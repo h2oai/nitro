@@ -1,38 +1,87 @@
-import { ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, RatingSize, Slider, SpinButton, Stack, TextField } from '@fluentui/react';
+import { Calendar, Checkbox, ColorPicker, ComboBox, DateRangeType, Dropdown, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, TextField } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
 
+type B = boolean
 type S = string
 type N = number
 type U = N
 type I = N
 type F = N
-type B = boolean
-type V = S | I | F | B
+type V = S | I | F
 type Dict<T> = { [key: string]: T }
 type Pair<T> = [T, T]
 
 type Choice = {
-  label: S
-  key?: S
+  value: V
+  label?: S
   icon?: S
-  color?: S
-  selected?: S
+  selected?: B
 }
 
-type Choicelike = Choice | S
-type Choices = Choicelike[] | Dict<S>
+type Choicelike = V | Pair<V>
+type Choices = S | Choice[] | Choicelike[] | Dict<V>
+
+const
+  isN = (x: any): x is number => typeof x === 'number',
+  isS = (x: any): x is string => typeof x === 'string',
+  unum = (x: any): N | undefined => isN(x) ? x : undefined,
+  ustr = (x: any): S | undefined => isS(x) ? x : undefined,
+  udate = (x: any): Date | undefined => isS(x) ? new Date(x) : undefined,
+  isV = (x: any): x is S | N => isS(x) || isN(x),
+  isO = (x: any) => x && (typeof x === 'object'),
+  isPair = (x: any): x is any[] => Array.isArray(x) && x.length === 2,
+  words = (x: S) => x.trim().split(/\s+/g),
+  toChoices = (x: any): Choice[] | undefined => {
+    if (!x) return undefined
+    if (Array.isArray(x)) {
+      const c: Choice[] = []
+      for (const v of x) {
+        if (isV(v)) { // value
+          c.push({ label: String(v), value: v })
+        } else if (isPair(v)) { // [label, value]
+          const label = v[0], value = v[1]
+          if (isS(label) && isV(value)) {
+            c.push({ label, value })
+          } else {
+            console.warn('Invalid choice pair. Want [string, value], got ', v)
+          }
+        } else if (isO(v) && isV(v.value)) { // { value: v }
+          if (!v.label) v.label = String(v.value)
+          c.push(v)
+        }
+      }
+      return c
+    }
+    if (isS(x)) { // 'value1 value2 value3...'
+      return words(x).map(value => ({ label: value, value }))
+    }
+    if (isO(x)) { // { label1: value1, label2: value2, ... }
+      const c: Choice[] = []
+      for (const label in x) {
+        const value = x[label]
+        if (isV(value)) {
+          c.push({ label, value })
+        } else {
+          console.warn('Invalid choice value in dictionary. Want string or number, got ', value)
+        }
+      }
+      return c
+    }
+    console.warn('Invalid choice list. Want string or array or dictionary, got ', x)
+    return undefined
+  }
 
 type InputBase = {
   label?: S
-  mode?: 'text' | 'int' | 'float' | 'date' | 'time' | 'list' | 'color' | 'menu' | 'rating' | 'slider'
+  mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'list' | 'color' | 'menu' | 'rating' | 'slider'
   icon?: S
   choices?: Choices
   actions?: Choices
   value?: V | Pair<V>
-  min?: N
-  max?: N
+  min?: N | S
+  max?: N | S
   step?: N
   precision?: U
   mask?: S
@@ -44,6 +93,7 @@ type InputBase = {
   lines?: U
   required?: B
   password?: B
+  editable?: B
 }
 
 type Input = {
@@ -67,11 +117,11 @@ type Session = {
 type InputProps = { input: Input }
 
 const
-  WithSend = ({ hasLabel: hasPrompt, children }: { hasLabel?: B, children: React.ReactChild }) => (
+  WithSend = ({ hasLabel, children }: { hasLabel?: B, children: React.ReactChild }) => (
     <Stack horizontal tokens={{ childrenGap: 5 }} >
       <Stack.Item grow>{children}</Stack.Item>
       <Stack.Item>
-        {hasPrompt ? <Label>&nbsp;</Label> : null}
+        {hasLabel ? <Label>&nbsp;</Label> : null}
         <PrimaryButton iconProps={{ iconName: 'Send' }} />
       </Stack.Item>
     </ Stack>
@@ -84,7 +134,7 @@ class XTextField extends React.Component<InputProps, {}> {
       { label, placeholder, icon, value, mask, prefix, suffix, error, lines, required, password } = this.props.input,
       props: Partial<ITextFieldProps> = {
         label: label,
-        defaultValue: value ? String(value) : undefined,
+        defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
         placeholder,
         errorMessage: error,
         required: required === true,
@@ -112,9 +162,9 @@ class XSpinButton extends React.Component<InputProps, {}> {
       <WithSend>
         <SpinButton
           label={label}
-          defaultValue={value ? String(value) : undefined}
-          min={min}
-          max={max}
+          defaultValue={isS(value) ? value : isN(value) ? String(value) : undefined}
+          min={unum(min)}
+          max={unum(max)}
           step={step}
           precision={precision}
         />
@@ -128,9 +178,9 @@ class XSlider extends React.Component<InputProps, {}> {
   render() {
     const
       { label, value, min, max, step } = this.props.input,
-      originFromZero = isNum(min) && min < 0 && isNum(max) && max > 0,
-      props: Partial<ISliderProps> = { label: label, min, max, step, originFromZero },
-      slider = Array.isArray(value) && value.length === 2 && isNum(value[0]) && isNum(value[1])
+      originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
+      props: Partial<ISliderProps> = { label: label, min: unum(min), max: unum(max), step, originFromZero },
+      slider = Array.isArray(value) && value.length === 2 && isN(value[0]) && isN(value[1])
         ? (
           <Slider
             {...props}
@@ -149,6 +199,22 @@ class XSlider extends React.Component<InputProps, {}> {
   }
 }
 
+const
+  WithLabel = ({ label, children }: { label?: S, children: JSX.Element }) => (
+    label
+      ? (
+        <Stack>
+          <Stack.Item>
+            <Label>{label}</Label>
+          </Stack.Item>
+          <Stack.Item>{children}</Stack.Item>
+        </Stack>
+      ) : (
+        children
+      )
+  )
+
+
 class XRating extends React.Component<InputProps, {}> {
   // TODO format string; aria-label
   render() {
@@ -156,20 +222,144 @@ class XRating extends React.Component<InputProps, {}> {
       { label, value, min, max } = this.props.input
     return (
       <WithSend>
-        <Stack>
-          <Stack.Item>
-            <Label>{label}</Label>
-          </Stack.Item>
-          <Stack.Item>
-            <Rating
-              defaultRating={isNum(value) ? value : undefined}
-              allowZeroStars={isNum(min) && min <= 0}
-              max={max}
-            />
-          </Stack.Item>
-        </Stack>
+        <WithLabel label={label}>
+          <Rating
+            defaultRating={unum(value)}
+            allowZeroStars={isN(min) && min <= 0}
+            max={unum(max)}
+          />
+        </WithLabel>
       </WithSend>
     )
+  }
+}
+
+
+
+class XCalendar extends React.Component<InputProps, {}> {
+  // TODO format string; aria-label
+  render() {
+    const
+      { label, mode, value, min, max } = this.props.input,
+      date = udate(value),
+      minDate = udate(min),
+      maxDate = udate(max),
+      dateRangeType = mode === 'week'
+        ? DateRangeType.Week
+        : mode === 'month'
+          ? DateRangeType.Month
+          : DateRangeType.Day
+    return (
+      <WithSend hasLabel={label ? true : false}>
+        <WithLabel label={label}>
+          <Calendar
+            dateRangeType={dateRangeType}
+            value={date}
+            minDate={minDate}
+            maxDate={maxDate}
+            isDayPickerVisible={mode !== 'month'}
+            highlightSelectedMonth
+            showGoToToday
+          />
+        </WithLabel>
+      </WithSend>
+    )
+  }
+}
+
+class XColorPicker extends React.Component<InputProps, {}> {
+  render() {
+    const
+      { label, value } = this.props.input
+    return (
+      <WithSend hasLabel={label ? true : false}>
+        <WithLabel label={label}>
+          <ColorPicker color={isS(value) ? value : '#ff0000'} />
+        </WithLabel>
+      </WithSend>
+    )
+  }
+}
+
+type ChoiceProps = InputProps & { choices: Choice[] }
+
+const CheckboxContainer = styled.div`
+  margin: 0.5rem 0;
+`
+class XCheckList extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { label }, choices } = this.props,
+      checkboxes = choices.map(c => (
+        <CheckboxContainer key={c.value}>
+          <Checkbox label={c.label} checked={c.selected ? true : false} />
+        </CheckboxContainer>
+      ))
+
+    return (
+      <WithSend hasLabel={label ? true : false}>
+        <WithLabel label={label}><div>{checkboxes}</div></WithLabel>
+      </WithSend>
+    )
+  }
+}
+
+class XMultiSelectDropdown extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { label, placeholder, error }, choices } = this.props,
+      options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
+      selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
+
+    return (
+
+      <WithSend hasLabel={label ? true : false}>
+        <Dropdown
+          multiSelect
+          label={label}
+          placeholder={placeholder}
+          options={options}
+          defaultSelectedKeys={selectedKeys}
+          errorMessage={error}
+        />
+      </WithSend>
+    )
+  }
+}
+
+class XMultiSelectComboBox extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { label, placeholder }, choices } = this.props,
+      options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
+      selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
+
+    return (
+
+      <WithSend hasLabel={label ? true : false}>
+        <ComboBox
+          multiSelect
+          label={label}
+          placeholder={placeholder}
+          options={options}
+          selectedKey={selectedKeys}
+        />
+      </WithSend>
+    )
+  }
+}
+
+
+const XMultiSelect = ({ input, choices }: ChoiceProps) => {
+  if (input.editable) {
+    return <XMultiSelectComboBox input={input} choices={choices} />
+  } else {
+    const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
+    if (!hasLongLabels && choices.length > 10) {
+      return <XMultiSelectDropdown input={input} choices={choices} />
+    } else {
+      return <XCheckList input={input} choices={choices} />
+    }
   }
 }
 
@@ -185,6 +375,10 @@ export type Message = Input | Output | Session
 let _xid = 0
 
 const
+  fruits = words(`
+    Apples Bananas Cherries Dates Elderberries Figs Grapes Huckleberries Jujubes Kiwis Lychees Mangos 
+    Nectarines Oranges Peaches Quince Raspberries Strawberries Tangerines Watermelons
+  `),
   lorem = `
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -251,6 +445,27 @@ const
         await input({ mode: 'rating', label: 'Rating with value', value: 3 })
         await input({ mode: 'rating', label: 'Rating with zero allowed', min: 0 })
         await input({ mode: 'rating', label: 'Rating with max', value: 3, max: 10 })
+        await input({ mode: 'day', label: 'Day picker', value: '2021-10-10' })
+        await input({ mode: 'day', label: 'Day picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
+        await input({ mode: 'week', label: 'Week picker', value: '2021-10-10' })
+        await input({ mode: 'week', label: 'Week picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
+        await input({ mode: 'month', label: 'Month picker', value: '2021-10-10' })
+        await input({ mode: 'month', label: 'Month picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
+        await input({ mode: 'color', label: 'Color picker', value: '#a241e8' })
+        await input({
+          mode: 'list', label: 'Multiple choice list', choices: [
+            { label: 'Apples', value: 'a' },
+            { label: 'Bananas', value: 'b', selected: true },
+            { label: 'Cherries', value: 'c' },
+          ]
+        })
+        await input({ mode: 'list', label: 'Multiple choice list from string', choices: 'Apples Bananas Cherries' })
+        await input({ mode: 'list', label: 'Multiple choice list from dictionary', choices: { Apples: 'a', Bananas: 'b', Cherries: 'c' } })
+        await input({ mode: 'list', label: 'Multiple choice list from string array', choices: ['Apples', 'Bananas', 'Cherries'] })
+        await input({ mode: 'list', label: 'Multiple choice list from tuples', choices: [['Apples', 'a'], ['Bananas', 'b'], ['Cherries', 'c']] })
+        await input({ mode: 'list', label: 'Multiple choice list, more than 10 choices', placeholder: 'Pick some fruits', choices: fruits })
+        await input({ mode: 'list', label: 'Multiple choice list, with error message', placeholder: 'Pick some fruits', choices: fruits, error: 'Error message' })
+        await input({ mode: 'list', label: 'Multiple choice list, editable', placeholder: 'Pick or enter some fruits', choices: fruits, editable: true })
       }
     return { connect }
   }
@@ -355,24 +570,32 @@ const
     padding: 2rem 2rem 3rem 2rem;
     box-shadow: 0 -14px 28px rgba(0,0,0,0.1), 0 -10px 10px rgba(0,0,0,0.01);
   `,
-  isNum = (n: any): n is number => typeof n === 'number',
   getDefaultValue = (value: any, min: any, max: any, step: any): N | undefined => {
-    if (isNum(value)) return value
-    if (isNum(min)) return Math.max(0, min)
-    if (isNum(max)) return Math.min(0, max)
-    if (isNum(step)) return 0
+    if (isN(value)) return value
+    if (isN(min)) return Math.max(0, min)
+    if (isN(max)) return Math.min(0, max)
+    if (isN(step)) return 0
     return undefined
   },
   InputImpl = ({ input }: InputProps) => {
-    const { mode, choices } = input
-    if (choices) {
-      if (choices.length) {
-      }
+    const choices = toChoices(input.choices)
+    switch (input.mode) {
+      case 'slider':
+        return <XSlider input={input} />
+      case 'rating':
+        return <XRating input={input} />
+      case 'day':
+      case 'month':
+      case 'week':
+        return <XCalendar input={input} />
+      case 'color':
+        return <XColorPicker input={input} />
+      case 'list':
+        if (choices?.length) return <XMultiSelect input={input} choices={choices} />
     }
-    if (mode === 'slider') return <XSlider input={input} />
-    if (mode === 'rating') return <XRating input={input} />
     input.value = getDefaultValue(input.value, input.min, input.max, input.step)
-    if (isNum(input.value)) return <XSpinButton input={input} />
+    if (isN(input.value)) return <XSpinButton input={input} />
+    // TODO mode=int/float + spin/slider?
     return <XTextField input={input} />
   }
 

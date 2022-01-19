@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from './App';
 import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/react';
 import reportWebVitals from './reportWebVitals';
-import { SendIcon, SkypeCheckIcon, RedEyeIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon } from '@fluentui/react-icons-mdl2';
+import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon } from '@fluentui/react-icons-mdl2';
 import './index.css';
 
 
@@ -59,6 +59,10 @@ registerIcons({
     ChevronDownSmall: <ChevronDownSmallIcon />, // used by spin button
     FavoriteStar: <FavoriteStarIcon />, // used by rating
     FavoriteStarFill: <FavoriteStarFillIcon />, // used by rating
+    Up: <UpIcon />, // used by calendar
+    Down: <DownIcon />, // used by calendar
+    CheckMark: <CheckMarkIcon />, // used by checkbox
+    ChevronDown: <ChevronDownIcon /> // used by dropdown
   },
 })
 
