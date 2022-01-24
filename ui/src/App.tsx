@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, TextField } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TextField } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -431,6 +431,20 @@ const
     return options
   }
 
+class XSwatchPicker extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { label }, choices } = this.props,
+      cells: IColorCellProps[] = choices.map(c => ({ id: String(c.value), label: String(c.label), color: String(c.value) }))
+
+    return (
+      <WithLabel label={label}>
+        <SwatchColorPicker columnCount={10} colorCells={cells} />
+      </WithLabel>
+    )
+  }
+}
+
 class XDropdown extends React.Component<ChoiceProps, {}> {
   render() {
     const
@@ -563,7 +577,6 @@ const
         await input({ mode: 'week', label: 'Week picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
         await input({ mode: 'month', label: 'Month picker', value: '2021-10-10' })
         await input({ mode: 'month', label: 'Month picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
-        await input({ mode: 'color', label: 'Color picker', value: '#a241e8' })
         await input({
           mode: 'list', label: 'Multiple choice list', choices: [
             { label: 'Apples', value: 'a' },
@@ -626,10 +639,20 @@ const
         await input({
           label: 'Choice list, grouped', placeholder: 'Pick an item', choices: [
             { label: 'Apple', value: 'a', group: 'Fruits' },
-            { label: 'Banana', value: 'a', group: 'Fruits' },
-            { label: 'Cherry', value: 'a', group: 'Fruits' },
+            { label: 'Banana', value: 'b', group: 'Fruits' },
+            { label: 'Cherry', value: 'c', group: 'Fruits' },
             { label: 'Lettuce', value: 'l', group: 'Vegetables' },
             { label: 'Tomato', value: 't', group: 'Vegetables' },
+          ]
+        })
+        await input({ mode: 'color', label: 'Color picker', value: '#a241e8' })
+        await input({
+          mode: 'color', label: 'Color picker, with choices', choices: [
+            { label: 'orange', value: '#ca5010' },
+            { label: 'cyan', value: '#038387' },
+            { label: 'blueMagenta', value: '#8764b8' },
+            { label: 'magenta', value: '#881798' },
+            { label: 'white', value: '#ffffff' },
           ]
         })
       }
@@ -746,7 +769,23 @@ const
   InputImpl = ({ input }: InputProps) => {
     const
       choices = toChoices(input.choices),
-      actions = toChoices(input.choices)
+      actions = toChoices(input.actions)
+
+    if (choices?.length) {
+      switch (input.mode) {
+        case 'color':
+          return <XSwatchPicker input={input} choices={choices} />
+        default:
+          const hasGroups = choices.some(c => c.group ? true : false)
+          if (hasGroups || (choices.length > 7)) {
+            return <XDropdown input={input} choices={choices} />
+          } else {
+            return <XChoiceGroup input={input} choices={choices} />
+          }
+      }
+    }
+
+    if (actions?.length) return <XButtons input={input} choices={actions} />
 
     switch (input.mode) {
       case 'slider':
@@ -762,15 +801,6 @@ const
       case 'list':
         if (choices?.length) return <XMultiSelect input={input} choices={choices} />
     }
-    if (choices?.length) {
-      const hasGroups = choices.some(c => c.group ? true : false)
-      if (hasGroups || (choices.length > 7)) {
-        return <XDropdown input={input} choices={choices} />
-      } else {
-        return <XChoiceGroup input={input} choices={choices} />
-      }
-    }
-    if (actions?.length) return <XButtons input={input} choices={actions} />
 
     input.value = getDefaultValue(input.value, input.min, input.max, input.step)
     if (isN(input.value)) return <XSpinButton input={input} />
