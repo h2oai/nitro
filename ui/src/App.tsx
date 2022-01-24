@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, TextField } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, TextField } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -452,6 +452,26 @@ class XDropdown extends React.Component<ChoiceProps, {}> {
     )
   }
 }
+class XChoiceGroup extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { label, placeholder }, choices } = this.props,
+      options: IChoiceGroupOption[] = choices.map(c => ({ key: String(c.value), text: String(c.label) })),
+      selectedItem = choices.find(c => c.selected),
+      selectedKey = selectedItem ? selectedItem.value : undefined
+
+    return (
+      <WithSend hasLabel={label ? true : false}>
+        <ChoiceGroup
+          label={label}
+          placeholder={placeholder}
+          options={options}
+          defaultSelectedKey={selectedKey}
+        />
+      </WithSend>
+    )
+  }
+}
 class InputView extends React.Component<InputProps, {}> {
   render() {
     return <InputContainer><InputImpl input={this.props.input}></InputImpl></InputContainer>
@@ -556,33 +576,40 @@ const
         await input({ mode: 'list', label: 'Multiple choice list, with error message', placeholder: 'Pick some fruits', choices: fruits, error: 'Error message' })
         await input({ mode: 'list', label: 'Multiple choice list, editable', placeholder: 'Pick or enter some fruits', choices: fruits, editable: true })
         await input({
-          choices: [
+          actions: [
             { label: 'Apples', value: 'a', selected: true },
             { label: 'Bananas', value: 'b' },
             { label: 'Cherries', value: 'c' },
           ]
         })
         await input({
-          choices: [
+          actions: [
             { label: 'Yes', value: 'yes', selected: true },
             { label: 'No', value: 'no' },
           ],
           inline: true,
         })
         await input({
-          choices: [
+          actions: [
             { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
             { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
           ],
         })
         await input({
-          choices: [
+          actions: [
             { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
             { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
           ],
           inline: true,
         })
-        await input({ label: 'Choice list', placeholder: 'Pick a fruit', choices: fruits })
+        await input({
+          label: 'Choice list, short', placeholder: 'Pick a fruit', choices: [
+            { label: 'Apples', value: 'a', selected: true },
+            { label: 'Bananas', value: 'b' },
+            { label: 'Cherries', value: 'c' },
+          ]
+        })
+        await input({ label: 'Choice list, long', placeholder: 'Pick a fruit', choices: fruits })
         await input({ label: 'Choice list, with error message', placeholder: 'Pick a fruit', choices: fruits, error: 'Error message' })
         await input({
           label: 'Choice list, grouped', placeholder: 'Pick an item', choices: [
@@ -705,7 +732,10 @@ const
     return undefined
   },
   InputImpl = ({ input }: InputProps) => {
-    const choices = toChoices(input.choices)
+    const
+      choices = toChoices(input.choices),
+      actions = toChoices(input.choices)
+
     switch (input.mode) {
       case 'slider':
         return <XSlider input={input} />
@@ -720,16 +750,16 @@ const
       case 'list':
         if (choices?.length) return <XMultiSelect input={input} choices={choices} />
     }
-    if (choices) {
-      if (choices.length) {
-        const hasGroups = choices.some(c => c.group ? true : false)
-        if (hasGroups || (choices.length > 5)) {
-          return <XDropdown input={input} choices={choices} />
-        } else {
-          return <XButtons input={input} choices={choices} />
-        }
+    if (choices?.length) {
+      const hasGroups = choices.some(c => c.group ? true : false)
+      if (hasGroups || (choices.length > 7)) {
+        return <XDropdown input={input} choices={choices} />
+      } else {
+        return <XChoiceGroup input={input} choices={choices} />
       }
     }
+    if (actions?.length) return <XButtons input={input} choices={actions} />
+
     input.value = getDefaultValue(input.value, input.min, input.max, input.step)
     if (isN(input.value)) return <XSpinButton input={input} />
     // TODO mode=int/float + spin/slider?
