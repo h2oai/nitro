@@ -310,7 +310,7 @@ class XCheckList extends React.Component<ChoiceProps, {}> {
 class XMultiSelectDropdown extends React.Component<ChoiceProps, {}> {
   render() {
     const
-      { input: { label, placeholder, error }, choices } = this.props,
+      { input: { label, placeholder, error, required }, choices } = this.props,
       options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
       selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
 
@@ -324,6 +324,7 @@ class XMultiSelectDropdown extends React.Component<ChoiceProps, {}> {
           options={options}
           defaultSelectedKeys={selectedKeys}
           errorMessage={error}
+          required={required ? true : false}
         />
       </WithSend>
     )
@@ -433,7 +434,7 @@ const
 class XDropdown extends React.Component<ChoiceProps, {}> {
   render() {
     const
-      { input: { label, placeholder, error }, choices } = this.props,
+      { input: { label, placeholder, error, required }, choices } = this.props,
       hasGroups = choices.some(c => c.group ? true : false),
       options: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(choices) : choices.map(toDropdownOption),
       selectedItem = choices.find(c => c.selected),
@@ -447,6 +448,7 @@ class XDropdown extends React.Component<ChoiceProps, {}> {
           options={options}
           selectedKey={selectedKey}
           errorMessage={error}
+          required={required ? true : false}
         />
       </WithSend>
     )
@@ -455,7 +457,7 @@ class XDropdown extends React.Component<ChoiceProps, {}> {
 class XChoiceGroup extends React.Component<ChoiceProps, {}> {
   render() {
     const
-      { input: { label, placeholder }, choices } = this.props,
+      { input: { label, placeholder, required }, choices } = this.props,
       options: IChoiceGroupOption[] = choices.map(c => ({ key: String(c.value), text: String(c.label) })),
       selectedItem = choices.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
@@ -467,6 +469,7 @@ class XChoiceGroup extends React.Component<ChoiceProps, {}> {
           placeholder={placeholder}
           options={options}
           defaultSelectedKey={selectedKey}
+          required={required ? true : false}
         />
       </WithSend>
     )
@@ -575,6 +578,7 @@ const
         await input({ mode: 'list', label: 'Multiple choice list, more than 10 choices', placeholder: 'Pick some fruits', choices: fruits })
         await input({ mode: 'list', label: 'Multiple choice list, with error message', placeholder: 'Pick some fruits', choices: fruits, error: 'Error message' })
         await input({ mode: 'list', label: 'Multiple choice list, editable', placeholder: 'Pick or enter some fruits', choices: fruits, editable: true })
+        await input({ mode: 'list', label: 'Multiple choice list, required', placeholder: 'Pick or enter some fruits', choices: fruits, required: true })
         await input({
           actions: [
             { label: 'Apples', value: 'a', selected: true },
@@ -609,7 +613,15 @@ const
             { label: 'Cherries', value: 'c' },
           ]
         })
+        await input({
+          label: 'Choice list, short, required', placeholder: 'Pick a fruit', required: true, choices: [
+            { label: 'Apples', value: 'a', selected: true },
+            { label: 'Bananas', value: 'b' },
+            { label: 'Cherries', value: 'c' },
+          ]
+        })
         await input({ label: 'Choice list, long', placeholder: 'Pick a fruit', choices: fruits })
+        await input({ label: 'Choice list, long, required', placeholder: 'Pick a fruit', required: true, choices: fruits })
         await input({ label: 'Choice list, with error message', placeholder: 'Pick a fruit', choices: fruits, error: 'Error message' })
         await input({
           label: 'Choice list, grouped', placeholder: 'Pick an item', choices: [
