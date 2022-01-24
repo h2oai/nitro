@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ColorPicker, ComboBox, DateRangeType, Dropdown, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, TextField } from '@fluentui/react';
+import { Calendar, Checkbox, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, TextField } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -16,7 +16,9 @@ type Pair<T> = [T, T]
 type Choice = {
   value: V
   label?: S
+  group?: S
   icon?: S
+  caption?: S
   selected?: B
 }
 
@@ -94,6 +96,7 @@ type InputBase = {
   required?: B
   password?: B
   editable?: B
+  inline?: B
 }
 
 type Input = {
@@ -363,6 +366,92 @@ const XMultiSelect = ({ input, choices }: ChoiceProps) => {
   }
 }
 
+class XButtons extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { inline }, choices } = this.props,
+      horizontal = inline ? true : false,
+      textAlign = horizontal ? 'center' : 'left',
+      styles: IButtonStyles = { root: { width: '100%', textAlign } },
+      compoundStyles: IButtonStyles = { root: { width: '100%', maxWidth: 'auto' } },
+      buttons = choices.map(c => {
+        const
+          text = c.label,
+          button = c.selected
+            ? c.caption
+              ? <CompoundButton primary text={text} secondaryText={c.caption} styles={compoundStyles} />
+              : <PrimaryButton text={text} styles={styles} />
+            : c.caption
+              ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} />
+              : <DefaultButton text={text} styles={styles} />
+        return <Stack.Item key={c.value} grow={horizontal}>{button}</Stack.Item>
+      })
+    return <Stack horizontal={horizontal} tokens={{ childrenGap: 5 }}>{buttons}</Stack>
+  }
+}
+
+const
+  gensym = (prefix: S) => {
+    let k = 0
+    return () => `__sidekick__${prefix}${++k}`
+  },
+  toDropdownOption = (c: Choice): IDropdownOption => (
+    { key: c.value, text: String(c.label) }
+  ),
+  toGroupedDropdownOptions = (choices: Choice[]): IDropdownOption[] => {
+    const
+      groups: Dict<Choice[]> = { '': [] }
+    for (const c of choices) {
+      const g = c.group
+      if (g) {
+        const a = groups[g]
+        if (a) {
+          a.push(c)
+        } else {
+          groups[g] = [c]
+        }
+      } else {
+        groups[''].push(c)
+      }
+    }
+
+    const
+      options: IDropdownOption[] = [],
+      sepSym = gensym('s'),
+      groupSym = gensym('g')
+    for (const g in groups) {
+      const choices = groups[g]
+      if (options.length) options.push({ key: sepSym(), text: '-', itemType: DropdownMenuItemType.Divider })
+      options.push({ key: groupSym(), text: g, itemType: DropdownMenuItemType.Header })
+      for (const c of choices) {
+        options.push({ key: c.value, text: String(c.label) })
+      }
+    }
+    return options
+  }
+
+class XDropdown extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { label, placeholder, error }, choices } = this.props,
+      hasGroups = choices.some(c => c.group ? true : false),
+      options: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(choices) : choices.map(toDropdownOption),
+      selectedItem = choices.find(c => c.selected),
+      selectedKey = selectedItem ? selectedItem.value : undefined
+
+    return (
+      <WithSend hasLabel={label ? true : false}>
+        <Dropdown
+          label={label}
+          placeholder={placeholder}
+          options={options}
+          selectedKey={selectedKey}
+          errorMessage={error}
+        />
+      </WithSend>
+    )
+  }
+}
 class InputView extends React.Component<InputProps, {}> {
   render() {
     return <InputContainer><InputImpl input={this.props.input}></InputImpl></InputContainer>
@@ -466,6 +555,44 @@ const
         await input({ mode: 'list', label: 'Multiple choice list, more than 10 choices', placeholder: 'Pick some fruits', choices: fruits })
         await input({ mode: 'list', label: 'Multiple choice list, with error message', placeholder: 'Pick some fruits', choices: fruits, error: 'Error message' })
         await input({ mode: 'list', label: 'Multiple choice list, editable', placeholder: 'Pick or enter some fruits', choices: fruits, editable: true })
+        await input({
+          choices: [
+            { label: 'Apples', value: 'a', selected: true },
+            { label: 'Bananas', value: 'b' },
+            { label: 'Cherries', value: 'c' },
+          ]
+        })
+        await input({
+          choices: [
+            { label: 'Yes', value: 'yes', selected: true },
+            { label: 'No', value: 'no' },
+          ],
+          inline: true,
+        })
+        await input({
+          choices: [
+            { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
+            { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
+          ],
+        })
+        await input({
+          choices: [
+            { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
+            { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
+          ],
+          inline: true,
+        })
+        await input({ label: 'Choice list', placeholder: 'Pick a fruit', choices: fruits })
+        await input({ label: 'Choice list, with error message', placeholder: 'Pick a fruit', choices: fruits, error: 'Error message' })
+        await input({
+          label: 'Choice list, grouped', placeholder: 'Pick an item', choices: [
+            { label: 'Apple', value: 'a', group: 'Fruits' },
+            { label: 'Banana', value: 'a', group: 'Fruits' },
+            { label: 'Cherry', value: 'a', group: 'Fruits' },
+            { label: 'Lettuce', value: 'l', group: 'Vegetables' },
+            { label: 'Tomato', value: 't', group: 'Vegetables' },
+          ]
+        })
       }
     return { connect }
   }
@@ -592,6 +719,16 @@ const
         return <XColorPicker input={input} />
       case 'list':
         if (choices?.length) return <XMultiSelect input={input} choices={choices} />
+    }
+    if (choices) {
+      if (choices.length) {
+        const hasGroups = choices.some(c => c.group ? true : false)
+        if (hasGroups || (choices.length > 5)) {
+          return <XDropdown input={input} choices={choices} />
+        } else {
+          return <XButtons input={input} choices={choices} />
+        }
+      }
     }
     input.value = getDefaultValue(input.value, input.min, input.max, input.step)
     if (isN(input.value)) return <XSpinButton input={input} />
