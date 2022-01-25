@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TextField } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TextField } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -409,6 +409,14 @@ class XMultiSelectComboBox extends React.Component<InputProps, {}> {
   }
 }
 
+const
+  toContextualMenuItem = (c: Choice): IContextualMenuItem => ({
+    key: String(c.value),
+    text: String(c.label),
+    iconProps: c.icon ? { iconName: c.icon } : undefined,
+  }),
+  toContextualMenuProps = (cs: Choice[]): IContextualMenuProps => ({ items: cs.map(toContextualMenuItem) })
+
 class XButtons extends React.Component<InputProps, {}> {
   render() {
     const
@@ -421,12 +429,16 @@ class XButtons extends React.Component<InputProps, {}> {
         const
           text = c.label,
           button = c.selected
-            ? c.caption
-              ? <CompoundButton primary text={text} secondaryText={c.caption} styles={compoundStyles} />
-              : <PrimaryButton text={text} styles={styles} />
-            : c.caption
-              ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} />
-              : <DefaultButton text={text} styles={styles} />
+            ? c.choices
+              ? <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.choices)} />
+              : c.caption
+                ? <CompoundButton primary text={text} secondaryText={c.caption} styles={compoundStyles} />
+                : <PrimaryButton text={text} styles={styles} />
+            : c.choices
+              ? <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.choices)} />
+              : c.caption
+                ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} />
+                : <DefaultButton text={text} styles={styles} />
         return <Stack.Item key={c.value} grow={horizontal}>{button}</Stack.Item>
       })
     return <Stack horizontal={horizontal} tokens={{ childrenGap: 5 }}>{buttons}</Stack>
@@ -599,33 +611,6 @@ const
         await input({ mode: 'list', label: 'Multiple choice list, editable', placeholder: 'Pick or enter some fruits', choices: fruits, editable: true })
         await input({ mode: 'list', label: 'Multiple choice list, required', placeholder: 'Pick or enter some fruits', choices: fruits, required: true })
         await input({
-          actions: [
-            { label: 'Apples', value: 'a', selected: true },
-            { label: 'Bananas', value: 'b' },
-            { label: 'Cherries', value: 'c' },
-          ]
-        })
-        await input({
-          actions: [
-            { label: 'Yes', value: 'yes', selected: true },
-            { label: 'No', value: 'no' },
-          ],
-          inline: true,
-        })
-        await input({
-          actions: [
-            { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
-            { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
-          ],
-        })
-        await input({
-          actions: [
-            { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
-            { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
-          ],
-          inline: true,
-        })
-        await input({
           label: 'Choice list, short', placeholder: 'Pick a fruit', choices: [
             { label: 'Apples', value: 'a', selected: true },
             { label: 'Bananas', value: 'b' },
@@ -669,6 +654,57 @@ const
             { label: 'magenta', value: '#881798' },
             { label: 'white', value: '#ffffff' },
           ]
+        })
+        await input({
+          actions: [
+            { label: 'Apples', value: 'a', selected: true },
+            { label: 'Bananas', value: 'b' },
+            { label: 'Cherries', value: 'c' },
+          ]
+        })
+        await input({
+          actions: [
+            { label: 'Yes', value: 'yes', selected: true },
+            { label: 'No', value: 'no' },
+          ],
+          inline: true,
+        })
+        await input({
+          actions: [
+            { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
+            { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
+          ],
+        })
+        await input({
+          actions: [
+            { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
+            { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
+          ],
+          inline: true,
+        })
+        await input({
+          actions: [
+            {
+              label: 'Yes', value: 'yes', selected: true, choices: [
+                { label: 'Remind me later', value: 'later' },
+                { label: "Don't ask me again", value: 'never' },
+              ]
+            },
+            { label: 'No', value: 'no' },
+          ],
+          inline: true,
+        })
+        await input({
+          actions: [
+            { label: 'Yes', value: 'yes', selected: true },
+            {
+              label: 'No', value: 'no', choices: [
+                { label: 'Remind me later', value: 'later' },
+                { label: "Don't ask me again", value: 'never' },
+              ]
+            },
+          ],
+          inline: true,
         })
       }
     return { connect }
