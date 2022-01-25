@@ -296,15 +296,13 @@ class XColorPicker extends React.Component<InputProps, {}> {
   }
 }
 
-type ChoiceProps = InputProps & { choices: Choice[] }
-
 const CheckboxContainer = styled.div`
   margin: 0.5rem 0;
 `
-class XCheckList extends React.Component<ChoiceProps, {}> {
+class XCheckList extends React.Component<InputProps, {}> {
   render() {
     const
-      { input: { label }, choices } = this.props,
+      { label, choices } = this.props.input,
       checkboxes = choices.map(c => (
         <CheckboxContainer key={c.value}>
           <Checkbox label={c.label} checked={c.selected ? true : false} />
@@ -319,10 +317,10 @@ class XCheckList extends React.Component<ChoiceProps, {}> {
   }
 }
 
-class XDropdown extends React.Component<ChoiceProps, {}> {
+class XDropdown extends React.Component<InputProps, {}> {
   render() {
     const
-      { input: { label, placeholder, error, required }, choices } = this.props,
+      { label, placeholder, error, required, choices } = this.props.input,
       hasGroups = choices.some(c => c.choices?.length ? true : false),
       options: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(choices) : choices.map(toDropdownOption),
       selectedItem = choices.find(c => c.selected),
@@ -343,10 +341,10 @@ class XDropdown extends React.Component<ChoiceProps, {}> {
   }
 }
 
-class XMultiSelectDropdown extends React.Component<ChoiceProps, {}> {
+class XMultiSelectDropdown extends React.Component<InputProps, {}> {
   render() {
     const
-      { input: { label, placeholder, error, required }, choices } = this.props,
+      { label, placeholder, error, required, choices } = this.props.input,
       options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
       selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
 
@@ -367,10 +365,10 @@ class XMultiSelectDropdown extends React.Component<ChoiceProps, {}> {
   }
 }
 
-class XComboBox extends React.Component<ChoiceProps, {}> {
+class XComboBox extends React.Component<InputProps, {}> {
   render() {
     const
-      { input: { label, placeholder }, choices } = this.props,
+      { label, placeholder, choices } = this.props.input,
       options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
       selectedItem = choices.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
@@ -389,10 +387,10 @@ class XComboBox extends React.Component<ChoiceProps, {}> {
   }
 }
 
-class XMultiSelectComboBox extends React.Component<ChoiceProps, {}> {
+class XMultiSelectComboBox extends React.Component<InputProps, {}> {
   render() {
     const
-      { input: { label, placeholder }, choices } = this.props,
+      { label, placeholder, choices } = this.props.input,
       options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
       selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
 
@@ -411,15 +409,15 @@ class XMultiSelectComboBox extends React.Component<ChoiceProps, {}> {
   }
 }
 
-class XButtons extends React.Component<ChoiceProps, {}> {
+class XButtons extends React.Component<InputProps, {}> {
   render() {
     const
-      { input: { inline }, choices } = this.props,
+      { inline, actions } = this.props.input,
       horizontal = inline ? true : false,
       textAlign = horizontal ? 'center' : 'left',
       styles: IButtonStyles = { root: { width: '100%', textAlign } },
       compoundStyles: IButtonStyles = { root: { width: '100%', maxWidth: 'auto' } },
-      buttons = choices.map(c => {
+      buttons = actions.map(c => {
         const
           text = c.label,
           button = c.selected
@@ -462,10 +460,10 @@ const
     return options
   }
 
-class XSwatchPicker extends React.Component<ChoiceProps, {}> {
+class XSwatchPicker extends React.Component<InputProps, {}> {
   render() {
     const
-      { input: { label }, choices } = this.props,
+      { label, choices } = this.props.input,
       cells: IColorCellProps[] = choices.map(c => ({ id: String(c.value), label: String(c.label), color: String(c.value) }))
 
     return (
@@ -476,10 +474,10 @@ class XSwatchPicker extends React.Component<ChoiceProps, {}> {
   }
 }
 
-class XChoiceGroup extends React.Component<ChoiceProps, {}> {
+class XChoiceGroup extends React.Component<InputProps, {}> {
   render() {
     const
-      { input: { label, placeholder, required }, choices } = this.props,
+      { label, placeholder, required, choices } = this.props.input,
       options: IChoiceGroupOption[] = choices.map(c => ({ key: String(c.value), text: String(c.label) })),
       selectedItem = choices.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
@@ -795,29 +793,29 @@ const
       switch (input.mode) {
         case 'list': // multiple choice
           if (input.editable) {
-            return <XMultiSelectComboBox input={input} choices={choices} />
+            return <XMultiSelectComboBox input={input} />
           }
           const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
           if (!hasLongLabels && choices.length > 10) {
-            return <XMultiSelectDropdown input={input} choices={choices} />
+            return <XMultiSelectDropdown input={input} />
           }
-          return <XCheckList input={input} choices={choices} />
+          return <XCheckList input={input} />
         case 'color':
-          return <XSwatchPicker input={input} choices={choices} />
+          return <XSwatchPicker input={input} />
         default:
           if (input.editable) {
-            return <XComboBox input={input} choices={choices} />
+            return <XComboBox input={input} />
           }
           const hasGroups = choices.some(c => c.choices?.length ? true : false)
           if (hasGroups || (choices.length > 7)) {
-            return <XDropdown input={input} choices={choices} />
+            return <XDropdown input={input} />
           }
-          return <XChoiceGroup input={input} choices={choices} />
+          return <XChoiceGroup input={input} />
       }
     }
 
     if (actions.length) {
-      return <XButtons input={input} choices={actions} />
+      return <XButtons input={input} />
     }
 
     switch (input.mode) {
