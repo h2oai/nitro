@@ -315,6 +315,30 @@ class XCheckList extends React.Component<ChoiceProps, {}> {
   }
 }
 
+class XDropdown extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { label, placeholder, error, required }, choices } = this.props,
+      hasGroups = choices.some(c => c.choices?.length ? true : false),
+      options: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(choices) : choices.map(toDropdownOption),
+      selectedItem = choices.find(c => c.selected),
+      selectedKey = selectedItem ? selectedItem.value : undefined
+
+    return (
+      <WithSend hasLabel={label ? true : false}>
+        <Dropdown
+          label={label}
+          placeholder={placeholder}
+          options={options}
+          selectedKey={selectedKey}
+          errorMessage={error}
+          required={required ? true : false}
+        />
+      </WithSend>
+    )
+  }
+}
+
 class XMultiSelectDropdown extends React.Component<ChoiceProps, {}> {
   render() {
     const
@@ -339,6 +363,28 @@ class XMultiSelectDropdown extends React.Component<ChoiceProps, {}> {
   }
 }
 
+class XComboBox extends React.Component<ChoiceProps, {}> {
+  render() {
+    const
+      { input: { label, placeholder }, choices } = this.props,
+      options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
+      selectedItem = choices.find(c => c.selected),
+      selectedKey = selectedItem ? selectedItem.value : undefined
+
+    return (
+      <WithSend hasLabel={label ? true : false}>
+        <ComboBox
+          allowFreeform
+          label={label}
+          placeholder={placeholder}
+          options={options}
+          selectedKey={selectedKey}
+        />
+      </WithSend>
+    )
+  }
+}
+
 class XMultiSelectComboBox extends React.Component<ChoiceProps, {}> {
   render() {
     const
@@ -347,9 +393,9 @@ class XMultiSelectComboBox extends React.Component<ChoiceProps, {}> {
       selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
 
     return (
-
       <WithSend hasLabel={label ? true : false}>
         <ComboBox
+          allowFreeform
           multiSelect
           label={label}
           placeholder={placeholder}
@@ -426,29 +472,6 @@ class XSwatchPicker extends React.Component<ChoiceProps, {}> {
   }
 }
 
-class XDropdown extends React.Component<ChoiceProps, {}> {
-  render() {
-    const
-      { input: { label, placeholder, error, required }, choices } = this.props,
-      hasGroups = choices.some(c => c.choices?.length ? true : false),
-      options: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(choices) : choices.map(toDropdownOption),
-      selectedItem = choices.find(c => c.selected),
-      selectedKey = selectedItem ? selectedItem.value : undefined
-
-    return (
-      <WithSend hasLabel={label ? true : false}>
-        <Dropdown
-          label={label}
-          placeholder={placeholder}
-          options={options}
-          selectedKey={selectedKey}
-          errorMessage={error}
-          required={required ? true : false}
-        />
-      </WithSend>
-    )
-  }
-}
 class XChoiceGroup extends React.Component<ChoiceProps, {}> {
   render() {
     const
@@ -615,7 +638,8 @@ const
           ]
         })
         await input({ label: 'Choice list, long', placeholder: 'Pick a fruit', choices: fruits })
-        await input({ label: 'Choice list, long, required', placeholder: 'Pick a fruit', required: true, choices: fruits })
+        await input({ label: 'Choice list, long, editable', placeholder: 'Pick a fruit', choices: fruits, editable: true })
+        await input({ label: 'Choice list, long, required', placeholder: 'Pick a fruit', choices: fruits, required: true })
         await input({ label: 'Choice list, with error message', placeholder: 'Pick a fruit', choices: fruits, error: 'Error message' })
         await input({
           label: 'Choice list, grouped', placeholder: 'Pick an item', choices: [
@@ -777,6 +801,9 @@ const
         case 'color':
           return <XSwatchPicker input={input} choices={choices} />
         default:
+          if (input.editable) {
+            return <XComboBox input={input} choices={choices} />
+          }
           const hasGroups = choices.some(c => c.choices?.length ? true : false)
           if (hasGroups || (choices.length > 7)) {
             return <XDropdown input={input} choices={choices} />
