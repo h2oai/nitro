@@ -417,6 +417,14 @@ const
   }),
   toContextualMenuProps = (cs: Choice[]): IContextualMenuProps => ({ items: cs.map(toContextualMenuItem) })
 
+class XMenu extends React.Component<InputProps, {}> {
+  render() {
+    const
+      { label, actions } = this.props.input
+    return <PrimaryButton text={label ?? 'Choose an action'} menuProps={toContextualMenuProps(actions)} />
+  }
+}
+
 class XButtons extends React.Component<InputProps, {}> {
   render() {
     const
@@ -706,6 +714,18 @@ const
           ],
           inline: true,
         })
+        // More than 5 actions displays a menu.
+        await input({
+          label: 'Create new',
+          actions: [
+            { label: 'Area Chart', value: 'area', icon: 'AreaChart' },
+            { label: 'Bar Chart', value: 'bar', icon: 'BarChartHorizontal' },
+            { label: 'Column Chart', value: 'column', icon: 'BarChartVertical' },
+            { label: 'Line Chart', value: 'line', icon: 'LineChart' },
+            { label: 'Scatterplot', value: 'scatter', icon: 'ScatterChart' },
+            { label: 'Donut Chart', value: 'donut', icon: 'DonutChart' },
+          ],
+        })
       }
     return { connect }
   }
@@ -851,6 +871,9 @@ const
     }
 
     if (actions.length) {
+      if (actions.length > 5) {
+        return <XMenu input={input} />
+      }
       return <XButtons input={input} />
     }
 
