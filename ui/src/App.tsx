@@ -16,14 +16,11 @@ type Pair<T> = [T, T]
 type Choice = {
   value: V
   label?: S
-  group?: S
   icon?: S
   caption?: S
   selected?: B
+  choices?: Choice[]
 }
-
-type Choicelike = V | Pair<V>
-type Choices = S | Choice[] | Choicelike[] | Dict<V>
 
 const
   isN = (x: any): x is number => typeof x === 'number',
@@ -79,8 +76,6 @@ type InputBase = {
   label?: S
   mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'list' | 'color' | 'menu' | 'rating' | 'slider'
   icon?: S
-  choices?: Choices
-  actions?: Choices
   value?: V | Pair<V>
   min?: N | S
   max?: N | S
@@ -99,16 +94,29 @@ type InputBase = {
   inline?: B
 }
 
-type Input = {
+type Input = InputBase & {
   t: 'i'
   id: S
-} & InputBase
+  choices?: Choice[]
+  actions?: Choice[]
+}
 
-type Output = {
-  t: 'o'
-  id: S
+type RawChoice = V | Pair<V>
+type RawChoices = S | RawChoice[] | Dict<V> | Choice[]
+
+type RawInput = InputBase & {
+  choices?: RawChoices
+  actions?: RawChoices
+}
+
+type OutputBase = {
   author: S
   text?: S
+}
+
+type Output = OutputBase & {
+  t: 'o'
+  id: S
 }
 
 type Session = {
@@ -353,20 +361,6 @@ class XMultiSelectComboBox extends React.Component<ChoiceProps, {}> {
   }
 }
 
-
-const XMultiSelect = ({ input, choices }: ChoiceProps) => {
-  if (input.editable) {
-    return <XMultiSelectComboBox input={input} choices={choices} />
-  } else {
-    const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
-    if (!hasLongLabels && choices.length > 10) {
-      return <XMultiSelectDropdown input={input} choices={choices} />
-    } else {
-      return <XCheckList input={input} choices={choices} />
-    }
-  }
-}
-
 class XButtons extends React.Component<ChoiceProps, {}> {
   render() {
     const
@@ -401,31 +395,18 @@ const
   ),
   toGroupedDropdownOptions = (choices: Choice[]): IDropdownOption[] => {
     const
-      groups: Dict<Choice[]> = { '': [] }
-    for (const c of choices) {
-      const g = c.group
-      if (g) {
-        const a = groups[g]
-        if (a) {
-          a.push(c)
-        } else {
-          groups[g] = [c]
-        }
-      } else {
-        groups[''].push(c)
-      }
-    }
-
-    const
       options: IDropdownOption[] = [],
       sepSym = gensym('s'),
       groupSym = gensym('g')
-    for (const g in groups) {
-      const choices = groups[g]
-      if (options.length) options.push({ key: sepSym(), text: '-', itemType: DropdownMenuItemType.Divider })
-      options.push({ key: groupSym(), text: g, itemType: DropdownMenuItemType.Header })
-      for (const c of choices) {
-        options.push({ key: c.value, text: String(c.label) })
+    for (const g of choices) {
+      if (g.choices?.length) {
+        if (options.length) options.push({ key: sepSym(), text: '-', itemType: DropdownMenuItemType.Divider })
+        options.push({ key: groupSym(), text: String(g.label), itemType: DropdownMenuItemType.Header })
+        for (const c of g.choices) {
+          options.push(toDropdownOption(c))
+        }
+      } else {
+        options.push(toDropdownOption(g))
       }
     }
     return options
@@ -449,7 +430,7 @@ class XDropdown extends React.Component<ChoiceProps, {}> {
   render() {
     const
       { input: { label, placeholder, error, required }, choices } = this.props,
-      hasGroups = choices.some(c => c.group ? true : false),
+      hasGroups = choices.some(c => c.choices?.length ? true : false),
       options: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(choices) : choices.map(toDropdownOption),
       selectedItem = choices.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
@@ -527,7 +508,7 @@ const
   newSocket = (handle: (m: Message) => void) => {
     const
       send = (m: Message) => window.setTimeout(() => handle(m), 0),
-      input = (m: InputBase) => send({ t: 'i', id: xid(), ...m }),
+      input = (m: RawInput) => send({ t: 'i', id: xid(), ...sanitizeInput(m) }),
       output = async (author: S, text: S) => send({ t: 'o', id: xid(), author, text }),
       system = async (text: S) => await output('', text),
       user = async (text: S) => await output('user', text),
@@ -638,14 +619,22 @@ const
         await input({ label: 'Choice list, with error message', placeholder: 'Pick a fruit', choices: fruits, error: 'Error message' })
         await input({
           label: 'Choice list, grouped', placeholder: 'Pick an item', choices: [
-            { label: 'Apple', value: 'a', group: 'Fruits' },
-            { label: 'Banana', value: 'b', group: 'Fruits' },
-            { label: 'Cherry', value: 'c', group: 'Fruits' },
-            { label: 'Lettuce', value: 'l', group: 'Vegetables' },
-            { label: 'Tomato', value: 't', group: 'Vegetables' },
+            {
+              label: 'Fruits', value: 'f', choices: [
+                { label: 'Apple', value: 'a' },
+                { label: 'Banana', value: 'b' },
+                { label: 'Cherry', value: 'c' },
+              ]
+            },
+            {
+              label: 'Vegetables', value: 'g', choices: [
+                { label: 'Lettuce', value: 'l' },
+                { label: 'Tomato', value: 't' },
+              ]
+            },
           ]
         })
-        await input({ mode: 'color', label: 'Color picker', value: '#a241e8' })
+        await input({ mode: 'color', label: 'Color picker, arbitrary color', value: '#a241e8' })
         await input({
           mode: 'color', label: 'Color picker, with choices', choices: [
             { label: 'orange', value: '#ca5010' },
@@ -766,26 +755,39 @@ const
     if (isN(step)) return 0
     return undefined
   },
+  sanitizeInput = (input: RawInput): InputBase => {
+    input.choices = toChoices(input.choices)
+    input.actions = toChoices(input.actions)
+    return input
+  },
   InputImpl = ({ input }: InputProps) => {
-    const
-      choices = toChoices(input.choices),
-      actions = toChoices(input.actions)
+    const { choices, actions } = input
 
     if (choices?.length) {
       switch (input.mode) {
+        case 'list': // multiple choice
+          if (input.editable) {
+            return <XMultiSelectComboBox input={input} choices={choices} />
+          }
+          const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
+          if (!hasLongLabels && choices.length > 10) {
+            return <XMultiSelectDropdown input={input} choices={choices} />
+          }
+          return <XCheckList input={input} choices={choices} />
         case 'color':
           return <XSwatchPicker input={input} choices={choices} />
         default:
-          const hasGroups = choices.some(c => c.group ? true : false)
+          const hasGroups = choices.some(c => c.choices?.length ? true : false)
           if (hasGroups || (choices.length > 7)) {
             return <XDropdown input={input} choices={choices} />
-          } else {
-            return <XChoiceGroup input={input} choices={choices} />
           }
+          return <XChoiceGroup input={input} choices={choices} />
       }
     }
 
-    if (actions?.length) return <XButtons input={input} choices={actions} />
+    if (actions?.length) {
+      return <XButtons input={input} choices={actions} />
+    }
 
     switch (input.mode) {
       case 'slider':
@@ -798,12 +800,12 @@ const
         return <XCalendar input={input} />
       case 'color':
         return <XColorPicker input={input} />
-      case 'list':
-        if (choices?.length) return <XMultiSelect input={input} choices={choices} />
     }
 
     input.value = getDefaultValue(input.value, input.min, input.max, input.step)
-    if (isN(input.value)) return <XSpinButton input={input} />
+    if (isN(input.value)) {
+      return <XSpinButton input={input} />
+    }
     // TODO mode=int/float + spin/slider?
     return <XTextField input={input} />
   }
