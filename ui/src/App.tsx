@@ -32,8 +32,8 @@ const
   isO = (x: any) => x && (typeof x === 'object'),
   isPair = (x: any): x is any[] => Array.isArray(x) && x.length === 2,
   words = (x: S) => x.trim().split(/\s+/g),
-  toChoices = (x: any): Choice[] | undefined => {
-    if (!x) return undefined
+  toChoices = (x: any): Choice[] => {
+    if (!x) return []
     if (Array.isArray(x)) {
       const c: Choice[] = []
       for (const v of x) {
@@ -48,6 +48,7 @@ const
           }
         } else if (isO(v) && isV(v.value)) { // { value: v }
           if (!v.label) v.label = String(v.value)
+          if (v.choices) v.choices = toChoices(v.choices)
           c.push(v)
         }
       }
@@ -69,7 +70,7 @@ const
       return c
     }
     console.warn('Invalid choice list. Want string or array or dictionary, got ', x)
-    return undefined
+    return []
   }
 
 type InputBase = {
@@ -94,11 +95,14 @@ type InputBase = {
   inline?: B
 }
 
-type Input = InputBase & {
+type SanitizedInput = InputBase & {
+  choices: Choice[]
+  actions: Choice[]
+}
+
+type Input = SanitizedInput & {
   t: 'i'
   id: S
-  choices?: Choice[]
-  actions?: Choice[]
 }
 
 type RawChoice = V | Pair<V>
@@ -779,15 +783,15 @@ const
     if (isN(step)) return 0
     return undefined
   },
-  sanitizeInput = (input: RawInput): InputBase => {
+  sanitizeInput = (input: RawInput): SanitizedInput => {
     input.choices = toChoices(input.choices)
     input.actions = toChoices(input.actions)
-    return input
+    return input as SanitizedInput
   },
   InputImpl = ({ input }: InputProps) => {
     const { choices, actions } = input
 
-    if (choices?.length) {
+    if (choices.length) {
       switch (input.mode) {
         case 'list': // multiple choice
           if (input.editable) {
@@ -812,7 +816,7 @@ const
       }
     }
 
-    if (actions?.length) {
+    if (actions.length) {
       return <XButtons input={input} choices={actions} />
     }
 
