@@ -255,7 +255,9 @@ class XTimePicker extends React.Component<InputProps, {}> {
     const
       { label, value } = this.props.input,
       t = String(value).toLowerCase(),
-      c24 = !t.endsWith('am') && !t.endsWith('pm'),
+      am = t.endsWith('am'),
+      pm = !am && t.endsWith('pm'),
+      c24 = !(am || pm),
       hhmmss = c24 ? t : t.substring(0, t.length - 2),
       tokens = hhmmss.split(':'),
       [hh, mm, ss] = tokens.map(t => parseInt(t, 10)),
@@ -280,7 +282,7 @@ class XTimePicker extends React.Component<InputProps, {}> {
         <Stack.Item styles={!c24 ? undefined : hide}>
           <Stack>
             <Stack.Item><Label>&nbsp;</Label></Stack.Item>
-            <Stack.Item><Toggle offText='AM' onText='PM' /></Stack.Item>
+            <Stack.Item><Toggle offText='AM' onText='PM' defaultChecked={pm} /></Stack.Item>
           </Stack>
         </Stack.Item>
       </Stack>
