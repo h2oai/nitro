@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, formProperties, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, formProperties, GroupShowAll, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -29,11 +29,13 @@ type InputBase = {
   placeholder?: S
   error?: S
   lines?: U
+  size?: S | U
   multiple?: B
   required?: B
   password?: B
   editable?: B
   inline?: B
+
 }
 
 type Choice = {
@@ -602,11 +604,18 @@ class XForm extends React.Component<FormProps, {}> {
   render() {
     const
       { inputs, inline } = this.props,
-      children = inputs.map(input => (
-        <Stack.Item key={xid()}>
-          <XInput input={input} />
-        </Stack.Item>
-      ))
+      children = inputs.map(input => {
+        const
+          size = inline ? input.size : undefined, // only process if inline
+          styles = isS(size) ? { root: { width: size } } : undefined,
+          grow = isN(size) ? size : styles ? undefined : 1
+
+        return (
+          <Stack.Item key={xid()} grow={grow} styles={styles}>
+            <XInput input={input} />
+          </Stack.Item >
+        )
+      })
 
     return inline
       ? <Stack horizontal tokens={gap5}>{children}</Stack>
@@ -961,6 +970,27 @@ const
                 { label: 'City' },
                 { label: 'State' },
                 { label: 'Zip' },
+              ]
+            },
+          ]
+        })
+        await input({
+          inputs: [
+            {
+              inline: true, inputs: [
+                { label: 'First name' },
+                { label: 'M.I', size: '10%' }, // 10% of available width
+                { label: 'Last name' },
+              ]
+            },
+            { label: 'Address line 1' },
+            { label: 'Address line 2' },
+            {
+              inline: true, inputs: [
+                // 6:1:4 ratio of available width
+                { label: 'City', size: 6 },
+                { label: 'State', size: 1 },
+                { label: 'Zip', size: 4 },
               ]
             },
           ]
