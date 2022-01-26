@@ -111,6 +111,7 @@ type RawChoices = S | RawChoice[] | Dict<V> | Choice[]
 type RawInput = InputBase & {
   choices?: RawChoices
   actions?: RawChoices
+  range?: Pair<V>
 }
 
 type OutputBase = {
@@ -624,22 +625,23 @@ const
         await input({ label: 'Multiline text field', lines: 1 })
         await input({ label: 'Multiline text field, taller', lines: 5 })
         await input({ label: 'Integer', value: 5 })
-        await input({ label: 'Integer within range', min: 0, max: 10 })
-        await input({ label: 'Integer within range, with steps', min: 0, max: 10, step: 2 })
-        await input({ label: 'Integer within range, with default', value: 5, min: 0, max: 10 })
-        await input({ label: 'Integer within range, origin from zero', value: 3, min: -5, max: 5 })
-        await input({ label: 'Decimal within range', value: 0.6, min: -1, max: 1, step: 0.2 })
-        await input({ label: 'Integer range', value: [3, 7], min: 1, max: 10 })
-        await input({ label: 'Integer range, origin from zero', value: [-1, 3], min: -5, max: 5 })
+        await input({ label: 'Integer within range', range: [0, 10] })
+        await input({ label: 'Integer within range, with steps', range: [0, 10], step: 2 })
+        await input({ label: 'Integer within range, with default', value: 5, range: [0, 10] })
+        await input({ label: 'Integer within range, origin from zero', value: 3, range: [-5, 5] })
+        await input({ label: 'Decimal within range', value: 0.6, range: [-1, 1], step: 0.2 })
+        await input({ label: 'Integer range', value: [3, 7], range: [1, 10] })
+        await input({ label: 'Integer range, origin from zero', value: [-1, 3], range: [-5, 5] })
         await input({ label: 'Integer field', value: 5, editable: true })
-        await input({ label: 'Integer field with range', value: 5, min: 1, max: 10, editable: true })
-        await input({ label: 'Integer field with range and step', value: 50, min: 0, max: 100, step: 10, editable: true })
-        await input({ label: 'Decimal field with range and step', value: 0.5, min: 0.0, max: 1.0, step: 0.05, editable: true })
-        await input({ label: 'Decimal field with range, step, and precision', value: 0.5, min: 0.0, max: 1.0, step: 0.05, precision: 2, editable: true })
+        await input({ label: 'Integer field with range', value: 5, range: [1, 10], editable: true })
+        await input({ label: 'Integer field with range and step', value: 50, range: [0, 100], step: 10, editable: true })
+        await input({ label: 'Decimal field with range and step', value: 0.5, range: [0.0, 1.0], step: 0.05, editable: true })
+        await input({ label: 'Decimal field with range, step, and precision', value: 0.5, range: [0.0, 1.0], step: 0.05, precision: 2, editable: true })
         await input({ mode: 'rating', label: 'Rating' })
         await input({ mode: 'rating', label: 'Rating with value', value: 3 })
         await input({ mode: 'rating', label: 'Rating with zero allowed', min: 0 })
         await input({ mode: 'rating', label: 'Rating with max', value: 3, max: 10 })
+        await input({ mode: 'rating', label: 'Rating with range', value: 3, range: [0, 7] })
         await input({ mode: 'time', label: 'Time', value: '3:04PM' })
         await input({ mode: 'time', label: 'Time, with seconds', value: '3:04:05PM' })
         await input({ mode: 'time', label: 'Time, hour only', value: '3PM' })
@@ -647,11 +649,11 @@ const
         await input({ mode: 'time', label: 'Time, 24-hr clock, with seconds', value: '15:04:05' })
         await input({ mode: 'time', label: 'Time, hour only, 24-hour clock', value: '15' })
         await input({ mode: 'day', label: 'Day picker', value: '2021-10-10' })
-        await input({ mode: 'day', label: 'Day picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
+        await input({ mode: 'day', label: 'Day picker with range', value: '2021-10-10', range: ['2019-01-01', '2022-12-31'] })
         await input({ mode: 'week', label: 'Week picker', value: '2021-10-10' })
-        await input({ mode: 'week', label: 'Week picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
+        await input({ mode: 'week', label: 'Week picker with range', value: '2021-10-10', range: ['2019-01-01', '2022-12-31'] })
         await input({ mode: 'month', label: 'Month picker', value: '2021-10-10' })
-        await input({ mode: 'month', label: 'Month picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
+        await input({ mode: 'month', label: 'Month picker with range', value: '2021-10-10', range: ['2019-01-01', '2022-12-31'] })
         await input({
           mode: 'list', label: 'Multiple choice list', choices: [
             { label: 'Apples', value: 'a' },
@@ -898,6 +900,13 @@ const
   sanitizeInput = (input: RawInput): SanitizedInput => {
     input.choices = toChoices(input.choices)
     input.actions = toChoices(input.actions)
+    if (isPair(input.range)) {
+      const [x, y] = input.range
+      if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
+        input.min = x
+        input.max = y
+      }
+    }
     return input as SanitizedInput
   },
   InputImpl = ({ input }: InputProps) => {
