@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, formProperties, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -13,6 +13,29 @@ type V = S | I | F
 type Dict<T> = { [key: string]: T }
 type Pair<T> = [T, T]
 
+type InputBase = {
+  label?: S
+  mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+  icon?: S
+  value?: V | Pair<V>
+  min?: N | S
+  max?: N | S
+  step?: N
+  precision?: U
+  mask?: S
+  prefix?: S
+  suffix?: S
+  // format?: S // TODO: displayed-value format string for spinbutton, slider
+  placeholder?: S
+  error?: S
+  lines?: U
+  multiple?: B
+  required?: B
+  password?: B
+  editable?: B
+  inline?: B
+}
+
 type Choice = {
   value: V
   label?: S
@@ -21,6 +44,46 @@ type Choice = {
   selected?: B
   choices?: Choice[]
 }
+
+type SanitizedInput = InputBase & {
+  choices: Choice[]
+  actions: Choice[]
+  inputs?: SanitizedInput[]
+}
+
+type Input = SanitizedInput & {
+  t: 'i'
+  id: S
+}
+
+type RawChoice = V | Pair<V>
+type RawChoices = S | RawChoice[] | Dict<V> | Choice[]
+
+type RawInput = InputBase & {
+  choices?: RawChoices
+  actions?: RawChoices
+  inputs?: RawInput[]
+  range?: Pair<V>
+}
+
+type OutputBase = {
+  author: S
+  text?: S
+}
+
+type Output = OutputBase & {
+  t: 'o'
+  id: S
+}
+
+type Session = {
+  t: 's'
+  outputs: Output[]
+  input?: Input
+}
+
+const
+  gap5: IStackTokens = { childrenGap: 5 }
 
 const
   isN = (x: any): x is number => typeof x === 'number',
@@ -73,69 +136,12 @@ const
     return []
   }
 
-type InputBase = {
-  label?: S
-  mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
-  icon?: S
-  value?: V | Pair<V>
-  min?: N | S
-  max?: N | S
-  step?: N
-  precision?: U
-  mask?: S
-  prefix?: S
-  suffix?: S
-  // format?: S // TODO: displayed-value format string for spinbutton, slider
-  placeholder?: S
-  error?: S
-  lines?: U
-  multiple?: B
-  required?: B
-  password?: B
-  editable?: B
-  inline?: B
-}
 
-type SanitizedInput = InputBase & {
-  choices: Choice[]
-  actions: Choice[]
-}
-
-type Input = SanitizedInput & {
-  t: 'i'
-  id: S
-}
-
-type RawChoice = V | Pair<V>
-type RawChoices = S | RawChoice[] | Dict<V> | Choice[]
-
-type RawInput = InputBase & {
-  choices?: RawChoices
-  actions?: RawChoices
-  range?: Pair<V>
-}
-
-type OutputBase = {
-  author: S
-  text?: S
-}
-
-type Output = OutputBase & {
-  t: 'o'
-  id: S
-}
-
-type Session = {
-  t: 's'
-  outputs: Output[]
-  input?: Input
-}
-
-type InputProps = { input: Input }
+type InputProps = { input: SanitizedInput }
 
 const
   WithSend = ({ hasLabel, children }: { hasLabel?: B, children: React.ReactChild }) => (
-    <Stack horizontal tokens={{ childrenGap: 5 }} >
+    <Stack horizontal tokens={gap5} >
       <Stack.Item grow>{children}</Stack.Item>
       <Stack.Item>
         {hasLabel ? <Label>&nbsp;</Label> : null}
@@ -275,7 +281,7 @@ class XTimePicker extends React.Component<InputProps, {}> {
 
         <WithLabel label={label}>
 
-          <Stack horizontal horizontalAlign='start' tokens={{ childrenGap: 5 }}>
+          <Stack horizontal horizontalAlign='start' tokens={gap5}>
             <Stack.Item styles={hhp ? undefined : hide}>
               <SpinButton label='Hours' labelPosition={Position.top} defaultValue={String(hh)} min={c24 ? 0 : 1} max={c24 ? 23 : 12} styles={narrow} />
             </Stack.Item>
@@ -494,9 +500,9 @@ class XButtons extends React.Component<InputProps, {}> {
               : c.caption
                 ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} />
                 : <DefaultButton text={text} styles={styles} />
-        return <Stack.Item key={c.value} grow={horizontal}>{button}</Stack.Item>
+        return <Stack.Item key={c.value}>{button}</Stack.Item>
       })
-    return <Stack horizontal={horizontal} tokens={{ childrenGap: 5 }}>{buttons}</Stack>
+    return <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
   }
 }
 
@@ -609,9 +615,104 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
     )
   }
 }
+
+type FormProps = {
+  inputs: SanitizedInput[]
+  inline: B
+}
+
+class XForm extends React.Component<FormProps, {}> {
+  render() {
+    const
+      { inputs, inline } = this.props,
+      children = inputs.map(input => (
+        <Stack.Item key={xid()}>
+          <XInput input={input} />
+        </Stack.Item>
+      ))
+
+    return inline
+      ? <Stack horizontal tokens={gap5}>{children}</Stack>
+      : <Stack tokens={gap5}>{children}</Stack>
+  }
+}
+
+const
+  XInput = ({ input }: InputProps) => {
+    const { choices, actions, editable, multiple, inputs, inline } = input
+
+    if (inputs) {
+      return <XForm inputs={inputs} inline={inline ? true : false} />
+    }
+
+    if (choices.length) {
+      if (multiple) {
+        if (editable) {
+          return <XMultiSelectComboBox input={input} />
+        }
+        const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
+        if (!hasLongLabels && choices.length > 10) {
+          return <XMultiSelectDropdown input={input} />
+        }
+        return <XCheckList input={input} />
+      }
+      switch (input.mode) {
+        case 'tag':
+          // 'multiple' implied
+          return <XTagPicker input={input} />
+        case 'color':
+          return <XSwatchPicker input={input} />
+        default:
+          if (editable) {
+            return <XComboBox input={input} />
+          }
+          const hasGroups = choices.some(c => c.choices?.length ? true : false)
+          if (hasGroups || (choices.length > 7)) {
+            return <XDropdown input={input} />
+          }
+          return <XChoiceGroup input={input} />
+      }
+    }
+
+    if (actions.length) {
+      if (actions.length > 5) {
+        return <XMenu input={input} />
+      }
+      return <XButtons input={input} />
+    }
+
+    switch (input.mode) {
+      case 'rating':
+        return <XRating input={input} />
+      case 'day':
+      case 'month':
+      case 'week':
+        return <XCalendar input={input} />
+      case 'time':
+        return <XTimePicker input={input} />
+      case 'color':
+        return <XColorPicker input={input} />
+    }
+
+    const
+      { value, min, max, step } = input,
+      hasRange = isN(min) && isN(max) && min < max
+
+    if (isN(value) || hasRange) {
+      if (!editable && hasRange) {
+        const steps = (max - min) / (isN(step) ? step : 1)
+        if (steps <= 16) {
+          return <XSlider input={input} />
+        }
+      }
+      return <XSpinButton input={input} />
+    }
+    return <XTextField input={input} />
+  }
+
 class InputView extends React.Component<InputProps, {}> {
   render() {
-    return <InputContainer><InputImpl input={this.props.input}></InputImpl></InputContainer>
+    return <InputContainer><XInput input={this.props.input}></XInput></InputContainer>
   }
 }
 
@@ -833,6 +934,38 @@ const
             { label: 'Donut Chart', value: 'donut', icon: 'DonutChart' },
           ],
         })
+        await input({
+          inputs: [
+            { label: 'Username', placeholder: 'someone@company.com' },
+            { label: 'Password', placeholder: 'Password', password: true },
+          ]
+        })
+        await input({
+          inline: true,
+          inputs: [
+            { label: 'Username', placeholder: 'someone@company.com' },
+            { label: 'Password', placeholder: 'Password', password: true },
+          ]
+        })
+        await input({
+          inputs: [
+            {
+              inline: true, inputs: [
+                { label: 'First name' },
+                { label: 'Last name' },
+              ]
+            },
+            { label: 'Address line 1' },
+            { label: 'Address line 2' },
+            {
+              inline: true, inputs: [
+                { label: 'City' },
+                { label: 'State' },
+                { label: 'Zip' },
+              ]
+            },
+          ]
+        })
       }
     return { connect }
   }
@@ -945,83 +1078,20 @@ const
     return undefined
   },
   sanitizeInput = (input: RawInput): SanitizedInput => {
-    input.choices = toChoices(input.choices)
-    input.actions = toChoices(input.actions)
-    if (isPair(input.range)) {
-      const [x, y] = input.range
+    const { choices, actions, range, inputs } = input
+    input.choices = toChoices(choices)
+    input.actions = toChoices(actions)
+    if (isPair(range)) {
+      const [x, y] = range
       if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
         input.min = x
         input.max = y
       }
     }
+    if (Array.isArray(inputs)) {
+      input.inputs = inputs.map(sanitizeInput)
+    }
     return input as SanitizedInput
-  },
-  InputImpl = ({ input }: InputProps) => {
-    const { choices, actions, editable, multiple } = input
-
-    if (choices.length) {
-      if (multiple) {
-        if (editable) {
-          return <XMultiSelectComboBox input={input} />
-        }
-        const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
-        if (!hasLongLabels && choices.length > 10) {
-          return <XMultiSelectDropdown input={input} />
-        }
-        return <XCheckList input={input} />
-      }
-      switch (input.mode) {
-        case 'tag':
-          // 'multiple' implied
-          return <XTagPicker input={input} />
-        case 'color':
-          return <XSwatchPicker input={input} />
-        default:
-          if (editable) {
-            return <XComboBox input={input} />
-          }
-          const hasGroups = choices.some(c => c.choices?.length ? true : false)
-          if (hasGroups || (choices.length > 7)) {
-            return <XDropdown input={input} />
-          }
-          return <XChoiceGroup input={input} />
-      }
-    }
-
-    if (actions.length) {
-      if (actions.length > 5) {
-        return <XMenu input={input} />
-      }
-      return <XButtons input={input} />
-    }
-
-    switch (input.mode) {
-      case 'rating':
-        return <XRating input={input} />
-      case 'day':
-      case 'month':
-      case 'week':
-        return <XCalendar input={input} />
-      case 'time':
-        return <XTimePicker input={input} />
-      case 'color':
-        return <XColorPicker input={input} />
-    }
-
-    const
-      { value, min, max, step } = input,
-      hasRange = isN(min) && isN(max) && min < max
-
-    if (isN(value) || hasRange) {
-      if (!editable && hasRange) {
-        const steps = (max - min) / (isN(step) ? step : 1)
-        if (steps <= 16) {
-          return <XSlider input={input} />
-        }
-      }
-      return <XSpinButton input={input} />
-    }
-    return <XTextField input={input} />
   }
 
 const
