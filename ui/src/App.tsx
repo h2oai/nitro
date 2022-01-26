@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -75,7 +75,7 @@ const
 
 type InputBase = {
   label?: S
-  mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'list' | 'color' | 'rating'
+  mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
   icon?: S
   value?: V | Pair<V>
   min?: N | S
@@ -89,6 +89,7 @@ type InputBase = {
   placeholder?: S
   error?: S
   lines?: U
+  multiple?: B
   required?: B
   password?: B
   editable?: B
@@ -524,6 +525,51 @@ const
     return options
   }
 
+const
+  createAutocompleter = (choices: Choice[]) => {
+    const
+      items: ITag[] = choices.map(c => ({ key: c.value, name: String(c.label) })),
+      listContainsTagList = (tag: ITag, tagList?: ITag[]) => (!tagList || !tagList.length || tagList.length === 0)
+        ? false
+        : tagList.some(compareTag => compareTag.key === tag.key),
+      suggest = (filterText: string, tagList?: ITag[]): ITag[] =>
+        filterText
+          ? items.filter(
+            tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0 && !listContainsTagList(tag, tagList),
+          )
+          : [],
+      resolve = (item: ITag) => item.name
+
+    return { resolve, suggest }
+  }
+
+
+type TagPickerState = {
+  autocompleter: ReturnType<typeof createAutocompleter>
+}
+
+class XTagPicker extends React.Component<InputProps, TagPickerState> {
+  constructor(props: InputProps) {
+    super(props)
+    const { choices } = props.input
+    this.state = {
+      autocompleter: createAutocompleter(choices)
+    }
+  }
+  render() {
+    const
+      { label } = this.props.input,
+      { autocompleter } = this.state
+    return (
+      <WithSend hasLabel={label ? true : false}>
+        <WithLabel label={label}>
+          <TagPicker onResolveSuggestions={autocompleter.suggest} getTextFromItem={autocompleter.resolve} />
+        </WithLabel>
+      </WithSend>
+    )
+  }
+}
+
 class XSwatchPicker extends React.Component<InputProps, {}> {
   render() {
     const
@@ -655,20 +701,21 @@ const
         await input({ mode: 'month', label: 'Month picker', value: '2021-10-10' })
         await input({ mode: 'month', label: 'Month picker with range', value: '2021-10-10', range: ['2019-01-01', '2022-12-31'] })
         await input({
-          mode: 'list', label: 'Multiple choice list', choices: [
+          multiple: true, label: 'Multiple choice list', choices: [
             { label: 'Apples', value: 'a' },
             { label: 'Bananas', value: 'b', selected: true },
             { label: 'Cherries', value: 'c' },
           ]
         })
-        await input({ mode: 'list', label: 'Multiple choice list from string', choices: 'Apples Bananas Cherries' })
-        await input({ mode: 'list', label: 'Multiple choice list from dictionary', choices: { Apples: 'a', Bananas: 'b', Cherries: 'c' } })
-        await input({ mode: 'list', label: 'Multiple choice list from string array', choices: ['Apples', 'Bananas', 'Cherries'] })
-        await input({ mode: 'list', label: 'Multiple choice list from tuples', choices: [['Apples', 'a'], ['Bananas', 'b'], ['Cherries', 'c']] })
-        await input({ mode: 'list', label: 'Multiple choice list, more than 10 choices', placeholder: 'Pick some fruits', choices: fruits })
-        await input({ mode: 'list', label: 'Multiple choice list, with error message', placeholder: 'Pick some fruits', choices: fruits, error: 'Error message' })
-        await input({ mode: 'list', label: 'Multiple choice list, editable', placeholder: 'Pick or enter some fruits', choices: fruits, editable: true })
-        await input({ mode: 'list', label: 'Multiple choice list, required', placeholder: 'Pick or enter some fruits', choices: fruits, required: true })
+        await input({ multiple: true, label: 'Multiple choice list from string', choices: 'Apples Bananas Cherries' })
+        await input({ multiple: true, label: 'Multiple choice list from dictionary', choices: { Apples: 'a', Bananas: 'b', Cherries: 'c' } })
+        await input({ multiple: true, label: 'Multiple choice list from string array', choices: ['Apples', 'Bananas', 'Cherries'] })
+        await input({ multiple: true, label: 'Multiple choice list from tuples', choices: [['Apples', 'a'], ['Bananas', 'b'], ['Cherries', 'c']] })
+        await input({ multiple: true, label: 'Multiple choice list, more than 10 choices', placeholder: 'Pick some fruits', choices: fruits })
+        await input({ multiple: true, label: 'Multiple choice list, with error message', placeholder: 'Pick some fruits', choices: fruits, error: 'Error message' })
+        await input({ multiple: true, label: 'Multiple choice list, editable', placeholder: 'Pick or enter some fruits', choices: fruits, editable: true })
+        await input({ multiple: true, label: 'Multiple choice list, required', placeholder: 'Pick or enter some fruits', choices: fruits, required: true })
+        await input({ mode: 'tag', label: 'Tags', choices: fruits })
         await input({
           label: 'Choice list, short', placeholder: 'Pick a fruit', choices: [
             { label: 'Apples', value: 'a', selected: true },
@@ -910,19 +957,23 @@ const
     return input as SanitizedInput
   },
   InputImpl = ({ input }: InputProps) => {
-    const { choices, actions, editable } = input
+    const { choices, actions, editable, multiple } = input
 
     if (choices.length) {
+      if (multiple) {
+        if (editable) {
+          return <XMultiSelectComboBox input={input} />
+        }
+        const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
+        if (!hasLongLabels && choices.length > 10) {
+          return <XMultiSelectDropdown input={input} />
+        }
+        return <XCheckList input={input} />
+      }
       switch (input.mode) {
-        case 'list': // multiple choice
-          if (editable) {
-            return <XMultiSelectComboBox input={input} />
-          }
-          const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
-          if (!hasLongLabels && choices.length > 10) {
-            return <XMultiSelectDropdown input={input} />
-          }
-          return <XCheckList input={input} />
+        case 'tag':
+          // 'multiple' implied
+          return <XTagPicker input={input} />
         case 'color':
           return <XSwatchPicker input={input} />
         default:
