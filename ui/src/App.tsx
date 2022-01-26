@@ -160,18 +160,16 @@ class XTextField extends React.Component<InputProps, {}> {
         defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
         placeholder,
         errorMessage: error,
-        required: required === true,
-      },
-      field = password === true
-        ? <TextField {...props} type='password' canRevealPassword revealPasswordAriaLabel='Show password' />
-        : mask
-          ? <MaskedTextField {...props} mask={mask} />
-          : lines && (lines >= 1)
-            ? <TextField {...props} multiline resizable autoAdjustHeight rows={lines} />
-            : <TextField {...props} iconProps={icon ? { iconName: icon } : undefined} prefix={prefix} suffix={suffix} />
+        required: required === true
+      }
 
-    return <WithSend hasLabel={label ? true : false}>{field}</WithSend>
-
+    return password === true
+      ? <TextField {...props} type='password' canRevealPassword revealPasswordAriaLabel='Show password' />
+      : mask
+        ? <MaskedTextField {...props} mask={mask} />
+        : lines && (lines >= 1)
+          ? <TextField {...props} multiline resizable autoAdjustHeight rows={lines} />
+          : <TextField {...props} iconProps={icon ? { iconName: icon } : undefined} prefix={prefix} suffix={suffix} />
   }
 }
 
@@ -182,16 +180,14 @@ class XSpinButton extends React.Component<InputProps, {}> {
       { label, value, min, max, step, precision } = this.props.input
 
     return (
-      <WithSend>
-        <SpinButton
-          label={label}
-          defaultValue={isS(value) ? value : isN(value) ? String(value) : undefined}
-          min={unum(min)}
-          max={unum(max)}
-          step={step}
-          precision={precision}
-        />
-      </WithSend>
+      <SpinButton
+        label={label}
+        defaultValue={isS(value) ? value : isN(value) ? String(value) : undefined}
+        min={unum(min)}
+        max={unum(max)}
+        step={step}
+        precision={precision}
+      />
     )
   }
 }
@@ -202,22 +198,22 @@ class XSlider extends React.Component<InputProps, {}> {
     const
       { label, value, min, max, step } = this.props.input,
       originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
-      props: Partial<ISliderProps> = { label: label, min: unum(min), max: unum(max), step, originFromZero },
-      slider = Array.isArray(value) && value.length === 2 && isN(value[0]) && isN(value[1])
-        ? (
-          <Slider
-            {...props}
-            ranged
-            defaultLowerValue={getDefaultValue(value[0], min, max, step)}
-            defaultValue={getDefaultValue(value[1], min, max, step)}
-          />
-        ) : (
-          <Slider
-            {...props}
-            defaultValue={getDefaultValue(value, min, max, step)}
-          />
-        )
-    return <WithSend>{slider}</WithSend>
+      props: Partial<ISliderProps> = { label: label, min: unum(min), max: unum(max), step, originFromZero }
+
+    return Array.isArray(value) && value.length === 2 && isN(value[0]) && isN(value[1])
+      ? (
+        <Slider
+          {...props}
+          ranged
+          defaultLowerValue={getDefaultValue(value[0], min, max, step)}
+          defaultValue={getDefaultValue(value[1], min, max, step)}
+        />
+      ) : (
+        <Slider
+          {...props}
+          defaultValue={getDefaultValue(value, min, max, step)}
+        />
+      )
 
   }
 }
@@ -244,15 +240,13 @@ class XRating extends React.Component<InputProps, {}> {
     const
       { label, value, min, max } = this.props.input
     return (
-      <WithSend>
-        <WithLabel label={label}>
-          <Rating
-            defaultRating={unum(value)}
-            allowZeroStars={isN(min) && min <= 0}
-            max={unum(max)}
-          />
-        </WithLabel>
-      </WithSend>
+      <WithLabel label={label}>
+        <Rating
+          defaultRating={unum(value)}
+          allowZeroStars={isN(min) && min <= 0}
+          max={unum(max)}
+        />
+      </WithLabel>
     )
   }
 }
@@ -277,29 +271,25 @@ class XTimePicker extends React.Component<InputProps, {}> {
 
 
     return (
-      <WithSend hasLabel={label ? true : false}>
-
-        <WithLabel label={label}>
-
-          <Stack horizontal horizontalAlign='start' tokens={gap5}>
-            <Stack.Item styles={hhp ? undefined : hide}>
-              <SpinButton label='Hours' labelPosition={Position.top} defaultValue={String(hh)} min={c24 ? 0 : 1} max={c24 ? 23 : 12} styles={narrow} />
-            </Stack.Item>
-            <Stack.Item styles={mmp ? undefined : hide}>
-              <SpinButton label='Minutes' labelPosition={Position.top} defaultValue={String(mm)} min={0} max={59} styles={narrow} />
-            </Stack.Item>
-            <Stack.Item styles={ssp ? undefined : hide}>
-              <SpinButton label='Seconds' labelPosition={Position.top} defaultValue={String(ss)} min={0} max={59} styles={narrow} />
-            </Stack.Item>
-            <Stack.Item styles={!c24 ? undefined : hide} align='end'>
-              <Stack>
-                <Stack.Item><Label>&nbsp;</Label></Stack.Item>
-                <Stack.Item><Toggle offText='AM' onText='PM' defaultChecked={pm} /></Stack.Item>
-              </Stack>
-            </Stack.Item>
-          </Stack>
-        </WithLabel>
-      </WithSend>
+      <WithLabel label={label}>
+        <Stack horizontal horizontalAlign='start' tokens={gap5}>
+          <Stack.Item styles={hhp ? undefined : hide}>
+            <SpinButton label='Hours' labelPosition={Position.top} defaultValue={String(hh)} min={c24 ? 0 : 1} max={c24 ? 23 : 12} styles={narrow} />
+          </Stack.Item>
+          <Stack.Item styles={mmp ? undefined : hide}>
+            <SpinButton label='Minutes' labelPosition={Position.top} defaultValue={String(mm)} min={0} max={59} styles={narrow} />
+          </Stack.Item>
+          <Stack.Item styles={ssp ? undefined : hide}>
+            <SpinButton label='Seconds' labelPosition={Position.top} defaultValue={String(ss)} min={0} max={59} styles={narrow} />
+          </Stack.Item>
+          <Stack.Item styles={!c24 ? undefined : hide} align='end'>
+            <Stack>
+              <Stack.Item><Label>&nbsp;</Label></Stack.Item>
+              <Stack.Item><Toggle offText='AM' onText='PM' defaultChecked={pm} /></Stack.Item>
+            </Stack>
+          </Stack.Item>
+        </Stack>
+      </WithLabel>
     )
   }
 }
@@ -318,19 +308,17 @@ class XCalendar extends React.Component<InputProps, {}> {
           ? DateRangeType.Month
           : DateRangeType.Day
     return (
-      <WithSend hasLabel={label ? true : false}>
-        <WithLabel label={label}>
-          <Calendar
-            dateRangeType={dateRangeType}
-            value={date}
-            minDate={minDate}
-            maxDate={maxDate}
-            isDayPickerVisible={mode !== 'month'}
-            highlightSelectedMonth
-            showGoToToday
-          />
-        </WithLabel>
-      </WithSend>
+      <WithLabel label={label}>
+        <Calendar
+          dateRangeType={dateRangeType}
+          value={date}
+          minDate={minDate}
+          maxDate={maxDate}
+          isDayPickerVisible={mode !== 'month'}
+          highlightSelectedMonth
+          showGoToToday
+        />
+      </WithLabel>
     )
   }
 }
@@ -340,11 +328,9 @@ class XColorPicker extends React.Component<InputProps, {}> {
     const
       { label, value } = this.props.input
     return (
-      <WithSend hasLabel={label ? true : false}>
-        <WithLabel label={label}>
-          <ColorPicker color={isS(value) ? value : '#ff0000'} />
-        </WithLabel>
-      </WithSend>
+      <WithLabel label={label}>
+        <ColorPicker color={isS(value) ? value : '#ff0000'} />
+      </WithLabel>
     )
   }
 }
@@ -363,9 +349,7 @@ class XCheckList extends React.Component<InputProps, {}> {
       ))
 
     return (
-      <WithSend hasLabel={label ? true : false}>
-        <WithLabel label={label}><div>{checkboxes}</div></WithLabel>
-      </WithSend>
+      <WithLabel label={label}><div>{checkboxes}</div></WithLabel>
     )
   }
 }
@@ -380,16 +364,14 @@ class XDropdown extends React.Component<InputProps, {}> {
       selectedKey = selectedItem ? selectedItem.value : undefined
 
     return (
-      <WithSend hasLabel={label ? true : false}>
-        <Dropdown
-          label={label}
-          placeholder={placeholder}
-          options={options}
-          selectedKey={selectedKey}
-          errorMessage={error}
-          required={required ? true : false}
-        />
-      </WithSend>
+      <Dropdown
+        label={label}
+        placeholder={placeholder}
+        options={options}
+        selectedKey={selectedKey}
+        errorMessage={error}
+        required={required ? true : false}
+      />
     )
   }
 }
@@ -403,17 +385,15 @@ class XMultiSelectDropdown extends React.Component<InputProps, {}> {
 
     return (
 
-      <WithSend hasLabel={label ? true : false}>
-        <Dropdown
-          multiSelect
-          label={label}
-          placeholder={placeholder}
-          options={options}
-          defaultSelectedKeys={selectedKeys}
-          errorMessage={error}
-          required={required ? true : false}
-        />
-      </WithSend>
+      <Dropdown
+        multiSelect
+        label={label}
+        placeholder={placeholder}
+        options={options}
+        defaultSelectedKeys={selectedKeys}
+        errorMessage={error}
+        required={required ? true : false}
+      />
     )
   }
 }
@@ -427,15 +407,13 @@ class XComboBox extends React.Component<InputProps, {}> {
       selectedKey = selectedItem ? selectedItem.value : undefined
 
     return (
-      <WithSend hasLabel={label ? true : false}>
-        <ComboBox
-          allowFreeform
-          label={label}
-          placeholder={placeholder}
-          options={options}
-          selectedKey={selectedKey}
-        />
-      </WithSend>
+      <ComboBox
+        allowFreeform
+        label={label}
+        placeholder={placeholder}
+        options={options}
+        selectedKey={selectedKey}
+      />
     )
   }
 }
@@ -448,16 +426,14 @@ class XMultiSelectComboBox extends React.Component<InputProps, {}> {
       selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
 
     return (
-      <WithSend hasLabel={label ? true : false}>
-        <ComboBox
-          allowFreeform
-          multiSelect
-          label={label}
-          placeholder={placeholder}
-          options={options}
-          selectedKey={selectedKeys}
-        />
-      </WithSend>
+      <ComboBox
+        allowFreeform
+        multiSelect
+        label={label}
+        placeholder={placeholder}
+        options={options}
+        selectedKey={selectedKeys}
+      />
     )
   }
 }
@@ -567,11 +543,9 @@ class XTagPicker extends React.Component<InputProps, TagPickerState> {
       { label } = this.props.input,
       { autocompleter } = this.state
     return (
-      <WithSend hasLabel={label ? true : false}>
-        <WithLabel label={label}>
-          <TagPicker onResolveSuggestions={autocompleter.suggest} getTextFromItem={autocompleter.resolve} />
-        </WithLabel>
-      </WithSend>
+      <WithLabel label={label}>
+        <TagPicker onResolveSuggestions={autocompleter.suggest} getTextFromItem={autocompleter.resolve} />
+      </WithLabel>
     )
   }
 }
@@ -603,15 +577,13 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
       selectedKey = selectedItem ? selectedItem.value : undefined
 
     return (
-      <WithSend hasLabel={label ? true : false}>
-        <ChoiceGroup
-          label={label}
-          placeholder={placeholder}
-          options={options}
-          defaultSelectedKey={selectedKey}
-          required={required ? true : false}
-        />
-      </WithSend>
+      <ChoiceGroup
+        label={label}
+        placeholder={placeholder}
+        options={options}
+        defaultSelectedKey={selectedKey}
+        required={required ? true : false}
+      />
     )
   }
 }
