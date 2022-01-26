@@ -160,9 +160,9 @@ class XTextField extends React.Component<InputProps, {}> {
     const
       { label, placeholder, icon, value, mask, prefix, suffix, error, lines, required, password } = this.props.input,
       props: Partial<ITextFieldProps> = {
-        label: label,
+        label,
         defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
-        placeholder,
+        placeholder: placeholder ?? label ? undefined : 'Message...',
         errorMessage: error,
         required: required === true
       }
