@@ -269,23 +269,29 @@ class XTimePicker extends React.Component<InputProps, {}> {
 
 
     return (
-      <Stack horizontal horizontalAlign='start' tokens={{ childrenGap: 5 }}>
-        <Stack.Item styles={hhp ? undefined : hide}>
-          <SpinButton label='Hours' labelPosition={Position.top} defaultValue={String(hh)} min={c24 ? 0 : 1} max={c24 ? 23 : 12} styles={narrow} />
-        </Stack.Item>
-        <Stack.Item styles={mmp ? undefined : hide}>
-          <SpinButton label='Minutes' labelPosition={Position.top} defaultValue={String(mm)} min={0} max={59} styles={narrow} />
-        </Stack.Item>
-        <Stack.Item styles={ssp ? undefined : hide}>
-          <SpinButton label='Seconds' labelPosition={Position.top} defaultValue={String(ss)} min={0} max={59} styles={narrow} />
-        </Stack.Item>
-        <Stack.Item styles={!c24 ? undefined : hide}>
-          <Stack>
-            <Stack.Item><Label>&nbsp;</Label></Stack.Item>
-            <Stack.Item><Toggle offText='AM' onText='PM' defaultChecked={pm} /></Stack.Item>
+      <WithSend hasLabel={label ? true : false}>
+
+        <WithLabel label={label}>
+
+          <Stack horizontal horizontalAlign='start' tokens={{ childrenGap: 5 }}>
+            <Stack.Item styles={hhp ? undefined : hide}>
+              <SpinButton label='Hours' labelPosition={Position.top} defaultValue={String(hh)} min={c24 ? 0 : 1} max={c24 ? 23 : 12} styles={narrow} />
+            </Stack.Item>
+            <Stack.Item styles={mmp ? undefined : hide}>
+              <SpinButton label='Minutes' labelPosition={Position.top} defaultValue={String(mm)} min={0} max={59} styles={narrow} />
+            </Stack.Item>
+            <Stack.Item styles={ssp ? undefined : hide}>
+              <SpinButton label='Seconds' labelPosition={Position.top} defaultValue={String(ss)} min={0} max={59} styles={narrow} />
+            </Stack.Item>
+            <Stack.Item styles={!c24 ? undefined : hide} align='end'>
+              <Stack>
+                <Stack.Item><Label>&nbsp;</Label></Stack.Item>
+                <Stack.Item><Toggle offText='AM' onText='PM' defaultChecked={pm} /></Stack.Item>
+              </Stack>
+            </Stack.Item>
           </Stack>
-        </Stack.Item>
-      </Stack>
+        </WithLabel>
+      </WithSend>
     )
   }
 }
