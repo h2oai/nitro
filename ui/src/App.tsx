@@ -184,11 +184,13 @@ class XSpinButton extends React.Component<InputProps, {}> {
     return (
       <SpinButton
         label={label}
+        labelPosition={Position.top}
         defaultValue={isS(value) ? value : isN(value) ? String(value) : undefined}
         min={unum(min)}
         max={unum(max)}
         step={step}
         precision={precision}
+        styles={{ labelWrapper: { marginBottom: -4 } }} // Make textbox top match textfield
       />
     )
   }
@@ -269,7 +271,7 @@ class XTimePicker extends React.Component<InputProps, {}> {
       mmp = !isNaN(mm),
       ssp = !isNaN(ss),
       hide: IStackItemStyles = { root: { display: 'none' } },
-      narrow: Partial<ISpinButtonStyles> = { spinButtonWrapper: { width: 50 } }
+      narrow: Partial<ISpinButtonStyles> = { labelWrapper: { marginBottom: -4 }, spinButtonWrapper: { width: 50 } }
 
 
     return (
@@ -619,6 +621,12 @@ const
     if (inputs) for (const child of inputs) if (inputHasActions(child)) return true
     return false
   },
+  inputHasLabel = (input: Input): B => {
+    const { label, inputs } = input
+    if (label) return true
+    if (inputs && inputs.length && inputHasLabel(inputs[0])) return true
+    return false
+  },
   XInput = ({ input }: InputProps) => { // recursive
 
     // This function contains the heuristics for determining which widget to use.
@@ -701,8 +709,9 @@ class InputView extends React.Component<InputProps, {}> {
     const
       { input } = this.props,
       hasActions = inputHasActions(input),
+      hasLabel = inputHasLabel(input),
       form = <XInput input={input}></XInput>,
-      body = hasActions ? form : <WithSend>{form}</WithSend>
+      body = hasActions ? form : <WithSend hasLabel={hasLabel}>{form}</WithSend>
     return <InputContainer>{body}</InputContainer>
   }
 }
