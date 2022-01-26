@@ -45,13 +45,13 @@ type Choice = {
   choices?: Choice[]
 }
 
-type SanitizedInput = InputBase & {
+type Input = InputBase & {
   choices: Choice[]
   actions: Choice[]
-  inputs?: SanitizedInput[]
+  inputs?: Input[]
 }
 
-type Input = SanitizedInput & {
+type InputMessage = Input & {
   t: 'i'
   id: S
 }
@@ -66,21 +66,23 @@ type RawInput = InputBase & {
   range?: Pair<V>
 }
 
-type OutputBase = {
+type Output = {
   author: S
   text?: S
 }
 
-type Output = OutputBase & {
+type OutputMessage = Output & {
   t: 'o'
   id: S
 }
 
-type Session = {
+type SessionMessage = {
   t: 's'
-  outputs: Output[]
-  input?: Input
+  outputs: OutputMessage[]
+  input?: InputMessage
 }
+
+export type Message = InputMessage | OutputMessage | SessionMessage
 
 const
   gap5: IStackTokens = { childrenGap: 5 }
@@ -137,7 +139,7 @@ const
   }
 
 
-type InputProps = { input: SanitizedInput }
+type InputProps = { input: Input }
 
 const
   WithSend = ({ hasLabel, children }: { hasLabel?: B, children: React.ReactChild }) => (
@@ -589,7 +591,7 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
 }
 
 type FormProps = {
-  inputs: SanitizedInput[]
+  inputs: Input[]
   inline: B
 }
 
@@ -689,7 +691,6 @@ class InputView extends React.Component<InputProps, {}> {
 }
 
 
-export type Message = Input | Output | Session
 
 let _xid = 0
 
@@ -1049,7 +1050,7 @@ const
     if (isN(step)) return 0
     return undefined
   },
-  sanitizeInput = (input: RawInput): SanitizedInput => {
+  sanitizeInput = (input: RawInput): Input => {
     const { choices, actions, range, inputs } = input
     input.choices = toChoices(choices)
     input.actions = toChoices(actions)
@@ -1063,13 +1064,13 @@ const
     if (Array.isArray(inputs)) {
       input.inputs = inputs.map(sanitizeInput)
     }
-    return input as SanitizedInput
+    return input as Input
   }
 
 const
-  groupOutputs = (outputs: Output[]): Output[][] => { // TODO speed up
+  groupOutputs = (outputs: OutputMessage[]): OutputMessage[][] => { // TODO speed up
     if (outputs.length === 0) return []
-    const groups: Output[][] = [[outputs[0]]]
+    const groups: OutputMessage[][] = [[outputs[0]]]
     if (outputs.length === 1) return groups
     for (let i = 1; i < outputs.length; i++) {
       const
@@ -1081,7 +1082,7 @@ const
     return groups
   }
 
-class OutputsView extends React.Component<{ outputs: Output[] }, { outputs: Output[] }> {
+class OutputsView extends React.Component<{ outputs: OutputMessage[] }, { outputs: OutputMessage[] }> {
   render() {
     const
       { outputs } = this.props,
@@ -1102,7 +1103,7 @@ class OutputsView extends React.Component<{ outputs: Output[] }, { outputs: Outp
 }
 
 
-export class App extends React.Component<{}, { outputs: Output[], inputs: Input[] }> {
+export class App extends React.Component<{}, { outputs: OutputMessage[], inputs: InputMessage[] }> {
   constructor(props: {}) {
     super(props)
     this.state = { outputs: [], inputs: [] }
