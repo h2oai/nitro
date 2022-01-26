@@ -895,14 +895,14 @@ const
         })
         await input({
           actions: [
-            { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
-            { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
+            { label: 'Sign me up!', value: 'yes', caption: 'Terms and conditions apply', selected: true },
+            { label: 'Not now', value: 'no', caption: "I'll decide later." },
           ],
         })
         await input({
           actions: [
-            { label: 'Yes', value: 'yes', caption: 'Sign me up!', selected: true },
-            { label: 'No', value: 'no', caption: "Not now, I'll decide later." },
+            { label: 'Sign me up!', value: 'yes', caption: 'Terms and conditions apply', selected: true },
+            { label: 'Not now', value: 'no', caption: "I'll decide later." },
           ],
           inline: true,
         })
@@ -992,7 +992,14 @@ const
                 { label: 'Zip', size: 1 },
               ]
             },
-          ]
+            {
+              actions: [
+                { label: 'Sign me up!', value: 'yes', caption: 'Terms and conditions apply', selected: true },
+                { label: 'Not now', value: 'no', caption: "I'll decide later." },
+              ],
+              inline: true,
+            }
+          ],
         })
       }
     return { connect }
