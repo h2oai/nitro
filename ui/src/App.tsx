@@ -458,9 +458,7 @@ const
     let k = 0
     return () => `__sidekick__${prefix}${++k}`
   },
-  toDropdownOption = (c: Choice): IDropdownOption => (
-    { key: c.value, text: String(c.label) }
-  ),
+  toDropdownOption = (c: Choice): IDropdownOption => ({ key: c.value, text: String(c.label) }),
   toGroupedDropdownOptions = (choices: Choice[]): IDropdownOption[] => {
     const
       options: IDropdownOption[] = [],
@@ -488,7 +486,7 @@ class XSwatchPicker extends React.Component<InputProps, {}> {
 
     return (
       <WithLabel label={label}>
-        <SwatchColorPicker columnCount={10} colorCells={cells} />
+        <SwatchColorPicker columnCount={10} colorCells={cells} cellWidth={35} cellHeight={35} />
       </WithLabel>
     )
   }
@@ -707,8 +705,8 @@ const
           actions: [
             {
               label: 'Yes', value: 'yes', selected: true, choices: [
-                { label: 'Remind me later', value: 'later' },
-                { label: "Don't ask me again", value: 'never' },
+                { label: 'Remind me later', value: 'later', icon: 'ChatBot' },
+                { label: "Don't ask me again", value: 'never', icon: 'MuteChat' },
               ]
             },
             { label: 'No', value: 'no' },
@@ -720,8 +718,8 @@ const
             { label: 'Yes', value: 'yes', selected: true },
             {
               label: 'No', value: 'no', choices: [
-                { label: 'Remind me later', value: 'later' },
-                { label: "Don't ask me again", value: 'never' },
+                { label: 'Remind me later', value: 'later', icon: 'ChatBot' },
+                { label: "Don't ask me again", value: 'never', icon: 'MuteChat' },
               ]
             },
           ],

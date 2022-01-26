@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from './App';
 import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/react';
 import reportWebVitals from './reportWebVitals';
-import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon } from '@fluentui/react-icons-mdl2';
+import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon } from '@fluentui/react-icons-mdl2';
 import './index.css';
 
 
@@ -70,6 +70,8 @@ registerIcons({
     LineChart: <LineChartIcon />,
     ScatterChart: <ScatterChartIcon />,
     DonutChart: <DonutChartIcon />,
+    ChatBot: <ChatBotIcon />,
+    MuteChat: <MuteChatIcon />,
   },
 })
 
