@@ -611,7 +611,7 @@ class XForm extends React.Component<FormProps, {}> {
           grow = isN(size) ? size : styles ? undefined : 1
 
         return (
-          <Stack.Item key={xid()} grow={grow} styles={styles}>
+          <Stack.Item key={xid()} grow={grow} styles={styles} disableShrink>
             <XInput input={input} />
           </Stack.Item >
         )
@@ -987,10 +987,9 @@ const
             { label: 'Address line 2' },
             {
               inline: true, inputs: [
-                // 6:1:4 ratio of available width
-                { label: 'City', size: 6 },
-                { label: 'State', size: 1 },
-                { label: 'Zip', size: 4 },
+                { label: 'City', size: 5 },
+                { label: 'State', size: '20%' },
+                { label: 'Zip', size: 1 },
               ]
             },
           ]
