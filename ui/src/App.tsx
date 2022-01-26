@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, ISliderProps, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TextField } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TextField, Toggle } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -250,6 +250,43 @@ class XRating extends React.Component<InputProps, {}> {
 }
 
 
+class XTimePicker extends React.Component<InputProps, {}> {
+  render() {
+    const
+      { label, value } = this.props.input,
+      t = String(value).toLowerCase(),
+      c24 = !t.endsWith('am') && !t.endsWith('pm'),
+      hhmmss = c24 ? t : t.substring(0, t.length - 2),
+      tokens = hhmmss.split(':'),
+      [hh, mm, ss] = tokens.map(t => parseInt(t, 10)),
+      hhp = !isNaN(hh),
+      mmp = !isNaN(mm),
+      ssp = !isNaN(ss),
+      hide: IStackItemStyles = { root: { display: 'none' } },
+      narrow: Partial<ISpinButtonStyles> = { spinButtonWrapper: { width: 50 } }
+
+
+    return (
+      <Stack horizontal horizontalAlign='start' tokens={{ childrenGap: 5 }}>
+        <Stack.Item styles={hhp ? undefined : hide}>
+          <SpinButton label='Hours' labelPosition={Position.top} defaultValue={String(hh)} min={c24 ? 0 : 1} max={c24 ? 23 : 12} styles={narrow} />
+        </Stack.Item>
+        <Stack.Item styles={mmp ? undefined : hide}>
+          <SpinButton label='Minutes' labelPosition={Position.top} defaultValue={String(mm)} min={0} max={59} styles={narrow} />
+        </Stack.Item>
+        <Stack.Item styles={ssp ? undefined : hide}>
+          <SpinButton label='Seconds' labelPosition={Position.top} defaultValue={String(ss)} min={0} max={59} styles={narrow} />
+        </Stack.Item>
+        <Stack.Item styles={!c24 ? undefined : hide}>
+          <Stack>
+            <Stack.Item><Label>&nbsp;</Label></Stack.Item>
+            <Stack.Item><Toggle offText='AM' onText='PM' /></Stack.Item>
+          </Stack>
+        </Stack.Item>
+      </Stack>
+    )
+  }
+}
 
 class XCalendar extends React.Component<InputProps, {}> {
   // TODO format string; aria-label
@@ -599,6 +636,12 @@ const
         await input({ mode: 'rating', label: 'Rating with value', value: 3 })
         await input({ mode: 'rating', label: 'Rating with zero allowed', min: 0 })
         await input({ mode: 'rating', label: 'Rating with max', value: 3, max: 10 })
+        await input({ mode: 'time', label: 'Time', value: '3:04PM' })
+        await input({ mode: 'time', label: 'Time, with seconds', value: '3:04:05PM' })
+        await input({ mode: 'time', label: 'Time, hour only', value: '3PM' })
+        await input({ mode: 'time', label: 'Time, 24-hr clock', value: '15:04' })
+        await input({ mode: 'time', label: 'Time, 24-hr clock, with seconds', value: '15:04:05' })
+        await input({ mode: 'time', label: 'Time, hour only, 24-hour clock', value: '15' })
         await input({ mode: 'day', label: 'Day picker', value: '2021-10-10' })
         await input({ mode: 'day', label: 'Day picker with range', value: '2021-10-10', min: '2019-01-01', max: '2022-12-31' })
         await input({ mode: 'week', label: 'Week picker', value: '2021-10-10' })
@@ -897,6 +940,8 @@ const
       case 'month':
       case 'week':
         return <XCalendar input={input} />
+      case 'time':
+        return <XTimePicker input={input} />
       case 'color':
         return <XColorPicker input={input} />
     }
