@@ -552,6 +552,7 @@ class XTagPicker extends React.Component<InputProps, TagPickerState> {
   }
 }
 
+const swatchCellSize = 25
 class XSwatchPicker extends React.Component<InputProps, {}> {
   render() {
     const
@@ -560,7 +561,7 @@ class XSwatchPicker extends React.Component<InputProps, {}> {
 
     return (
       <WithLabel label={label}>
-        <SwatchColorPicker columnCount={10} colorCells={cells} cellWidth={35} cellHeight={35} />
+        <SwatchColorPicker columnCount={10} colorCells={cells} cellWidth={swatchCellSize} cellHeight={swatchCellSize} />
       </WithLabel>
     )
   }
@@ -612,7 +613,17 @@ class XForm extends React.Component<FormProps, {}> {
 }
 
 const
-  XInput = ({ input }: InputProps) => {
+  inputHasActions = (input: Input): B => { // recursive
+    const { actions, inputs } = input
+    if (actions.length) return true
+    if (inputs) for (const child of inputs) if (inputHasActions(child)) return true
+    return false
+  },
+  XInput = ({ input }: InputProps) => { // recursive
+
+    // This function contains the heuristics for determining which widget to use.
+    // TODO might need a widget= to force which widget to use.
+
     const { choices, actions, editable, multiple, inputs, inline } = input
 
     if (inputs) {
@@ -684,9 +695,15 @@ const
     return <XTextField input={input} />
   }
 
+
 class InputView extends React.Component<InputProps, {}> {
   render() {
-    return <InputContainer><XInput input={this.props.input}></XInput></InputContainer>
+    const
+      { input } = this.props,
+      hasActions = inputHasActions(input),
+      form = <XInput input={input}></XInput>,
+      body = hasActions ? form : <WithSend>{form}</WithSend>
+    return <InputContainer>{body}</InputContainer>
   }
 }
 
