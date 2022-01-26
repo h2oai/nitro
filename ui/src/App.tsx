@@ -498,7 +498,11 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
   render() {
     const
       { label, placeholder, required, choices } = this.props.input,
-      options: IChoiceGroupOption[] = choices.map(c => ({ key: String(c.value), text: String(c.label) })),
+      options: IChoiceGroupOption[] = choices.map(({ value, label, icon: iconName }) => ({
+        key: String(value),
+        text: String(label),
+        iconProps: iconName ? { iconName } : undefined,
+      })),
       selectedItem = choices.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
 
@@ -630,6 +634,15 @@ const
             { label: 'Apples', value: 'a', selected: true },
             { label: 'Bananas', value: 'b' },
             { label: 'Cherries', value: 'c' },
+          ]
+        })
+        await input({
+          label: 'Choice list, with icons', choices: [
+            { label: 'Area', value: 'area', icon: 'AreaChart', selected: true },
+            { label: 'Bar', value: 'bar', icon: 'BarChartHorizontal' },
+            { label: 'Column', value: 'column', icon: 'BarChartVertical' },
+            { label: 'Line', value: 'line', icon: 'LineChart' },
+            { label: 'Scatter', value: 'scatter', icon: 'ScatterChart' },
           ]
         })
         await input({ label: 'Choice list, long', placeholder: 'Pick a fruit', choices: fruits })
