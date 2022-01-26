@@ -75,7 +75,7 @@ const
 
 type InputBase = {
   label?: S
-  mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'list' | 'color' | 'menu' | 'rating' | 'slider'
+  mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'list' | 'color' | 'rating'
   icon?: S
   value?: V | Pair<V>
   min?: N | S
@@ -623,23 +623,22 @@ const
         await input({ label: 'Password field', password: true })
         await input({ label: 'Multiline text field', lines: 1 })
         await input({ label: 'Multiline text field, taller', lines: 5 })
-        await input({ label: 'Integer field', value: 5 })
-        await input({ label: 'Integer field with min', min: 5 })
-        await input({ label: 'Integer field with max', max: 5 })
-        await input({ label: 'Integer field with step', step: 5 })
-        await input({ label: 'Integer field with range', value: 5, min: 1, max: 10 })
-        await input({ label: 'Integer field with range and step', value: 50, min: 0, max: 100, step: 10 })
-        await input({ label: 'Decimal field with range and step', value: 0.5, min: 0.0, max: 1.0, step: 0.05 })
-        await input({ label: 'Decimal field with range, step, and precision', value: 0.5, min: 0.0, max: 1.0, step: 0.05, precision: 2 })
-        await input({ mode: 'slider', label: 'Slider', value: 5 })
-        await input({ mode: 'slider', label: 'Slider with min', min: 5 })
-        await input({ mode: 'slider', label: 'Slider with max', max: 5 })
-        await input({ mode: 'slider', label: 'Slider with step', step: 5 })
-        await input({ mode: 'slider', label: 'Slider with range', value: 5, min: 1, max: 10 })
-        await input({ mode: 'slider', label: 'Slider with origin from zero', value: 5, min: -10, max: 10 })
-        await input({ mode: 'slider', label: 'Ranged Slider', value: [3, 7] })
-        await input({ mode: 'slider', label: 'Ranged Slider with range', value: [3, 7], min: 1, max: 10 })
-        await input({ mode: 'slider', label: 'Ranged Slider with origin from zero', value: [3, 7], min: -10, max: 10 })
+        await input({ label: 'Integer', value: 5 })
+        await input({ label: 'Integer within range', min: 0, max: 10 })
+        await input({ label: 'Integer within range, with steps', min: 0, max: 10, step: 2 })
+        await input({ label: 'Integer within range, with default', value: 5, min: 0, max: 10 })
+        await input({ label: 'Integer within range, origin from zero', value: 3, min: -5, max: 5 })
+        await input({ label: 'Decimal within range', value: 0.6, min: -1, max: 1, step: 0.2 })
+        await input({ label: 'Integer range', value: [3, 7], min: 1, max: 10 })
+        await input({ label: 'Integer range, origin from zero', value: [-1, 3], min: -5, max: 5 })
+        await input({ label: 'Integer field', value: 5, editable: true })
+        await input({ label: 'Integer field with min', min: 5, editable: true })
+        await input({ label: 'Integer field with max', max: 5, editable: true })
+        await input({ label: 'Integer field with step', step: 5, editable: true })
+        await input({ label: 'Integer field with range', value: 5, min: 1, max: 10, editable: true })
+        await input({ label: 'Integer field with range and step', value: 50, min: 0, max: 100, step: 10, editable: true })
+        await input({ label: 'Decimal field with range and step', value: 0.5, min: 0.0, max: 1.0, step: 0.05, editable: true })
+        await input({ label: 'Decimal field with range, step, and precision', value: 0.5, min: 0.0, max: 1.0, step: 0.05, precision: 2, editable: true })
         await input({ mode: 'rating', label: 'Rating' })
         await input({ mode: 'rating', label: 'Rating with value', value: 3 })
         await input({ mode: 'rating', label: 'Rating with zero allowed', min: 0 })
@@ -905,12 +904,12 @@ const
     return input as SanitizedInput
   },
   InputImpl = ({ input }: InputProps) => {
-    const { choices, actions } = input
+    const { choices, actions, editable } = input
 
     if (choices.length) {
       switch (input.mode) {
         case 'list': // multiple choice
-          if (input.editable) {
+          if (editable) {
             return <XMultiSelectComboBox input={input} />
           }
           const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
@@ -921,7 +920,7 @@ const
         case 'color':
           return <XSwatchPicker input={input} />
         default:
-          if (input.editable) {
+          if (editable) {
             return <XComboBox input={input} />
           }
           const hasGroups = choices.some(c => c.choices?.length ? true : false)
@@ -940,8 +939,6 @@ const
     }
 
     switch (input.mode) {
-      case 'slider':
-        return <XSlider input={input} />
       case 'rating':
         return <XRating input={input} />
       case 'day':
@@ -954,11 +951,19 @@ const
         return <XColorPicker input={input} />
     }
 
-    input.value = getDefaultValue(input.value, input.min, input.max, input.step)
-    if (isN(input.value)) {
+    const
+      { value, min, max, step } = input,
+      hasRange = isN(min) && isN(max) && min < max
+
+    if (isN(value) || hasRange) {
+      if (!editable && hasRange) {
+        const steps = (max - min) / (isN(step) ? step : 1)
+        if (steps <= 16) {
+          return <XSlider input={input} />
+        }
+      }
       return <XSpinButton input={input} />
     }
-    // TODO mode=int/float + spin/slider?
     return <XTextField input={input} />
   }
 
