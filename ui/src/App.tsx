@@ -1,6 +1,7 @@
 import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, formProperties, GroupShowAll, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
+import { micromark } from 'micromark';
 import './App.css';
 
 type B = boolean
@@ -154,6 +155,33 @@ const
     </ Stack>
   )
 
+
+const Markdown = styled.div`
+/* Don't add margins before/after first/last paragraph */
+&>p:first-child {
+  margin-top: 0;
+}
+&>p:last-child {
+  margin-bottom: 0;
+}
+&>p:only-child {
+  margin: 0;
+}
+/* Don't indent lists */
+&>ul, &>ol {
+  padding-left: 1rem;
+}
+`
+
+class XMarkdown extends React.Component<{ text: S }, {}> {
+  render() {
+    const
+      { text } = this.props,
+      html = micromark(text)
+
+    return <Markdown dangerouslySetInnerHTML={{ __html: html }}></Markdown>
+  }
+}
 
 class XTextField extends React.Component<InputProps, {}> {
   render() {
@@ -756,6 +784,28 @@ const
       connect = async () => {
         // connect to backend
         for (let i = 0; i < 20; i++) await (toss() ? system : user)(lipsum())
+
+        system(`
+Normal _italic_ *italic* __bold__ **bold** \`code\` [Link](http://a.com)
+
+> Blockquote
+
+* List
+* List
+* List
+
+1. One
+2. Two
+3. Three
+
+\`\`\`
+# code block
+print '3 backticks or'
+print 'indent 4 spaces'
+\`\`\`
+          
+        `)
+
         // const response = await input()
         // await output(`hello, ${response}`)
         await input({})
@@ -1144,7 +1194,7 @@ class OutputsView extends React.Component<{ outputs: OutputMessage[] }, { output
       // TODO insert day marker
       groups = groupOutputs(outputs).map(g => {
         const
-          bubbles = g.map(o => <ChatBubble key={o.id}>{o.text}</ChatBubble>),
+          bubbles = g.map(o => <ChatBubble key={o.id}><XMarkdown text={o.text ?? ''} /></ChatBubble>),
           key = g[0].id
         return g[0].author
           ? <ChatBubbleGroupRight key={key}>{bubbles}</ChatBubbleGroupRight>
