@@ -1,5 +1,6 @@
 import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import { micromark, Options as MicromarkOptions } from 'micromark';
+import { gfmAutolinkLiteral, gfmAutolinkLiteralHtml } from 'micromark-extension-gfm-autolink-literal'
 import { gfmStrikethrough, gfmStrikethroughHtml } from 'micromark-extension-gfm-strikethrough';
 import React from 'react';
 import styled from 'styled-components';
@@ -187,8 +188,8 @@ const Markdown = styled.div`
 
 const
   micromarkOpts: MicromarkOptions = {
-    extensions: [gfmStrikethrough()],
-    htmlExtensions: [gfmStrikethroughHtml]
+    extensions: [gfmStrikethrough(), gfmAutolinkLiteral],
+    htmlExtensions: [gfmStrikethroughHtml, gfmAutolinkLiteralHtml]
   }
 
 class XMarkdown extends React.Component<{ text: S }, {}> {
@@ -814,6 +815,9 @@ Normal _italic_ *italic* __bold__ **bold** ~strikethrough~ \`code\` [Link](http:
 1. One
 2. Two
 3. Three
+
+Email foo@bar.baz
+Link www.h2o.ai
 
 \`\`\`
 # code block
