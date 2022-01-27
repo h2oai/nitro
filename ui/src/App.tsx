@@ -600,29 +600,6 @@ type FormProps = {
   inline: B
 }
 
-class XForm extends React.Component<FormProps, {}> {
-  render() {
-    const
-      { inputs, inline } = this.props,
-      children = inputs.map(input => {
-        const
-          size = inline ? input.size : undefined, // only process if inline
-          styles = isS(size) ? { root: { width: size } } : undefined,
-          grow = isN(size) ? size : styles ? undefined : 1
-
-        return (
-          <Stack.Item key={xid()} grow={grow} styles={styles} disableShrink>
-            <XInput input={input} />
-          </Stack.Item >
-        )
-      })
-
-    return inline
-      ? <Stack horizontal tokens={gap5}>{children}</Stack>
-      : <Stack tokens={gap5}>{children}</Stack>
-  }
-}
-
 const
   inputHasActions = (input: Input): B => { // recursive
     const { actions, inputs } = input
@@ -644,7 +621,23 @@ const
     const { choices, actions, editable, multiple, inputs, inline } = input
 
     if (inputs) {
-      return <XForm inputs={inputs} inline={inline ? true : false} />
+
+      const children = inputs.map(input => {
+        const
+          size = inline ? input.size : undefined, // only process if inline
+          styles = isS(size) ? { root: { width: size } } : undefined,
+          grow = isN(size) ? size : styles ? undefined : 1 // set only if not sized
+
+        return (
+          <Stack.Item key={xid()} grow={grow} styles={styles} disableShrink>
+            <XInput input={input} />
+          </Stack.Item >
+        )
+      })
+
+      return inline
+        ? <Stack horizontal tokens={gap5}>{children}</Stack>
+        : <Stack tokens={gap5}>{children}</Stack>
     }
 
     if (choices.length) {
