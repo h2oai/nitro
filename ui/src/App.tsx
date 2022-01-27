@@ -145,12 +145,23 @@ const
 type InputProps = { input: Input }
 
 const
-  WithSend = ({ hasLabel, children }: { hasLabel?: B, children: React.ReactChild }) => (
+  WithOffset = ({ offset, children }: { offset?: any, children: JSX.Element }) =>
+    (offset ?? true) ? (
+      <div>
+        <div><Label>&nbsp;</Label></div>
+        <div>{children}</div>
+      </div>
+    ) : children
+
+
+const
+  WithSend = ({ offset, children }: { offset?: any, children: JSX.Element }) => (
     <Stack horizontal tokens={gap5} >
       <Stack.Item grow>{children}</Stack.Item>
       <Stack.Item>
-        {hasLabel ? <Label>&nbsp;</Label> : null}
-        <PrimaryButton iconProps={{ iconName: 'Send' }} />
+        <WithOffset offset={offset}>
+          <PrimaryButton iconProps={{ iconName: 'Send' }} />
+        </WithOffset>
       </Stack.Item>
     </ Stack>
   )
@@ -317,10 +328,9 @@ class XTimePicker extends React.Component<InputProps, {}> {
             <SpinButton label='Seconds' labelPosition={Position.top} defaultValue={String(ss)} min={0} max={59} styles={narrow} />
           </Stack.Item>
           <Stack.Item styles={!c24 ? undefined : hide} align='end'>
-            <Stack>
-              <Stack.Item><Label>&nbsp;</Label></Stack.Item>
-              <Stack.Item><Toggle offText='AM' onText='PM' defaultChecked={pm} /></Stack.Item>
-            </Stack>
+            <WithOffset>
+              <Toggle offText='AM' onText='PM' defaultChecked={pm} />
+            </WithOffset>
           </Stack.Item>
         </Stack>
       </WithLabel>
@@ -511,14 +521,8 @@ class XButtons extends React.Component<InputProps, {}> {
                 : <DefaultButton text={text} styles={styles} />
         return <Stack.Item key={c.value}>{button}</Stack.Item>
       })
-    return (
-      <div>
-        <div>
-          <Label>&nbsp;</Label>
-        </div>
-        <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
-      </div>
-    )
+    return <WithOffset><Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack></WithOffset>
+
   }
 }
 
@@ -747,7 +751,7 @@ class InputView extends React.Component<InputProps, {}> {
       hasActions = inputHasActions(input),
       hasLabel = inputHasLabel(input),
       form = <XInput input={input}></XInput>,
-      body = hasActions ? form : <WithSend hasLabel={hasLabel}>{form}</WithSend>
+      body = hasActions ? form : <WithSend offset={hasLabel}>{form}</WithSend>
     return <InputContainer>{body}</InputContainer>
   }
 }
