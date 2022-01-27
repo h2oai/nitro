@@ -2,6 +2,7 @@ import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton,
 import { micromark, Options as MicromarkOptions } from 'micromark';
 import { gfmAutolinkLiteral, gfmAutolinkLiteralHtml } from 'micromark-extension-gfm-autolink-literal'
 import { gfmStrikethrough, gfmStrikethroughHtml } from 'micromark-extension-gfm-strikethrough';
+import { directive, directiveHtml, HtmlOptions } from 'micromark-extension-directive'
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -188,8 +189,22 @@ const Markdown = styled.div`
 
 const
   micromarkOpts: MicromarkOptions = {
-    extensions: [gfmStrikethrough(), gfmAutolinkLiteral],
-    htmlExtensions: [gfmStrikethroughHtml, gfmAutolinkLiteralHtml]
+    extensions: [gfmStrikethrough(), gfmAutolinkLiteral, directive()],
+    htmlExtensions: [gfmStrikethroughHtml, gfmAutolinkLiteralHtml, directiveHtml({
+      abbr(d) {
+        if (d.type !== 'textDirective') return false
+
+        this.tag('<abbr')
+
+        if (d.attributes && 'title' in d.attributes) {
+          this.tag(' title="' + this.encode(d.attributes.title) + '"')
+        }
+
+        this.tag('>')
+        this.raw(d.label || '')
+        this.tag('</abbr>')
+      }
+    })]
   }
 
 class XMarkdown extends React.Component<{ text: S }, {}> {
@@ -641,11 +656,6 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
   }
 }
 
-type FormProps = {
-  inputs: Input[]
-  inline: B
-}
-
 const
   inputHasActions = (input: Input): B => { // recursive
     const { actions, inputs } = input
@@ -818,6 +828,8 @@ Normal _italic_ *italic* __bold__ **bold** ~strikethrough~ \`code\` [Link](http:
 
 Email foo@bar.baz
 Link www.h2o.ai
+
+A lovely language know as :abbr[HTML]{title="HyperText Markup Language"}.
 
 \`\`\`
 # code block
