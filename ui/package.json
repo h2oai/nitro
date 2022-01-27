@@ -14,6 +14,7 @@
     "@types/react-dom": "^17.0.11",
     "@types/styled-components": "^5.1.20",
     "micromark": "^3.0.10",
+    "micromark-extension-gfm-strikethrough": "^1.0.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",

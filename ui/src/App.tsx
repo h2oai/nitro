@@ -1,5 +1,6 @@
 import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
-import { micromark } from 'micromark';
+import { micromark, Options as MicromarkOptions } from 'micromark';
+import { gfmStrikethrough, gfmStrikethroughHtml } from 'micromark-extension-gfm-strikethrough';
 import React from 'react';
 import styled from 'styled-components';
 import './App.css';
@@ -184,11 +185,17 @@ const Markdown = styled.div`
 }
 `
 
+const
+  micromarkOpts: MicromarkOptions = {
+    extensions: [gfmStrikethrough()],
+    htmlExtensions: [gfmStrikethroughHtml]
+  }
+
 class XMarkdown extends React.Component<{ text: S }, {}> {
   render() {
     const
       { text } = this.props,
-      html = micromark(text)
+      html = micromark(text, micromarkOpts)
 
     return <Markdown dangerouslySetInnerHTML={{ __html: html }}></Markdown>
   }
@@ -796,7 +803,7 @@ const
         for (let i = 0; i < 20; i++) await (toss() ? system : user)(lipsum())
 
         system(`
-Normal _italic_ *italic* __bold__ **bold** \`code\` [Link](http://a.com)
+Normal _italic_ *italic* __bold__ **bold** ~strikethrough~ \`code\` [Link](http://a.com)
 
 > Blockquote
 
@@ -985,7 +992,7 @@ print 'indent 4 spaces'
         })
         // More than 5 actions displays a menu.
         await input({
-          label: 'Create new',
+          label: 'Add a new chart',
           actions: [
             { label: 'Area Chart', value: 'area', icon: 'AreaChart' },
             { label: 'Bar Chart', value: 'bar', icon: 'BarChartHorizontal' },
