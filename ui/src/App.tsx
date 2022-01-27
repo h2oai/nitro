@@ -493,8 +493,7 @@ class XButtons extends React.Component<InputProps, {}> {
     const
       { inline, actions } = this.props.input,
       horizontal = inline ? true : false,
-      textAlign = horizontal ? 'center' : 'left',
-      styles: IButtonStyles = { root: { width: '100%', textAlign } },
+      styles: IButtonStyles = { root: { width: '100%' } },
       compoundStyles: IButtonStyles = { root: { width: '100%', maxWidth: 'auto' } },
       buttons = actions.map(c => {
         const
@@ -512,7 +511,16 @@ class XButtons extends React.Component<InputProps, {}> {
                 : <DefaultButton text={text} styles={styles} />
         return <Stack.Item key={c.value}>{button}</Stack.Item>
       })
-    return <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
+    return (
+      <Stack>
+        <Stack.Item key='label'>
+          <Label>&nbsp;</Label>
+        </Stack.Item>
+        <Stack.Item key='actions'>
+          <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
+        </Stack.Item>
+      </Stack>
+    )
   }
 }
 
@@ -999,6 +1007,14 @@ print 'indent 4 spaces'
           ]
         })
         await input({
+          inline: true,
+          inputs: [
+            { label: 'Username', placeholder: 'someone@company.com' },
+            { label: 'Password', placeholder: 'Password', password: true },
+            { actions: [{ value: 'Login', selected: true }] },
+          ]
+        })
+        await input({
           inputs: [
             {
               inline: true, inputs: [
@@ -1145,7 +1161,7 @@ const
   InputContainer = styled.div`
     background: #fff;
     box-sizing: border-box;
-    padding: 2rem 2rem 3rem 2rem;
+    padding: 2rem 2rem 4rem 2rem;
     box-shadow: 0 -14px 28px rgba(0,0,0,0.1), 0 -10px 10px rgba(0,0,0,0.01);
   `,
   getDefaultValue = (value: any, min: any, max: any, step: any): N | undefined => {
