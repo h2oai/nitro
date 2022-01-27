@@ -1,7 +1,7 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, formProperties, GroupShowAll, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuItemProps, IContextualMenuProps, IDropdownOption, inputProperties, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Persona, PersonaPresence, PersonaSize, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { micromark } from 'micromark';
 import React from 'react';
 import styled from 'styled-components';
-import { micromark } from 'micromark';
 import './App.css';
 
 type B = boolean
@@ -512,14 +512,12 @@ class XButtons extends React.Component<InputProps, {}> {
         return <Stack.Item key={c.value}>{button}</Stack.Item>
       })
     return (
-      <Stack>
-        <Stack.Item key='label'>
+      <div>
+        <div>
           <Label>&nbsp;</Label>
-        </Stack.Item>
-        <Stack.Item key='actions'>
-          <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
-        </Stack.Item>
-      </Stack>
+        </div>
+        <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
+      </div>
     )
   }
 }
