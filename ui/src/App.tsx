@@ -862,8 +862,11 @@ print 'indent 4 spaces'
           v: 1,
           columns: [
             { t: 's', label: 'Text', data: randSs(10) },
-            { t: 'n', label: 'Number', data: randInts },
-            { t: 'n', label: 'Number,IN', data: randInts },
+            { t: 'n', label: 'Number, local', data: randInts },
+            { t: 'n', label: 'Number, US', data: randInts, format: { locale: 'en-US' } },
+            { t: 'n', label: 'Number, DE', data: randInts, format: { locale: 'de-DE' } },
+            { t: 'n', label: 'Number, EG', data: randInts, format: { locale: 'ar-EG' } },
+            { t: 'n', label: 'Number, IN', data: randInts, format: { locale: 'en-IN' } },
             { t: 'n', label: 'Decimal', data: randFloats },
 
             { t: 'n', label: 'Percent', data: randPercents },
@@ -871,6 +874,8 @@ print 'indent 4 spaces'
             { t: 'n', label: 'Unit, long', data: randInts },
 
             { t: 'n', label: 'Currency', data: randFloats },
+            { t: 'n', label: 'Currency, Euro', data: randFloats },
+            { t: 'n', label: 'Currency, Japan', data: randFloats },
             { t: 'n', label: 'Currency, name', data: randFloats },
             { t: 'n', label: 'Currency, accounting', data: randFloats },
 
@@ -1344,6 +1349,17 @@ const
   }
 
 const TableContainer = styled.div`
+  background-color: #fff;
+  overflow: auto;
+  & table {
+    color: #5f5f5f;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+  }
+  & th, td {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #ececec;
+  }
   & td.n {
     text-align: right; 
   }
@@ -1373,7 +1389,8 @@ class TableAttachmentView extends React.Component<{ attachment: TableAttachment 
       }),
       rows = transpose(data),
       trs = rows.map(r => `<tr>${r.join('')}</tr>`).join(''),
-      html = `<tbody>${trs}</tbody>`
+      ths = columns.map((c, i) => `<th>${c.label ?? `Column ${i + 1}`}</th>`).join(''),
+      html = `<thead>${ths}</thead><tbody>${trs}</tbody>`
     return <TableContainer><table dangerouslySetInnerHTML={{ __html: html }} /></TableContainer>
   }
 }
