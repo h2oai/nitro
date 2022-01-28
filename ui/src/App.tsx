@@ -1329,23 +1329,17 @@ const
     }
     return rows
   },
-  formatNumber = (v: V) => String(v),
-  formatDate = (v: V) => String(v), // TODO
   toSnakeCaseOpts = (d: Dict<any>): any => {
     const opts: any = {}
     for (const k in d) opts[snakeToCamelCase(k)] = d
     return opts
   },
-  toNumberFormatter = (d: Dict<any>) => {
-    const
-      opts = toSnakeCaseOpts(d),
-      f = Intl.NumberFormat(opts.locale, opts)
+  toNumberFormatter = (d: Dict<any> | null) => {
+    const f = d ? Intl.NumberFormat(d.locale, toSnakeCaseOpts(d)) : Intl.NumberFormat()
     return (n: V) => f.format(isN(n) ? n : NaN)
   },
-  toDateFormatter = (d: Dict<any>) => {
-    const
-      opts = toSnakeCaseOpts(d),
-      f = Intl.DateTimeFormat(opts.locale, opts)
+  toDateFormatter = (d: Dict<any> | null) => {
+    const f = d ? Intl.DateTimeFormat(d.locale, toSnakeCaseOpts(d)) : Intl.DateTimeFormat()
     return (s: V) => f.format(new Date(String(s)))
   }
 class TableAttachmentView extends React.Component<{ attachment: TableAttachment }, {}> {
@@ -1356,12 +1350,12 @@ class TableAttachmentView extends React.Component<{ attachment: TableAttachment 
         switch (t) {
           case 'n':
             {
-              const fmt = format ? toNumberFormatter(format) : formatNumber
+              const fmt = toNumberFormatter(format ?? null)
               return data.map(d => d === null ? '' : fmt(d))
             }
           case 'd':
             {
-              const fmt = format ? toDateFormatter(format) : formatDate
+              const fmt = toDateFormatter(format ?? null)
               return data.map(d => d === null ? '' : fmt(d))
             }
           default:
