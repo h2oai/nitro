@@ -57,11 +57,6 @@ type Input = InputBase & {
   inputs?: Input[]
 }
 
-type InputMessage = Input & {
-  t: 'i'
-  id: S
-}
-
 type RawChoice = V | Pair<V>
 type RawChoices = S | RawChoice[] | Dict<V> | Choice[]
 
@@ -72,9 +67,25 @@ type RawInput = InputBase & {
   range?: Pair<V>
 }
 
+
+type FileAttachment = { t: 'file', url?: S, data?: S, label?: S }
+type ImageAttachment = { t: 'image', url?: S, data?: S, label?: S }
+type TableAttachmentColumn = { t: 's' | 'd' | 'n', data: Array<V | null>, label?: S, format?: Dict<V> }
+type TableAttachment = { t: 'table', columns: TableAttachmentColumn[] }
+
+type Versioned = { v: U }
+
+type Attachment = Versioned & (FileAttachment | ImageAttachment | TableAttachment)
+
 type Output = {
   author: S
   text?: S
+  attachments?: Attachment[]
+}
+
+type InputMessage = Input & {
+  t: 'i'
+  id: S
 }
 
 type OutputMessage = Output & {
@@ -102,6 +113,7 @@ const
   isV = (x: any): x is S | N => isS(x) || isN(x),
   isO = (x: any) => x && (typeof x === 'object'),
   isPair = (x: any): x is any[] => Array.isArray(x) && x.length === 2,
+  snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase()),
   words = (x: S) => x.trim().split(/\s+/g),
   toChoices = (x: any): Choice[] => {
     if (!x) return []
@@ -191,7 +203,7 @@ const
   micromarkOpts: MicromarkOptions = {
     extensions: [gfmStrikethrough(), gfmAutolinkLiteral, directive()],
     htmlExtensions: [gfmStrikethroughHtml, gfmAutolinkLiteralHtml, directiveHtml({
-      abbr(d) {
+      abbr(d) { // :embed{foo=bar} or :::embed \n\n :::
         if (d.type !== 'textDirective') return false
 
         this.tag('<abbr')
@@ -795,19 +807,21 @@ const
     for (let i = 0; i < n; i++) xs[i] = i
     return xs
   },
-  rand = (min: I, max: I) => Math.floor(Math.random() * (max - min) + min),
+  randF = (min: F, max: F) => Math.random() * (max - min) + min,
+  rand = (min: I, max: I) => Math.floor(randF(min, max)),
+  randS = () => lorem[rand(0, lorem.length - 1)],
+  randFs = (n: U, min: F, max: F) => range(n).map(_ => randF(min, max)),
+  rands = (n: U, min: I, max: I) => range(n).map(_ => rand(min, max)),
+  randSs = (n: U) => range(n).map(_ => randS()),
   sentenceCase = (s: S) => s.length ? s[0].toUpperCase() + s.substring(1) + '.' : '',
-  lipsum = () => {
-    const n = lorem.length - 1
-    return range(rand(1, 4)).map(_ => sentenceCase(range(rand(3, 8)).map(_ => lorem[rand(0, n)]).join(' '))).join(' ')
-  },
+  lipsum = () => (range(rand(1, 4)).map(_ => sentenceCase(randSs(rand(3, 8)).join(' '))).join(' ')),
   xid = () => `x${_xid++}`,
   newSocket = (handle: (m: Message) => void) => {
     const
       send = (m: Message) => window.setTimeout(() => handle(m), 0),
       input = (m: RawInput) => send({ t: 'i', id: xid(), ...sanitizeInput(m) }),
-      output = async (author: S, text: S) => send({ t: 'o', id: xid(), author, text }),
-      system = async (text: S) => await output('', text),
+      output = async (author: S, text: S, attachments?: Attachment[]) => send({ t: 'o', id: xid(), author, text, attachments }),
+      system = async (text: S, attachments?: Attachment[]) => await output('', text, attachments),
       user = async (text: S) => await output('user', text),
       connect = async () => {
         // connect to backend
@@ -836,8 +850,49 @@ A lovely language know as :abbr[HTML]{title="HyperText Markup Language"}.
 print '3 backticks or'
 print 'indent 4 spaces'
 \`\`\`
-          
         `)
+
+        const
+          randInts = rands(10, 1000, 1000000),
+          randFloats = randFs(10, -10000, 10000),
+          randPercents = randFs(10, 1, 100)
+
+        system(`Attachments: :embed[] `, [{
+          t: 'table',
+          v: 1,
+          columns: [
+            { t: 's', label: 'Text', data: randSs(10) },
+            { t: 'n', label: 'Number', data: randInts },
+            { t: 'n', label: 'Number,IN', data: randInts },
+            { t: 'n', label: 'Decimal', data: randFloats },
+
+            { t: 'n', label: 'Percent', data: randPercents },
+            { t: 'n', label: 'Unit', data: randInts },
+            { t: 'n', label: 'Unit, long', data: randInts },
+
+            { t: 'n', label: 'Currency', data: randFloats },
+            { t: 'n', label: 'Currency, name', data: randFloats },
+            { t: 'n', label: 'Currency, accounting', data: randFloats },
+
+            { t: 'n', label: 'Scientific, US', data: randFloats },
+            { t: 'n', label: 'Scientific, PT', data: randFloats },
+            { t: 'n', label: 'Engineering, US', data: randFloats },
+            { t: 'n', label: 'Engineering, de', data: randFloats },
+
+            { t: 'n', label: 'Compact, zh-CN', data: randFloats },
+            { t: 'n', label: 'Compact, fr', data: randFloats },
+            { t: 'n', label: 'Compact, en-GB', data: randFloats },
+            { t: 'n', label: 'Signs, except zero', data: randFloats },
+            { t: 'n', label: 'Signs, always', data: randFloats },
+          ],
+        }])
+
+        system(`Image attachments`, [
+          { t: 'image', v: 1, url: 'https://picsum.photos/200/300' },
+          { t: 'image', v: 1, url: 'https://picsum.photos/300/200' },
+          { t: 'image', v: 1, url: 'https://picsum.photos/300' },
+          { t: 'image', v: 1, url: 'https://picsum.photos/200' },
+        ])
 
         // const response = await input()
         // await output(`hello, ${response}`)
@@ -1131,7 +1186,7 @@ const
   `,
   ChatHeaderCommands = styled.div`
   `,
-  bubbleRadius = '0.75rem',
+  bubbleRadius = '0.5rem',
   bubble = (r: S) => 'border-radius: ' + r.replace(/\./g, bubbleRadius) + ';',
   ChatBubble = styled.div`
     max-width: 60%;
@@ -1183,6 +1238,13 @@ const
     flex-direction: column;
     justify-content: flex-end;
   `,
+  ChatAttachments = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    margin: 0.5rem 0;
+  `,
   InputContainer = styled.div`
     background: #fff;
     box-sizing: border-box;
@@ -1228,6 +1290,59 @@ const
     return groups
   }
 
+class FileAttachmentView extends React.Component<{ attachment: FileAttachment }, {}> {
+  render() {
+    return <div />
+  }
+}
+
+const imageAttachmentThumbnailSize = '6rem'
+const ImageAttachmentThumbnail = styled.img`
+  width: ${imageAttachmentThumbnailSize};
+  height: ${imageAttachmentThumbnailSize};
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 0.25rem;
+  margin: 0 0.5rem 0.5rem 0;
+`
+
+class ImageAttachmentView extends React.Component<{ attachment: ImageAttachment }, {}> {
+  render() {
+    const { data, label, url } = this.props.attachment
+    if (url) return <ImageAttachmentThumbnail src={url} />
+    return <div />
+  }
+}
+class TableAttachmentView extends React.Component<{ attachment: TableAttachment }, {}> {
+  render() {
+    return <div />
+  }
+}
+const
+  AttachmentView = ({ attachment }: { attachment: Attachment }) => {
+    switch (attachment.t) {
+      case 'file':
+        return <FileAttachmentView attachment={attachment} />
+      case 'image':
+        return <ImageAttachmentView attachment={attachment} />
+      case 'table':
+        return <TableAttachmentView attachment={attachment} />
+    }
+    return <div />
+  },
+  OutputView = ({ output }: { output: Output }) => {
+    const
+      { text, attachments } = output,
+      extra = attachments ? attachments.map(a => <AttachmentView key={xid()} attachment={a} />) : null
+    return (
+      <ChatBubble>
+        <XMarkdown text={text ?? ''} />
+        {extra ? <ChatAttachments>{extra}</ChatAttachments> : null}
+      </ChatBubble>
+    )
+  }
+
+
 class OutputsView extends React.Component<{ outputs: OutputMessage[] }, { outputs: OutputMessage[] }> {
   render() {
     const
@@ -1235,7 +1350,7 @@ class OutputsView extends React.Component<{ outputs: OutputMessage[] }, { output
       // TODO insert day marker
       groups = groupOutputs(outputs).map(g => {
         const
-          bubbles = g.map(o => <ChatBubble key={o.id}><XMarkdown text={o.text ?? ''} /></ChatBubble>),
+          bubbles = g.map(o => <OutputView key={o.id} output={o} />),
           key = g[0].id
         return g[0].author
           ? <ChatBubbleGroupRight key={key}>{bubbles}</ChatBubbleGroupRight>
