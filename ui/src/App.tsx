@@ -1313,9 +1313,66 @@ class ImageAttachmentView extends React.Component<{ attachment: ImageAttachment 
     return <div />
   }
 }
+
+type Format = (v: V) => S
+const
+  transpose = <T extends {}>(data: T[][]): T[][] => {
+    const
+      ncols = data.length,
+      nrows = Math.min(...data.map(c => c.length)),
+      rows: T[][] = new Array<T[]>(nrows)
+
+    for (let i = 0; i < nrows; i++) {
+      const row = new Array<T>(ncols)
+      for (let j = 0; j < ncols; j++) row[j] = data[j][i]
+      rows[i] = row
+    }
+    return rows
+  },
+  formatNumber = (v: V) => String(v),
+  formatDate = (v: V) => String(v), // TODO
+  toSnakeCaseOpts = (d: Dict<any>): any => {
+    const opts: any = {}
+    for (const k in d) opts[snakeToCamelCase(k)] = d
+    return opts
+  },
+  toNumberFormatter = (d: Dict<any>) => {
+    const
+      opts = toSnakeCaseOpts(d),
+      f = Intl.NumberFormat(opts.locale, opts)
+    return (n: V) => f.format(isN(n) ? n : NaN)
+  },
+  toDateFormatter = (d: Dict<any>) => {
+    const
+      opts = toSnakeCaseOpts(d),
+      f = Intl.DateTimeFormat(opts.locale, opts)
+    return (s: V) => f.format(new Date(String(s)))
+  }
 class TableAttachmentView extends React.Component<{ attachment: TableAttachment }, {}> {
   render() {
-    return <div />
+    const
+      { columns } = this.props.attachment,
+      data = columns.map(({ t, data, format, label }) => {
+        switch (t) {
+          case 'n':
+            {
+              const fmt = format ? toNumberFormatter(format) : formatNumber
+              return data.map(d => d === null ? '' : fmt(d))
+            }
+          case 'd':
+            {
+              const fmt = format ? toDateFormatter(format) : formatDate
+              return data.map(d => d === null ? '' : fmt(d))
+            }
+          default:
+            return data.map(d => String(d))
+        }
+      }),
+      rows = transpose(data),
+      tds = (vs: S[]) => vs.map(v => `<td>${v}</td>`).join(''),
+      trs = rows.map(r => `<tr>${tds(r)}</tr>`).join(''),
+      html = `<tbody>${trs}</tbody>`
+    return <table dangerouslySetInnerHTML={{ __html: html }} />
   }
 }
 const
