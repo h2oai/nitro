@@ -1342,31 +1342,39 @@ const
     const f = d ? Intl.DateTimeFormat(d.locale, toSnakeCaseOpts(d)) : Intl.DateTimeFormat()
     return (s: V) => f.format(new Date(String(s)))
   }
+
+const TableContainer = styled.div`
+  & td.n {
+    text-align: right; 
+  }
+`
+
+
 class TableAttachmentView extends React.Component<{ attachment: TableAttachment }, {}> {
   render() {
     const
       { columns } = this.props.attachment,
+      empty = '<td/>',
       data = columns.map(({ t, data, format, label }) => {
         switch (t) {
           case 'n':
             {
               const fmt = toNumberFormatter(format ?? null)
-              return data.map(d => d === null ? '' : fmt(d))
+              return data.map(d => d !== null ? `<td class='n'>${fmt(d)}</td>` : empty)
             }
           case 'd':
             {
               const fmt = toDateFormatter(format ?? null)
-              return data.map(d => d === null ? '' : fmt(d))
+              return data.map(d => d !== null ? `<td>${fmt(d)}</td>` : empty)
             }
           default:
-            return data.map(d => String(d))
+            return data.map(d => d ? `<td>${d}</td>` : empty)
         }
       }),
       rows = transpose(data),
-      tds = (vs: S[]) => vs.map(v => `<td>${v}</td>`).join(''),
-      trs = rows.map(r => `<tr>${tds(r)}</tr>`).join(''),
+      trs = rows.map(r => `<tr>${r.join('')}</tr>`).join(''),
       html = `<tbody>${trs}</tbody>`
-    return <table dangerouslySetInnerHTML={{ __html: html }} />
+    return <TableContainer><table dangerouslySetInnerHTML={{ __html: html }} /></TableContainer>
   }
 }
 const
