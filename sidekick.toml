@@ -1,0 +1,119 @@
+#
+# General settings.
+#
+
+# Log verbosity. 
+# One of panic, fatal, error, warn, info, debug, trace, disabled.
+LogLevel = "debug"
+
+# HTTP server IP:port to listen on.
+Address = ":11111"
+
+# Directory to serve static files from
+WebRoot = "./ui/build"
+
+# The path prefix to be used for resolving relative URLs.
+# e.g. "/", "/foo/", "/foo/bar/", "/foo/bar/baz/"
+BasePath = "/"
+
+#
+# Front-end web socket settings
+#
+[ClientWebSocket]
+
+# Read buffer size in bytes. 
+# If size is zero, then buffers allocated by the HTTP server are used. 
+# The buffer size does not limit the size of the messages that can be read.
+ReadBufferSize = 1024
+
+# Write buffer size in bytes. 
+# If size is zero, then buffers allocated by the HTTP server are used. 
+# The buffer size does not limit the size of the messages that can be written.
+WriteBufferSize = 1024
+
+# Maximum message size allowed from client, in bytes.
+MaxMessageSize = 512
+
+# Maximum number of outbound messages to queue up before kicking client.
+MessageQueueSize = 256
+
+# Time allowed to write a message to the client, in seconds.
+WriteTimeout = 10
+
+# Send pings to client with this period, in seconds. 
+# Must be less than PongTimeout.
+PingInterval = 54
+
+# Time allowed to read the next pong message from the client, in seconds. 
+# Must be greater than PingInterval
+PongTimeout = 60
+
+
+#
+# Back-end web socket settings
+#
+[BotWebSocket]
+
+# Read buffer size in bytes. 
+# If size is zero, then buffers allocated by the HTTP server are used. 
+# The buffer size does not limit the size of the messages that can be read.
+ReadBufferSize = 1024
+
+# Write buffer size in bytes. 
+# If size is zero, then buffers allocated by the HTTP server are used. 
+# The buffer size does not limit the size of the messages that can be written.
+WriteBufferSize = 1024
+
+# Maximum message size allowed from bot, in bytes.
+MaxMessageSize = 512
+
+# Maximum number of outbound messages to queue up before kicking bot.
+MessageQueueSize = 256
+
+# Time allowed to write a message to the bot, in seconds.
+WriteTimeout = 10
+
+# Send pings to bot with this period, in seconds. 
+# Must be less than PongTimeout.
+PingInterval = 54
+
+# Time allowed to read the next pong message from the bot, in seconds. 
+# Must be greater than PingInterval
+PongTimeout = 60
+
+#
+# Bots
+#
+[[Bot]]
+
+# An identifier for this bot.
+Name = "hello"
+
+# Launch the bot when this path is accessed from a web browser.
+# If the global BaseURL is set to "/foo/" and the bot's path is set to "/bar",
+#  the bot will be launched when "/foo/bar" is accessed.
+Path = "/"
+
+# The command to run to launch this bot.
+# If the command contains no path separators, an attempt is made to 
+# resolve the command to a complete path if possible. 
+# Otherwise the command is treated as a path.
+Command = "python3 hello.py"
+
+# Command line arguments to pass.
+Arguments = ["arg1", "arg2", "arg3"]
+
+# Environment variables to set.
+# Each entry is of the form "key=value".
+# If Env contains duplicate environment keys, only the last
+# value in the slice for each duplicate key is used.
+# As a special case on Windows, SYSTEMROOT is always added if
+# missing and not explicitly set to the empty string.
+Env = ["KEY1=VALUE1", "KEY2=VALUE2", "KEY3=VALUE3"]
+
+# Whether to include environment variables from the daemon's current process.
+InheritEnv = true
+
+# The working directory for the command.
+# If empty, the command is run in the daemon's current directory.
+WorkingDirectory = ""
