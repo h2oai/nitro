@@ -14,7 +14,7 @@ WebRoot = "./ui/build"
 
 # The path prefix to be used for resolving relative URLs.
 # e.g. "/", "/foo/", "/foo/bar/", "/foo/bar/baz/"
-BasePath = "/"
+BaseURL = "/"
 
 #
 # Front-end web socket settings
@@ -80,40 +80,3 @@ PingInterval = 54
 # Time allowed to read the next pong message from the bot, in seconds. 
 # Must be greater than PingInterval
 PongTimeout = 60
-
-#
-# Bots
-#
-[[Bot]]
-
-# An identifier for this bot.
-Name = "hello"
-
-# Launch the bot when this path is accessed from a web browser.
-# If the global BaseURL is set to "/foo/" and the bot's path is set to "/bar",
-#  the bot will be launched when "/foo/bar" is accessed.
-Path = "/"
-
-# The command to run to launch this bot.
-# If the command contains no path separators, an attempt is made to 
-# resolve the command to a complete path if possible. 
-# Otherwise the command is treated as a path.
-Command = "python3 hello.py"
-
-# Command line arguments to pass.
-Arguments = ["arg1", "arg2", "arg3"]
-
-# Environment variables to set.
-# Each entry is of the form "key=value".
-# If Env contains duplicate environment keys, only the last
-# value in the slice for each duplicate key is used.
-# As a special case on Windows, SYSTEMROOT is always added if
-# missing and not explicitly set to the empty string.
-Env = ["KEY1=VALUE1", "KEY2=VALUE2", "KEY3=VALUE3"]
-
-# Whether to include environment variables from the daemon's current process.
-InheritEnv = true
-
-# The working directory for the command.
-# If empty, the command is run in the daemon's current directory.
-WorkingDirectory = ""

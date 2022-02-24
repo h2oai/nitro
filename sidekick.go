@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"path"
@@ -11,6 +14,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/cristalhq/jwt/v4"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -22,10 +27,9 @@ type Conf struct {
 	LogLevel        string
 	Address         string
 	WebRoot         string
-	BasePath        string
+	BaseURL         string
 	ClientWebSocket WebSocketConf
 	BotWebSocket    WebSocketConf
-	Bot             []BotConf
 }
 
 type WebSocketConf struct {
@@ -38,33 +42,22 @@ type WebSocketConf struct {
 	WriteTimeout     time.Duration
 }
 
-type BotConf struct {
-	Name             string
-	Path             string
-	Command          string
-	Arguments        []string
-	Env              []string
-	InheritEnv       bool
-	WorkingDirectory string
-}
-
 var (
 	newline = []byte{'\n'}
 )
 
+type Creds struct {
+	ID     string `json:"id"`
+	Secret string `json:"secret"`
+}
+
 type Actor struct {
-	sync.RWMutex
+	// sync.RWMutex
 	conn *websocket.Conn
 	send chan []byte
+	// pool  *WorkerPool
 	peer *Actor
-}
-
-type Client struct {
-	*Actor
-}
-
-type Bot struct {
-	*Actor
+	// creds *Creds
 }
 
 func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
@@ -88,7 +81,7 @@ func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
 			return
 		}
 
-		peer := c.peer
+		peer := c.peer // XXX peer may be nil
 
 		select {
 		case peer.send <- message:
@@ -153,8 +146,9 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 
 type Server struct {
 	conf           Conf
-	pool           *BotPool
-	routes         map[string]http.HandlerFunc
+	tokenIssuer    *TokenIssuer
+	workers        *WorkerPool
+	fileServers    *StaticFileServerGroup
 	clientUpgrader websocket.Upgrader
 	botUpgrader    websocket.Upgrader
 }
@@ -164,89 +158,340 @@ const (
 	outSocketSuffix = "/out"
 )
 
-type BotPool struct {
-	bots chan *Bot
+type WorkerPool struct {
+	sync.Mutex
+	workers map[string]map[*Actor]struct{}
 }
 
-func newBotPool() *BotPool {
-	return &BotPool{bots: make(chan *Bot, 512)}
+func newWorkerPool() *WorkerPool {
+	return &WorkerPool{
+		workers: make(map[string]map[*Actor]struct{}),
+	}
+}
+
+func (p *WorkerPool) Put(route string, w *Actor) {
+	p.Lock()
+
+	workers, ok := p.workers[route]
+	if !ok {
+		workers = make(map[*Actor]struct{})
+		p.workers[route] = workers
+	}
+	workers[w] = struct{}{}
+
+	p.Unlock()
+}
+
+func (p *WorkerPool) Get(route string) *Actor {
+	p.Lock()
+	defer p.Unlock()
+
+	var w *Actor
+	if workers, ok := p.workers[route]; ok {
+		for w = range workers {
+			break
+		}
+		if w != nil {
+			delete(workers, w)
+		}
+	}
+	return w
+}
+
+func isWs(u *url.URL) bool {
+	return u.Scheme == "wss" || u.Scheme == "ws"
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p := r.URL.Path
+	url := r.URL
+	p := strings.TrimPrefix(url.Path, s.conf.BaseURL)
 
-	for route, fs := range s.routes {
-		if !strings.HasPrefix(p, route) {
-			continue
+	log.Debug().Str("url", r.URL.String()).Str("uri", r.RequestURI).Msg("request")
+
+	switch p {
+	case "ws":
+		if !isWs(url) {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+		query := url.Query()
+		route := query.Get("route")
+
+		log.Debug().Str("addr", r.RemoteAddr).Msg("client joining")
+		conf := s.conf.ClientWebSocket
+
+		conn, err := s.clientUpgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Error().Err(err).Msg("failed to upgrade client")
+			return
 		}
 
-		if strings.HasSuffix(p, inSocketSuffix) {
-			log.Debug().Str("addr", r.RemoteAddr).Msg("client joining")
-			conf := s.conf.ClientWebSocket
-
-			conn, err := s.clientUpgrader.Upgrade(w, r, nil)
-			if err != nil {
-				log.Error().Err(err).Msg("failed to upgrade client")
-				return
+		if worker := s.workers.Get(route); worker != nil {
+			client := &Actor{
+				conn: conn,
+				send: make(chan []byte, conf.MessageQueueSize),
+				peer: worker,
 			}
 
-			select {
-			case bot := <-s.pool.bots:
-				client := &Client{
-					&Actor{
-						conn: conn,
-						send: make(chan []byte, conf.MessageQueueSize),
-						peer: bot.Actor,
-					},
-				}
-				bot.peer = client.Actor
+			worker.peer = client
 
-				go client.Write(conf.WriteTimeout, conf.PingInterval)
-				go client.Read(conf.MaxMessageSize, conf.PongTimeout)
-
-			default: // pool empty
-				conn.SetWriteDeadline(time.Now().Add(conf.WriteTimeout))
-				conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseTryAgainLater, "unavailable"))
-				conn.Close()
-
-			}
-
-		} else if strings.HasSuffix(p, outSocketSuffix) {
-			log.Debug().Str("addr", r.RemoteAddr).Msg("bot joining")
-			conf := s.conf.BotWebSocket
-
-			conn, err := s.botUpgrader.Upgrade(w, r, nil)
-			if err != nil {
-				log.Error().Err(err).Msg("failed to upgrade bot")
-				return
-			}
-			bot := &Bot{
-				&Actor{
-					conn: conn,
-					send: make(chan []byte, conf.MessageQueueSize),
-				},
-			}
-
-			select {
-			case s.pool.bots <- bot:
-				go bot.Write(conf.WriteTimeout, conf.PingInterval)
-				go bot.Read(conf.MaxMessageSize, conf.PongTimeout)
-			default: // pool full
-				conn.SetWriteDeadline(time.Now().Add(conf.WriteTimeout))
-				conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseTryAgainLater, "crowded"))
-				conn.Close()
-			}
+			go client.Write(conf.WriteTimeout, conf.PingInterval)
+			go client.Read(conf.MaxMessageSize, conf.PongTimeout)
 		} else {
-			if r.Method != http.MethodGet {
-				http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-				return
-			}
-			fs.ServeHTTP(w, r)
+			conn.SetWriteDeadline(time.Now().Add(conf.WriteTimeout))
+			conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseTryAgainLater, "no-worker"))
+			conn.Close()
 		}
+		return
+
+	case "bot":
+		if !isWs(url) {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		log.Debug().Str("addr", r.RemoteAddr).Msg("bot joining")
+
+		query := url.Query()
+		token := query.Get("token")
+
+		claims, err := s.tokenIssuer.Verify([]byte(token), r.RemoteAddr)
+		if err != nil {
+			log.Error().Err(err).Msg("bearer token verification failed")
+			return
+		}
+
+		conf := s.conf.BotWebSocket
+
+		conn, err := s.botUpgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Error().Err(err).Msg("failed to upgrade bot")
+			return
+		}
+		worker := &Actor{
+			conn: conn,
+			send: make(chan []byte, conf.MessageQueueSize),
+		}
+
+		s.workers.Put(claims.Route, worker)
+
+		go worker.Write(conf.WriteTimeout, conf.PingInterval)
+		go worker.Read(conf.MaxMessageSize, conf.PongTimeout)
+
+		return
+
+	case "bot/auth":
+		id, secret, ok := r.BasicAuth()
+		if !ok {
+			log.Error().Msg("missing basic auth")
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		if id != secret { // XXX check via keychain
+			log.Error().Msg("bad id/secret")
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		r.Body = http.MaxBytesReader(w, r.Body, 1<<13) // 8K
+
+		var req BotAuthRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			log.Error().Err(err).Msg("decode failed")
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		route := path.Clean(req.Route)
+		if route != req.Route {
+			log.Error().Msg("malformed route")
+			http.Error(w, fmt.Sprintf("%s: malformed route", http.StatusText(http.StatusBadRequest)), http.StatusBadRequest)
+			return
+		}
+
+		// https://www.rfc-editor.org/rfc/rfc6749#section-5.1
+		token, err := s.tokenIssuer.Issue(id, r.RemoteAddr, route)
+		if err != nil {
+			log.Error().Err(err).Msg("token issue failed")
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		res, err := json.Marshal(BotAuthResponse{
+			TokenType:   "Bearer",
+			AccessToken: token,
+			ExpiresIn:   10, // XXX get from conf
+		})
+		if err != nil {
+			log.Error().Err(err).Msg("token marshal failed")
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(res)
 		return
 	}
 
+	if r.Method != http.MethodGet {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		return
+	}
+
+	if fs, ok := s.fileServers.Get(url.Path); ok {
+		fs.ServeHTTP(w, r)
+	}
+
 	http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+}
+
+type BotAuthRequest struct {
+	Route string `json:"route"`
+}
+
+type BotAuthResponse struct {
+	// https://www.rfc-editor.org/rfc/rfc6749#section-5.1
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	ExpiresIn    int    `json:"expires_in"` // seconds
+	RefreshToken string `json:"refresh_token,omitempty"`
+	Scope        string `json:"scope,omitempty"` // space-delimited, case-sensitive
+}
+
+type KeyCache struct {
+	sync.RWMutex
+	items   map[string]time.Time
+	ttl, gc time.Duration
+}
+
+func (c *KeyCache) Has(key string) bool {
+	c.RLock()
+	defer c.RUnlock()
+	t, ok := c.items[key]
+	return ok && t.After(time.Now())
+}
+
+func (c *KeyCache) Put(key string) {
+	c.Lock()
+	c.items[key] = time.Now().Add(c.ttl)
+	c.Unlock()
+}
+
+func (c *KeyCache) Del(key string) {
+	c.Lock()
+	delete(c.items, key)
+	c.Unlock()
+}
+
+func newKeyCache(ttl, gc time.Duration) *KeyCache {
+	if gc < time.Second {
+		gc = time.Second
+	}
+	return &KeyCache{items: make(map[string]time.Time), ttl: ttl, gc: gc}
+}
+func (c *KeyCache) GC() {
+	ticker := time.NewTicker(c.gc)
+	for range ticker.C {
+		c.Lock()
+		now := time.Now()
+		for k, t := range c.items {
+			if t.Before(now) {
+				delete(c.items, k)
+			}
+		}
+		c.Unlock()
+	}
+}
+
+type BotClaims struct {
+	jwt.RegisteredClaims
+	IP    string `json:"ip"`
+	Route string `json:"route"`
+}
+
+type TokenIssuer struct {
+	cache    *KeyCache
+	builder  *jwt.Builder
+	verifier *jwt.HSAlg
+	audience string
+	ttl      time.Duration
+}
+
+func newTokenIssuer(audience string, ttl time.Duration) (*TokenIssuer, error) {
+	key := []byte(`secret`)
+	signer, err := jwt.NewSignerHS(jwt.HS256, key)
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize JWT signer: %v", err)
+	}
+	verifier, err := jwt.NewVerifierHS(jwt.HS256, key)
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize JWT verifier: %v", err)
+	}
+	builder := jwt.NewBuilder(signer)
+	cache := newKeyCache(ttl, time.Minute)
+	return &TokenIssuer{cache, builder, verifier, audience, ttl}, nil
+}
+
+func (ti *TokenIssuer) GC() {
+	ti.cache.GC()
+}
+
+func (ti *TokenIssuer) Issue(subject, ip, route string) (string, error) {
+	var token string
+	uid, err := uuid.NewRandom()
+	if err != nil {
+		return token, fmt.Errorf("failed to generate UUID: %v", err)
+	}
+	id := uid.String()
+	ti.cache.Put(id)
+	claims := &BotClaims{
+		jwt.RegisteredClaims{
+			ID:        id,
+			Subject:   subject,
+			Audience:  jwt.Audience{ti.audience},
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(ti.ttl)),
+		},
+		ip,
+		route,
+	}
+	t, err := ti.builder.Build(claims)
+	if err != nil {
+		return token, fmt.Errorf("failed to build JWT token: %v", err)
+	}
+	return t.String(), nil
+}
+
+var (
+	errBadAudience  = errors.New("wrong audience in token")
+	errBadIP        = errors.New("wrong IP in token")
+	errExpiredToken = errors.New("token expired")
+	errReusedToken  = errors.New("token reused")
+)
+
+func (ti *TokenIssuer) Verify(b []byte, ip string) (*BotClaims, error) {
+	var claims BotClaims
+	err := jwt.ParseClaims(b, ti.verifier, &claims)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse JWT token: %v", err)
+	}
+
+	if !ti.cache.Has(claims.ID) {
+		return nil, errReusedToken
+	}
+	ti.cache.Del(claims.ID) // prevent reuse
+
+	if !claims.IsValidExpiresAt(time.Now()) {
+		return nil, errExpiredToken
+	}
+	if !claims.IsForAudience(ti.audience) {
+		return nil, errBadAudience
+	}
+	if claims.IP != ip {
+		return nil, errBadIP
+	}
+
+	return &claims, nil
 }
 
 func adjustDurations(conf *WebSocketConf) {
@@ -279,32 +524,64 @@ func newUpgrader(conf WebSocketConf) websocket.Upgrader {
 	}
 }
 
-func newServer(conf Conf) *Server {
-	clientConf, botConf := conf.ClientWebSocket, conf.BotWebSocket
+type StaticFileServerGroup struct {
+	sync.RWMutex
+	fs      http.Handler
+	baseURL string
+	routes  map[string]http.HandlerFunc
+}
 
-	fs := http.FileServer(http.Dir(conf.WebRoot))
+func newStaticFileServerGroup(webRoot, baseURL string) *StaticFileServerGroup {
+	return &StaticFileServerGroup{
+		fs:      http.FileServer(http.Dir(webRoot)),
+		baseURL: baseURL,
+		routes:  make(map[string]http.HandlerFunc),
+	}
+}
 
-	routes := make(map[string]http.HandlerFunc)
-	for _, bc := range conf.Bot {
-		p := path.Clean(conf.BasePath + bc.Path)
+func (g *StaticFileServerGroup) Put(route string) {
+	g.Lock()
+	if _, ok := g.routes[route]; !ok {
+		p := path.Clean(g.baseURL + route)
 		// Ensure trailing slash so that relative URLs for static files resolve correctly
 		if p != "/" {
 			p += "/"
 		}
-		log.Debug().Str("path", p).Msg("register path")
-		routes[p] = http.StripPrefix(p, fs).ServeHTTP
+		g.routes[route] = http.StripPrefix(p, g.fs).ServeHTTP
+	}
+	g.Unlock()
+}
+func (g *StaticFileServerGroup) Get(route string) (http.HandlerFunc, bool) {
+	g.RLock()
+	defer g.RUnlock()
+	f, ok := g.routes[route]
+	return f, ok
+}
+
+func newServer(conf Conf) (*Server, error) {
+	clientConf, botConf := conf.ClientWebSocket, conf.BotWebSocket
+
+	ti, err := newTokenIssuer("SIDEKICK", 10*time.Second) // XXX read from env
+	if err != nil {
+		return nil, fmt.Errorf("failed to create token issuer: %v", err)
 	}
 	return &Server{
 		conf,
-		newBotPool(),
-		routes,
+		ti,
+		newWorkerPool(),
+		newStaticFileServerGroup(conf.WebRoot, conf.BaseURL),
 		newUpgrader(clientConf),
 		newUpgrader(botConf),
-	}
+	}, nil
 }
 
 func serve(conf Conf) error {
-	server := newServer(conf)
+	server, err := newServer(conf)
+	if err != nil {
+		return err
+	}
+
+	go server.tokenIssuer.GC()
 
 	s := &http.Server{
 		// TODO TLS config
