@@ -252,12 +252,23 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		log.Debug().Str("addr", r.RemoteAddr).Msg("bot joining")
 
-		query := url.Query()
-		token := query.Get("token")
+		id, secret, ok := r.BasicAuth()
+		if !ok {
+			log.Error().Msg("missing basic auth")
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
 
-		claims, err := s.tokenIssuer.Verify([]byte(token), r.RemoteAddr)
-		if err != nil {
-			log.Error().Err(err).Msg("bearer token verification failed")
+		if id != secret { // XXX check via keychain
+			log.Error().Msg("bad id/secret")
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		route := r.Header.Get("Sidekick-Route")
+		if route == "" {
+			log.Error().Msg("empty route")
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
 		}
 
@@ -273,7 +284,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			send: make(chan []byte, conf.MessageQueueSize),
 		}
 
-		s.workers.Put(claims.Route, worker)
+		s.workers.Put(route, worker)
+		s.fileServers.Put(route)
 
 		go worker.Write(conf.WriteTimeout, conf.PingInterval)
 		go worker.Read(conf.MaxMessageSize, conf.PongTimeout)
