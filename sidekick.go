@@ -53,8 +53,8 @@ type Creds struct {
 
 type Actor struct {
 	// sync.RWMutex
-	conn *websocket.Conn
-	send chan []byte
+	conn  *websocket.Conn
+	sendC chan []byte
 	// pool  *WorkerPool
 	peer *Actor
 	// creds *Creds
@@ -73,10 +73,14 @@ func (c *Actor) send(b []byte) bool {
 var (
 	msgPeerHasDied = []byte("peer dead")
 )
+
 func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
 	conn := c.conn
 	defer func() {
 		conn.Close()
+		if c.peer != nil {
+			c.peer.conn.Close()
+		}
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("reader closed")
 	}()
 	conn.SetReadLimit(readLimit)
@@ -114,11 +118,15 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 	defer func() {
 		ping.Stop()
 		conn.Close()
+		if c.peer != nil {
+			c.peer.conn.Close()
+		}
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("reader closed")
 	}()
+
 	for {
 		select {
-		case message, ok := <-c.send:
+		case message, ok := <-c.sendC:
 			conn.SetWriteDeadline(time.Now().Add(writeTimeout))
 			if !ok {
 				// send channel closed
@@ -134,13 +142,14 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 			w.Write(message)
 
 			// drain
-			n := len(c.send)
+			n := len(c.sendC)
 			for i := 0; i < n; i++ {
 				w.Write(newline)
-				w.Write(<-c.send)
+				w.Write(<-c.sendC)
 			}
 
 			if err := w.Close(); err != nil {
+				log.Error().Err(err).Msg("failed to close connection writer")
 				return
 			}
 		case <-ping.C:
