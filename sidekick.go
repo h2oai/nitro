@@ -60,6 +60,19 @@ type Actor struct {
 	// creds *Creds
 }
 
+func (c *Actor) send(b []byte) bool {
+	select {
+	case c.sendC <- b:
+	default:
+		close(c.sendC)
+		return false
+	}
+	return true
+}
+
+var (
+	msgPeerHasDied = []byte("peer dead")
+)
 func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
 	conn := c.conn
 	defer func() {
@@ -81,21 +94,16 @@ func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
 			return
 		}
 
-		peer := c.peer // XXX peer may be nil
+		peer := c.peer
 
-		select {
-		case peer.send <- message:
-		default: // peer dead
-			close(peer.send)
+		if peer == nil {
+			continue
+		}
 
-			// reply with peer-dead
-			select {
-			case c.send <- message: // XXX send peer-dead
-			default: // i'm dead, too
-				close(c.send)
-			}
-
-			return // stop reading
+		if !peer.send(message) {
+			// peer dead; bail out
+			c.send(msgPeerHasDied)
+			return
 		}
 	}
 }
