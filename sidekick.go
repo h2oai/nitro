@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
 	"path"
@@ -170,11 +169,6 @@ type Server struct {
 	botUpgrader    websocket.Upgrader
 }
 
-const (
-	inSocketSuffix  = "/in"
-	outSocketSuffix = "/out"
-)
-
 type WorkerPool struct {
 	sync.Mutex
 	workers map[string]map[*Actor]struct{}
@@ -203,110 +197,112 @@ func (p *WorkerPool) Get(route string) *Actor {
 	p.Lock()
 	defer p.Unlock()
 
-	var w *Actor
 	if workers, ok := p.workers[route]; ok {
-		for w = range workers {
-			break
-		}
-		if w != nil {
+		for w := range workers {
 			delete(workers, w)
+			return w
 		}
 	}
-	return w
+	return nil
 }
 
-func isWs(u *url.URL) bool {
-	return u.Scheme == "wss" || u.Scheme == "ws"
+func (s *Server) hijackBot(w http.ResponseWriter, r *http.Request) {
+	log.Debug().Str("addr", r.RemoteAddr).Msg("bot joining")
+
+	id, secret, ok := r.BasicAuth()
+	if !ok {
+		log.Error().Msg("missing basic auth")
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+
+	if id != secret { // XXX check via keychain
+		log.Error().Msg("bad id/secret")
+		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		return
+	}
+
+	route := r.Header.Get("Sidekick-Route")
+	if route == "" {
+		log.Error().Msg("empty route")
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+
+	conf := s.conf.BotWebSocket
+
+	conn, err := s.botUpgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to upgrade bot")
+		return
+	}
+	worker := &Actor{
+		conn:  conn,
+		sendC: make(chan []byte, conf.MessageQueueSize),
+	}
+
+	s.workers.Put(route, worker)
+	s.fileServers.Put(route)
+
+	go worker.Write(conf.WriteTimeout, conf.PingInterval)
+	go worker.Read(conf.MaxMessageSize, conf.PongTimeout)
+
+	log.Info().Str("route", route).Str("addr", r.RemoteAddr).Msg("bot joined")
+}
+
+func (s *Server) hijackClient(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	route := query.Get("route")
+
+	log.Debug().Str("addr", r.RemoteAddr).Msg("client joining")
+	conf := s.conf.ClientWebSocket
+
+	conn, err := s.clientUpgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to upgrade client")
+		return
+	}
+
+	worker := s.workers.Get(route)
+
+	if worker == nil {
+		log.Debug().Str("addr", r.RemoteAddr).Msg("no available worker")
+		conn.SetWriteDeadline(time.Now().Add(conf.WriteTimeout))
+		conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseTryAgainLater, "no-worker"))
+		conn.Close()
+		return
+	}
+
+	client := &Actor{
+		conn:  conn,
+		sendC: make(chan []byte, conf.MessageQueueSize),
+		peer:  worker,
+	}
+
+	worker.peer = client
+
+	go client.Write(conf.WriteTimeout, conf.PingInterval)
+	go client.Read(conf.MaxMessageSize, conf.PongTimeout)
+
+	log.Info().
+		Str("route", route).
+		Str("addr", r.RemoteAddr).
+		Str("peer", worker.conn.RemoteAddr().String()).
+		Msg("client bridged")
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	url := r.URL
-	p := strings.TrimPrefix(url.Path, s.conf.BaseURL)
+	p := strings.TrimPrefix(r.URL.Path, s.conf.BaseURL)
 
-	log.Debug().Str("url", r.URL.String()).Str("uri", r.RequestURI).Msg("request")
+	log.Debug().Str("path", r.URL.Path).Msg("request")
 
 	switch p {
-	case "ws":
-		if !isWs(url) {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-		query := url.Query()
-		route := query.Get("route")
-
-		log.Debug().Str("addr", r.RemoteAddr).Msg("client joining")
-		conf := s.conf.ClientWebSocket
-
-		conn, err := s.clientUpgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Error().Err(err).Msg("failed to upgrade client")
-			return
-		}
-
-		if worker := s.workers.Get(route); worker != nil {
-			client := &Actor{
-				conn: conn,
-				send: make(chan []byte, conf.MessageQueueSize),
-				peer: worker,
-			}
-
-			worker.peer = client
-
-			go client.Write(conf.WriteTimeout, conf.PingInterval)
-			go client.Read(conf.MaxMessageSize, conf.PongTimeout)
-		} else {
-			conn.SetWriteDeadline(time.Now().Add(conf.WriteTimeout))
-			conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseTryAgainLater, "no-worker"))
-			conn.Close()
-		}
+	case "wss":
+		s.hijackClient(w, r)
 		return
 
 	case "bot":
-		if !isWs(url) {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		log.Debug().Str("addr", r.RemoteAddr).Msg("bot joining")
-
-		id, secret, ok := r.BasicAuth()
-		if !ok {
-			log.Error().Msg("missing basic auth")
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		if id != secret { // XXX check via keychain
-			log.Error().Msg("bad id/secret")
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			return
-		}
-
-		route := r.Header.Get("Sidekick-Route")
-		if route == "" {
-			log.Error().Msg("empty route")
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		conf := s.conf.BotWebSocket
-
-		conn, err := s.botUpgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Error().Err(err).Msg("failed to upgrade bot")
-			return
-		}
-		worker := &Actor{
-			conn: conn,
-			send: make(chan []byte, conf.MessageQueueSize),
-		}
-
-		s.workers.Put(route, worker)
-		s.fileServers.Put(route)
-
-		go worker.Write(conf.WriteTimeout, conf.PingInterval)
-		go worker.Read(conf.MaxMessageSize, conf.PongTimeout)
-
+		s.hijackBot(w, r)
 		return
 
 	case "bot/auth":
@@ -368,8 +364,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if fs, ok := s.fileServers.Get(url.Path); ok {
+	if fs, ok := s.fileServers.Match(r.URL.Path); ok {
 		fs.ServeHTTP(w, r)
+		return
 	}
 
 	http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
@@ -576,17 +573,21 @@ func (g *StaticFileServerGroup) Put(route string) {
 		if p != "/" {
 			p += "/"
 		}
+		log.Debug().Str("route", route).Str("strip", p).Msg("registering route")
 		g.routes[route] = http.StripPrefix(p, g.fs).ServeHTTP
 	}
 	g.Unlock()
 }
-func (g *StaticFileServerGroup) Get(route string) (http.HandlerFunc, bool) {
+func (g *StaticFileServerGroup) Match(urlPath string) (http.HandlerFunc, bool) {
 	g.RLock()
 	defer g.RUnlock()
-	f, ok := g.routes[route]
-	return f, ok
+	for route, handler := range g.routes {
+		if strings.HasPrefix(urlPath, route) {
+			return handler, true
+		}
+	}
+	return nil, false
 }
-
 func newServer(conf Conf) (*Server, error) {
 	clientConf, botConf := conf.ClientWebSocket, conf.BotWebSocket
 

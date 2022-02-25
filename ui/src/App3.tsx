@@ -41,6 +41,8 @@ type SocketEventHandler = (e: SocketEvent) => void
 
 type SendSocketData = (data: any) => void
 
+const defer = (f: TimerHandler) => window.setTimeout(f, 0)
+
 const
   toSocketAddress = (path: S): S => {
     const
@@ -107,8 +109,25 @@ export const App = () => {
   let send: SendSocketData | null = null
   useEffect(() => {
     if (!send) {
-      send = connect(window.location.pathname + 'in', (e) => {
+      const route = window.location.pathname
+      send = connect(`/wss?route=${route}`, (e) => { // XXX prefix baseurl
         console.log('got event', e)
+        switch (e.t) {
+          case SocketEventT.Connect:
+            window.setTimeout(() => {
+              if (send) {
+                send({ t: 'h', h: { language: window.navigator.language } })
+              }
+            }, 1000)
+            break
+          case SocketEventT.Message:
+            break
+          case SocketEventT.Disconnect:
+            break
+          case SocketEventT.Error:
+            console.error(e.error)
+            break
+        }
       })
     }
   })
