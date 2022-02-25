@@ -4,18 +4,17 @@ import websocket
 from base64 import b64encode
 
 # TODO read from env
-basic_auth = b64encode(b'foo:foo').decode('ascii')
-headers = {
-    'Authorization': 'Basic ' + basic_auth,
-    'Sidekick-Route': '/foo/'
-}
+client_id = 'foo'
+client_secret = 'foo'
 
 # TODO SSL options
 # To modify the Host, Origin, Cookie, or Sec-WebSocket-Protocol header values of the WebSocket handshake request,
 # pass the host, origin, cookie, or subprotocols options to your WebSocket connection.
 # https://websocket-client.readthedocs.io/en/latest/faq.html#what-else-can-i-do-with-sslopts
 ws = websocket.WebSocket()
-ws.connect('ws://localhost:11111/bot', header=headers)
+ws.connect('ws://localhost:11111/ws/bot?r=/foo/', header={
+    'Authorization': 'Basic ' + b64encode(f'{client_id}:{client_secret}'.encode('ascii')).decode('ascii')
+})
 
 _primitive = (bool, int, float, str)
 Primitive = Union[bool, int, float, str]
