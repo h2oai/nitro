@@ -52,11 +52,24 @@ type Creds struct {
 }
 
 type Actor struct {
-	conn  *websocket.Conn
-	sendC chan []byte
-	route string
-	pool  *WorkerPool
-	peer  *Actor
+	conn   *websocket.Conn
+	sendC  chan []byte
+	route  string
+	pool   *WorkerPool
+	peer   *Actor
+	peerMu sync.RWMutex
+}
+
+func (c *Actor) Peer() *Actor {
+	c.peerMu.RLock()
+	defer c.peerMu.RUnlock()
+	return c.peer
+}
+
+func (c *Actor) SetPeer(peer *Actor) {
+	c.peerMu.Lock()
+	c.peer = peer
+	c.peerMu.Unlock()
 }
 
 func (c *Actor) send(b []byte) bool {
@@ -78,8 +91,9 @@ func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
 	conn := c.conn
 	defer func() {
 		conn.Close()
-		if c.peer != nil {
-			c.peer.conn.Close()
+		peer := c.Peer()
+		if peer != nil {
+			peer.conn.Close()
 		}
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("reader closed")
 	}()
@@ -98,16 +112,18 @@ func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
 			return
 		}
 
-		if c.peer == nil && c.pool != nil {
-			c.pool.Match(c)
+		peer := c.Peer()
+
+		if peer == nil && c.pool != nil {
+			peer = c.pool.Match(c)
 		}
 
-		if c.peer == nil {
+		if peer == nil {
 			c.send(msgNoPeer)
 			continue
 		}
 
-		if !c.peer.send(message) {
+		if !peer.send(message) {
 			// peer dead; bail out
 			c.send(msgPeerDied)
 			return
@@ -121,8 +137,9 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 	defer func() {
 		ping.Stop()
 		conn.Close()
-		if c.peer != nil {
-			c.peer.conn.Close()
+		peer := c.Peer()
+		if peer != nil {
+			peer.conn.Close()
 		}
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("writer closed")
 	}()
@@ -196,19 +213,21 @@ func (p *WorkerPool) Put(route string, w *Actor) {
 	p.Unlock()
 }
 
-func (p *WorkerPool) Match(caller *Actor) bool {
+func (p *WorkerPool) Match(caller *Actor) (callee *Actor) {
 	p.Lock()
-	defer p.Unlock()
-
 	if workers, ok := p.workers[caller.route]; ok {
-		for callee := range workers {
+		for callee = range workers {
 			delete(workers, callee)
-			callee.peer = caller
-			caller.peer = callee
-			return true
+			break
 		}
 	}
-	return false
+	p.Unlock()
+
+	if callee != nil {
+		callee.SetPeer(caller)
+		caller.SetPeer(callee)
+	}
+	return
 }
 
 func (s *Server) hijackBot(w http.ResponseWriter, r *http.Request) {
