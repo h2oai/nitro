@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -15,8 +14,6 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/cristalhq/jwt/v4"
-	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -340,154 +337,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.fs.ServeHTTP(w, r)
-}
-
-type BotAuthRequest struct {
-	Route string `json:"route"`
-}
-
-type BotAuthResponse struct {
-	// https://www.rfc-editor.org/rfc/rfc6749#section-5.1
-	AccessToken  string `json:"access_token"`
-	TokenType    string `json:"token_type"`
-	ExpiresIn    int    `json:"expires_in"` // seconds
-	RefreshToken string `json:"refresh_token,omitempty"`
-	Scope        string `json:"scope,omitempty"` // space-delimited, case-sensitive
-}
-
-type KeyCache struct {
-	sync.RWMutex
-	items   map[string]time.Time
-	ttl, gc time.Duration
-}
-
-func (c *KeyCache) Has(key string) bool {
-	c.RLock()
-	defer c.RUnlock()
-	t, ok := c.items[key]
-	return ok && t.After(time.Now())
-}
-
-func (c *KeyCache) Put(key string) {
-	c.Lock()
-	c.items[key] = time.Now().Add(c.ttl)
-	c.Unlock()
-}
-
-func (c *KeyCache) Del(key string) {
-	c.Lock()
-	delete(c.items, key)
-	c.Unlock()
-}
-
-func newKeyCache(ttl, gc time.Duration) *KeyCache {
-	if gc < time.Second {
-		gc = time.Second
-	}
-	return &KeyCache{items: make(map[string]time.Time), ttl: ttl, gc: gc}
-}
-func (c *KeyCache) GC() {
-	ticker := time.NewTicker(c.gc)
-	for range ticker.C {
-		c.Lock()
-		now := time.Now()
-		for k, t := range c.items {
-			if t.Before(now) {
-				delete(c.items, k)
-			}
-		}
-		c.Unlock()
-	}
-}
-
-type BotClaims struct {
-	jwt.RegisteredClaims
-	IP    string `json:"ip"`
-	Route string `json:"route"`
-}
-
-type TokenIssuer struct {
-	cache    *KeyCache
-	builder  *jwt.Builder
-	verifier *jwt.HSAlg
-	audience string
-	ttl      time.Duration
-}
-
-func newTokenIssuer(audience string, ttl time.Duration) (*TokenIssuer, error) {
-	key := []byte(`secret`)
-	signer, err := jwt.NewSignerHS(jwt.HS256, key)
-	if err != nil {
-		return nil, fmt.Errorf("failed to initialize JWT signer: %v", err)
-	}
-	verifier, err := jwt.NewVerifierHS(jwt.HS256, key)
-	if err != nil {
-		return nil, fmt.Errorf("failed to initialize JWT verifier: %v", err)
-	}
-	builder := jwt.NewBuilder(signer)
-	cache := newKeyCache(ttl, time.Minute)
-	return &TokenIssuer{cache, builder, verifier, audience, ttl}, nil
-}
-
-func (ti *TokenIssuer) GC() {
-	ti.cache.GC()
-}
-
-func (ti *TokenIssuer) Issue(subject, ip, route string) (string, error) {
-	var token string
-	uid, err := uuid.NewRandom()
-	if err != nil {
-		return token, fmt.Errorf("failed to generate UUID: %v", err)
-	}
-	id := uid.String()
-	ti.cache.Put(id)
-	claims := &BotClaims{
-		jwt.RegisteredClaims{
-			ID:        id,
-			Subject:   subject,
-			Audience:  jwt.Audience{ti.audience},
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(ti.ttl)),
-		},
-		ip,
-		route,
-	}
-	t, err := ti.builder.Build(claims)
-	if err != nil {
-		return token, fmt.Errorf("failed to build JWT token: %v", err)
-	}
-	return t.String(), nil
-}
-
-var (
-	errBadAudience  = errors.New("wrong audience in token")
-	errBadIP        = errors.New("wrong IP in token")
-	errExpiredToken = errors.New("token expired")
-	errReusedToken  = errors.New("token reused")
-)
-
-func (ti *TokenIssuer) Verify(b []byte, ip string) (*BotClaims, error) {
-	var claims BotClaims
-	err := jwt.ParseClaims(b, ti.verifier, &claims)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse JWT token: %v", err)
-	}
-
-	if !ti.cache.Has(claims.ID) {
-		return nil, errReusedToken
-	}
-	ti.cache.Del(claims.ID) // prevent reuse
-
-	if !claims.IsValidExpiresAt(time.Now()) {
-		return nil, errExpiredToken
-	}
-	if !claims.IsForAudience(ti.audience) {
-		return nil, errBadAudience
-	}
-	if claims.IP != ip {
-		return nil, errBadIP
-	}
-
-	return &claims, nil
 }
 
 func adjustDurations(conf *WebSocketConf) {
