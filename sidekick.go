@@ -14,13 +14,13 @@ import (
 	"sync"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/cristalhq/jwt/v4"
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-
-	"github.com/BurntSushi/toml"
-	"github.com/gorilla/websocket"
+	"golang.org/x/time/rate"
 )
 
 type Conf struct {
@@ -40,6 +40,8 @@ type WebSocketConf struct {
 	PingInterval     time.Duration
 	PongTimeout      time.Duration
 	WriteTimeout     time.Duration
+	RateLimit        float64
+	RateLimitBurst   int
 }
 
 var (
@@ -83,11 +85,12 @@ func (c *Actor) send(b []byte) bool {
 }
 
 var (
-	msgNoPeer   = []byte(`{"t":"e","e":"no-peer"}`)
-	msgPeerDied = []byte(`{"t":"e","e":"peer-died"}`)
+	msgNoPeer      = []byte(`{"t":"e","e":"no-peer"}`)
+	msgPeerDied    = []byte(`{"t":"e","e":"peer-died"}`)
+	msgRateLimited = []byte(`{"t":"e","e":"rate-limited"}`)
 )
 
-func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
+func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
 	conn := c.conn
 	defer func() {
 		conn.Close()
@@ -103,7 +106,16 @@ func (c *Actor) Read(readLimit int64, pongTimeout time.Duration) {
 		conn.SetReadDeadline(time.Now().Add(pongTimeout))
 		return nil
 	})
+
+	limiter := rate.NewLimiter(rate.Limit(rateLimit), rateLimitBurst)
+
 	for {
+
+		if !limiter.Allow() {
+			c.send(msgRateLimited)
+			return
+		}
+
 		_, message, err := conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
@@ -269,7 +281,7 @@ func (s *Server) hijackBot(w http.ResponseWriter, r *http.Request) {
 	s.workers.Put(route, worker)
 
 	go worker.Write(conf.WriteTimeout, conf.PingInterval)
-	go worker.Read(conf.MaxMessageSize, conf.PongTimeout)
+	go worker.Read(conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
 
 	log.Info().Str("route", route).Str("addr", r.RemoteAddr).Msg("worker joined")
 }
@@ -302,7 +314,7 @@ func (s *Server) hijackClient(w http.ResponseWriter, r *http.Request) {
 	}
 
 	go client.Write(conf.WriteTimeout, conf.PingInterval)
-	go client.Read(conf.MaxMessageSize, conf.PongTimeout)
+	go client.Read(conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
 
 	log.Info().Str("addr", r.RemoteAddr).Msg("client joined")
 }

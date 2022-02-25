@@ -34,7 +34,7 @@ WriteBufferSize = 1024
 # Maximum message size allowed from client, in bytes.
 MaxMessageSize = 512
 
-# Maximum number of outbound messages to queue up before kicking client.
+# Maximum number of outbound messages to queue up before terminating the connection.
 MessageQueueSize = 256
 
 # Time allowed to write a message to the client, in seconds.
@@ -48,6 +48,12 @@ PingInterval = 54
 # Must be greater than PingInterval
 PongTimeout = 60
 
+# Maximum number of inbound messages allowed per second.
+# Exceeding this limit will terminate the connection.
+RateLimit = 60
+
+# Maximum number of inbound messages to handle in excess of the specified rate.
+RateLimitBurst = 10
 
 #
 # Back-end web socket settings
@@ -67,7 +73,7 @@ WriteBufferSize = 1024
 # Maximum message size allowed from bot, in bytes.
 MaxMessageSize = 512
 
-# Maximum number of outbound messages to queue up before kicking bot.
+# Maximum number of outbound messages to queue up before terminating the connection.
 MessageQueueSize = 256
 
 # Time allowed to write a message to the bot, in seconds.
@@ -80,3 +86,10 @@ PingInterval = 54
 # Time allowed to read the next pong message from the bot, in seconds. 
 # Must be greater than PingInterval
 PongTimeout = 60
+
+# Maximum number of inbound messages allowed per second.
+# Exceeding this limit will terminate the connection.
+RateLimit = 600
+
+# Maximum number of inbound messages allowed in excess of the specified rate.
+RateLimitBurst = 10
