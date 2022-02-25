@@ -8,4 +8,9 @@ require (
 	github.com/rs/zerolog v1.26.1
 )
 
-require golang.org/x/time v0.0.0-20220224211638-0e9765cccd65
+require (
+	github.com/vmihailenco/msgpack/v5 v5.3.5
+	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65
+)
+
+require github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect

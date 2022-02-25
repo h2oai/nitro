@@ -1,7 +1,6 @@
 {
   "name": "ui",
   "version": "0.1.0",
-  "homepage": ".",
   "private": true,
   "dependencies": {
     "@fluentui/react": "^8.49.0",
@@ -14,6 +13,7 @@
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/styled-components": "^5.1.20",
+    "@ygoe/msgpack": "^1.0.3",
     "micromark": "^3.0.10",
     "micromark-extension-directive": "^2.1.1",
     "micromark-extension-gfm-autolink-literal": "^1.0.3",

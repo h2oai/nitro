@@ -1,7 +1,7 @@
 from typing import Optional, Tuple, List, Dict, Union
-import json
 import websocket
 from base64 import b64encode
+import msgpack
 
 # TODO read from env
 client_id = 'foo'
@@ -35,15 +35,22 @@ class ProtocolError(Exception):
     pass
 
 
+def _unmarshal(b) -> dict:
+    return msgpack.unpackb(b)
+
+
+def _marshal(d: dict):
+    return msgpack.packb(d)
+
+
 def _write(d: dict):
-    # compact representation, without newlines
-    ws.send(json.dumps(d, allow_nan=False, separators=(',', ':')))
+    ws.send(_marshal(d))
 
 
 def _read() -> any:
     data = ws.recv()
-    print('data', data)
-    d = json.loads(data)
+    print('raw', data)
+    d = _unmarshal(data)
     print('loaded', d)
     if isinstance(d, dict):
         t = d.get('t')

@@ -17,6 +17,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/vmihailenco/msgpack/v5"
 	"golang.org/x/time/rate"
 )
 
@@ -40,10 +41,6 @@ type WebSocketConf struct {
 	RateLimit        float64
 	RateLimitBurst   int
 }
-
-var (
-	newline = []byte{'\n'}
-)
 
 type Creds struct {
 	ID     string `json:"id"`
@@ -82,10 +79,16 @@ func (c *Actor) send(b []byte) bool {
 }
 
 var (
-	msgNoPeer      = []byte(`{"t":"e","e":"no-peer"}`)
-	msgPeerDied    = []byte(`{"t":"e","e":"peer-died"}`)
-	msgRateLimited = []byte(`{"t":"e","e":"rate-limited"}`)
+	msgNoPeer      = mustMarshal(ErrMsg{0, 0, "no_peer"})
+	msgPeerDied    = mustMarshal(ErrMsg{0, 0, "peer_died"})
+	msgRateLimited = mustMarshal(ErrMsg{0, 0, "rate_limited"})
 )
+
+type ErrMsg struct {
+	T     int    `msgpack:"t"`
+	Code  int    `msgpack:"c"`
+	Error string `msgpack:"e"`
+}
 
 func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
 	conn := c.conn
@@ -155,30 +158,15 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 
 	for {
 		select {
-		case message, ok := <-c.sendC:
+		case msg, ok := <-c.sendC:
 			conn.SetWriteDeadline(time.Now().Add(writeTimeout))
 			if !ok {
 				// send channel closed
 				conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-
-			w, err := conn.NextWriter(websocket.TextMessage)
-			if err != nil {
-				log.Error().Err(err).Msg("failed to obtain connection writer")
-				return
-			}
-			w.Write(message)
-
-			// drain
-			n := len(c.sendC)
-			for i := 0; i < n; i++ {
-				w.Write(newline)
-				w.Write(<-c.sendC)
-			}
-
-			if err := w.Close(); err != nil {
-				log.Error().Err(err).Msg("failed to close connection writer")
+			if err := conn.WriteMessage(websocket.BinaryMessage, msg); err != nil {
+				log.Error().Err(err).Msg("failed to write message")
 				return
 			}
 		case <-ping.C:
@@ -485,7 +473,16 @@ func configureLogger(logLevel string, pretty bool) {
 	}
 }
 
+func mustMarshal(i interface{}) []byte {
+	b, err := msgpack.Marshal(i)
+	if err != nil {
+		panic(err)
+	}
+	return b
+}
+
 func main() {
+
 	conf, err := parseConf("./sidekick.toml") // XXX tie to -conf
 	if err != nil {
 		panic(err)

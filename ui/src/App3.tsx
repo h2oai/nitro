@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 
+import msgpack from '@ygoe/msgpack'
+
 export type B = boolean
 export type U = number
 export type I = number
@@ -63,6 +65,7 @@ export const
       reconnect = (address: S) => {
         const retry = () => reconnect(address)
         const socket = new WebSocket(address)
+        socket.binaryType = 'arraybuffer'
         socket.onopen = () => {
           _socket = socket
           handle(connectEvent)
@@ -81,15 +84,14 @@ export const
           window.setTimeout(retry, _backoff * 1000)
         }
         socket.onmessage = (e) => {
-          if (!e.data) return
-          if (!e.data.length) return
-          for (const line of e.data.split('\n')) {
-            try {
-              const msg = JSON.parse(line) as IO
-            } catch (error) {
-              console.error(error)
-              handle({ t: SocketEventT.Error, error })
-            }
+          const data = e.data
+          if (!data) return
+          try {
+            const message = msgpack.deserialize(data) as IO
+            handle({ t: SocketEventT.Message, message })
+          } catch (error) {
+            console.error(error)
+            handle({ t: SocketEventT.Error, error })
           }
         }
         socket.onerror = (error) => {
@@ -101,7 +103,9 @@ export const
     reconnect(toSocketAddress(address))
 
     return (data: any) => {
-      if (_socket) _socket.send(JSON.stringify(data ?? {}))
+      defer(() => {
+        if (_socket) _socket.send(msgpack.serialize(data ?? {}))
+      })
     }
   }
 
@@ -115,11 +119,10 @@ export const App = () => {
         console.log('got event', e)
         switch (e.t) {
           case SocketEventT.Connect:
-            defer(() => {
-              if (send) send({ t: 'h', h: { language: window.navigator.language } })
-            })
+            if (send) send({ t: 'h', h: { language: window.navigator.language } })
             break
           case SocketEventT.Message:
+
             break
           case SocketEventT.Disconnect:
             break
