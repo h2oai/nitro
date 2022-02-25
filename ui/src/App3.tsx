@@ -110,15 +110,14 @@ export const App = () => {
   useEffect(() => {
     if (!send) {
       const route = window.location.pathname
-      send = connect(`/wss?route=${route}`, (e) => { // XXX prefix baseurl
+      const baseURL = document.getElementsByTagName('body')[0].getAttribute('data-baseurl') ?? '/'
+      send = connect(`${baseURL}ws/ui?r=${route}`, (e) => {
         console.log('got event', e)
         switch (e.t) {
           case SocketEventT.Connect:
-            window.setTimeout(() => {
-              if (send) {
-                send({ t: 'h', h: { language: window.navigator.language } })
-              }
-            }, 1000)
+            defer(() => {
+              if (send) send({ t: 'h', h: { language: window.navigator.language } })
+            })
             break
           case SocketEventT.Message:
             break
