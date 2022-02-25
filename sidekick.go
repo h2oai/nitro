@@ -663,14 +663,25 @@ func toLogLevel(s string) zerolog.Level {
 	return zerolog.Disabled
 }
 
+func configureLogger(logLevel string, pretty bool) {
+	zerolog.TimestampFieldName = "t"
+	zerolog.LevelFieldName = "l"
+	zerolog.MessageFieldName = "m"
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	zerolog.SetGlobalLevel(toLogLevel(logLevel))
+
+	if pretty {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
+}
+
 func main() {
-	conf, err := parseConf("./sidekick.toml")
+	conf, err := parseConf("./sidekick.toml") // XXX tie to -conf
 	if err != nil {
 		panic(err)
 	}
 
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	zerolog.SetGlobalLevel(toLogLevel(conf.LogLevel))
+	configureLogger(conf.LogLevel, true) // XXX tie to -pretty
 
 	// handle error
 	if err := serve(conf); err != nil {
