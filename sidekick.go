@@ -78,11 +78,9 @@ func (c *Actor) send(b []byte) bool {
 	return true
 }
 
-type MsgOp byte // Header, first byte
-
 const (
-	MsgOpControl MsgOp = iota + 1 // Control message
-	MsgOpMessage                  // P2P Message
+	MsgOpControl byte = iota + 1 // Control message
+	MsgOpMessage                 // P2P Message
 )
 
 const (
@@ -106,6 +104,7 @@ const (
 	ErrCodePeerUnavailable int = iota + 1
 	ErrCodePeerDead
 	ErrCodeRateLimited
+	ErrCodeBadOp
 )
 
 type ErrMsg struct {
@@ -117,6 +116,7 @@ var (
 	msgPeerUnavailable = mustMarshal(ErrMsg{MsgTypeError, ErrCodePeerUnavailable})
 	msgPeerDied        = mustMarshal(ErrMsg{MsgTypeError, ErrCodePeerDead})
 	msgRateLimited     = mustMarshal(ErrMsg{MsgTypeError, ErrCodeRateLimited})
+	msgErrBadOp        = mustMarshal(ErrMsg{MsgTypeError, ErrCodeBadOp})
 )
 
 func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
@@ -125,7 +125,9 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 		conn.Close()
 		peer := c.Peer()
 		if peer != nil {
-			peer.conn.Close()
+			// XXX send quitC<-bool and handle in write for-select, else "use of closed network connection"
+			c.SetPeer(nil)
+			close(peer.sendC)
 		}
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("reader closed")
 	}()
@@ -145,7 +147,7 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 			return
 		}
 
-		_, message, err := conn.ReadMessage()
+		_, msg, err := conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Error().Str("addr", conn.RemoteAddr().String()).Err(err).Msg("unexpected close")
@@ -157,6 +159,9 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 
 		if peer == nil && c.pool != nil {
 			peer = c.pool.Match(c)
+			if peer != nil {
+				log.Info().Str("remote", peer.conn.RemoteAddr().String()).Msg("bridged")
+			}
 		}
 
 		if peer == nil {
@@ -164,10 +169,22 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 			continue
 		}
 
-		if !peer.send(message) {
-			// peer dead; bail out
-			c.send(msgPeerDied)
-			return
+		if len(msg) > 1 {
+			op := msg[0]
+			msg = msg[1:]
+			switch op {
+			case MsgOpMessage:
+				if !peer.send(msg) {
+					// peer dead; bail out
+					c.send(msgPeerDied)
+					return
+				}
+			case MsgOpControl:
+				panic("not implemented") // XXX
+			default:
+				c.send(msgErrBadOp)
+				return
+			}
 		}
 	}
 }
@@ -180,7 +197,9 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 		conn.Close()
 		peer := c.Peer()
 		if peer != nil {
-			peer.conn.Close()
+			// XXX quitC instead
+			c.SetPeer(nil)
+			close(peer.sendC)
 		}
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("writer closed")
 	}()
@@ -195,7 +214,7 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 				return
 			}
 			if err := conn.WriteMessage(websocket.BinaryMessage, msg); err != nil {
-				log.Error().Err(err).Msg("failed to write message")
+				log.Error().Err(err).Msg("write failed")
 				return
 			}
 		case <-ping.C:
