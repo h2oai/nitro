@@ -50,10 +50,21 @@ type Creds struct {
 type Actor struct {
 	conn   *websocket.Conn
 	sendC  chan []byte
+	quitC  chan bool
 	route  string
 	pool   *WorkerPool
 	peer   *Actor
 	peerMu sync.RWMutex
+}
+
+func newActor(conn *websocket.Conn, queueSize int, route string, pool *WorkerPool) *Actor {
+	return &Actor{
+		conn:  conn,
+		sendC: make(chan []byte, queueSize),
+		quitC: make(chan bool),
+		route: route,
+		pool:  pool,
+	}
 }
 
 func (c *Actor) Peer() *Actor {
@@ -124,12 +135,11 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 	defer func() {
 		conn.Close()
 		peer := c.Peer()
-		if peer != nil {
-			// XXX send quitC<-bool and handle in write for-select, else "use of closed network connection"
-			c.SetPeer(nil)
-			close(peer.sendC)
-		}
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("reader closed")
+		if peer != nil {
+			c.SetPeer(nil)
+			peer.quitC <- true
+		}
 	}()
 	conn.SetReadLimit(readLimit)
 	conn.SetReadDeadline(time.Now().Add(pongTimeout))
@@ -195,13 +205,12 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 	defer func() {
 		ping.Stop()
 		conn.Close()
+		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("writer closed")
 		peer := c.Peer()
 		if peer != nil {
-			// XXX quitC instead
 			c.SetPeer(nil)
-			close(peer.sendC)
+			peer.quitC <- true
 		}
-		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("writer closed")
 	}()
 
 	for {
@@ -222,6 +231,8 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
+		case <-c.quitC:
+			return
 		}
 	}
 }
@@ -274,7 +285,6 @@ func (p *WorkerPool) Match(caller *Actor) (callee *Actor) {
 	}
 	return
 }
-
 func (s *Server) hijackBot(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	route := query.Get("r")
@@ -305,11 +315,8 @@ func (s *Server) hijackBot(w http.ResponseWriter, r *http.Request) {
 		log.Error().Err(err).Msg("failed to upgrade bot")
 		return
 	}
-	worker := &Actor{
-		conn:  conn,
-		sendC: make(chan []byte, conf.MessageQueueSize),
-		route: route,
-	}
+
+	worker := newActor(conn, conf.MessageQueueSize, route, nil)
 
 	s.workers.Put(route, worker)
 
@@ -339,12 +346,7 @@ func (s *Server) hijackClient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := &Actor{
-		conn:  conn,
-		sendC: make(chan []byte, conf.MessageQueueSize),
-		route: route,
-		pool:  s.workers,
-	}
+	client := newActor(conn, conf.MessageQueueSize, route, s.workers)
 
 	go client.Write(conf.WriteTimeout, conf.PingInterval)
 	go client.Read(conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
