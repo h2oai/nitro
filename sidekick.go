@@ -99,10 +99,10 @@ const (
 	MsgTypeError int = iota + 1
 	MsgTypeJoin
 	MsgTypeLeave
-	MsgOpRequest
-	MsgOpResponse
-	MsgOpWatch
-	MsgOpEvent
+	MsgTypeRequest
+	MsgTypeResponse
+	MsgTypeWatch
+	MsgTypeEvent
 	MsgTypeText
 	MsgTypeInput
 	MsgTypeAbort
@@ -181,7 +181,7 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 
 		if peer == nil {
 			c.send(msgPeerUnavailable)
-			continue
+			continue // let actor decide whether to hang on or hang up
 		}
 
 		if len(msg) > 1 {
