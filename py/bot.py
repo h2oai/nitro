@@ -2,6 +2,37 @@ from typing import Optional, Tuple, List, Dict, Union
 import websocket
 from base64 import b64encode
 import msgpack
+from enum import IntEnum
+from io import BytesIO
+
+
+class _MsgOp(IntEnum):
+    Control = 1
+    Message = 2
+
+
+class _MsgType(IntEnum):
+    Error = 1
+    Join = 2
+    Leave = 3
+    Request = 4
+    Response = 5
+    Watch = 6
+    Event = 7
+    Text = 8
+    Input = 9
+    Abort = 10
+    Resume = 11
+    Read = 12
+    Write = 13
+    Append = 14
+
+
+class _ErrorCode(IntEnum):
+    PeerUnavailable = 1
+    PeerDead = 2
+    RateLimited = 3
+
 
 # TODO read from env
 client_id = 'foo'
@@ -35,33 +66,36 @@ class ProtocolError(Exception):
     pass
 
 
+def _marshal(op: int, data: dict):
+    with BytesIO() as buf:
+        buf.write(op.to_bytes(1, 'little'))
+        buf.write(msgpack.packb(data))
+        buf.seek(0)
+        b = buf.read()
+        return b
+
+
 def _unmarshal(b) -> dict:
     return msgpack.unpackb(b)
 
 
-def _marshal(d: dict):
-    return msgpack.packb(d)
+def _write(op: int, d: dict):
+    ws.send_binary(_marshal(op, d))
 
 
-def _write(d: dict):
-    ws.send(_marshal(d))
+def _write_message(d: dict):
+    _write(_MsgOp.Message, d)
 
 
-def _read() -> any:
+def _read(t: int = 0) -> dict:
     data = ws.recv()
-    print('raw', data)
     d = _unmarshal(data)
-    print('loaded', d)
     if isinstance(d, dict):
-        t = d.get('t')
-        if t == 'r':  # result
-            e = d.get('e')
-            if e is not None:
-                raise RemoteError(e)
-            return d.get('r')
-        elif t == 'h':  # hello
-            return d.get('h')  # context
-        raise ProtocolError(f'unknown message opcode: got "{t}"')
+        if t == 0:
+            dt = d.get('t')
+            if t != dt:
+                raise ProtocolError(f'unexpected message: want {t}, got {dt}')
+        return d
     raise ProtocolError(f'unknown message format: want dict, got {type(d)}')
 
 
@@ -80,14 +114,13 @@ def option(
     return _clean(d)
 
 
-def question(
+def input(
         text: Optional[Union[str, Options]] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
-):
+) -> dict:
     is_shorthand = options is None and isinstance(text, (tuple, list, dict))
     d = dict(
-        t='r',
         text=None if is_shorthand else text,
         options=text if is_shorthand else options,
         actions=actions,
@@ -95,60 +128,71 @@ def question(
     return _clean(d)
 
 
-def ask(
+def read(
         text: Optional[Union[str, Options]] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
-) -> dict:
-    q = question(
+):
+    d = input(
         text,
         options,
         actions,
     )
-    _write(q)
-    return _read()
+    d['t'] = _MsgType.Read
+    _write_message(d)
+    return _read(_MsgType.Input)
 
 
-def result(
+def output(
         text: Union[str, Objects],
         results: Optional[Objects] = None,
-        append: Optional[bool] = None,
 ) -> dict:
     has_children = results is not None and isinstance(text, (list, dict))
     d = dict(
-        t='a' if append else 'w',
         text=None if has_children else text,
         results=text if has_children else results,
     )
     return _clean(d)
 
 
-def show(
+def append(
         text: Union[str, Objects],
         results: Optional[Objects] = None,
-        append: Optional[bool] = None,
         # TODO update: dict - selectively update parts
 ):
-    r = result(
+    d = output(
         text,
         results,
-        append,
     )
-    _write(r)
+    d['t'] = _MsgType.Append
+    _write_message(d)
+
+
+def write(
+        text: Union[str, Objects],
+        results: Optional[Objects] = None,
+        # TODO update: dict - selectively update parts
+):
+    d = output(
+        text,
+        results,
+    )
+    d['t'] = _MsgType.Write
+    _write_message(d)
 
 
 def close():
     ws.close()
 
 
-# Wait for handshake/hello
-context = _read()
+# Wait for join
+_d_join = _read(_MsgType.Join)  # XXX convert to context
 
 # ------ end of bootstrap; begin userland ------
 
 counter = 0
 
 while True:
-    choice = ask(('incr', 'decr'))
+    choice = read(('incr', 'decr'))
     counter += 1 if input == 'incr' else -1
-    show(str(counter), append=True)
+    append(str(counter))

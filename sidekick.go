@@ -78,17 +78,46 @@ func (c *Actor) send(b []byte) bool {
 	return true
 }
 
-var (
-	msgNoPeer      = mustMarshal(ErrMsg{0, 0, "no_peer"})
-	msgPeerDied    = mustMarshal(ErrMsg{0, 0, "peer_died"})
-	msgRateLimited = mustMarshal(ErrMsg{0, 0, "rate_limited"})
+type MsgOp byte // Header, first byte
+
+const (
+	MsgOpControl MsgOp = iota + 1 // Control message
+	MsgOpMessage                  // P2P Message
+)
+
+const (
+	MsgTypeError int = iota + 1
+	MsgTypeJoin
+	MsgTypeLeave
+	MsgOpRequest
+	MsgOpResponse
+	MsgOpWatch
+	MsgOpEvent
+	MsgTypeText
+	MsgTypeInput
+	MsgTypeAbort
+	MsgTypeResume
+	MsgTypeRead
+	MsgTypeWrite
+	MsgTypeAppend
+)
+
+const (
+	ErrCodePeerUnavailable int = iota + 1
+	ErrCodePeerDead
+	ErrCodeRateLimited
 )
 
 type ErrMsg struct {
-	T     int    `msgpack:"t"`
-	Code  int    `msgpack:"c"`
-	Error string `msgpack:"e"`
+	T    int `msgpack:"t"`
+	Code int `msgpack:"c"`
 }
+
+var (
+	msgPeerUnavailable = mustMarshal(ErrMsg{MsgTypeError, ErrCodePeerUnavailable})
+	msgPeerDied        = mustMarshal(ErrMsg{MsgTypeError, ErrCodePeerDead})
+	msgRateLimited     = mustMarshal(ErrMsg{MsgTypeError, ErrCodeRateLimited})
+)
 
 func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
 	conn := c.conn
@@ -131,7 +160,7 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 		}
 
 		if peer == nil {
-			c.send(msgNoPeer)
+			c.send(msgPeerUnavailable)
 			continue
 		}
 
