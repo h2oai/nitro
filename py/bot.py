@@ -67,6 +67,7 @@ class ProtocolError(Exception):
 
 
 def _marshal(op: int, data: dict):
+    # Prefix 1-byte op to message
     with BytesIO() as buf:
         buf.write(op.to_bytes(1, 'little'))
         buf.write(msgpack.packb(data))
@@ -93,6 +94,9 @@ def _read(t: int = 0) -> dict:
     if isinstance(d, dict):
         if t == 0:
             dt = d.get('t')
+            if t == _MsgType.Error:
+                code = d['c']
+                raise RemoteError(f'code {code}')
             if t != dt:
                 raise ProtocolError(f'unexpected message: want {t}, got {dt}')
         return d
