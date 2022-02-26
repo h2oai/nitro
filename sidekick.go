@@ -43,53 +43,6 @@ type WebSocketConf struct {
 	RateLimitBurst   int
 }
 
-type Creds struct {
-	ID     string `json:"id"`
-	Secret string `json:"secret"`
-}
-
-type Actor struct {
-	conn   *websocket.Conn
-	sendC  chan []byte
-	quitC  chan bool
-	route  string
-	pool   *WorkerPool
-	peer   *Actor
-	peerMu sync.RWMutex
-}
-
-func newActor(conn *websocket.Conn, queueSize int, route string, pool *WorkerPool) *Actor {
-	return &Actor{
-		conn:  conn,
-		sendC: make(chan []byte, queueSize),
-		quitC: make(chan bool),
-		route: route,
-		pool:  pool,
-	}
-}
-
-func (c *Actor) Peer() *Actor {
-	c.peerMu.RLock()
-	defer c.peerMu.RUnlock()
-	return c.peer
-}
-
-func (c *Actor) SetPeer(peer *Actor) {
-	c.peerMu.Lock()
-	c.peer = peer
-	c.peerMu.Unlock()
-}
-
-func (c *Actor) send(b []byte) bool {
-	select {
-	case c.sendC <- b:
-	default:
-		close(c.sendC)
-		return false
-	}
-	return true
-}
-
 const (
 	MsgOpControl byte = iota + 1 // Control message
 	MsgOpMessage                 // P2P Message
@@ -131,13 +84,36 @@ var (
 	msgErrBadOp        = mustMarshal(ErrMsg{MsgTypeError, ErrCodeBadOp})
 )
 
-func (c *Actor) quit() {
-	c.conn.Close()
-	peer := c.Peer()
-	if peer != nil {
-		c.SetPeer(nil)
-		peer.quitC <- true
+type Actor struct {
+	conn   *websocket.Conn
+	sendC  chan []byte
+	quitC  chan bool
+	route  string
+	pool   *WorkerPool
+	peer   *Actor
+	peerMu sync.RWMutex
+}
+
+func newActor(conn *websocket.Conn, queueSize int, route string, pool *WorkerPool) *Actor {
+	return &Actor{
+		conn:  conn,
+		sendC: make(chan []byte, queueSize),
+		quitC: make(chan bool),
+		route: route,
+		pool:  pool,
 	}
+}
+
+func (c *Actor) Peer() *Actor {
+	c.peerMu.RLock()
+	defer c.peerMu.RUnlock()
+	return c.peer
+}
+
+func (c *Actor) SetPeer(peer *Actor) {
+	c.peerMu.Lock()
+	c.peer = peer
+	c.peerMu.Unlock()
 }
 
 func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
@@ -237,12 +213,23 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 	}
 }
 
-type Server struct {
-	conf           Conf
-	workers        *WorkerPool
-	clientUpgrader websocket.Upgrader
-	workerUpgrader websocket.Upgrader
-	fs             http.Handler
+func (c *Actor) send(b []byte) bool {
+	select {
+	case c.sendC <- b:
+	default:
+		close(c.sendC)
+		return false
+	}
+	return true
+}
+
+func (c *Actor) quit() {
+	c.conn.Close()
+	peer := c.Peer()
+	if peer != nil {
+		c.SetPeer(nil)
+		peer.quitC <- true
+	}
 }
 
 type WorkerPool struct {
@@ -285,6 +272,15 @@ func (p *WorkerPool) Match(caller *Actor) (callee *Actor) {
 	}
 	return
 }
+
+type Server struct {
+	conf           Conf
+	workers        *WorkerPool
+	clientUpgrader websocket.Upgrader
+	workerUpgrader websocket.Upgrader
+	fs             http.Handler
+}
+
 func (s *Server) hijackBot(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	route := query.Get("r")
@@ -356,9 +352,6 @@ func (s *Server) hijackClient(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p := strings.TrimPrefix(r.URL.Path, s.conf.BaseURL)
-
-	log.Debug().Str("path", r.URL.Path).Msg("request")
-
 	switch p {
 	case "ws/ui":
 		s.hijackClient(w, r)
