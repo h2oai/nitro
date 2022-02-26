@@ -41,7 +41,8 @@ const
 
 type SocketEventHandler = (e: SocketEvent) => void
 
-type SendSocketData = (data: any) => void
+enum MsgOp { Control = 1, Message }
+type SendSocketData = (op: MsgOp, data: any) => void
 
 const defer = (f: TimerHandler) => window.setTimeout(f, 0)
 
@@ -102,12 +103,19 @@ export const
 
     reconnect(toSocketAddress(address))
 
-    return (data: any) => {
+    return (op: U, data: any) => {
       defer(() => {
-        if (_socket) _socket.send(msgpack.serialize(data ?? {}))
+        if (_socket && data) {
+          const payload = msgpack.serialize(data)
+          const msg = new Uint8Array(1 + payload.length)
+          msg.set([op], 0)
+          msg.set(payload, 1)
+          _socket.send(msg)
+        }
       })
     }
   }
+
 
 export const App = () => {
   let send: SendSocketData | null = null
@@ -119,10 +127,9 @@ export const App = () => {
         console.log('got event', e)
         switch (e.t) {
           case SocketEventT.Connect:
-            if (send) send({ t: 'h', h: { language: window.navigator.language } })
+            if (send) send(MsgOp.Message, { t: 'h', h: { language: window.navigator.language } })
             break
           case SocketEventT.Message:
-
             break
           case SocketEventT.Disconnect:
             break
