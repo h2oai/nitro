@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 import msgpack from '@ygoe/msgpack'
 
@@ -20,6 +20,46 @@ type Input = {
 }
 type IO = Input | Output
 
+enum MsgType {
+  Error = 1,
+  Join,
+  Leave,
+  Request,
+  Response,
+  Watch,
+  Event,
+  Text,
+  Input,
+  Abort,
+  Resume,
+  Read,
+  Write,
+  Append,
+}
+
+enum ErrCode {
+  PeerUnavailable = 1,
+  PeerDead,
+  RateLimited,
+  BadOp,
+}
+
+type Msg = {
+  t: MsgType.Error
+  c: ErrCode
+} | {
+  t: MsgType.Join
+  d: any // XXX formalize
+} | {
+  t: MsgType.Read
+} | {
+  t: MsgType.Write
+} | {
+  t: MsgType.Append
+}
+
+
+
 export enum SocketEventT {
   Connect,
   Disconnect,
@@ -34,27 +74,37 @@ export type SocketEvent = {
 } | {
   t: SocketEventT.Error, error: any
 } | {
-  t: SocketEventT.Message, message: IO
+  t: SocketEventT.Message, message: Msg
 }
-const
-  connectEvent: SocketEvent = { t: SocketEventT.Connect }
+const connectEvent: SocketEvent = { t: SocketEventT.Connect }
 
 type SocketEventHandler = (e: SocketEvent) => void
 
 enum MsgOp { Control = 1, Message }
-type SendSocketData = (op: MsgOp, data: any) => void
 
-const defer = (f: TimerHandler) => window.setTimeout(f, 0)
+const defer = (seconds: U, f: TimerHandler) => window.setTimeout(f, seconds * 1000)
 
-const
-  toSocketAddress = (path: S): S => {
-    const
-      { protocol, host } = window.location,
-      p = protocol === 'https:' ? 'wss' : 'ws'
-    return p + "://" + host + path
-  }
+const toSocketAddress = (path: S): S => {
+  const
+    { protocol, host } = window.location,
+    p = protocol === 'https:' ? 'wss' : 'ws'
+  return p + "://" + host + path
+}
+
+const marshal = (op: MsgOp, data: any): Uint8Array => {
+  const m = msgpack.serialize(data)
+  const d = new Uint8Array(1 + m.length)
+  d.set([op], 0) // 1-byte header
+  d.set(m, 1) // append message
+  return d
+}
+const unmarshal = (d: Uint8Array): Msg => msgpack.deserialize(d)
+type Socket = {
+  send(op: MsgOp, message: Msg): void
+  disconnect(): void
+}
 export const
-  connect = (address: S, handle: SocketEventHandler): SendSocketData => {
+  connect = (address: S, handle: SocketEventHandler): Socket => {
     let
       _socket: WebSocket | null = null,
       _backoff = 1
@@ -71,8 +121,6 @@ export const
           _socket = socket
           handle(connectEvent)
           _backoff = 1
-          // const hash = window.location.hash
-          // socket.send(`+ ${slug} ${hash.charAt(0) === '#' ? hash.substr(1) : hash}`) // protocol: t<sep>addr<sep>data
         }
         socket.onclose = (e) => {
           if (e.code === 1013) { // try again later
@@ -88,7 +136,7 @@ export const
           const data = e.data
           if (!data) return
           try {
-            const message = msgpack.deserialize(data) as IO
+            const message = unmarshal(data)
             handle({ t: SocketEventT.Message, message })
           } catch (error) {
             console.error(error)
@@ -99,46 +147,104 @@ export const
           console.error(error)
           handle({ t: SocketEventT.Error, error })
         }
+      },
+      send = (op: MsgOp, data: any) => {
+        defer(0, () => {
+          if (_socket && data) _socket.send(marshal(op, data))
+        })
       }
 
     reconnect(toSocketAddress(address))
 
-    return (op: U, data: any) => {
-      defer(() => {
-        if (_socket && data) {
-          const payload = msgpack.serialize(data)
-          const msg = new Uint8Array(1 + payload.length)
-          msg.set([op], 0)
-          msg.set(payload, 1)
-          _socket.send(msg)
-        }
-      })
-    }
+    return { send, disconnect }
   }
 
+enum AppStateT { Connecting, Disconnected, Valid, Invalid }
 
+type AppState = {
+  t: AppStateT.Connecting
+} | {
+  t: AppStateT.Disconnected
+  retry: U
+} | {
+  t: AppStateT.Invalid
+  error: S
+} | {
+  t: AppStateT.Valid
+}
+
+let socket: Socket | null = null
+const hello: Msg = {
+  t: MsgType.Join,
+  d: {
+    language: window.navigator.language,
+  }
+}
 export const App = () => {
-  let send: SendSocketData | null = null
+  // const [disconnected, disconnectedB] = useState(true)
+  // const [failure, failureB] = useState('')
+  const [state, stateB] = useState<AppState>({ t: AppStateT.Connecting })
+  const onMessage = (e: SocketEvent) => {
+    console.log('got event', e)
+    switch (e.t) {
+      case SocketEventT.Connect:
+        if (socket) socket.send(MsgOp.Message, hello)
+        break
+      case SocketEventT.Message:
+        {
+          const msg = e.message
+          switch (msg.t) {
+            case MsgType.Error:
+              switch (msg.c) {
+                case ErrCode.BadOp:
+                  stateB({ t: AppStateT.Invalid, error: 'unknown operation' })
+                  break
+                case ErrCode.PeerDead:
+                  stateB({ t: AppStateT.Invalid, error: 'remote died' })
+                  break
+                case ErrCode.PeerUnavailable:
+                  stateB({ t: AppStateT.Invalid, error: 'remote unavailable, retrying in 10 seconds' })
+                  defer(10, () => { if (socket) socket.send(MsgOp.Message, hello) })
+                  break
+                case ErrCode.RateLimited:
+                  stateB({ t: AppStateT.Invalid, error: 'rate limited' })
+                  break
+              }
+              break
+            case MsgType.Read:
+              break
+            case MsgType.Write:
+              break
+            case MsgType.Append:
+              break
+            default:
+              stateB({ t: AppStateT.Invalid, error: 'unknown message type' })
+              break
+          }
+        }
+        break
+      case SocketEventT.Disconnect:
+        stateB({ t: AppStateT.Disconnected, retry: e.retry })
+        break
+      case SocketEventT.Error:
+        stateB({ t: AppStateT.Invalid, error: e.error })
+        break
+    }
+  }
   useEffect(() => {
-    if (!send) {
+    if (!socket) {
       const route = window.location.pathname
       const baseURL = document.getElementsByTagName('body')[0].getAttribute('data-baseurl') ?? '/'
-      send = connect(`${baseURL}ws/ui?r=${route}`, (e) => {
-        console.log('got event', e)
-        switch (e.t) {
-          case SocketEventT.Connect:
-            if (send) send(MsgOp.Message, { t: 'h', h: { language: window.navigator.language } })
-            break
-          case SocketEventT.Message:
-            break
-          case SocketEventT.Disconnect:
-            break
-          case SocketEventT.Error:
-            console.error(e.error)
-            break
-        }
-      })
+      socket = connect(`${baseURL}ws/ui?r=${route}`, onMessage)
     }
   })
+  switch (state.t) {
+    case AppStateT.Connecting:
+      return <div>connecting</div>
+    case AppStateT.Disconnected:
+      return <div>disconnected, retrying in {state.retry} seconds </div>
+    case AppStateT.Invalid:
+      return <div>{state.error}</div>
+  }
   return <div>Hello!</div>
 }
