@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -532,12 +533,17 @@ func mustMarshal(i interface{}) []byte {
 
 func main() {
 
-	conf, err := parseConf("./sidekick.toml") // XXX tie to -conf
+	confFile := flag.String("conf", "sidekick.toml", "location of configuration file")
+	pretty := flag.Bool("pretty", false, "pretty-print and colorize log output for terminal")
+
+	flag.Parse()
+
+	conf, err := parseConf(*confFile)
 	if err != nil {
 		panic(err)
 	}
 
-	configureLogger(conf.LogLevel, true) // XXX tie to -pretty
+	configureLogger(conf.LogLevel, *pretty)
 
 	// handle error
 	if err := serve(conf); err != nil {
