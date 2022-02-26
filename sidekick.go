@@ -130,16 +130,20 @@ var (
 	msgErrBadOp        = mustMarshal(ErrMsg{MsgTypeError, ErrCodeBadOp})
 )
 
+func (c *Actor) quit() {
+	c.conn.Close()
+	peer := c.Peer()
+	if peer != nil {
+		c.SetPeer(nil)
+		peer.quitC <- true
+	}
+}
+
 func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
 	conn := c.conn
 	defer func() {
-		conn.Close()
-		peer := c.Peer()
+		c.quit()
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("reader closed")
-		if peer != nil {
-			c.SetPeer(nil)
-			peer.quitC <- true
-		}
 	}()
 	conn.SetReadLimit(readLimit)
 	conn.SetReadDeadline(time.Now().Add(pongTimeout))
@@ -204,13 +208,8 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 	ping := time.NewTicker(pingInterval)
 	defer func() {
 		ping.Stop()
-		conn.Close()
+		c.quit()
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("writer closed")
-		peer := c.Peer()
-		if peer != nil {
-			c.SetPeer(nil)
-			peer.quitC <- true
-		}
 	}()
 
 	for {
