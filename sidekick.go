@@ -159,7 +159,8 @@ func (a *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 
 		if peer == nil {
 			a.send(msgPeerUnavailable)
-			continue // let actor decide whether to hang on or hang up
+			// let actor decide whether to hang on or hang up
+			continue
 		}
 
 		if len(msg) > 1 {
@@ -168,9 +169,10 @@ func (a *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 			switch op {
 			case MsgOpMessage:
 				if !peer.send(msg) {
-					// peer dead; bail out
+					// peer dead
 					a.send(msgPeerDied)
-					return
+					// let actor decide whether to hang on or hang up
+					continue
 				}
 			case MsgOpControl:
 				panic("not implemented") // XXX
