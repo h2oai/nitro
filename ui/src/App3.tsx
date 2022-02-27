@@ -10,15 +10,12 @@ export type S = string
 export type D = Date
 
 type Output = {
-  t: 0
   content: S
 }
 type Input = {
-  t: 1
   caption: S
   value: S
 }
-type IO = Input | Output
 
 enum MsgType {
   Error = 1,
@@ -52,10 +49,13 @@ type Msg = {
   d: any // XXX formalize
 } | {
   t: MsgType.Read
+  d: Input
 } | {
   t: MsgType.Write
+  d: Output
 } | {
   t: MsgType.Append
+  d: Output
 }
 
 
@@ -181,8 +181,6 @@ const hello: Msg = {
   }
 }
 export const App = () => {
-  // const [disconnected, disconnectedB] = useState(true)
-  // const [failure, failureB] = useState('')
   const [state, stateB] = useState<AppState>({ t: AppStateT.Connecting })
   const onMessage = (e: SocketEvent) => {
     console.log('got event', e)
@@ -195,7 +193,8 @@ export const App = () => {
           const msg = e.message
           switch (msg.t) {
             case MsgType.Error:
-              switch (msg.c) {
+              const { c: code } = msg
+              switch (code) {
                 case ErrCode.BadOp:
                   stateB({ t: AppStateT.Invalid, error: 'unknown operation' })
                   break
@@ -209,6 +208,8 @@ export const App = () => {
                 case ErrCode.RateLimited:
                   stateB({ t: AppStateT.Invalid, error: 'rate limited' })
                   break
+                default:
+                  stateB({ t: AppStateT.Invalid, error: `unhandled error code ${code}` })
               }
               break
             case MsgType.Read:
@@ -235,7 +236,7 @@ export const App = () => {
     if (!socket) {
       const route = window.location.pathname
       const baseURL = document.getElementsByTagName('body')[0].getAttribute('data-baseurl') ?? '/'
-      socket = connect(`${baseURL}ws/ui?r=${route}`, onMessage)
+      socket = connect(`${baseURL}ws/f?r=${route}`, onMessage)
     }
   })
   switch (state.t) {

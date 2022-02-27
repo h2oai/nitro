@@ -43,7 +43,7 @@ client_secret = 'foo'
 # pass the host, origin, cookie, or subprotocols options to your WebSocket connection.
 # https://websocket-client.readthedocs.io/en/latest/faq.html#what-else-can-i-do-with-sslopts
 ws = websocket.WebSocket()
-ws.connect('ws://localhost:11111/ws/bot?r=/foo/', header={
+ws.connect('ws://localhost:11111/ws/b?r=/foo/', header={
     'Authorization': 'Basic ' + b64encode(f'{client_id}:{client_secret}'.encode('ascii')).decode('ascii')
 })
 

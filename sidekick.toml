@@ -19,7 +19,7 @@ BaseURL = "/"
 #
 # Front-end web socket settings
 #
-[ClientWebSocket]
+[Frontend]
 
 # Read buffer size in bytes. 
 # If size is zero, then buffers allocated by the HTTP server are used. 
@@ -58,7 +58,7 @@ RateLimitBurst = 10
 #
 # Back-end web socket settings
 #
-[BotWebSocket]
+[Backend]
 
 # Read buffer size in bytes. 
 # If size is zero, then buffers allocated by the HTTP server are used. 

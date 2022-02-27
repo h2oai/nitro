@@ -23,12 +23,12 @@ import (
 )
 
 type Conf struct {
-	LogLevel        string
-	Address         string
-	WebRoot         string
-	BaseURL         string
-	ClientWebSocket WebSocketConf
-	BotWebSocket    WebSocketConf
+	LogLevel string
+	Address  string
+	WebRoot  string
+	BaseURL  string
+	Frontend WebSocketConf
+	Backend  WebSocketConf
 }
 
 type WebSocketConf struct {
@@ -89,12 +89,12 @@ type Actor struct {
 	sendC  chan []byte
 	quitC  chan bool
 	route  string
-	pool   *WorkerPool
+	pool   *ActorPool
 	peer   *Actor
 	peerMu sync.RWMutex
 }
 
-func newActor(conn *websocket.Conn, queueSize int, route string, pool *WorkerPool) *Actor {
+func newActor(conn *websocket.Conn, queueSize int, route string, pool *ActorPool) *Actor {
 	return &Actor{
 		conn:  conn,
 		sendC: make(chan []byte, queueSize),
@@ -104,22 +104,22 @@ func newActor(conn *websocket.Conn, queueSize int, route string, pool *WorkerPoo
 	}
 }
 
-func (c *Actor) Peer() *Actor {
-	c.peerMu.RLock()
-	defer c.peerMu.RUnlock()
-	return c.peer
+func (a *Actor) Peer() *Actor {
+	a.peerMu.RLock()
+	defer a.peerMu.RUnlock()
+	return a.peer
 }
 
-func (c *Actor) SetPeer(peer *Actor) {
-	c.peerMu.Lock()
-	c.peer = peer
-	c.peerMu.Unlock()
+func (a *Actor) SetPeer(peer *Actor) {
+	a.peerMu.Lock()
+	a.peer = peer
+	a.peerMu.Unlock()
 }
 
-func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
-	conn := c.conn
+func (a *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
+	conn := a.conn
 	defer func() {
-		c.quit()
+		a.quit()
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("reader closed")
 	}()
 	conn.SetReadLimit(readLimit)
@@ -134,7 +134,7 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 	for {
 
 		if !limiter.Allow() {
-			c.send(msgRateLimited)
+			a.send(msgRateLimited)
 			return
 		}
 
@@ -146,17 +146,17 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 			return
 		}
 
-		peer := c.Peer()
+		peer := a.Peer()
 
-		if peer == nil && c.pool != nil {
-			peer = c.pool.Match(c)
+		if peer == nil && a.pool != nil {
+			peer = a.pool.Bridge(a)
 			if peer != nil {
 				log.Info().Str("remote", peer.conn.RemoteAddr().String()).Msg("bridged")
 			}
 		}
 
 		if peer == nil {
-			c.send(msgPeerUnavailable)
+			a.send(msgPeerUnavailable)
 			continue // let actor decide whether to hang on or hang up
 		}
 
@@ -167,31 +167,31 @@ func (c *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 			case MsgOpMessage:
 				if !peer.send(msg) {
 					// peer dead; bail out
-					c.send(msgPeerDied)
+					a.send(msgPeerDied)
 					return
 				}
 			case MsgOpControl:
 				panic("not implemented") // XXX
 			default:
-				c.send(msgErrBadOp)
+				a.send(msgErrBadOp)
 				return
 			}
 		}
 	}
 }
 
-func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
-	conn := c.conn
+func (a *Actor) Write(writeTimeout, pingInterval time.Duration) {
+	conn := a.conn
 	ping := time.NewTicker(pingInterval)
 	defer func() {
 		ping.Stop()
-		c.quit()
+		a.quit()
 		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("writer closed")
 	}()
 
 	for {
 		select {
-		case msg, ok := <-c.sendC:
+		case msg, ok := <-a.sendC:
 			conn.SetWriteDeadline(time.Now().Add(writeTimeout))
 			if !ok {
 				// send channel closed
@@ -207,60 +207,60 @@ func (c *Actor) Write(writeTimeout, pingInterval time.Duration) {
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
-		case <-c.quitC:
+		case <-a.quitC:
 			return
 		}
 	}
 }
 
-func (c *Actor) send(b []byte) bool {
+func (a *Actor) send(b []byte) bool {
 	select {
-	case c.sendC <- b:
+	case a.sendC <- b:
 	default:
-		close(c.sendC)
+		close(a.sendC)
 		return false
 	}
 	return true
 }
 
-func (c *Actor) quit() {
-	c.conn.Close()
-	peer := c.Peer()
+func (a *Actor) quit() {
+	a.conn.Close()
+	peer := a.Peer()
 	if peer != nil {
-		c.SetPeer(nil)
+		a.SetPeer(nil)
 		peer.quitC <- true
 	}
 }
 
-type WorkerPool struct {
+type ActorPool struct {
 	sync.Mutex
-	workers map[string]map[*Actor]struct{}
+	actors map[string]map[*Actor]struct{}
 }
 
-func newWorkerPool() *WorkerPool {
-	return &WorkerPool{
-		workers: make(map[string]map[*Actor]struct{}),
+func newActorPool() *ActorPool {
+	return &ActorPool{
+		actors: make(map[string]map[*Actor]struct{}),
 	}
 }
 
-func (p *WorkerPool) Put(route string, w *Actor) {
+func (p *ActorPool) Put(route string, w *Actor) {
 	p.Lock()
 
-	workers, ok := p.workers[route]
+	actors, ok := p.actors[route]
 	if !ok {
-		workers = make(map[*Actor]struct{})
-		p.workers[route] = workers
+		actors = make(map[*Actor]struct{})
+		p.actors[route] = actors
 	}
-	workers[w] = struct{}{}
+	actors[w] = struct{}{}
 
 	p.Unlock()
 }
 
-func (p *WorkerPool) Match(caller *Actor) (callee *Actor) {
+func (p *ActorPool) Bridge(caller *Actor) (callee *Actor) {
 	p.Lock()
-	if workers, ok := p.workers[caller.route]; ok {
-		for callee = range workers {
-			delete(workers, callee)
+	if actors, ok := p.actors[caller.route]; ok {
+		for callee = range actors {
+			delete(actors, callee)
 			break
 		}
 	}
@@ -274,17 +274,17 @@ func (p *WorkerPool) Match(caller *Actor) (callee *Actor) {
 }
 
 type Server struct {
-	conf           Conf
-	workers        *WorkerPool
-	clientUpgrader websocket.Upgrader
-	workerUpgrader websocket.Upgrader
-	fs             http.Handler
+	conf             Conf
+	actors           *ActorPool
+	frontendUpgrader websocket.Upgrader
+	backendUpgrader  websocket.Upgrader
+	fs               http.Handler
 }
 
-func (s *Server) hijackBot(w http.ResponseWriter, r *http.Request) {
+func (s *Server) hijackBackend(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	route := query.Get("r")
-	log.Debug().Str("addr", r.RemoteAddr).Str("route", route).Msg("worker joining")
+	log.Debug().Str("addr", r.RemoteAddr).Str("route", route).Msg("bot joining")
 
 	if route == "" {
 		log.Error().Msg("empty route")
@@ -305,24 +305,24 @@ func (s *Server) hijackBot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	conf := s.conf.BotWebSocket
-	conn, err := s.workerUpgrader.Upgrade(w, r, nil)
+	conf := s.conf.Backend
+	conn, err := s.backendUpgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to upgrade bot")
 		return
 	}
 
-	worker := newActor(conn, conf.MessageQueueSize, route, nil)
+	a := newActor(conn, conf.MessageQueueSize, route, nil)
 
-	s.workers.Put(route, worker)
+	s.actors.Put(route, a)
 
-	go worker.Write(conf.WriteTimeout, conf.PingInterval)
-	go worker.Read(conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
+	go a.Write(conf.WriteTimeout, conf.PingInterval)
+	go a.Read(conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
 
-	log.Info().Str("route", route).Str("addr", r.RemoteAddr).Msg("worker joined")
+	log.Info().Str("route", route).Str("addr", r.RemoteAddr).Msg("bot joined")
 }
 
-func (s *Server) hijackClient(w http.ResponseWriter, r *http.Request) {
+func (s *Server) hijackFrontend(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	route := query.Get("r")
 	log.Debug().Str("addr", r.RemoteAddr).Str("route", route).Msg("client joining")
@@ -335,14 +335,14 @@ func (s *Server) hijackClient(w http.ResponseWriter, r *http.Request) {
 
 	// XXX authenticate
 
-	conf := s.conf.ClientWebSocket
-	conn, err := s.clientUpgrader.Upgrade(w, r, nil)
+	conf := s.conf.Frontend
+	conn, err := s.frontendUpgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to upgrade client")
 		return
 	}
 
-	client := newActor(conn, conf.MessageQueueSize, route, s.workers)
+	client := newActor(conn, conf.MessageQueueSize, route, s.actors)
 
 	go client.Write(conf.WriteTimeout, conf.PingInterval)
 	go client.Read(conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
@@ -353,12 +353,12 @@ func (s *Server) hijackClient(w http.ResponseWriter, r *http.Request) {
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p := strings.TrimPrefix(r.URL.Path, s.conf.BaseURL)
 	switch p {
-	case "ws/ui":
-		s.hijackClient(w, r)
+	case "ws/f":
+		s.hijackFrontend(w, r)
 		return
 
-	case "ws/bot":
-		s.hijackBot(w, r)
+	case "ws/b":
+		s.hijackBackend(w, r)
 		return
 	}
 
@@ -387,8 +387,8 @@ func parseConf(filename string) (Conf, error) {
 		}
 	}
 
-	adjustDurations(&conf.ClientWebSocket)
-	adjustDurations(&conf.BotWebSocket)
+	adjustDurations(&conf.Frontend)
+	adjustDurations(&conf.Backend)
 
 	return conf, nil
 }
@@ -438,10 +438,10 @@ func newServer(conf Conf) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	clientConf, botConf := conf.ClientWebSocket, conf.BotWebSocket
+	clientConf, botConf := conf.Frontend, conf.Backend
 	return &Server{
 		conf,
-		newWorkerPool(),
+		newActorPool(),
 		newUpgrader(clientConf),
 		newUpgrader(botConf),
 		newWebServer(conf.BaseURL, conf.WebRoot, html),
