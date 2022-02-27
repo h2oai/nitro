@@ -16,6 +16,16 @@ WebRoot = "./ui/build"
 # e.g. "/", "/foo/", "/foo/bar/", "/foo/bar/baz/"
 BaseURL = "/"
 
+# ReadTimeout is the maximum duration for reading the entire request, 
+# including the body, in seconds. 
+# A zero or negative value means there will be no timeout.
+ReadTimeout = 10
+
+# WriteTimeout is the maximum duration before timing out
+# writes of the response, in seconds. 
+# It is reset whenever a new request's header is read. 
+WriteTimeout = 10
+
 #
 # Front-end web socket settings
 #

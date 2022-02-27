@@ -23,12 +23,14 @@ import (
 )
 
 type Conf struct {
-	LogLevel string
-	Address  string
-	WebRoot  string
-	BaseURL  string
-	Frontend WebSocketConf
-	Backend  WebSocketConf
+	LogLevel     string
+	Address      string
+	WebRoot      string
+	BaseURL      string
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+	Frontend     WebSocketConf
+	Backend      WebSocketConf
 }
 
 type WebSocketConf struct {
@@ -281,6 +283,21 @@ type Server struct {
 	fs               http.Handler
 }
 
+func newServer(conf Conf) (*Server, error) {
+	html, err := loadIndexPage(conf.BaseURL, conf.WebRoot)
+	if err != nil {
+		return nil, err
+	}
+	clientConf, botConf := conf.Frontend, conf.Backend
+	return &Server{
+		conf,
+		newActorPool(),
+		newUpgrader(clientConf),
+		newUpgrader(botConf),
+		newWebServer(conf.BaseURL, conf.WebRoot, html),
+	}, nil
+}
+
 func (s *Server) hijackBackend(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	route := query.Get("r")
@@ -387,6 +404,8 @@ func parseConf(filename string) (Conf, error) {
 		}
 	}
 
+	conf.ReadTimeout *= time.Second
+	conf.WriteTimeout *= time.Second
 	adjustDurations(&conf.Frontend)
 	adjustDurations(&conf.Backend)
 
@@ -433,21 +452,6 @@ func newWebServer(baseURL, webRoot string, html []byte) http.Handler {
 	})
 }
 
-func newServer(conf Conf) (*Server, error) {
-	html, err := loadIndexPage(conf.BaseURL, conf.WebRoot)
-	if err != nil {
-		return nil, err
-	}
-	clientConf, botConf := conf.Frontend, conf.Backend
-	return &Server{
-		conf,
-		newActorPool(),
-		newUpgrader(clientConf),
-		newUpgrader(botConf),
-		newWebServer(conf.BaseURL, conf.WebRoot, html),
-	}, nil
-}
-
 func serve(conf Conf) error {
 	server, err := newServer(conf)
 	if err != nil {
@@ -458,8 +462,8 @@ func serve(conf Conf) error {
 		// TODO TLS config
 		Addr:         conf.Address,
 		Handler:      server,
-		ReadTimeout:  time.Second * 10, // TODO expose
-		WriteTimeout: time.Second * 10, // TODO expose
+		ReadTimeout:  conf.ReadTimeout,
+		WriteTimeout: conf.WriteTimeout,
 	}
 
 	errC := make(chan error, 1)
