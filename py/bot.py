@@ -119,26 +119,26 @@ def option(
 
 
 def input(
-        text: Optional[Union[str, Options]] = None,
+        content: Optional[Union[str, Options]] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
 ) -> dict:
-    is_shorthand = options is None and isinstance(text, (tuple, list, dict))
+    is_shorthand = options is None and isinstance(content, (tuple, list, dict))
     d = dict(
-        text=None if is_shorthand else text,
-        options=text if is_shorthand else options,
+        text=None if is_shorthand else content,
+        options=content if is_shorthand else options,
         actions=actions,
     )
     return _clean(d)
 
 
 def read(
-        text: Optional[Union[str, Options]] = None,
+        content: Optional[Union[str, Options]] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
 ):
     d = input(
-        text,
+        content,
         options,
         actions,
     )
@@ -148,24 +148,24 @@ def read(
 
 
 def output(
-        text: Union[str, Objects],
+        content: Union[str, Objects],
         results: Optional[Objects] = None,
 ) -> dict:
-    has_children = results is not None and isinstance(text, (list, dict))
+    has_children = results is not None and isinstance(content, (tuple, list))
     d = dict(
-        text=None if has_children else text,
-        results=text if has_children else results,
+        text=None if has_children else content,
+        results=content if has_children else results,
     )
     return _clean(d)
 
 
 def append(
-        text: Union[str, Objects],
+        content: Union[str, Objects],
         results: Optional[Objects] = None,
         # TODO update: dict - selectively update parts
 ):
     d = output(
-        text,
+        content,
         results,
     )
     d['t'] = _MsgType.Append
@@ -173,12 +173,12 @@ def append(
 
 
 def write(
-        text: Union[str, Objects],
+        content: Union[str, Objects],
         results: Optional[Objects] = None,
         # TODO update: dict - selectively update parts
 ):
     d = output(
-        text,
+        content,
         results,
     )
     d['t'] = _MsgType.Write
