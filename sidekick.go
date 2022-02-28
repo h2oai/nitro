@@ -118,11 +118,11 @@ func (a *Actor) SetPeer(peer *Actor) {
 	a.peerMu.Unlock()
 }
 
-func (a *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
+func (a *Actor) Read(log zerolog.Logger, readLimit int64, rateLimit float64, rateLimitBurst int, pongTimeout time.Duration) {
 	conn := a.conn
 	defer func() {
 		a.quit()
-		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("reader closed")
+		log.Info().Msg("reader closed")
 	}()
 	conn.SetReadLimit(readLimit)
 	conn.SetReadDeadline(time.Now().Add(pongTimeout))
@@ -136,6 +136,7 @@ func (a *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 	for {
 
 		if !limiter.Allow() {
+			log.Warn().Msg("rate-limited")
 			a.send(msgRateLimited)
 			return
 		}
@@ -143,7 +144,7 @@ func (a *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 		_, msg, err := conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Error().Str("addr", conn.RemoteAddr().String()).Err(err).Msg("unexpected close")
+				log.Error().Err(err).Msg("unexpected close")
 			}
 			return
 		}
@@ -153,11 +154,12 @@ func (a *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 		if peer == nil && a.pool != nil {
 			peer = a.pool.Bridge(a)
 			if peer != nil {
-				log.Info().Str("remote", peer.conn.RemoteAddr().String()).Msg("bridged")
+				log.Info().Msg("bridged")
 			}
 		}
 
 		if peer == nil {
+			log.Debug().Msg("no peer available")
 			a.send(msgPeerUnavailable)
 			// let actor decide whether to hang on or hang up
 			continue
@@ -184,13 +186,13 @@ func (a *Actor) Read(readLimit int64, rateLimit float64, rateLimitBurst int, pon
 	}
 }
 
-func (a *Actor) Write(writeTimeout, pingInterval time.Duration) {
+func (a *Actor) Write(log zerolog.Logger, writeTimeout, pingInterval time.Duration) {
 	conn := a.conn
 	ping := time.NewTicker(pingInterval)
 	defer func() {
 		ping.Stop()
 		a.quit()
-		log.Debug().Str("addr", conn.RemoteAddr().String()).Msg("writer closed")
+		log.Info().Msg("writer closed")
 	}()
 
 	for {
@@ -303,23 +305,30 @@ func newServer(conf Conf) (*Server, error) {
 func (s *Server) hijackBackend(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	route := query.Get("r")
-	log.Debug().Str("addr", r.RemoteAddr).Str("route", route).Msg("bot joining")
+
+	logger := log.With().
+		Str("type", "backend").
+		Str("ip", r.RemoteAddr).
+		Str("route", route).
+		Logger()
+
+	logger.Debug().Msg("joining")
 
 	if route == "" {
-		log.Error().Msg("empty route")
+		logger.Error().Msg("empty route")
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 
 	id, secret, ok := r.BasicAuth()
 	if !ok {
-		log.Error().Msg("missing basic auth")
+		logger.Error().Msg("missing basic auth")
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	}
 
 	if id != secret { // XXX check via keychain
-		log.Error().Msg("bad id/secret")
+		logger.Error().Msg("bad id/secret")
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	}
@@ -327,7 +336,7 @@ func (s *Server) hijackBackend(w http.ResponseWriter, r *http.Request) {
 	conf := s.conf.Backend
 	conn, err := s.backendUpgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to upgrade bot")
+		logger.Error().Err(err).Msg("failed to upgrade")
 		return
 	}
 
@@ -335,19 +344,26 @@ func (s *Server) hijackBackend(w http.ResponseWriter, r *http.Request) {
 
 	s.actors.Put(route, a)
 
-	go a.Write(conf.WriteTimeout, conf.PingInterval)
-	go a.Read(conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
+	go a.Write(logger, conf.WriteTimeout, conf.PingInterval)
+	go a.Read(logger, conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
 
-	log.Info().Str("route", route).Str("addr", r.RemoteAddr).Msg("bot joined")
+	logger.Info().Msg("joined")
 }
 
 func (s *Server) hijackFrontend(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	route := query.Get("r")
-	log.Debug().Str("addr", r.RemoteAddr).Str("route", route).Msg("client joining")
+
+	logger := log.With().
+		Str("type", "frontend").
+		Str("ip", r.RemoteAddr).
+		Str("route", route).
+		Logger()
+
+	logger.Debug().Msg("joining")
 
 	if route == "" {
-		log.Error().Msg("empty route")
+		logger.Error().Msg("empty route")
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -357,16 +373,16 @@ func (s *Server) hijackFrontend(w http.ResponseWriter, r *http.Request) {
 	conf := s.conf.Frontend
 	conn, err := s.frontendUpgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to upgrade client")
+		logger.Error().Err(err).Msg("failed to upgrade")
 		return
 	}
 
 	client := newActor(conn, conf.MessageQueueSize, route, s.actors)
 
-	go client.Write(conf.WriteTimeout, conf.PingInterval)
-	go client.Read(conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
+	go client.Write(logger, conf.WriteTimeout, conf.PingInterval)
+	go client.Read(logger, conf.MaxMessageSize, conf.RateLimit, conf.RateLimitBurst, conf.PongTimeout)
 
-	log.Info().Str("addr", r.RemoteAddr).Msg("client joined")
+	logger.Info().Msg("joined")
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -471,7 +487,7 @@ func serve(conf Conf) error {
 	errC := make(chan error, 1)
 	go func() {
 		// TODO TLS
-		log.Info().Str("address", conf.Address).Msg("listening")
+		log.Info().Str("ip", conf.Address).Msg("listening")
 		errC <- s.ListenAndServe()
 	}()
 
