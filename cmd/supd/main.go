@@ -97,7 +97,7 @@ func (w *Worker) run(log zerolog.Logger) {
 	go func() {
 		<-w.quitC
 		if err := cmd.Stop(); err != nil {
-			log.Error().Err(err)
+			log.Error().Err(err).Msg("failed to stop")
 		}
 	}()
 
@@ -127,6 +127,7 @@ func (w *Worker) run(log zerolog.Logger) {
 	}()
 
 	status := <-cmd.Start()
+
 	logger := log.With().
 		Int64("start", status.StartTs).
 		Int64("stop", status.StopTs).
