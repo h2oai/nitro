@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/go-cmd/cmd v1.4.0
 	github.com/vmihailenco/msgpack/v5 v5.3.5
 	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65
 )
