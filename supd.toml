@@ -28,4 +28,4 @@ Env = []
 Dir = "py"
 
 # How many instances to keep alive.
-PoolSize = 4
+PoolSize = 1

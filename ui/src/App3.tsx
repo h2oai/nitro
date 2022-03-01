@@ -10,9 +10,12 @@ export type S = string
 export type D = Date
 
 type Output = {
+  xid: S
   content: S
 }
+
 type Input = {
+  xid: S
   caption: S
   value: S
 }
@@ -57,8 +60,6 @@ type Msg = {
   t: MsgType.Append
   d: Output
 }
-
-
 
 export enum SocketEventT {
   Connect,
@@ -159,7 +160,7 @@ export const
     return { send, disconnect }
   }
 
-enum AppStateT { Connecting, Disconnected, Valid, Invalid }
+enum AppStateT { Connecting, Disconnected, Invalid, Input, Outputs }
 
 type AppState = {
   t: AppStateT.Connecting
@@ -170,19 +171,58 @@ type AppState = {
   t: AppStateT.Invalid
   error: S
 } | {
-  t: AppStateT.Valid
+  t: AppStateT.Input
+  socket: Socket
+  input: Input
+} | {
+  t: AppStateT.Outputs
+  outputs: Output[]
 }
 
-let socket: Socket | null = null
+// let socket: Socket | null = null
 const hello: Msg = {
   t: MsgType.Join,
   d: {
     language: window.navigator.language,
   }
 }
-export const App = () => {
+
+const idgen = (prefix: S, initial = 0) => {
+  let _id = initial
+  return () => prefix + _id++
+}
+
+export const newSidekick = () => {
+  const outputs: Output[] = []
+
+  let _socket: Socket | null = null
+  const socket = (handle: (s: Socket, e: SocketEvent) => void): Socket => {
+    if (_socket) return _socket
+    const route = window.location.pathname
+    const baseURL = document.getElementsByTagName('body')[0].getAttribute('data-baseurl') ?? '/'
+    return _socket = connect(`${baseURL}ws/f?r=${route}`, e => { if (_socket) handle(_socket, e) })
+  }
+  const xid = idgen('x')
+  return {
+    xid,
+    outputs,
+    socket,
+  }
+}
+
+type Sidekick = ReturnType<typeof newSidekick>
+
+const Input = ({ socket, input }: { socket: Socket, input: Input }) => {
+  return <div>{JSON.stringify(input)}</div>
+}
+
+const Outputs = ({ outputs }: { outputs: Output[] }) => {
+  return <div>output</div>
+}
+
+export const App = ({ sidekick }: { sidekick: Sidekick }) => {
   const [state, stateB] = useState<AppState>({ t: AppStateT.Connecting })
-  const onMessage = (e: SocketEvent) => {
+  const onMessage = (socket: Socket, e: SocketEvent) => {
     console.log('got event', e)
     switch (e.t) {
       case SocketEventT.Connect:
@@ -213,10 +253,31 @@ export const App = () => {
               }
               break
             case MsgType.Read:
+              {
+                const input = msg.d
+                input.xid = sidekick.xid()
+                sidekick.outputs.length = 0
+                stateB({ t: AppStateT.Input, socket, input })
+              }
               break
             case MsgType.Write:
+              {
+                const output = msg.d
+                output.xid = sidekick.xid()
+                const outputs = sidekick.outputs
+                outputs.length = 0
+                outputs.push(output)
+                stateB({ t: AppStateT.Outputs, outputs })
+              }
               break
             case MsgType.Append:
+              {
+                const output = msg.d
+                output.xid = sidekick.xid()
+                const outputs = sidekick.outputs
+                outputs.push(output)
+                stateB({ t: AppStateT.Outputs, outputs })
+              }
               break
             default:
               stateB({ t: AppStateT.Invalid, error: 'unknown message type' })
@@ -232,20 +293,18 @@ export const App = () => {
         break
     }
   }
-  useEffect(() => {
-    if (!socket) {
-      const route = window.location.pathname
-      const baseURL = document.getElementsByTagName('body')[0].getAttribute('data-baseurl') ?? '/'
-      socket = connect(`${baseURL}ws/f?r=${route}`, onMessage)
-    }
-  })
+  useEffect(() => { sidekick.socket(onMessage) }, [sidekick])
   switch (state.t) {
     case AppStateT.Connecting:
       return <div>connecting</div>
     case AppStateT.Disconnected:
       return <div>disconnected, retrying in {state.retry} seconds </div>
     case AppStateT.Invalid:
-      return <div>{state.error}</div>
+      return <div>error: {state.error}</div>
+    case AppStateT.Input:
+      return <Input socket={state.socket} input={state.input} />
+    case AppStateT.Outputs:
+      return <Outputs outputs={state.outputs} />
   }
   return <div>Hello!</div>
 }

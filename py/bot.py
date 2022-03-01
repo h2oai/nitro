@@ -142,8 +142,7 @@ def read(
         options,
         actions,
     )
-    d['t'] = _MsgType.Read
-    _write_message(d)
+    _write_message(dict(t=_MsgType.Read, d=d))
     return _read(_MsgType.Input)
 
 
@@ -168,8 +167,7 @@ def append(
         content,
         results,
     )
-    d['t'] = _MsgType.Append
-    _write_message(d)
+    _write_message(dict(t=_MsgType.Append, d=d))
 
 
 def write(
@@ -181,8 +179,7 @@ def write(
         content,
         results,
     )
-    d['t'] = _MsgType.Write
-    _write_message(d)
+    _write_message(dict(t=_MsgType.Write, d=d))
 
 
 def close():

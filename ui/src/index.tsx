@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { App } from './App3';
+import { newSidekick, App } from './App3';
 import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/react';
 import reportWebVitals from './reportWebVitals';
 import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon } from '@fluentui/react-icons-mdl2';
@@ -67,7 +67,8 @@ registerIcons({
   },
 })
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const sidekick = newSidekick()
+ReactDOM.render(<App sidekick={sidekick} />, document.getElementById('root'));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
