@@ -2,18 +2,19 @@ import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton,
 import React from 'react';
 import styled from 'styled-components';
 import { B, isN, isS, isV, isPair, isO, N, S, gensym, xid } from './core';
-import * as D from './protocol';
+import { Option, Input } from './protocol';
+import { Socket } from './socket';
 
-type InputProps = { input: D.Input }
+type InputProps = { input: Input }
 const words = (x: S) => x.trim().split(/\s+/g)
 const unum = (x: any): N | undefined => isN(x) ? x : undefined
 const ustr = (x: any): S | undefined => isS(x) ? x : undefined
 const udate = (x: any): Date | undefined => isS(x) ? new Date(x) : undefined
 const snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase())
-const toChoices = (x: any): D.Choice[] => {
+const toOptions = (x: any): Option[] => {
   if (!x) return []
   if (Array.isArray(x)) {
-    const c: D.Choice[] = []
+    const c: Option[] = []
     for (const v of x) {
       if (isV(v)) { // value
         c.push({ label: String(v), value: v })
@@ -26,7 +27,7 @@ const toChoices = (x: any): D.Choice[] => {
         }
       } else if (isO(v) && isV(v.value)) { // { value: v }
         if (!v.label) v.label = String(v.value)
-        if (v.choices) v.choices = toChoices(v.choices)
+        if (v.options) v.options = toOptions(v.options)
         c.push(v)
       }
     }
@@ -36,7 +37,7 @@ const toChoices = (x: any): D.Choice[] => {
     return words(x).map(value => ({ label: value, value }))
   }
   if (isO(x)) { // { label1: value1, label2: value2, ... }
-    const c: D.Choice[] = []
+    const c: Option[] = []
     for (const label in x) {
       const value = x[label]
       if (isV(value)) {
@@ -58,10 +59,10 @@ const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefin
   if (isN(step)) return 0
   return undefined
 }
-const sanitizeInput = (input: D.Input): D.Input => {
-  const { choices, actions, range, inputs } = input
-  input.choices = toChoices(choices)
-  input.actions = toChoices(actions)
+const sanitizeInput = (input: Input): Input => {
+  const { options, actions, range, inputs } = input
+  input.options = toOptions(options)
+  input.actions = toOptions(actions)
   if (isPair(range)) {
     const [x, y] = range
     if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
@@ -72,7 +73,7 @@ const sanitizeInput = (input: D.Input): D.Input => {
   if (Array.isArray(inputs)) {
     input.inputs = inputs.map(sanitizeInput)
   }
-  return input as D.Input
+  return input as Input
 }
 
 const majorTheme = {
@@ -275,8 +276,8 @@ const CheckboxContainer = styled.div`
 class XCheckList extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, choices } = this.props.input,
-      checkboxes = choices.map(c => (
+      { label, options } = this.props.input,
+      checkboxes = options.map(c => (
         <CheckboxContainer key={c.value}>
           <Checkbox label={c.label} checked={c.selected ? true : false} />
         </CheckboxContainer>
@@ -291,17 +292,17 @@ class XCheckList extends React.Component<InputProps, {}> {
 class XDropdown extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, error, required, choices } = this.props.input,
-      hasGroups = choices.some(c => c.choices?.length ? true : false),
-      options: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(choices) : choices.map(toDropdownOption),
-      selectedItem = choices.find(c => c.selected),
+      { label, placeholder, error, required, options } = this.props.input,
+      hasGroups = options.some(c => c.options?.length ? true : false),
+      items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
+      selectedItem = options.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
 
     return (
       <Dropdown
         label={label}
         placeholder={placeholder}
-        options={options}
+        options={items}
         selectedKey={selectedKey}
         errorMessage={error}
         required={required ? true : false}
@@ -313,9 +314,9 @@ class XDropdown extends React.Component<InputProps, {}> {
 class XMultiSelectDropdown extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, error, required, choices } = this.props.input,
-      options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
-      selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
+      { label, placeholder, error, required, options } = this.props.input,
+      items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.label) })),
+      selectedKeys = options.filter(c => c.selected).map(c => String(c.value))
 
     return (
 
@@ -323,7 +324,7 @@ class XMultiSelectDropdown extends React.Component<InputProps, {}> {
         multiSelect
         label={label}
         placeholder={placeholder}
-        options={options}
+        options={items}
         defaultSelectedKeys={selectedKeys}
         errorMessage={error}
         required={required ? true : false}
@@ -335,9 +336,9 @@ class XMultiSelectDropdown extends React.Component<InputProps, {}> {
 class XComboBox extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, choices } = this.props.input,
-      options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
-      selectedItem = choices.find(c => c.selected),
+      { label, placeholder, options } = this.props.input,
+      items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.label) })),
+      selectedItem = options.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
 
     return (
@@ -345,7 +346,7 @@ class XComboBox extends React.Component<InputProps, {}> {
         allowFreeform
         label={label}
         placeholder={placeholder}
-        options={options}
+        options={items}
         selectedKey={selectedKey}
       />
     )
@@ -355,9 +356,9 @@ class XComboBox extends React.Component<InputProps, {}> {
 class XMultiSelectComboBox extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, choices } = this.props.input,
-      options: IDropdownOption[] = choices.map(c => ({ key: c.value, text: String(c.label) })),
-      selectedKeys = choices.filter(c => c.selected).map(c => String(c.value))
+      { label, placeholder, options } = this.props.input,
+      items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.label) })),
+      selectedKeys = options.filter(c => c.selected).map(c => String(c.value))
 
     return (
       <ComboBox
@@ -365,19 +366,19 @@ class XMultiSelectComboBox extends React.Component<InputProps, {}> {
         multiSelect
         label={label}
         placeholder={placeholder}
-        options={options}
+        options={items}
         selectedKey={selectedKeys}
       />
     )
   }
 }
 
-const toContextualMenuItem = (c: D.Choice): IContextualMenuItem => ({
+const toContextualMenuItem = (c: Option): IContextualMenuItem => ({
   key: String(c.value),
   text: String(c.label),
   iconProps: c.icon ? { iconName: c.icon } : undefined,
 })
-const toContextualMenuProps = (cs: D.Choice[]): IContextualMenuProps => ({ items: cs.map(toContextualMenuItem) })
+const toContextualMenuProps = (cs: Option[]): IContextualMenuProps => ({ items: cs.map(toContextualMenuItem) })
 
 class XMenu extends React.Component<InputProps, {}> {
   render() {
@@ -405,13 +406,13 @@ class XButtons extends React.Component<InputProps, {}> {
         const
           text = c.label,
           button = c.selected
-            ? c.choices
-              ? <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.choices)} />
+            ? c.options
+              ? <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} />
               : c.caption
                 ? <CompoundButton primary text={text} secondaryText={c.caption} styles={compoundStyles} />
                 : <PrimaryButton text={text} styles={styles} />
-            : c.choices
-              ? <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.choices)} />
+            : c.options
+              ? <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} />
               : c.caption
                 ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} />
                 : <DefaultButton text={text} styles={styles} />
@@ -422,29 +423,29 @@ class XButtons extends React.Component<InputProps, {}> {
   }
 }
 
-const toDropdownOption = (c: D.Choice): IDropdownOption => ({ key: c.value, text: String(c.label) })
-const toGroupedDropdownOptions = (choices: D.Choice[]): IDropdownOption[] => {
+const toDropdownOption = (c: Option): IDropdownOption => ({ key: c.value, text: String(c.label) })
+const toGroupedDropdownOptions = (options: Option[]): IDropdownOption[] => {
   const
-    options: IDropdownOption[] = [],
+    items: IDropdownOption[] = [],
     sepSym = gensym('s'),
     groupSym = gensym('g')
-  for (const g of choices) {
-    if (g.choices?.length) {
-      if (options.length) options.push({ key: sepSym(), text: '-', itemType: DropdownMenuItemType.Divider })
-      options.push({ key: groupSym(), text: String(g.label), itemType: DropdownMenuItemType.Header })
-      for (const c of g.choices) {
-        options.push(toDropdownOption(c))
+  for (const g of options) {
+    if (g.options?.length) {
+      if (options.length) items.push({ key: sepSym(), text: '-', itemType: DropdownMenuItemType.Divider })
+      items.push({ key: groupSym(), text: String(g.label), itemType: DropdownMenuItemType.Header })
+      for (const c of g.options) {
+        items.push(toDropdownOption(c))
       }
     } else {
-      options.push(toDropdownOption(g))
+      items.push(toDropdownOption(g))
     }
   }
-  return options
+  return items
 }
 
-const createAutocompleter = (choices: D.Choice[]) => {
+const createAutocompleter = (options: Option[]) => {
   const
-    items: ITag[] = choices.map(c => ({ key: c.value, name: String(c.label) })),
+    items: ITag[] = options.map(c => ({ key: c.value, name: String(c.label) })),
     listContainsTagList = (tag: ITag, tagList?: ITag[]) => (!tagList || !tagList.length || tagList.length === 0)
       ? false
       : tagList.some(compareTag => compareTag.key === tag.key),
@@ -467,9 +468,9 @@ type TagPickerState = {
 class XTagPicker extends React.Component<InputProps, TagPickerState> {
   constructor(props: InputProps) {
     super(props)
-    const { choices } = props.input
+    const { options } = props.input
     this.state = {
-      autocompleter: createAutocompleter(choices)
+      autocompleter: createAutocompleter(options)
     }
   }
   render() {
@@ -488,8 +489,8 @@ const swatchCellSize = 25
 class XSwatchPicker extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, choices } = this.props.input,
-      cells: IColorCellProps[] = choices.map(c => ({ id: String(c.value), label: String(c.label), color: String(c.value) }))
+      { label, options } = this.props.input,
+      cells: IColorCellProps[] = options.map(c => ({ id: String(c.value), label: String(c.label), color: String(c.value) }))
 
     return (
       <WithLabel label={label}>
@@ -502,20 +503,20 @@ class XSwatchPicker extends React.Component<InputProps, {}> {
 class XChoiceGroup extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, required, choices } = this.props.input,
-      options: IChoiceGroupOption[] = choices.map(({ value, label, icon: iconName }) => ({
+      { label, placeholder, required, options } = this.props.input,
+      items: IChoiceGroupOption[] = options.map(({ value, label, icon: iconName }) => ({
         key: String(value),
         text: String(label),
         iconProps: iconName ? { iconName } : undefined,
       })),
-      selectedItem = choices.find(c => c.selected),
+      selectedItem = options.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
 
     return (
       <ChoiceGroup
         label={label}
         placeholder={placeholder}
-        options={options}
+        options={items}
         defaultSelectedKey={selectedKey}
         required={required ? true : false}
       />
@@ -524,7 +525,7 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
 }
 
 const gap5: IStackTokens = { childrenGap: 5 }
-const inputHasActions = (input: D.Input): B => { // recursive
+const inputHasActions = (input: Input): B => { // recursive
   const { actions, inputs } = input
   if (actions.length) return true
   if (inputs) for (const child of inputs) if (inputHasActions(child)) return true
@@ -535,7 +536,7 @@ const XInput = ({ input }: InputProps) => { // recursive
   // This function contains the heuristics for determining which widget to use.
   // TODO might need a widget= to force which widget to use.
 
-  const { choices, actions, editable, multiple, inputs, inline } = input
+  const { options, actions, editable, multiple, inputs, inline } = input
 
   if (inputs) {
 
@@ -557,13 +558,13 @@ const XInput = ({ input }: InputProps) => { // recursive
       : <Stack tokens={gap5}>{children}</Stack>
   }
 
-  if (choices.length) {
+  if (options.length) {
     if (multiple) {
       if (editable) {
         return <XMultiSelectComboBox input={input} />
       }
-      const hasLongLabels = choices.some(({ label }) => label && (label.length > 75))
-      if (!hasLongLabels && choices.length > 10) {
+      const hasLongLabels = options.some(({ label }) => label && (label.length > 75))
+      if (!hasLongLabels && options.length > 10) {
         return <XMultiSelectDropdown input={input} />
       }
       return <XCheckList input={input} />
@@ -578,8 +579,8 @@ const XInput = ({ input }: InputProps) => { // recursive
         if (editable) {
           return <XComboBox input={input} />
         }
-        const hasGroups = choices.some(c => c.choices?.length ? true : false)
-        if (hasGroups || (choices.length > 7)) {
+        const hasGroups = options.some(c => c.options?.length ? true : false)
+        if (hasGroups || (options.length > 7)) {
           return <XDropdown input={input} />
         }
         return <XChoiceGroup input={input} />
@@ -627,7 +628,7 @@ const InputContainer = styled.div`
   padding: 0.5rem 0 2rem 0;
   max-width: 640px;
 `
-class InputView extends React.Component<InputProps, {}> {
+class InputView2 extends React.Component<InputProps, {}> {
   render() {
     const
       { input } = this.props,
@@ -638,4 +639,6 @@ class InputView extends React.Component<InputProps, {}> {
   }
 }
 
-
+export const XInputView = ({ socket, input }: { socket: Socket, input: Input }) => {
+  return <div>{JSON.stringify(input)}</div>
+}

@@ -1,5 +1,10 @@
 import { S, N, B, U, Pair } from "./core"
 
+export enum MsgOp {
+  Control = 1,
+  Message,
+}
+
 export enum MsgType {
   Error = 1,
   Join,
@@ -65,18 +70,18 @@ export type Input = {
   password?: B
   editable?: B
   inline?: B
-  choices: Choice[]
-  actions: Choice[]
+  options: Option[]
+  actions: Option[]
   inputs?: Input[]
   range?: Pair<N | S>
 }
-export type Choice = {
+export type Option = {
   value: N | S
   label?: S
   icon?: S
   caption?: S
   selected?: B
-  choices?: Choice[]
+  options?: Option[]
 }
 
 export type Output = {
