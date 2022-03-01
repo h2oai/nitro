@@ -1,65 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
-
-import msgpack from '@ygoe/msgpack'
-
-export type B = boolean
-export type U = number
-export type I = number
-export type F = number
-export type S = string
-export type D = Date
-
-type Output = {
-  xid: S
-  content: S
-}
-
-type Input = {
-  xid: S
-  caption: S
-  value: S
-}
-
-enum MsgType {
-  Error = 1,
-  Join,
-  Leave,
-  Request,
-  Response,
-  Watch,
-  Event,
-  Text,
-  Input,
-  Abort,
-  Resume,
-  Read,
-  Write,
-  Append,
-}
-
-enum ErrCode {
-  PeerUnavailable = 1,
-  PeerDead,
-  RateLimited,
-  BadOp,
-}
-
-type Msg = {
-  t: MsgType.Error
-  c: ErrCode
-} | {
-  t: MsgType.Join
-  d: any // XXX formalize
-} | {
-  t: MsgType.Read
-  d: Input
-} | {
-  t: MsgType.Write
-  d: Output
-} | {
-  t: MsgType.Append
-  d: Output
-}
+import msgpack from '@ygoe/msgpack';
+import React, { useEffect, useState } from 'react';
+import { B, N, Pair, S, U, xid } from './core';
+import * as D from './protocol'
 
 export enum SocketEventT {
   Connect,
@@ -75,7 +17,7 @@ export type SocketEvent = {
 } | {
   t: SocketEventT.Error, error: any
 } | {
-  t: SocketEventT.Message, message: Msg
+  t: SocketEventT.Message, message: D.Msg
 }
 const connectEvent: SocketEvent = { t: SocketEventT.Connect }
 
@@ -99,9 +41,9 @@ const marshal = (op: MsgOp, data: any): Uint8Array => {
   d.set(m, 1) // append message
   return d
 }
-const unmarshal = (d: Uint8Array): Msg => msgpack.deserialize(d)
+const unmarshal = (d: Uint8Array): D.Msg => msgpack.deserialize(d)
 type Socket = {
-  send(op: MsgOp, message: Msg): void
+  send(op: MsgOp, message: D.Msg): void
   disconnect(): void
 }
 export const
@@ -173,27 +115,22 @@ type AppState = {
 } | {
   t: AppStateT.Input
   socket: Socket
-  input: Input
+  input: D.Input
 } | {
   t: AppStateT.Outputs
-  outputs: Output[]
+  outputs: D.Output[]
 }
 
 // let socket: Socket | null = null
-const hello: Msg = {
-  t: MsgType.Join,
+const hello: D.Msg = {
+  t: D.MsgType.Join,
   d: {
     language: window.navigator.language,
   }
 }
 
-const idgen = (prefix: S, initial = 0) => {
-  let _id = initial
-  return () => prefix + _id++
-}
-
 export const newSidekick = () => {
-  const outputs: Output[] = []
+  const outputs: D.Output[] = []
 
   let _socket: Socket | null = null
   const socket = (handle: (s: Socket, e: SocketEvent) => void): Socket => {
@@ -202,9 +139,7 @@ export const newSidekick = () => {
     const baseURL = document.getElementsByTagName('body')[0].getAttribute('data-baseurl') ?? '/'
     return _socket = connect(`${baseURL}ws/f?r=${route}`, e => { if (_socket) handle(_socket, e) })
   }
-  const xid = idgen('x')
   return {
-    xid,
     outputs,
     socket,
   }
@@ -212,11 +147,11 @@ export const newSidekick = () => {
 
 type Sidekick = ReturnType<typeof newSidekick>
 
-const Input = ({ socket, input }: { socket: Socket, input: Input }) => {
+const Input = ({ socket, input }: { socket: Socket, input: D.Input }) => {
   return <div>{JSON.stringify(input)}</div>
 }
 
-const Outputs = ({ outputs }: { outputs: Output[] }) => {
+const Outputs = ({ outputs }: { outputs: D.Output[] }) => {
   return <div>output</div>
 }
 
@@ -232,48 +167,48 @@ export const App = ({ sidekick }: { sidekick: Sidekick }) => {
         {
           const msg = e.message
           switch (msg.t) {
-            case MsgType.Error:
+            case D.MsgType.Error:
               const { c: code } = msg
               switch (code) {
-                case ErrCode.BadOp:
+                case D.ErrCode.BadOp:
                   stateB({ t: AppStateT.Invalid, error: 'unknown operation' })
                   break
-                case ErrCode.PeerDead:
+                case D.ErrCode.PeerDead:
                   stateB({ t: AppStateT.Invalid, error: 'remote died' })
                   break
-                case ErrCode.PeerUnavailable:
+                case D.ErrCode.PeerUnavailable:
                   stateB({ t: AppStateT.Invalid, error: 'remote unavailable, retrying in 10 seconds' })
                   defer(10, () => { if (socket) socket.send(MsgOp.Message, hello) })
                   break
-                case ErrCode.RateLimited:
+                case D.ErrCode.RateLimited:
                   stateB({ t: AppStateT.Invalid, error: 'rate limited' })
                   break
                 default:
                   stateB({ t: AppStateT.Invalid, error: `unhandled error code ${code}` })
               }
               break
-            case MsgType.Read:
+            case D.MsgType.Read:
               {
                 const input = msg.d
-                input.xid = sidekick.xid()
+                input.xid = xid()
                 sidekick.outputs.length = 0
                 stateB({ t: AppStateT.Input, socket, input })
               }
               break
-            case MsgType.Write:
+            case D.MsgType.Write:
               {
                 const output = msg.d
-                output.xid = sidekick.xid()
+                output.xid = xid()
                 const outputs = sidekick.outputs
                 outputs.length = 0
                 outputs.push(output)
                 stateB({ t: AppStateT.Outputs, outputs })
               }
               break
-            case MsgType.Append:
+            case D.MsgType.Append:
               {
                 const output = msg.d
-                output.xid = sidekick.xid()
+                output.xid = xid()
                 const outputs = sidekick.outputs
                 outputs.push(output)
                 stateB({ t: AppStateT.Outputs, outputs })

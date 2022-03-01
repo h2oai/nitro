@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { newSidekick, App } from './App3';
+import { newSidekick, App } from './app';
 import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/react';
 import reportWebVitals from './reportWebVitals';
 import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon } from '@fluentui/react-icons-mdl2';
