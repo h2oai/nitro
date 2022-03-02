@@ -118,7 +118,7 @@ export const App = ({ sidekick }: { sidekick: Sidekick }) => {
     case AppStateT.Invalid:
       return <div>error: {state.error}</div>
     case AppStateT.Input:
-      return <XInputView socket={state.socket} input={state.input} />
+      return <XInputView send={state.socket.send} input={state.input} />
     case AppStateT.Outputs:
       return <XOutputView outputs={state.outputs} />
   }

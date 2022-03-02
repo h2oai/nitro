@@ -10,6 +10,8 @@ export type F = number
 export type N = number
 /** Synonym for string. */
 export type S = string
+/** Synonym for string or number. */
+export type V = S | N
 /** Synonym for date. */
 export type D = Date
 /** Synonym for number, string or date. */

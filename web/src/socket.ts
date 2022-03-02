@@ -19,8 +19,10 @@ export type SocketEvent = {
   t: SocketEventT.Message, message: Msg
 }
 
+export type Send = (op: MsgOp, message: Msg) => void
+
 export type Socket = {
-  send(op: MsgOp, message: Msg): void
+  send: Send
   disconnect(): void
 }
 

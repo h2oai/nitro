@@ -1,4 +1,4 @@
-import { S, N, B, U, Pair } from "./core"
+import { S, N, B, U, V, Pair } from "./core"
 
 export enum MsgOp {
   Control = 1,
@@ -44,6 +44,9 @@ export type Msg = {
 } | {
   t: MsgType.Append
   d: Output
+} | {
+  t: MsgType.Input,
+  d: Array<V | null>
 }
 
 
@@ -52,9 +55,9 @@ export type Input = {
   label?: S
   mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
   icon?: S
-  value?: N | S | Pair<N | S>
-  min?: N | S
-  max?: N | S
+  value?: V | Pair<V>
+  min?: V
+  max?: V
   step?: N
   precision?: U
   mask?: S
@@ -72,7 +75,7 @@ export type Input = {
   inline?: B
   options: Option[]
   actions: Option[]
-  inputs?: Input[]
+  inputs: Input[]
   range?: Pair<N | S>
 }
 export type Option = {

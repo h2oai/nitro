@@ -1,11 +1,24 @@
 import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { ContextMenuIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
-import { B, isN, isS, isV, isPair, isO, N, S, gensym, xid } from './core';
-import { Option, Input } from './protocol';
-import { Socket } from './socket';
+import { B, isN, isS, isV, isPair, isO, N, S, gensym, xid, U, V } from './core';
+import { Option, Input, MsgOp, MsgType } from './protocol';
+import { Send } from './socket';
+import { bond } from './ui';
 
-type InputProps = { input: Input }
+const newCaptureContext = (send: Send, data: V[], index: U) => {
+  const submit = (value: V, submit?: B) => {
+    data[index] = value
+    if (submit) send(MsgOp.Message, { t: MsgType.Input, d: data })
+  }
+  const next = () => newCaptureContext(send, data, index + 1)
+  return { submit, next }
+}
+type Context = ReturnType<typeof newCaptureContext>
+
+type InputProps = { context: Context, input: Input }
+
 const words = (x: S) => x.trim().split(/\s+/g)
 const unum = (x: any): N | undefined => isN(x) ? x : undefined
 const ustr = (x: any): S | undefined => isS(x) ? x : undefined
@@ -388,40 +401,48 @@ class XMenu extends React.Component<InputProps, {}> {
   }
 }
 
-class XButtons extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { inline, actions } = this.props.input,
-      horizontal = inline ? true : false,
-      styles: IButtonStyles = {
-        root: { width: '100%' },
-        label: { color: majorTheme.textColor },
-      },
-      compoundStyles: IButtonStyles = {
-        root: { width: '100%', maxWidth: 'auto' },
-        label: { color: majorTheme.textColor },
-        description: { color: majorTheme.textColor },
-      },
-      buttons = actions.map(c => {
-        const
-          text = c.label,
-          button = c.selected
-            ? c.options
-              ? <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} />
-              : c.caption
-                ? <CompoundButton primary text={text} secondaryText={c.caption} styles={compoundStyles} />
-                : <PrimaryButton text={text} styles={styles} />
-            : c.options
-              ? <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} />
-              : c.caption
-                ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} />
-                : <DefaultButton text={text} styles={styles} />
-        return <Stack.Item key={c.value}>{button}</Stack.Item>
-      })
-    return <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
-
-  }
+type XButtonsProps = {
+  useOptions: B // XXX ugly
 }
+
+const XButtons = bond(({ context, input, useOptions }: InputProps & XButtonsProps) => {
+  const
+    render = () => {
+      const
+        { inline, options, actions } = input,
+        items = useOptions ? options : actions,
+        horizontal = inline ? true : false,
+        styles: IButtonStyles = {
+          root: { width: '100%' },
+          label: { color: majorTheme.textColor },
+        },
+        compoundStyles: IButtonStyles = {
+          root: { width: '100%', maxWidth: 'auto' },
+          label: { color: majorTheme.textColor },
+          description: { color: majorTheme.textColor },
+        },
+        buttons = items.map(c => {
+          const
+            text = c.label,
+            onClick = () => context.submit(c.value, true),
+            button = c.selected
+              ? c.options
+                ? <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} onClick={onClick} />
+                : c.caption
+                  ? <CompoundButton primary text={text} secondaryText={c.caption} styles={compoundStyles} onClick={onClick} />
+                  : <PrimaryButton text={text} styles={styles} onClick={onClick} />
+              : c.options
+                ? <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} onClick={onClick} />
+                : c.caption
+                  ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} onClick={onClick} />
+                  : <DefaultButton text={text} styles={styles} onClick={onClick} />
+          return <Stack.Item key={c.value}>{button}</Stack.Item>
+        })
+      return <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
+    }
+  return { render }
+})
+
 
 const toDropdownOption = (c: Option): IDropdownOption => ({ key: c.value, text: String(c.label) })
 const toGroupedDropdownOptions = (options: Option[]): IDropdownOption[] => {
@@ -525,13 +546,7 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
 }
 
 const gap5: IStackTokens = { childrenGap: 5 }
-const inputHasActions = (input: Input): B => { // recursive
-  const { actions, inputs } = input
-  if (actions.length) return true
-  if (inputs) for (const child of inputs) if (inputHasActions(child)) return true
-  return false
-}
-const XInput = ({ input }: InputProps) => { // recursive
+const XInput = ({ context, input }: InputProps) => { // recursive
 
   // This function contains the heuristics for determining which widget to use.
   // TODO might need a widget= to force which widget to use.
@@ -548,7 +563,7 @@ const XInput = ({ input }: InputProps) => { // recursive
 
       return (
         <Stack.Item key={xid()} grow={grow} styles={styles} disableShrink>
-          <XInput input={input} />
+          <XInput context={context} input={input} />
         </Stack.Item >
       )
     })
@@ -561,50 +576,53 @@ const XInput = ({ input }: InputProps) => { // recursive
   if (options.length) {
     if (multiple) {
       if (editable) {
-        return <XMultiSelectComboBox input={input} />
+        return <XMultiSelectComboBox context={context} input={input} />
       }
       const hasLongLabels = options.some(({ label }) => label && (label.length > 75))
       if (!hasLongLabels && options.length > 10) {
-        return <XMultiSelectDropdown input={input} />
+        return <XMultiSelectDropdown context={context} input={input} />
       }
-      return <XCheckList input={input} />
+      return <XCheckList context={context} input={input} />
     }
     switch (input.mode) {
       case 'tag':
         // 'multiple' implied
-        return <XTagPicker input={input} />
+        return <XTagPicker context={context} input={input} />
       case 'color':
-        return <XSwatchPicker input={input} />
+        return <XSwatchPicker context={context} input={input} />
       default:
         if (editable) {
-          return <XComboBox input={input} />
+          return <XComboBox context={context} input={input} />
         }
         const hasGroups = options.some(c => c.options?.length ? true : false)
         if (hasGroups || (options.length > 7)) {
-          return <XDropdown input={input} />
+          return <XDropdown context={context} input={input} />
         }
-        return <XChoiceGroup input={input} />
+        if (options.length > 3) {
+          return <XChoiceGroup context={context} input={input} />
+        }
+        return <XButtons context={context} input={input} useOptions={true} />
     }
   }
 
   if (actions.length) {
     if (actions.length > 5) {
-      return <XMenu input={input} />
+      return <XMenu context={context} input={input} />
     }
-    return <XButtons input={input} />
+    return <XButtons context={context} input={input} useOptions={false} />
   }
 
   switch (input.mode) {
     case 'rating':
-      return <XRating input={input} />
+      return <XRating context={context} input={input} />
     case 'day':
     case 'month':
     case 'week':
-      return <XCalendar input={input} />
+      return <XCalendar context={context} input={input} />
     case 'time':
-      return <XTimePicker input={input} />
+      return <XTimePicker context={context} input={input} />
     case 'color':
-      return <XColorPicker input={input} />
+      return <XColorPicker context={context} input={input} />
   }
 
   const
@@ -615,12 +633,12 @@ const XInput = ({ input }: InputProps) => { // recursive
     if (!editable && hasRange) {
       const steps = (max - min) / (isN(step) ? step : 1)
       if (steps <= 16) {
-        return <XSlider input={input} />
+        return <XSlider context={context} input={input} />
       }
     }
-    return <XSpinButton input={input} />
+    return <XSpinButton context={context} input={input} />
   }
-  return <XTextField input={input} />
+  return <XTextField context={context} input={input} />
 }
 
 const InputContainer = styled.div`
@@ -628,17 +646,14 @@ const InputContainer = styled.div`
   padding: 0.5rem 0 2rem 0;
   max-width: 640px;
 `
-class InputView2 extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { input } = this.props,
-      hasActions = inputHasActions(input),
-      form = <XInput input={input}></XInput>,
-      body = hasActions ? form : <WithSend>{form}</WithSend>
-    return <InputContainer>{body}</InputContainer>
-  }
-}
 
-export const XInputView = ({ socket, input }: { socket: Socket, input: Input }) => {
-  return <div>{JSON.stringify(input)}</div>
-}
+export const XInputView = bond((props: { send: Send, input: Input }) => {
+  const
+    input = sanitizeInput(props.input),
+    context = newCaptureContext(props.send, [], -1),
+    render = () => {
+      const form = <XInput context={context} input={input}></XInput>
+      return <InputContainer>{form}</InputContainer>
+    }
+  return { render }
+})
