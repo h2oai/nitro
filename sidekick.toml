@@ -10,7 +10,7 @@ LogLevel = "debug"
 Address = ":11111"
 
 # Directory to serve static files from
-WebRoot = "./ui/build"
+WebRoot = "./web/build"
 
 # The path prefix to be used for resolving relative URLs.
 # e.g. "/", "/foo/", "/foo/bar/", "/foo/bar/baz/"
