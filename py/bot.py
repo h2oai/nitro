@@ -88,19 +88,29 @@ def _write_message(d: dict):
     _write(_MsgOp.Message, d)
 
 
-def _read(t: int = 0) -> dict:
-    data = ws.recv()
-    d = _unmarshal(data)
-    if isinstance(d, dict):
-        if t == 0:
-            dt = d.get('t')
-            if t == _MsgType.Error:
-                code = d['c']
-                raise RemoteError(f'code {code}')
-            if t != dt:
-                raise ProtocolError(f'unexpected message: want {t}, got {dt}')
-        return d
-    raise ProtocolError(f'unknown message format: want dict, got {type(d)}')
+def _read(expected=-1) -> any:
+    msg = _unmarshal(ws.recv())
+    if isinstance(msg, dict):
+        t = msg.get('t')
+        if t == _MsgType.Error:
+            code = msg.get('c')
+            raise RemoteError(f'code {code}')
+        if (expected > -1) and t != expected:
+            raise ProtocolError(f'unexpected message: want {expected}, got {t}')
+        if t == _MsgType.Input:
+            d = msg.get('d')
+            n = len(d)
+            if n == 0:
+                raise ProtocolError('unexpected input: got empty list')
+            elif n == 1:
+                return d[0]
+            else:
+                return tuple(d)
+        if t == _MsgType.Join:
+            d = msg.get('d')
+            return d
+        raise ProtocolError(f'unknown message type {t}')
+    raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
 
 
 def _clean(d: dict) -> dict:
@@ -122,12 +132,14 @@ def input(
         content: Optional[Union[str, Options]] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
+        inputs: Optional[List[dict]] = None,
 ) -> dict:
     is_shorthand = options is None and isinstance(content, (tuple, list, dict))
     d = dict(
         text=None if is_shorthand else content,
         options=content if is_shorthand else options,
         actions=actions,
+        inputs=inputs,
     )
     return _clean(d)
 
@@ -136,11 +148,13 @@ def read(
         content: Optional[Union[str, Options]] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
+        inputs: Optional[List[dict]] = None,
 ):
     d = input(
         content,
         options,
         actions,
+        inputs,
     )
     _write_message(dict(t=_MsgType.Read, d=d))
     return _read(_MsgType.Input)
