@@ -49,8 +49,20 @@ export type Msg = {
   d: Array<V | null>
 }
 
+export enum WidgetT {
+  Output = 1,
+  Input,
+  Option,
+}
+
+export type Output = {
+  t: WidgetT.Output
+  xid: S
+  content: S
+}
 
 export type Input = {
+  t: WidgetT.Input
   xid: S
   label?: S
   mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
@@ -78,16 +90,13 @@ export type Input = {
   inputs: Input[]
   range?: Pair<N | S>
 }
+
 export type Option = {
+  t: WidgetT.Option
   value: N | S
   label?: S
   icon?: S
   caption?: S
   selected?: B
   options?: Option[]
-}
-
-export type Output = {
-  xid: S
-  content: S
 }

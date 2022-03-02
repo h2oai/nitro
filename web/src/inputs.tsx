@@ -3,7 +3,7 @@ import { ContextMenuIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
 import { B, isN, isS, isV, isPair, isO, N, S, gensym, xid, U, V } from './core';
-import { Option, Input, MsgOp, MsgType } from './protocol';
+import { Option, Input, MsgOp, MsgType, WidgetT } from './protocol';
 import { Send } from './socket';
 import { bond } from './ui';
 
@@ -30,11 +30,11 @@ const toOptions = (x: any): Option[] => {
     const c: Option[] = []
     for (const v of x) {
       if (isV(v)) { // value
-        c.push({ label: String(v), value: v })
+        c.push({ t: WidgetT.Option, label: String(v), value: v })
       } else if (isPair(v)) { // [label, value]
         const label = v[0], value = v[1]
         if (isS(label) && isV(value)) {
-          c.push({ label, value })
+          c.push({ t: WidgetT.Option, label, value })
         } else {
           console.warn('Invalid choice pair. Want [string, value], got ', v)
         }
@@ -47,14 +47,14 @@ const toOptions = (x: any): Option[] => {
     return c
   }
   if (isS(x)) { // 'value1 value2 value3...'
-    return words(x).map(value => ({ label: value, value }))
+    return words(x).map(value => ({ t: WidgetT.Option, label: value, value }))
   }
   if (isO(x)) { // { label1: value1, label2: value2, ... }
     const c: Option[] = []
     for (const label in x) {
       const value = x[label]
       if (isV(value)) {
-        c.push({ label, value })
+        c.push({ t: WidgetT.Option, label, value })
       } else {
         console.warn('Invalid choice value in dictionary. Want string or number, got ', value)
       }
@@ -546,7 +546,9 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
 }
 
 const gap5: IStackTokens = { childrenGap: 5 }
-const XInput = ({ context, input }: InputProps) => { // recursive
+const XInput = ({ context: context0, input }: InputProps) => { // recursive
+
+  const context = context0.next()
 
   // This function contains the heuristics for determining which widget to use.
   // TODO might need a widget= to force which widget to use.
@@ -554,7 +556,6 @@ const XInput = ({ context, input }: InputProps) => { // recursive
   const { options, actions, editable, multiple, inputs, inline } = input
 
   if (inputs) {
-
     const children = inputs.map(input => {
       const
         size = inline ? input.size : undefined, // only process if inline

@@ -34,6 +34,12 @@ class _ErrorCode(IntEnum):
     RateLimited = 3
 
 
+class _WidgetType(IntEnum):
+    Output = 1
+    Input = 2
+    Option = 3
+
+
 # TODO read from env
 client_id = 'foo'
 client_secret = 'foo'
@@ -49,13 +55,9 @@ ws.connect('ws://localhost:11111/ws/b?r=/foo/', header={
 
 _primitive = (bool, int, float, str)
 Primitive = Union[bool, int, float, str]
-Objects = Union[Tuple[dict, ...], List[dict]]
-Options = Union[
-    Tuple[Primitive, ...],
-    List[Primitive],
-    Dict[Primitive, any],
-    Objects,
-]
+
+
+# Objects = Union[Tuple[dict, ...], List[dict]]
 
 
 class RemoteError(Exception):
@@ -117,83 +119,161 @@ def _clean(d: dict) -> dict:
     return {k: v for k, v in d.items() if v is not None}
 
 
+class Option:
+    def __init__(
+            self,
+            text: Optional[Primitive] = None,
+            value: any = None,
+    ):
+        self.text = text
+        self.value = value
+
+    def dump(self) -> dict:
+        d = dict(
+            t=_WidgetType.Option,
+            text=self.text,
+            value=self.value
+        )
+        return _clean(d)
+
+
+Options = Union[
+    Tuple[Primitive, ...],
+    List[Primitive],
+    Dict[Primitive, any],
+    List[Option],
+    Tuple[Option, ...],
+]
+
+Item = Union['Input', 'Output', str]
+Items = Union[List[Item], Tuple[Item, ...]]
+
+
+def _are_instances(xs, t) -> bool:
+    if not isinstance(xs, (tuple, list)):
+        return False
+    for x in xs:
+        if not isinstance(x, t):
+            return False
+    return True
+
+
+def _dump(x):
+    if isinstance(x, (tuple, list)):
+        return [_dump(e) for e in x]
+    if callable(getattr(x, 'dump', None)):
+        return x.dump()
+    return x
+
+
+class Input:
+    def __init__(
+            self,
+            text: Optional[str] = None,
+            options: Optional[Options] = None,
+            actions: Optional[Options] = None,
+            items: Optional[Items] = None,
+    ):
+        self.text = text
+        self.options = options
+        self.actions = actions
+        self.items = items
+
+    def dump(self) -> dict:
+        d = dict(
+            t=_WidgetType.Input,
+            text=self.text,
+            options=_dump(self.options),
+            actions=_dump(self.actions),
+            items=_dump(self.items),
+        )
+        return _clean(d)
+
+
+class Output:
+    def __init__(
+            self,
+            text: Optional[str] = None,
+            items: Optional[Items] = None,
+    ):
+        self.text = text
+        self.items = items
+
+    def dump(self) -> dict:
+        d = dict(
+            t=_WidgetType.Output,
+            text=self.text,
+            items=_dump(self.items),
+        )
+        return _clean(d)
+
+
 def option(
         text: Optional[Primitive] = None,
         value: any = None,
-) -> dict:
-    d = dict(
-        text=text,
-        value=value,
+) -> Option:
+    return Option(
+        text,
+        value
     )
-    return _clean(d)
 
 
 def input(
-        content: Optional[Union[str, Options]] = None,
+        content: Optional[Union[str, Items]] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
-        inputs: Optional[List[dict]] = None,
-) -> dict:
-    is_shorthand = options is None and isinstance(content, (tuple, list, dict))
-    d = dict(
-        text=None if is_shorthand else content,
-        options=content if is_shorthand else options,
-        actions=actions,
-        inputs=inputs,
-    )
-    return _clean(d)
-
-
-def read(
-        content: Optional[Union[str, Options]] = None,
-        options: Optional[Options] = None,
-        actions: Optional[Options] = None,
-        inputs: Optional[List[dict]] = None,
-):
-    d = input(
-        content,
+) -> Input:
+    text, items = (None, content) if isinstance(content, (tuple, list)) else (content, None)
+    return Input(
+        text,
         options,
         actions,
-        inputs,
+        items,
     )
-    _write_message(dict(t=_MsgType.Read, d=d))
-    return _read(_MsgType.Input)
 
 
 def output(
-        content: Union[str, Objects],
-        results: Optional[Objects] = None,
-) -> dict:
-    has_children = results is not None and isinstance(content, (tuple, list))
-    d = dict(
-        text=None if has_children else content,
-        results=content if has_children else results,
+        content: Union[str, Items],
+) -> Output:
+    text, items = (None, content) if isinstance(content, (tuple, list)) else (content, None)
+    return Output(
+        text,
+        items,
     )
-    return _clean(d)
+
+
+def read(
+        content: Optional[Union[str, Items]] = None,
+        options: Optional[Options] = None,
+        actions: Optional[Options] = None,
+):
+    i = input(
+        content,
+        options,
+        actions,
+    )
+    _write_message(dict(t=_MsgType.Read, d=i.dump()))
+    return _read(_MsgType.Input)
 
 
 def append(
-        content: Union[str, Objects],
-        results: Optional[Objects] = None,
+        content: Union[str, Items],
         # TODO update: dict - selectively update parts
 ):
-    d = output(
+    o = output(
         content,
-        results,
     )
-    _write_message(dict(t=_MsgType.Append, d=d))
+    _write_message(dict(t=_MsgType.Append, d=o.dump()))
 
 
 def write(
-        content: Union[str, Objects],
-        results: Optional[Objects] = None,
+        content: Union[str, Items],
         # TODO update: dict - selectively update parts
 ):
-    d = output(
+    o = output(
         content,
-        results,
     )
-    _write_message(dict(t=_MsgType.Write, d=d))
+    _write_message(dict(t=_MsgType.Write, d=o.dump()))
 
 
 def close():
@@ -208,6 +288,9 @@ _d_join = _read(_MsgType.Join)  # XXX convert to context
 counter = 0
 
 while True:
-    choice = read(('incr', 'decr'))
-    counter += 1 if input == 'incr' else -1
-    append(str(counter))
+    choice = read([
+        f'Count={counter}',
+        input(('incr', 'decr')),
+    ])
+    print(choice)
+    counter += 1 if choice == 'incr' else -1
