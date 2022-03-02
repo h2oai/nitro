@@ -1,17 +1,10 @@
 body {
   margin: 0;
-  font-family: 'Roboto', 'Karla', 'Poppins', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f9fbfc;
-
-  background-size: 13px 13px;
-  background-image: radial-gradient(rgb(88, 88, 88) 0.65px, #f9fbfc 0.65px);
-  background-size: 7px 7px;
-  background-image: repeating-linear-gradient(45deg, #ccc 0, #ccc 0.7000000000000001px, #f9fbfc 0, #f9fbfc 50%);
-
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: 'Source Code Pro', monospace;
 }
