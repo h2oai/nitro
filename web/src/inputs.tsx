@@ -117,6 +117,7 @@ const WithSend = ({ children }: { children: JSX.Element }) => (
     </Stack.Item>
   </ Stack>
 )
+
 class XTextField extends React.Component<InputProps, {}> {
   render() {
     const
@@ -565,11 +566,19 @@ const Stackables = ({ context, items, inline, size }: { context: Context, items:
   const children = items.map(item => {
     switch (item.t) {
       case WidgetT.Input:
-        return <Stackable key={xid()} inline={inline} size={size}><XInput context={context} input={item} /></Stackable>
+        return (
+          <Stackable key={xid()} inline={inline} size={size}>
+            <XInput context={context} input={item} />
+          </Stackable>
+        )
       case WidgetT.Output:
-        return <Stackable key={xid()} inline={inline} size={size}><XOutput context={context} output={item} /></Stackable>
+        return (
+          <Stackable key={xid()} inline={inline} size={size}>
+            <XOutput context={context} output={item} />
+          </Stackable>
+        )
       default:
-        return <Stack.Item key={xid()} ></Stack.Item>
+        return <Stack.Item key={xid()} />
     }
   })
 
@@ -673,13 +682,13 @@ const InputContainer = styled.div`
   max-width: 640px;
 `
 
-export const XInputView = bond((props: { send: Send, input: Input }) => {
+export const XInputView = (props: { send: Send, input: Input }) => {
   const
     input = sanitizeInput(props.input),
-    context = newCaptureContext(props.send, [], -1),
-    render = () => {
-      const form = <XInput context={context} input={input}></XInput>
-      return <InputContainer>{form}</InputContainer>
-    }
-  return { render }
-})
+    context = newCaptureContext(props.send, [], -1)
+  return (
+    <InputContainer>
+      <XInput context={context} input={input} />
+    </InputContainer>
+  )
+}
