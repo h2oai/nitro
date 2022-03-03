@@ -11,7 +11,7 @@ import { newSidekick } from './sidekick';
 // https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/
 const
   purple = createTheme({
-    defaultFontStyle: { fontFamily: 'Roboto' },
+    defaultFontStyle: { fontFamily: 'Source Sans Pro' },
     palette: {
       themePrimary: '#4a00e0',
       themeLighterAlt: '#f7f4fe',

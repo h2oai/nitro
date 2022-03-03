@@ -3,7 +3,7 @@ import { ContextMenuIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
 import { B, isN, isS, isV, isPair, isO, N, S, gensym, xid, U, V } from './core';
-import { Option, Input, MsgOp, MsgType, WidgetT } from './protocol';
+import { Option, Input, MsgOp, MsgType, WidgetT, Output } from './protocol';
 import { Send } from './socket';
 import { bond } from './ui';
 
@@ -18,6 +18,7 @@ const newCaptureContext = (send: Send, data: V[], index: U) => {
 type Context = ReturnType<typeof newCaptureContext>
 
 type InputProps = { context: Context, input: Input }
+type OutputProps = { context: Context, output: Output }
 
 const words = (x: S) => x.trim().split(/\s+/g)
 const unum = (x: any): N | undefined => isN(x) ? x : undefined
@@ -73,7 +74,7 @@ const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefin
   return undefined
 }
 const sanitizeInput = (input: Input): Input => {
-  const { options, actions, range, inputs } = input
+  const { options, actions, range, items } = input
   input.options = toOptions(options)
   input.actions = toOptions(actions)
   if (isPair(range)) {
@@ -83,10 +84,29 @@ const sanitizeInput = (input: Input): Input => {
       input.max = y
     }
   }
-  if (Array.isArray(inputs)) {
-    input.inputs = inputs.map(sanitizeInput)
+  if (Array.isArray(items)) {
+    input.items = items.map(sanitizeNested)
   }
-  return input as Input
+  return input
+}
+
+const sanitizeOutput = (output: Output): Output => {
+  const { items } = output
+  if (Array.isArray(items)) {
+    output.items = items.map(sanitizeNested)
+  }
+  return output
+}
+
+const sanitizeNested = (w: Input | Output): Input | Output => {
+  switch (w.t) {
+    case WidgetT.Input:
+      return sanitizeInput(w)
+    case WidgetT.Output:
+      return sanitizeOutput(w)
+    default:
+      return { t: WidgetT.Output, xid: xid(), text: String(w) }
+  }
 }
 
 const majorTheme = {
@@ -545,7 +565,46 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
   }
 }
 
+const Stackable = ({ inline, size, children }: { inline?: B, size?: S | U, children: JSX.Element }) => {
+  const
+    width = inline ? size : undefined, // only process if inline
+    styles = isS(width) ? { root: { width } } : undefined,
+    grow = isN(width) ? width : styles ? undefined : 1 // set only if not sized
+  return (
+    <Stack.Item grow={grow} styles={styles} disableShrink>
+      {children}
+    </Stack.Item >
+  )
+}
+
+const Stackables = ({ context, items, inline, size }: { context: Context, items: Array<Input | Output>, inline?: B, size?: S | U }) => {
+  const children = items.map(item => {
+    switch (item.t) {
+      case WidgetT.Input:
+        return <Stackable key={xid()} inline={inline} size={size}><XInput context={context} input={item} /></Stackable>
+      case WidgetT.Output:
+        return <Stackable key={xid()} inline={inline} size={size}><XOutput context={context} output={item} /></Stackable>
+      default:
+        return <Stack.Item key={xid()} ></Stack.Item>
+    }
+  })
+
+  return inline
+    ? <Stack horizontal tokens={gap5}>{children}</Stack>
+    : <Stack tokens={gap5}>{children}</Stack>
+}
+
 const gap5: IStackTokens = { childrenGap: 5 }
+
+const XOutput = ({ context: context0, output }: OutputProps) => {
+  const context = context0.next()
+  const { items } = output
+  if (items) {
+    return <Stackables context={context} items={items} inline={output.inline} size={output.size} />
+  }
+  return <div>{output.text}</div>
+}
+
 const XInput = ({ context: context0, input }: InputProps) => { // recursive
 
   const context = context0.next()
@@ -553,25 +612,10 @@ const XInput = ({ context: context0, input }: InputProps) => { // recursive
   // This function contains the heuristics for determining which widget to use.
   // TODO might need a widget= to force which widget to use.
 
-  const { options, actions, editable, multiple, inputs, inline } = input
+  const { options, actions, editable, multiple, items } = input
 
-  if (inputs) {
-    const children = inputs.map(input => {
-      const
-        size = inline ? input.size : undefined, // only process if inline
-        styles = isS(size) ? { root: { width: size } } : undefined,
-        grow = isN(size) ? size : styles ? undefined : 1 // set only if not sized
-
-      return (
-        <Stack.Item key={xid()} grow={grow} styles={styles} disableShrink>
-          <XInput context={context} input={input} />
-        </Stack.Item >
-      )
-    })
-
-    return inline
-      ? <Stack horizontal tokens={gap5}>{children}</Stack>
-      : <Stack tokens={gap5}>{children}</Stack>
+  if (items) {
+    return <Stackables context={context} items={items} inline={input.inline} size={input.size} />
   }
 
   if (options.length) {

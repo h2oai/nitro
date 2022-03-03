@@ -169,12 +169,12 @@ def _dump(x):
 class Input:
     def __init__(
             self,
-            text: Optional[str] = None,
+            label: Optional[str] = None,
             options: Optional[Options] = None,
             actions: Optional[Options] = None,
             items: Optional[Items] = None,
     ):
-        self.text = text
+        self.label = label
         self.options = options
         self.actions = actions
         self.items = items
@@ -182,7 +182,7 @@ class Input:
     def dump(self) -> dict:
         d = dict(
             t=_WidgetType.Input,
-            text=self.text,
+            label=self.label,
             options=_dump(self.options),
             actions=_dump(self.actions),
             items=_dump(self.items),
@@ -223,9 +223,9 @@ def input(
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
 ) -> Input:
-    text, items = (None, content) if isinstance(content, (tuple, list)) else (content, None)
+    label, items = (None, content) if isinstance(content, (tuple, list)) else (content, None)
     return Input(
-        text,
+        label,
         options,
         actions,
         items,
@@ -290,7 +290,7 @@ counter = 0
 while True:
     choice = read([
         f'Count={counter}',
-        input(('incr', 'decr')),
+        input(options=('incr', 'decr')),
     ])
     print(choice)
     counter += 1 if choice == 'incr' else -1
