@@ -80,6 +80,7 @@ export type Input = {
   max?: V
   step?: N
   precision?: U
+  range?: [V, V] | [V, V, V] | [V, V, V, V]
   mask?: S
   prefix?: S
   suffix?: S
@@ -93,7 +94,6 @@ export type Input = {
   editable?: B
   options: Option[]
   actions: Option[]
-  range?: Pair<N | S>
 }
 
 export type Option = {

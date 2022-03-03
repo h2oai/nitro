@@ -1,9 +1,8 @@
 import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
-import { ContextMenuIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
-import { B, isN, isS, isV, isPair, isO, N, S, gensym, xid, U, V } from './core';
-import { Option, Input, MsgOp, MsgType, WidgetT, Output } from './protocol';
+import { B, gensym, isN, isO, isPair, isS, isV, N, S, U, V, xid } from './core';
+import { Input, MsgOp, MsgType, Option, Output, WidgetT } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -77,11 +76,40 @@ const sanitizeInput = (input: Input): Input => {
   const { options, actions, range, items } = input
   input.options = toOptions(options)
   input.actions = toOptions(actions)
-  if (isPair(range)) {
-    const [x, y] = range
-    if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
-      input.min = x
-      input.max = y
+  if (Array.isArray(range)) {
+    switch (range.length) {
+      case 2:
+        {
+          const [x, y] = range
+          if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
+            input.min = x
+            input.max = y
+          }
+        }
+        break
+      case 3:
+        {
+          const [x, y, z] = range
+          // TODO string x, y?
+          if (isN(x) && isN(y) && isN(z)) {
+            input.min = x
+            input.max = y
+            input.step = z
+          }
+        }
+        break
+      case 4:
+        {
+          const [x, y, z, p] = range
+          // TODO string x, y?
+          if (isN(x) && isN(y) && isN(z) && isN(p)) {
+            input.min = x
+            input.max = y
+            input.step = z
+            input.precision = p
+          }
+        }
+        break
     }
   }
   if (Array.isArray(items)) {
