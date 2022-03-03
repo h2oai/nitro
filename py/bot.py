@@ -119,20 +119,36 @@ def _clean(d: dict) -> dict:
     return {k: v for k, v in d.items() if v is not None}
 
 
+N = Union[int, float]
+V = Union[N, str]
+
+
 class Option:
     def __init__(
             self,
-            text: Optional[Primitive] = None,
-            value: any = None,
+            value: V,
+            label: Optional[str] = None,
+            icon: Optional[str] = None,
+            caption: Optional[str] = None,
+            selected: Optional[bool] = None,
+            options: Optional['Options'] = None,
     ):
-        self.text = text
         self.value = value
+        self.label = label
+        self.icon = icon
+        self.caption = caption
+        self.selected = selected
+        self.options = options
 
     def dump(self) -> dict:
         d = dict(
             t=_WidgetT.Option,
-            text=self.text,
-            value=self.value
+            value=self.value,
+            label=self.label,
+            icon=self.icon,
+            caption=self.caption,
+            selected=self.selected,
+            options=self.options,
         )
         return _clean(d)
 
@@ -170,22 +186,82 @@ class Input:
     def __init__(
             self,
             label: Optional[str] = None,
+            mode: Optional[str] = None,
+            icon: Optional[str] = None,
+            value: Optional[Union[V, Tuple[V, V]]] = None,
+            min: Optional[V] = None,
+            max: Optional[V] = None,
+            step: Optional[N] = None,
+            precision: Optional[int] = None,
+            range: Optional[Union[Tuple[V, V], Tuple[N, N, N], Tuple[N, N, N, int]]] = None,
+            mask: Optional[str] = None,
+            prefix: Optional[str] = None,
+            suffix: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            error: Optional[str] = None,
+            lines: Optional[int] = None,
+            multiple: Optional[bool] = None,
+            required: Optional[bool] = None,
+            password: Optional[bool] = None,
+            editable: Optional[bool] = None,
             options: Optional[Options] = None,
             actions: Optional[Options] = None,
             items: Optional[Items] = None,
+            inline: Optional[bool] = None,
+            size: Optional[V] = None,
     ):
         self.label = label
+        self.mode = mode
+        self.icon = icon
+        self.value = value
+        self.min = min
+        self.max = max
+        self.step = step,
+        self.precision = precision,
+        self.range = range
+        self.mask = mask
+        self.prefix = prefix
+        self.suffix = suffix
+        self.placeholder = placeholder
+        self.error = error
+        self.lines = lines
+        self.multiple = multiple
+        self.required = required
+        self.password = password
+        self.editable = editable
         self.options = options
         self.actions = actions
         self.items = items
+        self.inline = inline
+        self.size = size
 
     def dump(self) -> dict:
         d = dict(
             t=_WidgetT.Input,
             label=self.label,
+            mode=self.mode,
+            icon=self.icon,
+            value=self.value,
+            min=self.min,
+            max=self.max,
+            step=self.step,
+            precision=self.precision,
+            range=self.range,
+            mask=self.mask,
+            prefix=self.prefix,
+            suffix=self.suffix,
+            placeholder=self.placeholder,
+            error=self.error,
+            lines=self.lines,
+            multiple=self.multiple,
+            required=self.required,
+            password=self.password,
+            editable=self.editable,
             options=_dump(self.options),
             actions=_dump(self.actions),
             items=_dump(self.items),
+            inline=self.inline,
+            size=self.size,
         )
         return _clean(d)
 
@@ -195,50 +271,93 @@ class Output:
             self,
             text: Optional[str] = None,
             items: Optional[Items] = None,
+            inline: Optional[bool] = None,
+            size: Optional[V] = None,
     ):
         self.text = text
         self.items = items
+        self.inline = inline
+        self.size = size
 
     def dump(self) -> dict:
         d = dict(
             t=_WidgetT.Output,
             text=self.text,
             items=_dump(self.items),
+            inline=self.inline,
+            size=self.size,
         )
         return _clean(d)
 
 
-def option(
-        text: Optional[Primitive] = None,
-        value: any = None,
-) -> Option:
-    return Option(
-        text,
-        value
-    )
+option = Option
 
 
 def input(
         content: Optional[Union[str, Items]] = None,
+        mode: Optional[str] = None,
+        icon: Optional[str] = None,
+        value: Optional[Union[V, Tuple[V, V]]] = None,
+        min: Optional[V] = None,
+        max: Optional[V] = None,
+        step: Optional[N] = None,
+        precision: Optional[int] = None,
+        range: Optional[Union[Tuple[V, V], Tuple[N, N, N], Tuple[N, N, N, int]]] = None,
+        mask: Optional[str] = None,
+        prefix: Optional[str] = None,
+        suffix: Optional[str] = None,
+        placeholder: Optional[str] = None,
+        error: Optional[str] = None,
+        lines: Optional[int] = None,
+        multiple: Optional[bool] = None,
+        required: Optional[bool] = None,
+        password: Optional[bool] = None,
+        editable: Optional[bool] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
+        inline: Optional[bool] = None,
+        size: Optional[V] = None,
 ) -> Input:
     label, items = (None, content) if isinstance(content, (tuple, list)) else (content, None)
     return Input(
         label,
+        mode,
+        icon,
+        value,
+        min,
+        max,
+        step,
+        precision,
+        range,
+        mask,
+        prefix,
+        suffix,
+        placeholder,
+        error,
+        lines,
+        multiple,
+        required,
+        password,
+        editable,
         options,
         actions,
         items,
+        inline,
+        size,
     )
 
 
 def output(
         content: Union[str, Items],
+        inline: Optional[bool] = None,
+        size: Optional[V] = None,
 ) -> Output:
     text, items = (None, content) if isinstance(content, (tuple, list)) else (content, None)
     return Output(
         text,
         items,
+        inline,
+        size,
     )
 
 

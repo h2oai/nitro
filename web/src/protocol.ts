@@ -57,22 +57,10 @@ export enum WidgetT {
 
 type IO = Input | Output
 
-export type Output = {
-  t: WidgetT.Output
-  xid: S
-  text: S
-  size?: S | U
-  inline?: B
-  items?: IO[]
-}
-
 export type Input = {
   t: WidgetT.Input
   xid: S
   label?: S
-  inline?: B
-  size?: S | U
-  items?: IO[]
   mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
   icon?: S
   value?: V | Pair<V>
@@ -80,7 +68,7 @@ export type Input = {
   max?: V
   step?: N
   precision?: U
-  range?: [V, V] | [V, V, V] | [V, V, V, V]
+  range?: [V, V] | [N, N, N] | [N, N, N, U]
   mask?: S
   prefix?: S
   suffix?: S
@@ -94,14 +82,26 @@ export type Input = {
   editable?: B
   options: Option[]
   actions: Option[]
+  items?: IO[]
+  inline?: B
+  size?: V
 }
 
 export type Option = {
   t: WidgetT.Option
-  value: N | S
+  value: V
   label?: S
   icon?: S
   caption?: S
   selected?: B
   options?: Option[]
+}
+
+export type Output = {
+  t: WidgetT.Output
+  xid: S
+  text: S
+  items?: IO[]
+  inline?: B
+  size?: V
 }
