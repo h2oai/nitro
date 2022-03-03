@@ -109,15 +109,11 @@ const sanitizeNested = (w: Input | Output): Input | Output => {
   }
 }
 
-const majorTheme = {
-  textColor: '#dcddde'
-}
-
 const WithSend = ({ children }: { children: JSX.Element }) => (
   <Stack horizontal tokens={gap5} >
     <Stack.Item grow>{children}</Stack.Item>
     <Stack.Item>
-      <PrimaryButton styles={{ icon: { color: majorTheme.textColor } }} iconProps={{ iconName: 'Send' }} />
+      <PrimaryButton iconProps={{ iconName: 'Send' }} />
     </Stack.Item>
   </ Stack>
 )
@@ -417,7 +413,7 @@ class XMenu extends React.Component<InputProps, {}> {
   render() {
     const
       { label, actions } = this.props.input
-    return <PrimaryButton text={label ?? 'Choose an action'} menuProps={toContextualMenuProps(actions)} styles={{ label: { color: majorTheme.textColor } }} />
+    return <PrimaryButton text={label ?? 'Choose an action'} menuProps={toContextualMenuProps(actions)} />
   }
 }
 
@@ -434,12 +430,9 @@ const XButtons = bond(({ context, input, useOptions }: InputProps & XButtonsProp
         horizontal = inline ? true : false,
         styles: IButtonStyles = {
           root: { width: '100%' },
-          label: { color: majorTheme.textColor },
         },
         compoundStyles: IButtonStyles = {
           root: { width: '100%', maxWidth: 'auto' },
-          label: { color: majorTheme.textColor },
-          description: { color: majorTheme.textColor },
         },
         buttons = items.map(c => {
           const

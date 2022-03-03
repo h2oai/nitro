@@ -12,30 +12,6 @@ import { newSidekick } from './sidekick';
 const
   purple = createTheme({
     defaultFontStyle: { fontFamily: 'Source Sans Pro' },
-    palette: {
-      themePrimary: '#4a00e0',
-      themeLighterAlt: '#f7f4fe',
-      themeLighter: '#dfd2fa',
-      themeLight: '#c5acf6',
-      themeTertiary: '#8e5fed',
-      themeSecondary: '#5e1be4',
-      themeDarkAlt: '#4300ca',
-      themeDark: '#3900ab',
-      themeDarker: '#2a007e',
-      neutralLighterAlt: '#faf9f8',
-      neutralLighter: '#f3f2f1',
-      neutralLight: '#edebe9',
-      neutralQuaternaryAlt: '#e1dfdd',
-      neutralQuaternary: '#d0d0d0',
-      neutralTertiaryAlt: '#c8c6c4',
-      neutralTertiary: '#a19f9d',
-      neutralSecondary: '#605e5c',
-      neutralPrimaryAlt: '#3b3a39',
-      neutralPrimary: '#323130',
-      neutralDark: '#201f1e',
-      black: '#000000',
-      white: '#ffffff',
-    }
   });
 
 loadTheme(purple)
