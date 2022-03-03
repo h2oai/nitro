@@ -589,8 +589,7 @@ const Stackables = ({ context, items, inline, size }: { context: Context, items:
 
 const gap5: IStackTokens = { childrenGap: 5 }
 
-const XOutput = ({ context: context0, output }: OutputProps) => {
-  const context = context0.next()
+const XOutput = ({ context, output }: OutputProps) => {
   const { items } = output
   if (items) {
     return <Stackables context={context} items={items} inline={output.inline} size={output.size} />
@@ -598,9 +597,8 @@ const XOutput = ({ context: context0, output }: OutputProps) => {
   return <div>{output.text}</div>
 }
 
-const XInput = ({ context: context0, input }: InputProps) => { // recursive
+const XInput = ({ context, input }: InputProps) => { // recursive
 
-  const context = context0.next()
 
   // This function contains the heuristics for determining which widget to use.
   // TODO might need a widget= to force which widget to use.
@@ -610,6 +608,8 @@ const XInput = ({ context: context0, input }: InputProps) => { // recursive
   if (items) {
     return <Stackables context={context} items={items} inline={input.inline} size={input.size} />
   }
+
+  context = context.next()
 
   if (options.length) {
     if (multiple) {
