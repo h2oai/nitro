@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { B, isN, isS, isV, isPair, isO, N, S, gensym, xid, U, V } from './core';
 import { Option, Input, MsgOp, MsgType, WidgetT, Output } from './protocol';
 import { Send } from './socket';
-import { bond } from './ui';
+import { make } from './ui';
 
 const newCaptureContext = (send: Send, data: V[], index: U) => {
   const submit = (value: V, submit?: B) => {
@@ -418,7 +418,7 @@ class XMenu extends React.Component<InputProps, {}> {
   }
 }
 
-const XButtons = bond(({ context, input }: InputProps) => {
+const XButtons = make(({ context, input }: InputProps) => {
   const
     render = () => {
       const

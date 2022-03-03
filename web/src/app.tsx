@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { B, box, defer, N, Pair, S, U, xid } from './core';
+import React from 'react';
+import { box, defer, S, U, xid } from './core';
 import { XInputView } from './inputs';
 import { ErrCode, Input, Msg, MsgOp, MsgType, Output } from './protocol';
 import { Sidekick } from './sidekick';
 import { Socket, SocketEvent, SocketEventT } from './socket';
-import { bond } from './ui';
+import { make } from './ui';
 
 enum AppStateT { Connecting, Disconnected, Invalid, Input, Outputs }
 
@@ -25,11 +25,10 @@ type AppState = {
   outputs: Output[]
 }
 
-// let socket: Socket | null = null
 const hello: Msg = {
   t: MsgType.Join,
   d: {
-    language: window.navigator.language,
+    language: window.navigator.language, // XXX formalize
   }
 }
 
@@ -37,7 +36,7 @@ const XOutputView = ({ outputs }: { outputs: Output[] }) => {
   return <div>output</div>
 }
 
-export const App = bond(({ sidekick }: { sidekick: Sidekick }) => {
+export const App = make(({ sidekick }: { sidekick: Sidekick }) => {
   const
     stateB = box<AppState>({ t: AppStateT.Connecting }),
     onMessage = (socket: Socket, e: SocketEvent) => {

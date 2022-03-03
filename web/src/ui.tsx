@@ -16,7 +16,7 @@ const reserved: Dict<B> = {
   update: true,
 }
 
-export function bond<TProps, TState extends Renderable>(ctor: (props: TProps) => TState) {
+export function make<TProps, TState extends Renderable>(ctor: (props: TProps) => TState) {
   return class extends React.Component<TProps> {
     private readonly model: TState
     private readonly arrows: Disposable[]
