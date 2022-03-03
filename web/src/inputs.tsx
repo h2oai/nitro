@@ -422,13 +422,9 @@ const XButtons = bond(({ context, input }: InputProps) => {
     render = () => {
       const
         { inline, actions } = input,
-        horizontal = inline ? true : false,
-        styles: IButtonStyles = {
-          root: { width: '100%' },
-        },
-        compoundStyles: IButtonStyles = {
-          root: { width: '100%', maxWidth: 'auto' },
-        },
+        horizontal = inline !== false,
+        styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
+        compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
         buttons = actions.map(c => {
           const
             text = c.label,
