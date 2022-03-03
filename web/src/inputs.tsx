@@ -417,16 +417,11 @@ class XMenu extends React.Component<InputProps, {}> {
   }
 }
 
-type XButtonsProps = {
-  useOptions: B // XXX ugly
-}
-
-const XButtons = bond(({ context, input, useOptions }: InputProps & XButtonsProps) => {
+const XButtons = bond(({ context, input }: InputProps) => {
   const
     render = () => {
       const
-        { inline, options, actions } = input,
-        items = useOptions ? options : actions,
+        { inline, actions } = input,
         horizontal = inline ? true : false,
         styles: IButtonStyles = {
           root: { width: '100%' },
@@ -434,7 +429,7 @@ const XButtons = bond(({ context, input, useOptions }: InputProps & XButtonsProp
         compoundStyles: IButtonStyles = {
           root: { width: '100%', maxWidth: 'auto' },
         },
-        buttons = items.map(c => {
+        buttons = actions.map(c => {
           const
             text = c.label,
             onClick = () => context.submit(c.value, true),
@@ -636,10 +631,7 @@ const XInput = ({ context: context0, input }: InputProps) => { // recursive
         if (hasGroups || (options.length > 7)) {
           return <XDropdown context={context} input={input} />
         }
-        if (options.length > 3) {
-          return <XChoiceGroup context={context} input={input} />
-        }
-        return <XButtons context={context} input={input} useOptions={true} />
+        return <XChoiceGroup context={context} input={input} />
     }
   }
 
@@ -647,7 +639,7 @@ const XInput = ({ context: context0, input }: InputProps) => { // recursive
     if (actions.length > 5) {
       return <XMenu context={context} input={input} />
     }
-    return <XButtons context={context} input={input} useOptions={false} />
+    return <XButtons context={context} input={input} />
   }
 
   switch (input.mode) {

@@ -34,7 +34,7 @@ class _ErrorCode(IntEnum):
     RateLimited = 3
 
 
-class _WidgetType(IntEnum):
+class _WidgetT(IntEnum):
     Output = 1
     Input = 2
     Option = 3
@@ -130,7 +130,7 @@ class Option:
 
     def dump(self) -> dict:
         d = dict(
-            t=_WidgetType.Option,
+            t=_WidgetT.Option,
             text=self.text,
             value=self.value
         )
@@ -181,7 +181,7 @@ class Input:
 
     def dump(self) -> dict:
         d = dict(
-            t=_WidgetType.Input,
+            t=_WidgetT.Input,
             label=self.label,
             options=_dump(self.options),
             actions=_dump(self.actions),
@@ -201,7 +201,7 @@ class Output:
 
     def dump(self) -> dict:
         d = dict(
-            t=_WidgetType.Output,
+            t=_WidgetT.Output,
             text=self.text,
             items=_dump(self.items),
         )
@@ -290,7 +290,7 @@ counter = 0
 while True:
     choice = read([
         f'Count={counter}',
-        input(options=('incr', 'decr')),
+        input(actions=('incr', 'decr')),
     ])
     print(choice)
     counter += 1 if choice == 'incr' else -1
