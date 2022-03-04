@@ -1,4 +1,4 @@
-import { S, N, B, U, V, Pair } from "./core"
+import { S, N, B, U, V, Pair, I } from "./core"
 
 export enum MsgType {
   Error = 1,
@@ -51,6 +51,7 @@ export type Widget = Input | Text
 export type Input = {
   t: WidgetT.Input
   xid: S
+  index: I
   text?: S
   name?: S
   mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'

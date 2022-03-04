@@ -1,20 +1,20 @@
 import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
-import { B, gensym, isN, isO, isPair, isS, isV, N, S, U, V, xid } from './core';
+import { B, gensym, I, isN, isO, isPair, isS, isV, N, S, U, V, xid } from './core';
 import { Markdown } from './markdown';
 import { Input, Widget, MsgType, Option, WidgetT } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
-const newCaptureContext = (send: Send, data: V[], index: U) => {
-  const submit = (value: V, submit?: B) => {
-    data[index] = value
-    if (submit) send({ t: MsgType.Input, d: data })
+const newCaptureContext = (send: Send, data: V[]) => {
+  const capture = (index: I, value: V) => {
+    if (index >= 0) data[index] = value
   }
-  const next = () => newCaptureContext(send, data, index + 1)
-  return { submit, next }
+  const submit = () => send({ t: MsgType.Input, d: data })
+  return { capture, submit }
 }
+
 type Context = ReturnType<typeof newCaptureContext>
 
 type InputProps = { context: Context, input: Input }
@@ -73,88 +73,39 @@ const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefin
   return undefined
 }
 
-const sanitizeInput = (input: Input): Input => {
-  const { options, actions, range, items } = input
-  input.options = toOptions(options)
-  input.actions = toOptions(actions)
-  if (Array.isArray(range)) {
-    switch (range.length) {
-      case 2:
-        {
-          const [x, y] = range
-          if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
-            input.min = x
-            input.max = y
-          }
+const XTextField = make(({ context, input }: InputProps) => {
+  const { index, value } = input
+  context.capture(index, (value as any) ?? '')
+  const
+    onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
+      v = v ?? (target as HTMLInputElement).value ?? value ?? ''
+      // TODO live?
+      context.capture(index, v)
+    },
+    render = () => {
+      const
+        { text: label, placeholder, icon, value, mask, prefix, suffix, error, lines, required, password } = input,
+        field: Partial<ITextFieldProps> = {
+          label,
+          defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
+          placeholder: placeholder ?? label ? undefined : 'Enter some text...',
+          errorMessage: error,
+          required: required === true,
+          onChange,
         }
-        break
-      case 3:
-        {
-          const [x, y, z] = range
-          // TODO string x, y?
-          if (isN(x) && isN(y) && isN(z)) {
-            input.min = x
-            input.max = y
-            input.step = z
-          }
-        }
-        break
-      case 4:
-        {
-          const [x, y, z, p] = range
-          // TODO string x, y?
-          if (isN(x) && isN(y) && isN(z) && isN(p)) {
-            input.min = x
-            input.max = y
-            input.step = z
-            input.precision = p
-          }
-        }
-        break
+
+      return password === true
+        ? <TextField {...field} type='password' canRevealPassword revealPasswordAriaLabel='Show password' />
+        : mask
+          ? <MaskedTextField {...field} mask={mask} />
+          : lines && (lines >= 1)
+            ? <TextField {...field} multiline resizable autoAdjustHeight rows={lines} />
+            : <TextField {...field} iconProps={icon ? { iconName: icon } : undefined} prefix={prefix} suffix={suffix} />
     }
-  }
-  if (Array.isArray(items)) {
-    input.items = items.map(sanitizeWidget)
-  }
-  return input
-}
 
-const sanitizeWidget = (widget: Widget): Widget => {
-  if (isS(widget)) return { t: WidgetT.Text, xid: xid(), value: widget }
-  if (widget.t === WidgetT.Input) return sanitizeInput(widget)
-  return widget
-}
+  return { render }
+})
 
-const WithSend = ({ children }: { children: JSX.Element }) => (
-  <Stack horizontal tokens={gap5} >
-    <Stack.Item grow>{children}</Stack.Item>
-    <Stack.Item>
-      <PrimaryButton iconProps={{ iconName: 'Send' }} />
-    </Stack.Item>
-  </ Stack>
-)
-
-class XTextField extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text: label, placeholder, icon, value, mask, prefix, suffix, error, lines, required, password } = this.props.input,
-      props: Partial<ITextFieldProps> = {
-        label,
-        defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
-        placeholder: placeholder ?? label ? undefined : 'Enter some text...',
-        errorMessage: error,
-        required: required === true,
-      }
-
-    return password === true
-      ? <TextField {...props} type='password' canRevealPassword revealPasswordAriaLabel='Show password' />
-      : mask
-        ? <MaskedTextField {...props} mask={mask} />
-        : lines && (lines >= 1)
-          ? <TextField {...props} multiline resizable autoAdjustHeight rows={lines} />
-          : <TextField {...props} iconProps={icon ? { iconName: icon } : undefined} prefix={prefix} suffix={suffix} />
-  }
-}
 
 class XSpinButton extends React.Component<InputProps, {}> {
   // TODO format string
@@ -434,18 +385,24 @@ class XMenu extends React.Component<InputProps, {}> {
   }
 }
 
+const continueAction: Option = { t: WidgetT.Option, value: 'continue', label: 'Continue', selected: true }
+const continueWidget: Widget = { t: WidgetT.Input, xid: xid(), index: -1 /* don't capture */, options: [], actions: [continueAction] }
+
 const XButtons = make(({ context, input }: InputProps) => {
   const
     render = () => {
       const
-        { inline, actions } = input,
+        { index, inline, actions } = input,
         horizontal = inline !== false,
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
         buttons = actions.map(c => {
           const
             text = c.label,
-            onClick = () => context.submit(c.value, true),
+            onClick = () => {
+              context.capture(index, c.value)
+              context.submit()
+            },
             button = c.selected
               ? c.options
                 ? <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} onClick={onClick} />
@@ -604,6 +561,11 @@ const inputHasActions = (input: Input): B => { // recursive
   return false
 }
 
+const widgetsHaveActions = (widgets: Widget[]): B => {
+  for (const widget of widgets) if (widget.t === WidgetT.Input && inputHasActions(widget)) return true
+  return false
+}
+
 const XInput = ({ context, input }: InputProps) => { // recursive
 
   // This function contains the heuristics for determining which widget to use.
@@ -614,8 +576,6 @@ const XInput = ({ context, input }: InputProps) => { // recursive
   if (items) {
     return <Stackables context={context} widgets={items} inline={input.inline} size={input.size} />
   }
-
-  context = context.next()
 
   if (options.length) {
     if (multiple) {
@@ -687,12 +647,74 @@ const WidgetsContainer = styled.div`
   max-width: 640px;
 `
 
+
+const newIncr = () => {
+  let i = 0
+  return () => i++
+}
+type Incr = ReturnType<typeof newIncr>
+
+const sanitizeInput = (input: Input, incr: Incr): Input => {
+  const { options, actions, range, items, index } = input
+  input.index = index === -1 ? index : incr()
+  input.options = toOptions(options)
+  input.actions = toOptions(actions)
+  if (Array.isArray(range)) {
+    switch (range.length) {
+      case 2:
+        {
+          const [x, y] = range
+          if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
+            input.min = x
+            input.max = y
+          }
+        }
+        break
+      case 3:
+        {
+          const [x, y, z] = range
+          // TODO string x, y?
+          if (isN(x) && isN(y) && isN(z)) {
+            input.min = x
+            input.max = y
+            input.step = z
+          }
+        }
+        break
+      case 4:
+        {
+          const [x, y, z, p] = range
+          // TODO string x, y?
+          if (isN(x) && isN(y) && isN(z) && isN(p)) {
+            input.min = x
+            input.max = y
+            input.step = z
+            input.precision = p
+          }
+        }
+        break
+    }
+  }
+  if (Array.isArray(items)) {
+    input.items = items.map(w => sanitizeWidget(w, incr))
+  }
+  return input
+}
+
+const sanitizeWidget = (widget: Widget, incr: Incr): Widget => {
+  if (isS(widget)) return { t: WidgetT.Text, xid: xid(), value: widget }
+  if (widget.t === WidgetT.Input) return sanitizeInput(widget, incr)
+  return widget
+}
 export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
-  console.log(JSON.stringify(props.widgets))
+  // console.log(JSON.stringify(props.widgets))
   const
-    widgets = props.widgets.map(sanitizeWidget),
-    context = newCaptureContext(props.send, [], -1)
-  console.log(JSON.stringify(widgets))
+    next = newIncr(),
+    sanitizedWidgets = props.widgets.map(w => sanitizeWidget(w, next)),
+    hasActions = widgetsHaveActions(sanitizedWidgets),
+    widgets: Widget[] = hasActions ? sanitizedWidgets : [...sanitizedWidgets, continueWidget],
+    context = newCaptureContext(props.send, [])
+  // console.log(JSON.stringify(widgets))
   return (
     <WidgetsContainer>
       <Stackables context={context} widgets={widgets} />
