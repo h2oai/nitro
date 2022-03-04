@@ -153,7 +153,7 @@ class XTextField extends React.Component<InputProps, {}> {
       props: Partial<ITextFieldProps> = {
         label,
         defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
-        placeholder: placeholder ?? label ? undefined : 'Message...',
+        placeholder: placeholder ?? label ? undefined : 'Enter some text...',
         errorMessage: error,
         required: required === true,
       }
@@ -625,8 +625,16 @@ const XOutput = ({ context, output }: OutputProps) => {
   return <div>{output.text}</div>
 }
 
-const XInput = ({ context, input }: InputProps) => { // recursive
+const inputHasActions = (input: Input): B => { // recursive
+  const { actions, items } = input
+  if (actions.length) return true
+  if (items) {
+    for (const item of items) if (item.t === WidgetT.Input && inputHasActions(item)) return true
+  }
+  return false
+}
 
+const XInput = ({ context, input }: InputProps) => { // recursive
 
   // This function contains the heuristics for determining which widget to use.
   // TODO might need a widget= to force which widget to use.
@@ -705,8 +713,7 @@ const XInput = ({ context, input }: InputProps) => { // recursive
 }
 
 const InputContainer = styled.div`
-  box-sizing: border-box;
-  padding: 0.5rem 0 2rem 0;
+  padding: 2rem;
   max-width: 640px;
 `
 
