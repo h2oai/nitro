@@ -1,2 +1,4 @@
 msgpack==1.0.3
 websocket-client==1.2.3
+Flask==2.0.3
+simple-websocket==0.5.1
