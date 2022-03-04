@@ -363,13 +363,53 @@ def output(
 
 def read(
         content: Optional[Union[str, Items]] = None,
+        mode: Optional[str] = None,
+        icon: Optional[str] = None,
+        value: Optional[Union[V, Tuple[V, V]]] = None,
+        min: Optional[V] = None,
+        max: Optional[V] = None,
+        step: Optional[N] = None,
+        precision: Optional[int] = None,
+        range: Optional[Union[Tuple[V, V], Tuple[N, N, N], Tuple[N, N, N, int]]] = None,
+        mask: Optional[str] = None,
+        prefix: Optional[str] = None,
+        suffix: Optional[str] = None,
+        placeholder: Optional[str] = None,
+        error: Optional[str] = None,
+        lines: Optional[int] = None,
+        multiple: Optional[bool] = None,
+        required: Optional[bool] = None,
+        password: Optional[bool] = None,
+        editable: Optional[bool] = None,
         options: Optional[Options] = None,
         actions: Optional[Options] = None,
+        inline: Optional[bool] = None,
+        size: Optional[V] = None,
 ):
     i = input(
         content,
+        mode,
+        icon,
+        value,
+        min,
+        max,
+        step,
+        precision,
+        range,
+        mask,
+        prefix,
+        suffix,
+        placeholder,
+        error,
+        lines,
+        multiple,
+        required,
+        password,
+        editable,
         options,
         actions,
+        inline,
+        size,
     )
     _write_message(dict(t=_MsgType.Read, d=i.dump()))
     return _read(_MsgType.Input)
@@ -377,20 +417,28 @@ def read(
 
 def append(
         content: Union[str, Items],
+        inline: Optional[bool] = None,
+        size: Optional[V] = None,
         # TODO update: dict - selectively update parts
 ):
     o = output(
         content,
+        inline,
+        size,
     )
     _write_message(dict(t=_MsgType.Append, d=o.dump()))
 
 
 def write(
         content: Union[str, Items],
+        inline: Optional[bool] = None,
+        size: Optional[V] = None,
         # TODO update: dict - selectively update parts
 ):
     o = output(
         content,
+        inline,
+        size,
     )
     _write_message(dict(t=_MsgType.Write, d=o.dump()))
 
@@ -407,6 +455,7 @@ _d_join = _read(_MsgType.Join)  # XXX convert to context
 counter = 0
 
 while True:
+    read()
     choice = read([
         f'Count={counter}',
         input(actions=('incr', 'decr')),
