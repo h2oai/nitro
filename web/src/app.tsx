@@ -1,6 +1,6 @@
 import React from 'react';
 import { box, defer, S, U, xid } from './core';
-import { XInputView } from './inputs';
+import { XWidgets } from './inputs';
 import { Input, Msg, MsgType } from './protocol';
 import { Sidekick } from './sidekick';
 import { Socket, SocketEvent, SocketEventT } from './socket';
@@ -82,7 +82,7 @@ export const App = make(({ sidekick }: { sidekick: Sidekick }) => {
         case AppStateT.Invalid:
           return <div>error: {state.error}</div>
         case AppStateT.Input:
-          return <XInputView send={state.socket.send} inputs={state.inputs} />
+          return <XWidgets send={state.socket.send} widgets={state.inputs} />
       }
       return <div>Hello!</div>
     }

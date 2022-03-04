@@ -43,9 +43,10 @@ export type Msg = {
 export enum WidgetT {
   Input = 1,
   Option,
+  Text,
 }
 
-export type Widget = Input
+export type Widget = Input | Text
 
 export type Input = {
   t: WidgetT.Input
@@ -87,4 +88,10 @@ export type Option = {
   caption?: S
   selected?: B
   options?: Option[]
+}
+
+export type Text = {
+  t: WidgetT.Text
+  xid: S
+  value: S
 }

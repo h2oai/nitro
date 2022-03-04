@@ -2,7 +2,8 @@ import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton,
 import React from 'react';
 import styled from 'styled-components';
 import { B, gensym, isN, isO, isPair, isS, isV, N, S, U, V, xid } from './core';
-import { Input, MsgType, Option, WidgetT } from './protocol';
+import { Markdown } from './markdown';
+import { Input, Widget, MsgType, Option, WidgetT } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -71,10 +72,8 @@ const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefin
   if (isN(step)) return 0
   return undefined
 }
+
 const sanitizeInput = (input: Input): Input => {
-  if (isS(input)) {
-    return { t: WidgetT.Input, xid: xid(), text: input, options: [], actions: [] }
-  }
   const { options, actions, range, items } = input
   input.options = toOptions(options)
   input.actions = toOptions(actions)
@@ -115,9 +114,15 @@ const sanitizeInput = (input: Input): Input => {
     }
   }
   if (Array.isArray(items)) {
-    input.items = items.map(sanitizeInput)
+    input.items = items.map(sanitizeWidget)
   }
   return input
+}
+
+const sanitizeWidget = (widget: Widget): Widget => {
+  if (isS(widget)) return { t: WidgetT.Text, xid: xid(), value: widget }
+  if (widget.t === WidgetT.Input) return sanitizeInput(widget)
+  return widget
 }
 
 const WithSend = ({ children }: { children: JSX.Element }) => (
@@ -573,13 +578,14 @@ const Stackable = ({ inline, size, children }: { inline?: B, size?: S | U, child
   )
 }
 
-const Stackables = ({ context, items, inline, size }: { context: Context, items: Input[], inline?: B, size?: S | U }) => {
-  const children = items.map(item => {
-    return (
-      <Stackable key={xid()} inline={inline} size={size}>
-        <XInput context={context} input={item} />
-      </Stackable>
-    )
+const Stackables = ({ context, widgets, inline, size }: { context: Context, widgets: Widget[], inline?: B, size?: S | U }) => {
+  const children = widgets.map(widget => {
+    const child = (widget.t === WidgetT.Input)
+      ? <XInput key={widget.xid} context={context} input={widget} />
+      : (widget.t === WidgetT.Text)
+        ? <Markdown key={widget.xid} text={widget.value} />
+        : <div>Unknown widget</div>
+    return <Stackable key={xid()} inline={inline} size={size}>{child}</Stackable>
   })
 
   return inline
@@ -606,7 +612,7 @@ const XInput = ({ context, input }: InputProps) => { // recursive
   const { options, actions, editable, multiple, items } = input
 
   if (items) {
-    return <Stackables context={context} items={items} inline={input.inline} size={input.size} />
+    return <Stackables context={context} widgets={items} inline={input.inline} size={input.size} />
   }
 
   context = context.next()
@@ -676,19 +682,20 @@ const XInput = ({ context, input }: InputProps) => { // recursive
   return <XTextField context={context} input={input} />
 }
 
-const InputContainer = styled.div`
+const WidgetsContainer = styled.div`
   padding: 2rem;
   max-width: 640px;
 `
 
-export const XInputView = (props: { send: Send, inputs: Input[] }) => {
-  console.log(JSON.stringify(props.inputs))
+export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
+  console.log(JSON.stringify(props.widgets))
   const
-    inputs = props.inputs.map(sanitizeInput),
-    context = newCaptureContext(props.send, [], -1),
-    children = inputs.map(input => (
-      <XInput key={input.xid} context={context} input={input} />
-    ))
-  console.log(JSON.stringify(inputs))
-  return <InputContainer>{children}</InputContainer>
+    widgets = props.widgets.map(sanitizeWidget),
+    context = newCaptureContext(props.send, [], -1)
+  console.log(JSON.stringify(widgets))
+  return (
+    <WidgetsContainer>
+      <Stackables context={context} widgets={widgets} />
+    </WidgetsContainer>
+  )
 }
