@@ -51,7 +51,7 @@ export type Widget = Input | Text
 export type Input = {
   t: WidgetT.Input
   xid: S
-  index: I
+  index?: U
   text?: S
   name?: S
   mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'

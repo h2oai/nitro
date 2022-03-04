@@ -8,7 +8,7 @@ import { Send } from './socket';
 import { make } from './ui';
 
 const newCaptureContext = (send: Send, data: V[]) => {
-  const capture = (index: I, value: V) => {
+  const capture = (index: any, value: V) => {
     if (index >= 0) data[index] = value
   }
   const submit = () => send({ t: MsgType.Input, d: data })
@@ -655,8 +655,8 @@ const newIncr = () => {
 type Incr = ReturnType<typeof newIncr>
 
 const sanitizeInput = (input: Input, incr: Incr): Input => {
-  const { options, actions, range, items, index } = input
-  input.index = index === -1 ? index : incr()
+  const { options, actions, range, items } = input
+  input.index ??= incr()
   input.options = toOptions(options)
   input.actions = toOptions(actions)
   if (Array.isArray(range)) {
