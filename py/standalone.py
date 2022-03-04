@@ -146,8 +146,8 @@ class Input:
         self.value = value
         self.min = min
         self.max = max
-        self.step = step,
-        self.precision = precision,
+        self.step = step
+        self.precision = precision
         self.range = range
         self.mask = mask
         self.prefix = prefix
