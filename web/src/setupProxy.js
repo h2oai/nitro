@@ -1,5 +1,5 @@
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 module.exports = function (app) {
-  app.use(createProxyMiddleware('/ws/f', { target: 'http://localhost:11111', ws: true }))
+  app.use(createProxyMiddleware('/sidekick', { target: 'http://localhost:5000', ws: true }))
 }

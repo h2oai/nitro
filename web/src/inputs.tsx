@@ -2,14 +2,14 @@ import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton,
 import React from 'react';
 import styled from 'styled-components';
 import { B, gensym, isN, isO, isPair, isS, isV, N, S, U, V, xid } from './core';
-import { Input, MsgOp, MsgType, Option, Output, WidgetT } from './protocol';
+import { Input, MsgType, Option, WidgetT } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
 const newCaptureContext = (send: Send, data: V[], index: U) => {
   const submit = (value: V, submit?: B) => {
     data[index] = value
-    if (submit) send(MsgOp.Message, { t: MsgType.Input, d: data })
+    if (submit) send({ t: MsgType.Input, d: data })
   }
   const next = () => newCaptureContext(send, data, index + 1)
   return { submit, next }
@@ -17,7 +17,6 @@ const newCaptureContext = (send: Send, data: V[], index: U) => {
 type Context = ReturnType<typeof newCaptureContext>
 
 type InputProps = { context: Context, input: Input }
-type OutputProps = { context: Context, output: Output }
 
 const words = (x: S) => x.trim().split(/\s+/g)
 const unum = (x: any): N | undefined => isN(x) ? x : undefined
@@ -73,6 +72,9 @@ const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefin
   return undefined
 }
 const sanitizeInput = (input: Input): Input => {
+  if (isS(input)) {
+    return { t: WidgetT.Input, xid: xid(), text: input, options: [], actions: [] }
+  }
   const { options, actions, range, items } = input
   input.options = toOptions(options)
   input.actions = toOptions(actions)
@@ -113,28 +115,9 @@ const sanitizeInput = (input: Input): Input => {
     }
   }
   if (Array.isArray(items)) {
-    input.items = items.map(sanitizeNested)
+    input.items = items.map(sanitizeInput)
   }
   return input
-}
-
-const sanitizeOutput = (output: Output): Output => {
-  const { items } = output
-  if (Array.isArray(items)) {
-    output.items = items.map(sanitizeNested)
-  }
-  return output
-}
-
-const sanitizeNested = (w: Input | Output): Input | Output => {
-  switch (w.t) {
-    case WidgetT.Input:
-      return sanitizeInput(w)
-    case WidgetT.Output:
-      return sanitizeOutput(w)
-    default:
-      return { t: WidgetT.Output, xid: xid(), text: String(w) }
-  }
 }
 
 const WithSend = ({ children }: { children: JSX.Element }) => (
@@ -149,7 +132,7 @@ const WithSend = ({ children }: { children: JSX.Element }) => (
 class XTextField extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, icon, value, mask, prefix, suffix, error, lines, required, password } = this.props.input,
+      { text: label, placeholder, icon, value, mask, prefix, suffix, error, lines, required, password } = this.props.input,
       props: Partial<ITextFieldProps> = {
         label,
         defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
@@ -172,7 +155,7 @@ class XSpinButton extends React.Component<InputProps, {}> {
   // TODO format string
   render() {
     const
-      { label, value, min, max, step, precision } = this.props.input
+      { text: label, value, min, max, step, precision } = this.props.input
 
     return (
       <SpinButton
@@ -193,7 +176,7 @@ class XSlider extends React.Component<InputProps, {}> {
   // TODO format string
   render() {
     const
-      { label, value, min, max, step } = this.props.input,
+      { text: label, value, min, max, step } = this.props.input,
       originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
       props: Partial<ISliderProps> = { label: label, min: unum(min), max: unum(max), step, originFromZero }
 
@@ -234,7 +217,7 @@ class XRating extends React.Component<InputProps, {}> {
   // TODO format string; aria-label
   render() {
     const
-      { label, value, min, max } = this.props.input
+      { text: label, value, min, max } = this.props.input
     return (
       <WithLabel label={label}>
         <Rating
@@ -251,7 +234,7 @@ class XRating extends React.Component<InputProps, {}> {
 class XTimePicker extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, value } = this.props.input,
+      { text: label, value } = this.props.input,
       t = String(value).toLowerCase(),
       am = t.endsWith('am'),
       pm = !am && t.endsWith('pm'),
@@ -291,7 +274,7 @@ class XCalendar extends React.Component<InputProps, {}> {
   // TODO format string; aria-label
   render() {
     const
-      { label, mode, value, min, max } = this.props.input,
+      { text: label, mode, value, min, max } = this.props.input,
       date = udate(value),
       minDate = udate(min),
       maxDate = udate(max),
@@ -319,7 +302,7 @@ class XCalendar extends React.Component<InputProps, {}> {
 class XColorPicker extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, value } = this.props.input
+      { text: label, value } = this.props.input
     return (
       <WithLabel label={label}>
         <ColorPicker color={isS(value) ? value : '#ff0000'} />
@@ -334,7 +317,7 @@ const CheckboxContainer = styled.div`
 class XCheckList extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, options } = this.props.input,
+      { text: label, options } = this.props.input,
       checkboxes = options.map(c => (
         <CheckboxContainer key={c.value}>
           <Checkbox label={c.label} checked={c.selected ? true : false} />
@@ -350,7 +333,7 @@ class XCheckList extends React.Component<InputProps, {}> {
 class XDropdown extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, error, required, options } = this.props.input,
+      { text: label, placeholder, error, required, options } = this.props.input,
       hasGroups = options.some(c => c.options?.length ? true : false),
       items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
       selectedItem = options.find(c => c.selected),
@@ -372,7 +355,7 @@ class XDropdown extends React.Component<InputProps, {}> {
 class XMultiSelectDropdown extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, error, required, options } = this.props.input,
+      { text: label, placeholder, error, required, options } = this.props.input,
       items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.label) })),
       selectedKeys = options.filter(c => c.selected).map(c => String(c.value))
 
@@ -394,7 +377,7 @@ class XMultiSelectDropdown extends React.Component<InputProps, {}> {
 class XComboBox extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, options } = this.props.input,
+      { text: label, placeholder, options } = this.props.input,
       items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.label) })),
       selectedItem = options.find(c => c.selected),
       selectedKey = selectedItem ? selectedItem.value : undefined
@@ -414,7 +397,7 @@ class XComboBox extends React.Component<InputProps, {}> {
 class XMultiSelectComboBox extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, options } = this.props.input,
+      { text: label, placeholder, options } = this.props.input,
       items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.label) })),
       selectedKeys = options.filter(c => c.selected).map(c => String(c.value))
 
@@ -441,7 +424,7 @@ const toContextualMenuProps = (cs: Option[]): IContextualMenuProps => ({ items: 
 class XMenu extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, actions } = this.props.input
+      { text: label, actions } = this.props.input
     return <PrimaryButton text={label ?? 'Choose an action'} menuProps={toContextualMenuProps(actions)} />
   }
 }
@@ -529,7 +512,7 @@ class XTagPicker extends React.Component<InputProps, TagPickerState> {
   }
   render() {
     const
-      { label } = this.props.input,
+      { text: label } = this.props.input,
       { autocompleter } = this.state
     return (
       <WithLabel label={label}>
@@ -543,7 +526,7 @@ const swatchCellSize = 25
 class XSwatchPicker extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, options } = this.props.input,
+      { text: label, options } = this.props.input,
       cells: IColorCellProps[] = options.map(c => ({ id: String(c.value), label: String(c.label), color: String(c.value) }))
 
     return (
@@ -557,7 +540,7 @@ class XSwatchPicker extends React.Component<InputProps, {}> {
 class XChoiceGroup extends React.Component<InputProps, {}> {
   render() {
     const
-      { label, placeholder, required, options } = this.props.input,
+      { text: label, placeholder, required, options } = this.props.input,
       items: IChoiceGroupOption[] = options.map(({ value, label, icon: iconName }) => ({
         key: String(value),
         text: String(label),
@@ -590,24 +573,13 @@ const Stackable = ({ inline, size, children }: { inline?: B, size?: S | U, child
   )
 }
 
-const Stackables = ({ context, items, inline, size }: { context: Context, items: Array<Input | Output>, inline?: B, size?: S | U }) => {
+const Stackables = ({ context, items, inline, size }: { context: Context, items: Input[], inline?: B, size?: S | U }) => {
   const children = items.map(item => {
-    switch (item.t) {
-      case WidgetT.Input:
-        return (
-          <Stackable key={xid()} inline={inline} size={size}>
-            <XInput context={context} input={item} />
-          </Stackable>
-        )
-      case WidgetT.Output:
-        return (
-          <Stackable key={xid()} inline={inline} size={size}>
-            <XOutput context={context} output={item} />
-          </Stackable>
-        )
-      default:
-        return <Stack.Item key={xid()} />
-    }
+    return (
+      <Stackable key={xid()} inline={inline} size={size}>
+        <XInput context={context} input={item} />
+      </Stackable>
+    )
   })
 
   return inline
@@ -616,14 +588,6 @@ const Stackables = ({ context, items, inline, size }: { context: Context, items:
 }
 
 const gap5: IStackTokens = { childrenGap: 5 }
-
-const XOutput = ({ context, output }: OutputProps) => {
-  const { items } = output
-  if (items) {
-    return <Stackables context={context} items={items} inline={output.inline} size={output.size} />
-  }
-  return <div>{output.text}</div>
-}
 
 const inputHasActions = (input: Input): B => { // recursive
   const { actions, items } = input
@@ -717,13 +681,14 @@ const InputContainer = styled.div`
   max-width: 640px;
 `
 
-export const XInputView = (props: { send: Send, input: Input }) => {
+export const XInputView = (props: { send: Send, inputs: Input[] }) => {
+  console.log(JSON.stringify(props.inputs))
   const
-    input = sanitizeInput(props.input),
-    context = newCaptureContext(props.send, [], -1)
-  return (
-    <InputContainer>
-      <XInput context={context} input={input} />
-    </InputContainer>
-  )
+    inputs = props.inputs.map(sanitizeInput),
+    context = newCaptureContext(props.send, [], -1),
+    children = inputs.map(input => (
+      <XInput key={input.xid} context={context} input={input} />
+    ))
+  console.log(JSON.stringify(inputs))
+  return <InputContainer>{children}</InputContainer>
 }

@@ -1,6 +1,6 @@
 import msgpack from '@ygoe/msgpack';
 import { S, U, defer } from "./core"
-import { Msg, MsgOp } from "./protocol"
+import { Msg } from "./protocol"
 
 export enum SocketEventT {
   Connect,
@@ -19,7 +19,7 @@ export type SocketEvent = {
   t: SocketEventT.Message, message: Msg
 }
 
-export type Send = (op: MsgOp, message: Msg) => void
+export type Send = (message: Msg) => void
 
 export type Socket = {
   send: Send
@@ -37,13 +37,7 @@ const toSocketAddress = (path: S): S => {
   return p + "://" + host + path
 }
 
-const marshal = (op: MsgOp, data: any): Uint8Array => {
-  const m = msgpack.serialize(data)
-  const d = new Uint8Array(1 + m.length)
-  d.set([op], 0) // 1-byte header
-  d.set(m, 1) // append message
-  return d
-}
+const marshal = (data: any): Uint8Array => msgpack.serialize(data)
 
 const unmarshal = (d: Uint8Array): Msg => msgpack.deserialize(d)
 
@@ -92,10 +86,10 @@ export const connect = (address: S, handle: SocketEventHandler): Socket => {
         handle({ t: SocketEventT.Error, error })
       }
     },
-    send = (op: MsgOp, message: any) => {
+    send = (message: any) => {
       console.log('send', message) // XXX remove
       defer(0, () => {
-        if (_socket && message) _socket.send(marshal(op, message))
+        if (_socket && message) _socket.send(marshal(message))
       })
     }
 

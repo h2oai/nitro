@@ -10,29 +10,22 @@ class _MsgType(IntEnum):
     Error = 1
     Join = 2
     Leave = 3
-    Request = 4
-    Response = 5
-    Watch = 6
-    Event = 7
-    Text = 8
-    Input = 9
-    Abort = 10
-    Resume = 11
-    Read = 12
-    Write = 13
-    Append = 14
-
-
-class _ErrorCode(IntEnum):
-    PeerUnavailable = 1
-    PeerDead = 2
-    RateLimited = 3
+    Abort = 4
+    Resume = 5
+    Request = 6
+    Response = 7
+    Watch = 8
+    Event = 9
+    Input = 10
+    Write = 11
+    Insert = 12
+    Update = 13
+    Remove = 14
 
 
 class _WidgetT(IntEnum):
-    Output = 1
-    Input = 2
-    Option = 3
+    Input = 1
+    Option = 2
 
 
 _primitive = (bool, int, float, str)
@@ -144,6 +137,7 @@ class Input:
             items: Optional[Items] = None,
             inline: Optional[bool] = None,
             size: Optional[V] = None,
+            align: Optional[str] = None,
     ):
         self.text = text
         self.name = name
@@ -170,11 +164,13 @@ class Input:
         self.items = items
         self.inline = inline
         self.size = size
+        self.align = align
 
     def dump(self) -> dict:
         d = dict(
             t=_WidgetT.Input,
             text=self.text,
+            name=self.name,
             mode=self.mode,
             icon=self.icon,
             value=self.value,
@@ -198,14 +194,20 @@ class Input:
             items=_dump(self.items),
             inline=self.inline,
             size=self.size,
+            align=self.align,
         )
         return _clean(d)
 
 
 class UI:
-    def __init__(self, send: Callable, recv: Callable):
+    def __init__(self, send: Callable, recv: Callable, handle: Callable):
         self._send = send
         self._recv = recv
+        self._handle = handle
+
+    def run(self):
+        self._read(_MsgType.Join)  # XXX handle join
+        self._handle(self)
 
     def input(
             self,
@@ -233,6 +235,7 @@ class UI:
             actions: Optional[Options] = None,
             inline: Optional[bool] = None,
             size: Optional[V] = None,
+            align: Optional[str] = None,
     ) -> Input:
         text, items = (None, content) if isinstance(content, (tuple, list)) else (content, None)
         return Input(
@@ -261,6 +264,7 @@ class UI:
             items,
             inline,
             size,
+            align,
         )
 
     def option(
@@ -334,6 +338,7 @@ class UI:
             actions: Optional[Options] = None,
             inline: Optional[bool] = None,
             size: Optional[V] = None,
+            align: Optional[str] = None,
     ):
         i = self.input(
             content,
@@ -360,8 +365,9 @@ class UI:
             actions,
             inline,
             size,
+            align,
         )
-        self._send(_marshal(dict(t=_MsgType.Read, d=i.dump())))
+        self._send(_marshal(dict(t=_MsgType.Write, d=i.dump())))
         return self._read(_MsgType.Input)
 
     def update(self, name: str, *args, **kwargs):
@@ -384,27 +390,24 @@ class UI:
 
 
 def main(ui: UI):
+    counter = 0
     while True:
-        counter = 0
         choice = ui.write([
             f'Count={counter}',
             ui.input(actions=('incr', 'decr')),
         ])
         counter += 1 if choice == 'incr' else -1
 
-        ui.write(ui.input())
-        ui.write([ui.input(), '', ''])
-
 
 app = Flask(__name__, static_folder='../web/build', static_url_path='')
 
 
-@app.route('/ws/f', websocket=True)
+@app.route('/sidekick', websocket=True)
 def socket():
     ws = simple_websocket.Server(request.environ)
-    ui = UI(ws.send, ws.receive)
+    ui = UI(ws.send, ws.receive, main)
     try:
-        main(ui)
+        ui.run()
     except simple_websocket.ConnectionClosed:
         pass
     return ''

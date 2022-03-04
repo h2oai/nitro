@@ -1,66 +1,57 @@
 import { S, N, B, U, V, Pair } from "./core"
 
-export enum MsgOp {
-  Control = 1,
-  Message,
-}
-
 export enum MsgType {
   Error = 1,
   Join,
   Leave,
+  Abort,
+  Resume,
   Request,
   Response,
   Watch,
   Event,
-  Text,
   Input,
-  Abort,
-  Resume,
-  Read,
   Write,
-  Append,
-}
-
-export enum ErrCode {
-  PeerUnavailable = 1,
-  PeerDead,
-  RateLimited,
-  BadOp,
+  Insert,
+  Update,
+  Remove,
 }
 
 export type Msg = {
   t: MsgType.Error
-  c: ErrCode
+  e: S
 } | {
   t: MsgType.Join
   d: any // XXX formalize
 } | {
-  t: MsgType.Read
+  t: MsgType.Write
   d: Input
 } | {
-  t: MsgType.Write
-  d: Output
+  t: MsgType.Insert
+  d: Input
 } | {
-  t: MsgType.Append
-  d: Output
+  t: MsgType.Update
+  d: Input
+} | {
+  t: MsgType.Remove
+  d: Input
 } | {
   t: MsgType.Input,
   d: Array<V | null>
 }
 
 export enum WidgetT {
-  Output = 1,
-  Input,
+  Input = 1,
   Option,
 }
 
-type IO = Input | Output
+export type Widget = Input
 
 export type Input = {
   t: WidgetT.Input
   xid: S
-  label?: S
+  text?: S
+  name?: S
   mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
   icon?: S
   value?: V | Pair<V>
@@ -82,9 +73,10 @@ export type Input = {
   editable?: B
   options: Option[]
   actions: Option[]
-  items?: IO[]
+  items?: Widget[]
   inline?: B
   size?: V
+  align?: S
 }
 
 export type Option = {
@@ -95,13 +87,4 @@ export type Option = {
   caption?: S
   selected?: B
   options?: Option[]
-}
-
-export type Output = {
-  t: WidgetT.Output
-  xid: S
-  text: S
-  items?: IO[]
-  inline?: B
-  size?: V
 }
