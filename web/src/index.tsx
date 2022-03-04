@@ -44,8 +44,9 @@ registerIcons({
   },
 })
 
-const sidekick = newSidekick()
-ReactDOM.render(<App sidekick={sidekick} />, document.getElementById('root'));
+const root = document.getElementById('sidekick')
+const sidekick = newSidekick(root?.getAttribute('data-endpoint') ?? '/wsui')
+ReactDOM.render(<App sidekick={sidekick} />, root);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
