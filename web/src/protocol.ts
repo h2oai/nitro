@@ -48,13 +48,15 @@ export enum WidgetT {
 
 export type Widget = Input | Text
 
+export type InputMode = 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+
 export type Input = {
   t: WidgetT.Input
   xid: S
   index?: U
   text?: S
   name?: S
-  mode?: 'button' | 'menu' | 'radio' | 'check' | 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+  mode?: InputMode
   icon?: S
   value?: V | Pair<V>
   min?: V

@@ -1,9 +1,9 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import { B, gensym, I, isN, isO, isPair, isS, isV, N, S, U, V, xid } from './core';
 import { Markdown } from './markdown';
-import { Input, Widget, MsgType, Option, WidgetT } from './protocol';
+import { Input, Widget, MsgType, Option, WidgetT, InputMode } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -566,79 +566,33 @@ const widgetsHaveActions = (widgets: Widget[]): B => {
   return false
 }
 
-const XInput = ({ context, input }: InputProps) => { // recursive
-
+const determineMode = (input: Input): InputMode => {
   // This function contains the heuristics for determining which widget to use.
-  // TODO might need a widget= to force which widget to use.
-
-  const { options, editable, multiple, items } = input
-  let { mode } = input
-
-  if (items) {
-    return <Stackables context={context} widgets={items} inline={input.inline} size={input.size} />
-  }
+  const { options, editable, multiple } = input
 
   if (options.length) {
     if (multiple) {
       if (editable) {
-        return <XMultiSelectComboBox context={context} input={input} />
+        return 'menu'
       }
-      if (!mode) {
-        const hasLongLabels = options.some(({ text }) => text && (text.length > 75))
-        mode = (!hasLongLabels && options.length > 10) ? 'menu' : 'check'
+      const hasLongLabels = options.some(({ text }) => text && (text.length > 75))
+      if (!hasLongLabels && options.length > 10) {
+        return 'menu'
       }
-      switch (mode) {
-        case 'menu':
-          return <XMultiSelectDropdown context={context} input={input} />
-        case 'check':
-          return <XCheckList context={context} input={input} />
-      }
+      return 'check'
     }
 
-    if (!mode) {
-      const hasGroups = options.some(c => c.options?.length ? true : false)
-      if (editable) {
-        mode = 'menu'
-      } else {
-        if (options.length <= 3) {
-          mode = 'button'
-        } else if (options.length <= 7 && !hasGroups) {
-          mode = 'radio'
-        } else {
-          mode = 'menu'
-        }
-      }
+    const hasGroups = options.some(c => c.options?.length ? true : false)
+    if (editable) {
+      return 'menu'
     }
-
-    switch (mode) {
-      case 'button':
-        return <XButtons context={context} input={input} />
-      case 'tag':
-        // 'multiple' implied
-        return <XTagPicker context={context} input={input} />
-      case 'color':
-        return <XSwatchPicker context={context} input={input} />
-      case 'radio':
-        return <XChoiceGroup context={context} input={input} />
-      case 'menu':
-        if (editable) {
-          return <XComboBox context={context} input={input} />
-        }
-        return <XDropdown context={context} input={input} />
+    if (options.length <= 3) {
+      return 'button'
     }
-  }
-
-  switch (mode) {
-    case 'rating':
-      return <XRating context={context} input={input} />
-    case 'day':
-    case 'month':
-    case 'week':
-      return <XCalendar context={context} input={input} />
-    case 'time':
-      return <XTimePicker context={context} input={input} />
-    case 'color':
-      return <XColorPicker context={context} input={input} />
+    if (options.length <= 7 && !hasGroups) {
+      return 'radio'
+    }
+    return 'menu'
   }
 
   const
@@ -649,19 +603,63 @@ const XInput = ({ context, input }: InputProps) => { // recursive
     if (!editable && hasRange) {
       const steps = (max - min) / (isN(step) ? step : 1)
       if (steps <= 16) {
-        return <XSlider context={context} input={input} />
+        return 'range'
       }
     }
-    return <XSpinButton context={context} input={input} />
+    return 'number'
   }
-  return <XTextField context={context} input={input} />
+  return 'text'
+}
+
+const XInput = ({ context, input }: InputProps) => { // recursive 
+  const { mode, items, options, editable, multiple } = input
+  if (items) {
+    return <Stackables context={context} widgets={items} inline={input.inline} size={input.size} />
+  }
+  switch (mode) {
+    case 'button':
+      return <XButtons context={context} input={input} />
+    case 'check':
+      return <XCheckList context={context} input={input} />
+    case 'color':
+      return options.length
+        ? <XSwatchPicker context={context} input={input} />
+        : <XColorPicker context={context} input={input} />
+    case 'day':
+    case 'month':
+    case 'week':
+      return <XCalendar context={context} input={input} />
+    case 'menu':
+      return editable
+        ? multiple
+          ? <XMultiSelectComboBox context={context} input={input} />
+          : <XComboBox context={context} input={input} />
+        : multiple
+          ? <XMultiSelectDropdown context={context} input={input} />
+          : <XDropdown context={context} input={input} />
+    case 'number':
+      return <XSpinButton context={context} input={input} />
+    case 'radio':
+      return <XChoiceGroup context={context} input={input} />
+    case 'range':
+      return <XSlider context={context} input={input} />
+    case 'rating':
+      return <XRating context={context} input={input} />
+    case 'tag':
+      return <XTagPicker context={context} input={input} />
+    case 'text':
+      return <XTextField context={context} input={input} />
+    case 'time':
+      return <XTimePicker context={context} input={input} />
+    default:
+      return <div>Unknown input</div>
+  }
 }
 
 const WidgetsContainer = styled.div`
   padding: 2rem;
   max-width: 640px;
 `
-
 
 const newIncr = () => {
   let i = 0
@@ -670,7 +668,7 @@ const newIncr = () => {
 type Incr = ReturnType<typeof newIncr>
 
 const sanitizeInput = (input: Input, incr: Incr): Input => {
-  const { options, range, items } = input
+  const { mode, options, range, items } = input
   input.index ??= incr()
   input.options = toOptions(options)
   if (Array.isArray(range)) {
@@ -709,9 +707,13 @@ const sanitizeInput = (input: Input, incr: Incr): Input => {
         break
     }
   }
+
   if (Array.isArray(items)) {
     input.items = items.map(w => sanitizeWidget(w, incr))
   }
+
+  if (!mode) input.mode = determineMode(input)
+
   return input
 }
 
