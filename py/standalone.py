@@ -133,7 +133,6 @@ class Input:
             password: Optional[bool] = None,
             editable: Optional[bool] = None,
             options: Optional[Options] = None,
-            actions: Optional[Options] = None,
             items: Optional[Items] = None,
             inline: Optional[bool] = None,
             size: Optional[V] = None,
@@ -160,7 +159,6 @@ class Input:
         self.password = password
         self.editable = editable
         self.options = options
-        self.actions = actions
         self.items = items
         self.inline = inline
         self.size = size
@@ -190,7 +188,6 @@ class Input:
             password=self.password,
             editable=self.editable,
             options=_dump(self.options),
-            actions=_dump(self.actions),
             items=_dump(self.items),
             inline=self.inline,
             size=self.size,
@@ -232,7 +229,6 @@ class UI:
             password: Optional[bool] = None,
             editable: Optional[bool] = None,
             options: Optional[Options] = None,
-            actions: Optional[Options] = None,
             inline: Optional[bool] = None,
             size: Optional[V] = None,
             align: Optional[str] = None,
@@ -260,7 +256,6 @@ class UI:
             password,
             editable,
             options,
-            actions,
             items,
             inline,
             size,
@@ -335,7 +330,6 @@ class UI:
             password: Optional[bool] = None,
             editable: Optional[bool] = None,
             options: Optional[Options] = None,
-            actions: Optional[Options] = None,
             inline: Optional[bool] = None,
             size: Optional[V] = None,
             align: Optional[str] = None,
@@ -362,7 +356,6 @@ class UI:
             password,
             editable,
             options,
-            actions,
             inline,
             size,
             align,
@@ -389,15 +382,23 @@ class UI:
 # --- userland ---
 
 
-def main(ui: UI):
+def main2(ui: UI):
     counter = 0
     while True:
         choice = ui.write([
             f'Count={counter}',
-            ui.input(actions=('incr', 'decr')),
+            ui.input(options=('+', '-')),
         ])
-        counter += 1 if choice == 'incr' else -1
+        counter += 1 if choice == '+' else -1
 
+
+def main(ui: UI):
+    choice = 'enter something'
+    while True:
+        choice, go = ui.write(choice)
+
+
+# --- bootstrap ---
 
 app = Flask(__name__, static_folder='../web/build', static_url_path='')
 

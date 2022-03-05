@@ -54,7 +54,7 @@ export type Input = {
   index?: U
   text?: S
   name?: S
-  mode?: 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+  mode?: 'button' | 'menu' | 'radio' | 'check' | 'text' | 'int' | 'float' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
   icon?: S
   value?: V | Pair<V>
   min?: V
@@ -74,7 +74,6 @@ export type Input = {
   password?: B
   editable?: B
   options: Option[]
-  actions: Option[]
   items?: Widget[]
   inline?: B
   size?: V
@@ -84,7 +83,7 @@ export type Input = {
 export type Option = {
   t: WidgetT.Option
   value: V
-  label?: S
+  text?: S
   icon?: S
   caption?: S
   selected?: B
