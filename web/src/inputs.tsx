@@ -412,16 +412,11 @@ const XButtons = make(({ context, input }: InputProps) => {
                   : <DefaultButton text={text} styles={styles} onClick={onClick} />
           return <Stack.Item key={c.value}>{button}</Stack.Item>
         })
-      const stack = <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
-      return text
-        ? (
-          <Stack tokens={gap5}>
-            <Stack.Item><Label>{text}</Label></Stack.Item>
-            <Stack.Item>{stack}</Stack.Item>
-          </Stack>
-        )
-        : stack
-
+      return (
+        <WithLabel label={text}>
+          <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
+        </WithLabel>
+      )
     }
   return { render }
 })
