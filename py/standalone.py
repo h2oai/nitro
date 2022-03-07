@@ -203,7 +203,8 @@ class UI:
 
     def run(self):
         self._read(_MsgType.Join)  # XXX handle join
-        self._handle(self)
+        while True:
+            self._handle(self)
 
     def input(
             self,
