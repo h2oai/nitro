@@ -88,7 +88,7 @@ const XTextField = make(({ context, input }: InputProps) => {
         field: Partial<ITextFieldProps> = {
           label: text,
           defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
-          placeholder: placeholder ?? text ? undefined : 'Enter some text...',
+          placeholder: placeholder ?? (text ? undefined : 'Enter some text...'),
           errorMessage: error,
           required: required === true,
           onChange,
