@@ -11,7 +11,6 @@ export enum MsgType {
   Watch,
   Event,
   Input,
-  Write,
   Insert,
   Update,
   Remove,
@@ -24,14 +23,13 @@ export type Msg = {
   t: MsgType.Join
   d: any // XXX formalize
 } | {
-  t: MsgType.Write
-  d: Input
-} | {
   t: MsgType.Insert
   d: Input
+  p?: I
 } | {
   t: MsgType.Update
   d: Input
+  p?: I
 } | {
   t: MsgType.Remove
   d: Input

@@ -24,7 +24,7 @@ const unum = (x: any): N | undefined => isN(x) ? x : undefined
 const ustr = (x: any): S | undefined => isS(x) ? x : undefined
 const udate = (x: any): Date | undefined => isS(x) ? new Date(x) : undefined
 const snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase())
-const toOptions = (x: any): Option[] => {
+const sanitizeOptions = (x: any): Option[] => { // recursive
   if (!x) return []
   if (Array.isArray(x)) {
     const c: Option[] = []
@@ -40,7 +40,7 @@ const toOptions = (x: any): Option[] => {
         }
       } else if (isO(v) && isV(v.value)) { // { value: v }
         if (!v.text) v.text = String(v.value)
-        if (v.options) v.options = toOptions(v.options)
+        if (v.options) v.options = sanitizeOptions(v.options)
         c.push(v)
       }
     }
@@ -667,10 +667,8 @@ const newIncr = () => {
 }
 type Incr = ReturnType<typeof newIncr>
 
-const sanitizeInput = (input: Input, incr: Incr): Input => {
-  const { mode, options, range, items } = input
-  input.index ??= incr()
-  input.options = toOptions(options)
+const sanitizeRange = (input: Input) => {
+  const { range } = input
   if (Array.isArray(range)) {
     switch (range.length) {
       case 2:
@@ -707,6 +705,14 @@ const sanitizeInput = (input: Input, incr: Incr): Input => {
         break
     }
   }
+}
+
+const sanitizeInput = (input: Input, incr: Incr): Input => {
+  const { mode, options, items } = input
+  input.index ??= incr()
+  input.options = sanitizeOptions(options)
+
+  sanitizeRange(input)
 
   if (Array.isArray(items)) {
     input.items = items.map(w => sanitizeWidget(w, incr))

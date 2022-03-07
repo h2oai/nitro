@@ -1,5 +1,5 @@
 import React from 'react';
-import { box, defer, S, U, xid } from './core';
+import { box, defer, isN, S, U, xid } from './core';
 import { XWidgets } from './inputs';
 import { Input, Msg, MsgType } from './protocol';
 import { Sidekick } from './sidekick';
@@ -45,13 +45,17 @@ export const App = make(({ sidekick }: { sidekick: Sidekick }) => {
                 const { e: error } = msg
                 stateB({ t: AppStateT.Invalid, error })
                 break
-              case MsgType.Write:
+              case MsgType.Update:
                 {
-                  const { d: input } = msg
+                  const { d: input, p: position } = msg
                   input.xid = xid()
                   const { inputs } = sidekick
-                  inputs.length = 0
-                  inputs.push(input)
+                  if (isN(position) && position >= 0 && position < inputs.length) {
+                    inputs[position] = input
+                  } else {
+                    inputs.length = 0
+                    inputs.push(input)
+                  }
                   stateB({ t: AppStateT.Input, socket, inputs })
                 }
                 break

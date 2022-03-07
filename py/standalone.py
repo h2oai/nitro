@@ -17,10 +17,9 @@ class _MsgType(IntEnum):
     Watch = 8
     Event = 9
     Input = 10
-    Write = 11
-    Insert = 12
-    Update = 13
-    Remove = 14
+    Insert = 11
+    Update = 12
+    Remove = 13
 
 
 class _WidgetT(IntEnum):
@@ -307,9 +306,11 @@ class UI:
     def _write(self):
         pass
 
-    def write(
+    def echo(
             self,
             content: Optional[Union[str, Items]] = None,
+            position: Optional[int] = None,
+            insert: Optional[bool] = False,
             name: Optional[str] = None,
             mode: Optional[str] = None,
             icon: Optional[str] = None,
@@ -334,7 +335,7 @@ class UI:
             size: Optional[V] = None,
             align: Optional[str] = None,
     ):
-        i = self.input(
+        d = self.input(
             content,
             name,
             mode,
@@ -359,24 +360,12 @@ class UI:
             inline,
             size,
             align,
-        )
-        self._send(_marshal(dict(t=_MsgType.Write, d=i.dump())))
+        ).dump()
+        msg = dict(t=_MsgType.Insert if insert else _MsgType.Update, d=d)
+        if position is not None:
+            msg['p'] = position
+        self._send(_marshal(msg))
         return self._read(_MsgType.Input)
-
-    def update(self, name: str, *args, **kwargs):
-        pass
-
-    def prepend(self, *args, **kwargs):
-        return self.insert(0, *args, **kwargs)
-
-    def append(self, *args, **kwargs):
-        return self.insert(-1, *args, **kwargs)
-
-    def insert(self, index: int, *args, **kwargs):
-        pass
-
-    def remove(self, index: int):
-        pass
 
 
 # --- userland ---
@@ -385,7 +374,7 @@ class UI:
 def main2(ui: UI):
     counter = 0
     while True:
-        choice = ui.write([
+        choice = ui.echo([
             f'Count={counter}',
             ui.input(options=('+', '-')),
         ])
@@ -395,7 +384,7 @@ def main2(ui: UI):
 def main(ui: UI):
     choice = 'enter something'
     while True:
-        choice, go = ui.write(choice)
+        choice, go = ui.echo(choice)
 
 
 # --- bootstrap ---
