@@ -293,7 +293,7 @@ class UI:
                 d = msg.get('d')
                 n = len(d)
                 if n == 0:
-                    raise ProtocolError('unexpected input: got empty list')
+                    return
                 elif n == 1:
                     return d[0]
                 else:
