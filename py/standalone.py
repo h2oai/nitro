@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, List, Dict, Union, Callable
+from typing import Optional, Tuple, List, Dict, Union, Callable, Set
 import msgpack
 from enum import IntEnum
 
@@ -97,11 +97,14 @@ class Option:
 
 
 Options = Union[
+    str,
     Tuple[Primitive, ...],
     List[Primitive],
-    Dict[Primitive, any],
-    List[Option],
+    Set[Primitive],
+    Dict[Primitive, V],
     Tuple[Option, ...],
+    List[Option],
+    Set[Option],
 ]
 
 Item = Union['Input', str]
