@@ -222,7 +222,7 @@ def main(ui: UI):
 app = Flask(__name__, static_folder='../web/build', static_url_path='')
 
 
-@app.route('/wsui', websocket=True)
+@app.route('/nitro', websocket=True)
 def socket():
     ws = simple_websocket.Server(request.environ)
     ui = UI(ws.send, ws.receive, main)

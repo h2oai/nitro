@@ -5,7 +5,7 @@ import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/re
 import reportWebVitals from './reportWebVitals';
 import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon } from '@fluentui/react-icons-mdl2';
 import './index.css';
-import { newSidekick } from './sidekick';
+import { newClient } from './client';
 
 
 // https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/
@@ -44,9 +44,9 @@ registerIcons({
   },
 })
 
-const root = document.getElementById('sidekick')
-const sidekick = newSidekick(root?.getAttribute('data-endpoint') ?? '/wsui')
-ReactDOM.render(<App sidekick={sidekick} />, root);
+const root = document.getElementById('nitro')
+const client = newClient(root?.getAttribute('data-endpoint') ?? '/nitro')
+ReactDOM.render(<App client={client} />, root);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

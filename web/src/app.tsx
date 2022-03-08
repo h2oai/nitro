@@ -2,7 +2,7 @@ import React from 'react';
 import { box, defer, isN, S, U, xid } from './core';
 import { XWidgets } from './inputs';
 import { Input, Msg, MsgType } from './protocol';
-import { Sidekick } from './sidekick';
+import { Client } from './client';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { make } from './ui';
 
@@ -29,7 +29,7 @@ const hello: Msg = {
   }
 }
 
-export const App = make(({ sidekick }: { sidekick: Sidekick }) => {
+export const App = make(({ client }: { client: Client }) => {
   const
     stateB = box<AppState>({ t: AppStateT.Connecting }),
     onMessage = (socket: Socket, e: SocketEvent) => {
@@ -49,7 +49,7 @@ export const App = make(({ sidekick }: { sidekick: Sidekick }) => {
                 {
                   const { d: input, p: position } = msg
                   input.xid = xid()
-                  const { inputs } = sidekick
+                  const { inputs } = client
                   if (isN(position) && position >= 0 && position < inputs.length) {
                     inputs[position] = input
                   } else {
@@ -74,7 +74,7 @@ export const App = make(({ sidekick }: { sidekick: Sidekick }) => {
       }
     },
     init = () => {
-      sidekick.socket(onMessage)
+      client.socket(onMessage)
     },
     render = () => {
       const state = stateB()

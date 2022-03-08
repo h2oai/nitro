@@ -3,7 +3,7 @@ import { Input } from './protocol'
 import { connect, Socket, SocketEvent } from './socket'
 
 
-export const newSidekick = (endpoint: S) => {
+export const newClient = (endpoint: S) => {
   const inputs: Input[] = []
 
   let _socket: Socket | null = null
@@ -17,4 +17,4 @@ export const newSidekick = (endpoint: S) => {
   }
 }
 
-export type Sidekick = ReturnType<typeof newSidekick>
+export type Client = ReturnType<typeof newClient>
