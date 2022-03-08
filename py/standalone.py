@@ -109,6 +109,18 @@ Options = Union[
 
 Item = Union['Input', str]
 Items = Union[List[Item], Tuple[Item, ...]]
+Range = Union[
+    Tuple[V, V],
+    Tuple[N, N],
+    Tuple[N, N, N],
+    Tuple[N, N, N, int],
+    List[V],
+]
+Value = Union[
+    V,
+    Tuple[V, V],
+    List[V],
+]
 
 
 class Input:
@@ -118,12 +130,12 @@ class Input:
             name: Optional[str] = None,
             mode: Optional[str] = None,
             icon: Optional[str] = None,
-            value: Optional[Union[V, Tuple[V, V]]] = None,
+            value: Optional[Value] = None,
             min: Optional[V] = None,
             max: Optional[V] = None,
             step: Optional[N] = None,
             precision: Optional[int] = None,
-            range: Optional[Union[Tuple[V, V], Tuple[N, N, N], Tuple[N, N, N, int]]] = None,
+            range: Optional[Range] = None,
             mask: Optional[str] = None,
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
@@ -215,12 +227,12 @@ class UI:
             name: Optional[str] = None,
             mode: Optional[str] = None,
             icon: Optional[str] = None,
-            value: Optional[Union[V, Tuple[V, V]]] = None,
+            value: Optional[Value] = None,
             min: Optional[V] = None,
             max: Optional[V] = None,
             step: Optional[N] = None,
             precision: Optional[int] = None,
-            range: Optional[Union[Tuple[V, V], Tuple[N, N, N], Tuple[N, N, N, int]]] = None,
+            range: Optional[Range] = None,
             mask: Optional[str] = None,
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
@@ -318,12 +330,12 @@ class UI:
             name: Optional[str] = None,
             mode: Optional[str] = None,
             icon: Optional[str] = None,
-            value: Optional[Union[V, Tuple[V, V]]] = None,
+            value: Optional[Value] = None,
             min: Optional[V] = None,
             max: Optional[V] = None,
             step: Optional[N] = None,
             precision: Optional[int] = None,
-            range: Optional[Union[Tuple[V, V], Tuple[N, N, N], Tuple[N, N, N, int]]] = None,
+            range: Optional[Range] = None,
             mask: Optional[str] = None,
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
