@@ -51,7 +51,7 @@ def _unmarshal(b) -> dict:
 
 
 def _dump(x):  # recursive
-    if isinstance(x, (tuple, list)):
+    if isinstance(x, (tuple, list, set)):
         return [_dump(e) for e in x]
     if callable(getattr(x, 'dump', None)):
         return x.dump()
