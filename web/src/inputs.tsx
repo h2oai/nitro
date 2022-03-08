@@ -31,8 +31,8 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
     for (const v of x) {
       if (isV(v)) { // value
         c.push({ t: WidgetT.Option, text: String(v), value: v })
-      } else if (isPair(v)) { // [text, value]
-        const text = v[0], value = v[1]
+      } else if (isPair(v)) { // [value, text]
+        const [value, text] = v
         if (isS(text) && isV(value)) {
           c.push({ t: WidgetT.Option, text, value })
         } else {
