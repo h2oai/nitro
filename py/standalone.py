@@ -427,8 +427,7 @@ def main(ui: UI):
     x = ui.echo('Integer field with range', value=5, range=(1, 10), editable=True)
     x = ui.echo('Integer field with range and step', value=50, range=(0, 100, 10), editable=True)
     x = ui.echo('Decimal field with range and step', value=0.5, range=(0.0, 1.0, 0.05), editable=True)
-    x = ui.echo('Decimal field with range, step, and precision', value=0.5, range=(0.0, 1.0, 0.05), precision=2,
-                editable=True)
+    x = ui.echo('Decimal field with range, step, and precision', value=0.5, range=(0.0, 1.0, 0.05, 2), editable=True)
     x = ui.echo('Rating', mode='rating')
     x = ui.echo('Rating with value', mode='rating', value=3)
     x = ui.echo('Rating with zero allowed', mode='rating', min=0)
@@ -446,16 +445,163 @@ def main(ui: UI):
     x = ui.echo('Week picker with range', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31'))
     x = ui.echo('Month picker', mode='month', value='2021-10-10')
     x = ui.echo('Month picker with range', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31'))
-    x = ui.echo('Options', options='Apples Bananas Cherries')
-    x = ui.echo('Options', options=('Apples', 'Bananas', 'Cherries'))
-    x = ui.echo('Options', options=['Apples', 'Bananas', 'Cherries'])
-    x = ui.echo('Options', options={'Apples', 'Bananas', 'Cherries'})
-    x = ui.echo('Options', options={'Apples': 'a', 'Bananas': 'b', 'Cherries': 'c'})
-    x = ui.echo('Options', options=dict(Apples='a', Bananas='b', Cherries='c'))
+    x = ui.echo('Options from string', options='Apples Bananas Cherries')
+    x = ui.echo('Options from tuple', options=('Apples', 'Bananas', 'Cherries'))
+    x = ui.echo('Options from list', options=['Apples', 'Bananas', 'Cherries'])
+    x = ui.echo('Options from set', options={'Apples', 'Bananas', 'Cherries'})
+    x = ui.echo('Options from tuples', options=(('a', 'Apples'), ('b', 'Bananas'), ('c', 'Cherries')))
+    x = ui.echo('Options from dict', options={'Apples': 'a', 'Bananas': 'b', 'Cherries': 'c'})
+    x = ui.echo('Options from dict', options=dict(Apples='a', Bananas='b', Cherries='c'))
     x = ui.echo('Options', options=[
         ui.option('a', 'Apples'),
         ui.option('b', 'Bananas'),
         ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Options with selection', options=[
+        ui.option('a', 'Apples', selected=True),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Multiple choice', multiple=True, options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Multiple choice, with selection', multiple=True, options=[
+        ui.option('a', 'Apples', selected=True),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Multiple choice, with multiple selections', multiple=True, options=[
+        ui.option('a', 'Apples', selected=True),
+        ui.option('b', 'Bananas', selected=True),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Multiple choice, required', multiple=True, required=True, options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Multiple choice, with error message', multiple=True, error='Something went wrong', options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Multiple choice, editable', multiple=True, editable=True, options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Tag Picker', mode='tag', options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Choice list', placeholder='Pick a fruit', options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Choice list, required', placeholder='Pick a fruit', required=True, options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Choice list, with icons', placeholder='Pick a fruit', required=True, options=[
+        ui.option('area', 'Area', icon='AreaChart', selected=True),
+        ui.option('bar', 'Bar', icon='BarChartHorizontal'),
+        ui.option('column', 'Column', icon='BarChartVertical'),
+        ui.option('line', 'Line', icon='LineChart'),
+        ui.option('scatter', 'Scatter', icon='ScatterChart'),
+        ui.option('donut', 'Donut', icon='DonutChart'),
+    ])
+    x = ui.echo('Choice list, with error message', placeholder='Pick a fruit', error='Something went wrong', options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Choice list, editable', placeholder='Pick a fruit', editable=True, options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
+    x = ui.echo('Choice list, grouped', placeholder='Pick an item', options=[
+        ui.option('f', 'Fruits', options=[
+            ui.option('a', 'Apples'),
+            ui.option('b', 'Bananas'),
+            ui.option('c', 'Cherries'),
+        ]),
+        ui.option('v', 'Vegetables', options=[
+            ui.option('l', 'Lettuce'),
+            ui.option('t', 'Tomato'),
+        ]),
+    ])
+    x = ui.echo('Color picker', mode='color', value='#a241e8')
+    x = ui.echo('Color picker, with choices', mode='color', options=[
+        ui.option('#ca5010', 'Orange'),
+        ui.option('#038387', 'Cyan'),
+        ui.option('#8764b8', 'Purple'),
+        ui.option('#881798', 'Magenta'),
+    ])
+    x = ui.echo('Buttons, vertical', options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ], inline=False)
+    x = ui.echo('Compound buttons', options=[
+        ui.option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+        ui.option('no', 'Not now', caption="I'll decide later"),
+    ])
+    x = ui.echo('Button with menu', options=[
+        ui.option('yes', 'Yes', selected=True, options=[
+            ui.option('later', 'Remind me later', icon='ChatBot'),
+            ui.option('never', "Don't ask me again", icon='MuteChat'),
+        ]),
+        ui.option('no', 'No'),
+    ])
+    x = ui.echo('Button with menu', options=[
+        ui.option('yes', 'Yes', selected=True),
+        ui.option('no', 'No', options=[
+            ui.option('later', 'Remind me later', icon='ChatBot'),
+            ui.option('never', "Don't ask me again", icon='MuteChat'),
+        ]),
+    ])
+    x = ui.echo('Add a new chart', options=[
+        ui.option('area', 'Area', icon='AreaChart'),
+        ui.option('bar', 'Bar', icon='BarChartHorizontal'),
+        ui.option('column', 'Column', icon='BarChartVertical'),
+        ui.option('line', 'Line', icon='LineChart'),
+        ui.option('scatter', 'Scatter', icon='ScatterChart'),
+        ui.option('donut', 'Donut', icon='DonutChart'),
+    ])
+    x = ui.echo([
+        ui.input('Username', placeholder='someone@company.com'),
+        ui.input('Password', password=True),
+    ])
+    x = ui.echo([
+        ui.input('Username', placeholder='someone@company.com'),
+        ui.input('Password', password=True),
+    ], inline=True)
+    x = ui.echo([
+        ui.input('Username', placeholder='someone@company.com'),
+        ui.input('Password', password=True),
+        ui.input(options=[ui.option('login', 'Login', selected=True)])
+    ], inline=True)
+    x = ui.echo([
+        ui.input([ui.input('First name'), ui.input('Last name')], inline=True),
+        ui.input('Address line 1'),
+        ui.input('Address line 2'),
+        ui.input([ui.input('City'), ui.input('State'), ui.input('Zip')], inline=True),
+    ])
+    x = ui.echo([
+        ui.input([ui.input('First name'), ui.input('M.I.', size='10%'), ui.input('Last name')], inline=True),
+        ui.input('Address line 1'),
+        ui.input('Address line 2'),
+        ui.input([ui.input('City', size=5), ui.input('State', size='20%'), ui.input('Zip', size=1)], inline=True),
+        ui.input(options=[
+            ui.option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+            ui.option('no', 'Not now', caption="I'll decide later"),
+        ])
     ])
 
 
