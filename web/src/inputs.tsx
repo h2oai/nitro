@@ -370,12 +370,13 @@ class XMultiSelectComboBox extends React.Component<InputProps, {}> {
   }
 }
 
-const toContextualMenuItem = (c: Option): IContextualMenuItem => ({
+const toContextualMenuItem = (c: Option, capture: (v: V) => void): IContextualMenuItem => ({
   key: String(c.value),
   text: String(c.text),
   iconProps: c.icon ? { iconName: c.icon } : undefined,
+  onClick: () => capture(c.value),
 })
-const toContextualMenuProps = (cs: Option[]): IContextualMenuProps => ({ items: cs.map(toContextualMenuItem) })
+const toContextualMenuProps = (cs: Option[], capture: (v: V) => void): IContextualMenuProps => ({ items: cs.map(c => toContextualMenuItem(c, capture)) })
 
 const continueAction: Option = { t: WidgetT.Option, value: 'continue', text: 'Continue', selected: true }
 const continueWidget: Widget = { t: WidgetT.Input, xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [continueAction] }
@@ -388,25 +389,26 @@ const XButtons = make(({ context, input }: InputProps) => {
         horizontal = inline !== false,
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
+        capture = (value: V) => {
+          context.capture(index, value)
+          context.submit()
+        },
         buttons = options.map(c => {
           const
             text = c.text,
-            onClick = () => {
-              context.capture(index, c.value)
-              context.submit()
-            },
+            onClick = () => capture(c.value),
             button = c.selected
               ? c.options
                 ? c.value === ''
-                  ? <PrimaryButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(c.options)} />
-                  : <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} onClick={onClick} />
+                  ? <PrimaryButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(c.options, capture)} />
+                  : <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options, capture)} onClick={onClick} />
                 : c.caption
                   ? <CompoundButton primary text={text} secondaryText={c.caption} styles={compoundStyles} onClick={onClick} />
                   : <PrimaryButton text={text} styles={styles} onClick={onClick} />
               : c.options
                 ? c.value === ''
-                  ? <DefaultButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(c.options)} />
-                  : <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options)} onClick={onClick} />
+                  ? <DefaultButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(c.options, capture)} />
+                  : <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options, capture)} onClick={onClick} />
                 : c.caption
                   ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} onClick={onClick} />
                   : <DefaultButton text={text} styles={styles} onClick={onClick} />
