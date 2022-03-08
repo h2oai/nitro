@@ -91,11 +91,12 @@ class Option:
             icon=self.icon,
             caption=self.caption,
             selected=self.selected,
-            options=self.options,
+            options=_dump(self.options),
         )
         return _clean(d)
 
 
+OptionPair = Tuple[V, str]
 Options = Union[
     str,
     Tuple[Primitive, ...],
@@ -105,6 +106,9 @@ Options = Union[
     Tuple[Option, ...],
     List[Option],
     Set[Option],
+    Tuple[OptionPair, ...],
+    List[OptionPair],
+    Set[OptionPair],
 ]
 
 Item = Union['Input', str]
