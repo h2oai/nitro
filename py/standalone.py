@@ -398,9 +398,61 @@ def main2(ui: UI):
 
 
 def main(ui: UI):
-    choice = 'enter something'
-    while True:
-        choice, go = ui.echo(choice)
+    x = ui.echo('Text field with label')
+    x = ui.echo('Text field with placeholder', placeholder='Enter text here')
+    x = ui.echo('Text field with value', value='Some text')
+    x = ui.echo('Text field, required', required=True)
+    x = ui.echo('Text field with input mask', mask='(999) 999 - 9999')
+    x = ui.echo('Text field with icon', icon='Calendar')
+    x = ui.echo('Text field with prefix', prefix='https://')
+    x = ui.echo('Text field with suffix', suffix='.com')
+    x = ui.echo('Text field with prefix and suffix', prefix='https://', suffix='.com')
+    x = ui.echo('Text field with error', error='Something went wrong')
+    x = ui.echo('Password field', password=True)
+    x = ui.echo('Multiline text field', lines=1)
+    x = ui.echo('Multiline text field, taller', lines=5)
+    x = ui.echo('Integer', value=5)
+    x = ui.echo('Integer within range', range=(0, 10))
+    x = ui.echo('Integer within range, with step', range=(0, 10, 2))
+    x = ui.echo('Integer within range, with default', value=5, range=(0, 10))
+    x = ui.echo('Integer within range, origin from zero', value=3, range=(-5, 5))
+    x = ui.echo('Decimal within range, with step', value=0.6, range=(-1, 1, 0.2))
+    x = ui.echo('Integer range', value=(3, 7), range=(1, 10))
+    x = ui.echo('Integer range, origin from zero', value=(-1, 3), range=(-5, 5))
+    x = ui.echo('Integer field', value=5, editable=True)
+    x = ui.echo('Integer field with range', value=5, range=(1, 10), editable=True)
+    x = ui.echo('Integer field with range and step', value=50, range=(0, 100, 10), editable=True)
+    x = ui.echo('Decimal field with range and step', value=0.5, range=(0.0, 1.0, 0.05), editable=True)
+    x = ui.echo('Decimal field with range, step, and precision', value=0.5, range=(0.0, 1.0, 0.05), precision=2,
+                editable=True)
+    x = ui.echo('Rating', mode='rating')
+    x = ui.echo('Rating with value', mode='rating', value=3)
+    x = ui.echo('Rating with zero allowed', mode='rating', min=0)
+    x = ui.echo('Rating with max', mode='rating', value=3, max=10)
+    x = ui.echo('Rating with range', mode='rating', value=3, range=(0, 7))
+    x = ui.echo('Time', mode='time', value='3:04PM')
+    x = ui.echo('Time, with seconds', mode='time', value='3:04:05PM')
+    x = ui.echo('Time, hour only', mode='time', value='3PM')
+    x = ui.echo('Time, 24-hr clock', mode='time', value='15:04')
+    x = ui.echo('Time, 24-hr clock, with seconds', mode='time', value='15:04:05')
+    x = ui.echo('Time, hour only, 24-hour clock', mode='time', value='15')
+    x = ui.echo('Day picker', mode='day', value='2021-10-10')
+    x = ui.echo('Day picker with range', mode='day', value='2021-10-10', range=('2019-01-01', '2022-12-31'))
+    x = ui.echo('Week picker', mode='week', value='2021-10-10')
+    x = ui.echo('Week picker with range', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31'))
+    x = ui.echo('Month picker', mode='month', value='2021-10-10')
+    x = ui.echo('Month picker with range', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31'))
+    x = ui.echo('Options', options='Apples Bananas Cherries')
+    x = ui.echo('Options', options=('Apples', 'Bananas', 'Cherries'))
+    x = ui.echo('Options', options=['Apples', 'Bananas', 'Cherries'])
+    x = ui.echo('Options', options={'Apples', 'Bananas', 'Cherries'})
+    x = ui.echo('Options', options={'Apples': 'a', 'Bananas': 'b', 'Cherries': 'c'})
+    x = ui.echo('Options', options=dict(Apples='a', Bananas='b', Cherries='c'))
+    x = ui.echo('Options', options=[
+        ui.option('a', 'Apples'),
+        ui.option('b', 'Bananas'),
+        ui.option('c', 'Cherries'),
+    ])
 
 
 # --- bootstrap ---
