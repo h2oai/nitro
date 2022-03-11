@@ -52,13 +52,16 @@ h2 {
 h3 {
   font-size: 1.44rem;
   line-height: 2rem;
+  font-weight: 400;
   margin-bottom: 0.25rem;
+  color: #333;
 }
 h4 {
   font-size: 1.2rem;
   line-height: 1.75rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: #333;
 }
 h5 {
   font-size: 1rem;
@@ -66,9 +69,10 @@ h5 {
   font-weight: 700;
   text-transform: uppercase;
   font-feature-settings: 'smcp';
+  color: #333;
 }
 h6 {
-  font-size: 0.833rem;
+  font-size: 0.92rem;
   line-height: 1.25rem;
   margin-bottom: 1rem;
 }
@@ -77,6 +81,9 @@ p, ul, ol {
   line-height: 1.75rem;
   margin-bottom: 1rem;
   color: #242424;
+}
+strong {
+  font-weight: 600;
 }
 ul {
   list-style: none;
