@@ -280,20 +280,48 @@ def input(
 class UI:
     def __init__(
             self,
-            app: 'Nitro',
-            send: Callable,
-            recv: Callable,
+            delegate: Delegate,
+            title: str = '',
+            caption: str = '',
+            menu: Optional[Sequence[Option]] = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
             context: any = None,
     ):
-        self._app = app
+        self._delegate = delegate
+        self._title = title
+        self._caption = caption
+        self._menu = menu or []
+        self._delegates: Dict[str, Delegate] = {opt.value: opt.delegate for opt in self._menu if opt.delegate}
         self._send = send
         self._recv = recv
-        self.context = context if context is not None else dict()
+        self.context = context
 
-    def run(self):
+    def delegate(self, ui: 'UI', key: Optional[str] = None):
+        if key is None:
+            self._delegate(ui)
+            return
+
+        d = self._delegates.get(key)
+        if d is None:
+            raise ProtocolError('Attempt to call unknown delegate')
+        d(ui)
+
+    def serve(self, send: Callable, recv: Callable, context: any = None):
+        UI(
+            self.delegate,
+            title=self._title,
+            caption=self._caption,
+            menu=self._menu,
+            send=send,
+            recv=recv,
+            context=context or {},
+        )._run()
+
+    def _run(self):
         self._read(_MsgType.Join)  # XXX handle join
         while True:
-            self._app.delegate(self)
+            self.delegate(self)
 
     def _read(self, expected: int):
         msg = _unmarshal(self._recv())
@@ -318,9 +346,6 @@ class UI:
                 return d
             raise ProtocolError(f'unknown message type {t}')
         raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
-
-    def _write(self):
-        pass
 
     def __call__(
             self,
@@ -382,31 +407,3 @@ class UI:
             msg['p'] = position
         self._send(_marshal(msg))
         return self._read(_MsgType.Input)
-
-
-class Nitro:
-    def __init__(
-            self,
-            delegate: Delegate,
-            title: str = '',
-            caption: str = '',
-            menu: Optional[Sequence[Option]] = None,
-    ):
-        self._delegate = delegate
-        self._title = title
-        self._caption = caption
-        self._menu = menu or []
-        self._delegates: Dict[str, Delegate] = {opt.value: opt.delegate for opt in self._menu if opt.delegate}
-
-    def spawn(self, send: Callable, recv: Callable, context: any = None):
-        return UI(self, send, recv, context)
-
-    def delegate(self, ui: UI, key: Optional[str] = None):
-        if key is None:
-            self._delegate(ui)
-            return
-
-        d = self._delegates.get(key)
-        if d is None:
-            raise ProtocolError('Attempt to call unknown delegate')
-        d(ui)
