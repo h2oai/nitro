@@ -63,13 +63,11 @@ independent of the rest of the world. — Henri Atlan, *Is Science Inhuman*?
 
 ###### But how could we fail to see that there is an infinite regress here—if we do not accept, as Kantian and post-Kantian philosophies do.
 
-According to them, the free subject is an absolute
+**Lead-in emphasis.** According to them, the free subject is an absolute
 origin, a first agent capable of creating first causes, who initiates new causal chains *ex nihilo*,
 independent of the rest of the world. — Henri Atlan, *Is Science Inhuman*?
 
 **This is bold text**
-
-*This text is italicized*
 
 ~~This was mistaken text~~
 

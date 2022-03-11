@@ -658,11 +658,6 @@ const XInput = ({ context, input }: InputProps) => { // recursive
   }
 }
 
-const WidgetsContainer = styled.div`
-  padding: 2rem;
-  max-width: 640px;
-`
-
 const newIncr = () => {
   let i = 0
   return () => i++
@@ -730,6 +725,76 @@ const sanitizeWidget = (widget: Widget, incr: Incr): Widget => {
   if (widget.t === WidgetT.Input) return sanitizeInput(widget, incr)
   return widget
 }
+
+const Logo = ({ size }: { size: U }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
+    <path d="M2048 0v64q0 182-32 340t-99 299-166 268-234 249l-191 572h-302v-227q-138 81-279 156l-418-418q75-141 156-279H256V722l572-190q121-135 248-235t269-166 299-98 340-33h64zM558 896q29-46 58-91t62-89l-294 98v82h174zm211 666q51-29 102-57t102-58l-372-372q-29 51-57 102t-58 103l283 282zm563-192q-44 32-89 61t-91 59v174h82l98-294zm183-327q99-99 172-201t124-214 76-235 32-264q-140 5-263 31t-235 77-215 123-203 172q-99 97-181 204T668 962l418 418q118-72 225-154t204-183zm-235-19q-53 0-99-20t-82-55-55-81-20-100q0-53 20-99t55-82 81-55 100-20q53 0 99 20t82 55 55 81 20 100q0 53-20 99t-55 82-81 55-100 20zm0-384q-27 0-50 10t-40 27-28 41-10 50q0 27 10 50t27 40 41 28 50 10q27 0 50-10t40-27 28-41 10-50q0-27-10-50t-27-40-41-28-50-10zM256 1536q53 0 99 20t82 55 55 81 20 100q0 53-20 99t-55 82-81 55-100 20H0v-256q0-53 20-99t55-82 81-55 100-20zm0 384q27 0 50-10t40-27 28-41 10-50q0-27-10-50t-27-40-41-28-50-10q-27 0-50 10t-40 27-28 41-10 50v128h128z" />
+  </svg>
+)
+
+const NavIcon = ({ size }: { size: U }) => (
+  <svg className='inactive' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
+    <path d="M2048 640H0V512h2048v128zm0 1024H0v-128h2048v128zm0-513H0v-127h2048v127z" />
+  </svg>
+)
+
+const NavActiveIcon = ({ size }: { size: U }) => (
+  <svg className='active' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
+    <path d="M1728 1024q-66 0-124-25t-102-68-69-102-25-125q0-66 25-124t68-102 102-69 125-25q66 0 124 25t102 68 69 102 25 125q0 66-25 124t-68 102-102 69-125 25zm-474-512q-12 31-19 63t-13 65H0V512h1254zm78 512q65 80 153 128H0v-128h1332zM0 1664v-128h2048v128H0z" />
+  </svg>
+)
+
+const NavContainer = styled.div`
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  .active {
+    display: none;
+  }
+  &:hover {
+    .inactive {
+      display: none;
+    }
+    .active {
+      display: block;
+    } 
+  } 
+`
+
+const XNav = () => (
+  <NavContainer>
+    <NavIcon size={20} />
+    <NavActiveIcon size={20} />
+  </NavContainer>
+)
+
+const WidgetsContainer = styled.div`
+  max-width: 640px;
+  background-color: #fff;
+  margin: 1rem auto 2rem;
+`
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+`
+const HeaderTitle = styled.div` 
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1rem;
+  color: #555;
+  margin-left: 1rem;
+`
+const HeaderSubtitle = styled.div`
+  font-weight: 400;
+  color: #999;
+  margin-left: 0.5rem;
+`
+const Body = styled.div`
+  padding: 1rem 2rem 2rem;
+`
+
 export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
   // console.log(JSON.stringify(props.widgets))
   const
@@ -741,7 +806,14 @@ export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
   // console.log(JSON.stringify(widgets))
   return (
     <WidgetsContainer>
-      <Stackables context={context} widgets={widgets} />
+      <Header>
+        <XNav />
+        <HeaderTitle>Nitro App</HeaderTitle>
+        <HeaderSubtitle>v1.0</HeaderSubtitle>
+      </Header>
+      <Body>
+        <Stackables context={context} widgets={widgets} />
+      </Body>
     </WidgetsContainer>
   )
 }

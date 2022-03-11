@@ -5,6 +5,7 @@ import { Input, Msg, MsgType } from './protocol';
 import { Client } from './client';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { make } from './ui';
+import styled from 'styled-components';
 
 enum AppStateT { Connecting, Disconnected, Invalid, Input, Outputs }
 
@@ -29,6 +30,15 @@ const hello: Msg = {
   }
 }
 
+// TODO make configurable
+// Source: https://projects.verou.me/css3patterns/#tartan
+const Texture = styled.div`
+  height: 1.5rem;
+  background-color: hsl(2, 57%, 40%);
+  background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
+  repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
+  repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0,0,0,.2) 2px, rgba(0,0,0,.2) 3px, transparent 3px, transparent 5px, rgba(0,0,0,.2) 5px);
+`
 export const App = make(({ client }: { client: Client }) => {
   const
     stateB = box<AppState>({ t: AppStateT.Connecting }),
@@ -86,7 +96,12 @@ export const App = make(({ client }: { client: Client }) => {
         case AppStateT.Invalid:
           return <div>error: {state.error}</div>
         case AppStateT.Input:
-          return <XWidgets send={state.socket.send} widgets={state.inputs} />
+          return (
+            <div>
+              <Texture />
+              <XWidgets send={state.socket.send} widgets={state.inputs} />
+            </div>
+          )
       }
       return <div>Hello!</div>
     }
