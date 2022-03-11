@@ -1,4 +1,4 @@
-from h2o_nitro import UI, input, option
+from h2o_nitro import Nitro, UI, input, option
 import simple_websocket
 from flask import Flask, request
 
@@ -335,13 +335,16 @@ def main(ui: UI):
 
 # --- bootstrap ---
 
+
+nitro = Nitro(main)
+
 app = Flask(__name__, static_folder='../web/build', static_url_path='')
 
 
 @app.route('/nitro', websocket=True)
 def socket():
     ws = simple_websocket.Server(request.environ)
-    ui = UI(ws.send, ws.receive, main)
+    ui = nitro.spawn(ws.send, ws.receive)
     try:
         ui.run()
     except simple_websocket.ConnectionClosed:

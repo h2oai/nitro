@@ -1,6 +1,14 @@
-from typing import Optional, Tuple, List, Dict, Union, Callable, Set
+from typing import Optional, Tuple, Sequence, List, Dict, Union, Callable, Set
 import msgpack
 from enum import IntEnum
+
+__xid = 0
+
+
+def _xid() -> str:
+    global __xid
+    __xid += 1
+    return f'x{__xid}'
 
 
 class _MsgType(IntEnum):
@@ -59,18 +67,21 @@ def _clean(d: dict) -> dict:
 N = Union[int, float]
 V = Union[N, str]
 
+Delegate = Callable[['UI'], None]
+
 
 class Option:
     def __init__(
             self,
-            value: V,
+            value: Union[V, Delegate],
             text: Optional[str] = None,
             icon: Optional[str] = None,
             caption: Optional[str] = None,
             selected: Optional[bool] = None,
             options: Optional['Options'] = None,
     ):
-        self.value = value
+        self.delegate = value if callable(value) else None
+        self.value = value if self.delegate is None else _xid()
         self.text = text
         self.icon = icon
         self.caption = caption
@@ -267,15 +278,22 @@ def input(
 
 
 class UI:
-    def __init__(self, send: Callable, recv: Callable, handle: Callable):
+    def __init__(
+            self,
+            app: 'Nitro',
+            send: Callable,
+            recv: Callable,
+            context: any = None,
+    ):
+        self._app = app
         self._send = send
         self._recv = recv
-        self._handle = handle
+        self.context = context if context is not None else dict()
 
     def run(self):
         self._read(_MsgType.Join)  # XXX handle join
         while True:
-            self._handle(self)
+            self._app.delegate(self)
 
     def _read(self, expected: int):
         msg = _unmarshal(self._recv())
@@ -364,3 +382,31 @@ class UI:
             msg['p'] = position
         self._send(_marshal(msg))
         return self._read(_MsgType.Input)
+
+
+class Nitro:
+    def __init__(
+            self,
+            delegate: Delegate,
+            title: str = '',
+            caption: str = '',
+            menu: Optional[Sequence[Option]] = None,
+    ):
+        self._delegate = delegate
+        self._title = title
+        self._caption = caption
+        self._menu = menu or []
+        self._delegates: Dict[str, Delegate] = {opt.value: opt.delegate for opt in self._menu if opt.delegate}
+
+    def spawn(self, send: Callable, recv: Callable, context: any = None):
+        return UI(self, send, recv, context)
+
+    def delegate(self, ui: UI, key: Optional[str] = None):
+        if key is None:
+            self._delegate(ui)
+            return
+
+        d = self._delegates.get(key)
+        if d is None:
+            raise ProtocolError('Attempt to call unknown delegate')
+        d(ui)
