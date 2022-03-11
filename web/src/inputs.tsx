@@ -1,7 +1,7 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, ContextualMenu, ContextualMenuItemType, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
-import { B, gensym, I, isN, isO, isPair, isS, isV, N, S, U, V, xid } from './core';
+import { B, box, gensym, I, isN, isO, isPair, isS, isV, N, on, S, U, V, xid } from './core';
 import { Markdown } from './markdown';
 import { Input, Widget, MsgType, Option, WidgetT, InputMode } from './protocol';
 import { Send } from './socket';
@@ -733,13 +733,13 @@ const Logo = ({ size }: { size: U }) => (
 )
 
 const NavIcon = ({ size }: { size: U }) => (
-  <svg className='inactive' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
     <path d="M2048 640H0V512h2048v128zm0 1024H0v-128h2048v128zm0-513H0v-127h2048v127z" />
   </svg>
 )
 
 const NavActiveIcon = ({ size }: { size: U }) => (
-  <svg className='active' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
     <path d="M1728 1024q-66 0-124-25t-102-68-69-102-25-125q0-66 25-124t68-102 102-69 125-25q66 0 124 25t102 68 69 102 25 125q0 66-25 124t-68 102-102 69-125 25zm-474-512q-12 31-19 63t-13 65H0V512h1254zm78 512q65 80 153 128H0v-128h1332zM0 1664v-128h2048v128H0z" />
   </svg>
 )
@@ -748,32 +748,35 @@ const NavContainer = styled.div`
   cursor: pointer;
   width: 20px;
   height: 20px;
-  .active {
-    display: none;
-  }
-  &:hover {
-    .inactive {
-      display: none;
-    }
-    .active {
-      display: block;
-    } 
-  } 
 `
-
-const XNav = () => (
-  <NavContainer>
-    <NavIcon size={20} />
-    <NavActiveIcon size={20} />
-  </NavContainer>
-)
-
+const XNav = make(() => {
+  const
+    containerRef = React.createRef<HTMLDivElement>(),
+    showMenuB = box(false),
+    showMenu = () => showMenuB(true),
+    hideMenu = () => showMenuB(false),
+    render = () => {
+      const isMenuVisible = showMenuB()
+      return (
+        <NavContainer ref={containerRef} onClick={showMenu}>
+          {isMenuVisible ? <NavActiveIcon size={20} /> : <NavIcon size={20} />}
+          <ContextualMenu
+            items={menuItems}
+            hidden={!isMenuVisible}
+            target={containerRef}
+            onItemClick={hideMenu}
+            onDismiss={hideMenu}
+          />
+        </NavContainer>
+      )
+    }
+  return { render, showMenuB }
+})
 const WidgetsContainer = styled.div`
   max-width: 640px;
   background-color: #fff;
   margin: 1rem auto 2rem;
 `
-
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -794,7 +797,70 @@ const HeaderSubtitle = styled.div`
 const Body = styled.div`
   padding: 1rem 2rem 2rem;
 `
-
+const menuItems: IContextualMenuItem[] = [
+  { key: 'newItem', iconProps: { iconName: 'Add' }, text: 'New' },
+  {
+    key: 'upload',
+    iconProps: { iconName: 'Upload', style: { color: 'salmon' } },
+    text: 'Upload',
+    title: 'Upload a file',
+  },
+  { key: 'divider_1', itemType: ContextualMenuItemType.Divider },
+  { key: 'share', iconProps: { iconName: 'Share' }, text: 'Share' },
+  { key: 'print', iconProps: { iconName: 'Print' }, text: 'Print' },
+  { key: 'music', iconProps: { iconName: 'MusicInCollectionFill' }, text: 'Music' },
+  {
+    key: 'newItem2',
+    text: 'New',
+    onClick: () => console.log('New clicked'),
+  },
+  {
+    key: 'divider_2',
+    itemType: ContextualMenuItemType.Divider,
+  },
+  {
+    key: 'rename',
+    text: 'Rename',
+    onClick: () => console.log('Rename clicked'),
+  },
+  {
+    key: 'edit',
+    text: 'Edit',
+    onClick: () => console.log('Edit clicked'),
+  },
+  {
+    key: 'properties',
+    text: 'Properties',
+    onClick: () => console.log('Properties clicked'),
+  },
+  {
+    key: 'linkNoTarget',
+    text: 'Link same window',
+    href: 'http://bing.com',
+  },
+  {
+    key: 'linkWithTarget',
+    text: 'Link new window',
+    href: 'http://bing.com',
+    target: '_blank',
+  },
+  {
+    key: 'linkWithOnClick',
+    name: 'Link click',
+    href: 'http://bing.com',
+    onClick: (ev) => {
+      alert('Link clicked')
+      if (ev) ev.preventDefault()
+    },
+    target: '_blank',
+  },
+  {
+    key: 'disabled',
+    text: 'Disabled item',
+    disabled: true,
+    onClick: () => console.error('Disabled item should not be clickable.'),
+  },
+]
 export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
   // console.log(JSON.stringify(props.widgets))
   const
