@@ -25,6 +25,7 @@ class _MsgType(IntEnum):
     Insert = 11
     Update = 12
     Remove = 13
+    Conf = 14
 
 
 class _WidgetT(IntEnum):
@@ -281,8 +282,8 @@ class UI:
     def __init__(
             self,
             delegate: Delegate,
-            title: str = '',
-            caption: str = '',
+            title: str = 'H2O Nitro',
+            caption: str = 'v0.1.0', # XXX show actual version
             menu: Optional[Sequence[Option]] = None,
             send: Optional[Callable] = None,
             recv: Optional[Callable] = None,
@@ -320,6 +321,14 @@ class UI:
 
     def _run(self):
         self._read(_MsgType.Join)  # XXX handle join
+        self._send(_marshal(dict(
+            t=_MsgType.Conf,
+            d=dict(
+                title=self._title,
+                caption=self._caption,
+                menu=_dump(self._menu),
+            ),
+        )))
         while True:
             self.delegate(self)
 
