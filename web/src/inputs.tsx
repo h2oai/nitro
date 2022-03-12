@@ -742,12 +742,13 @@ const NavContainer = styled.div`
   display: flex;
   align-items: center;
 `
-const XNav = make(({ menu }: { menu: Option[] }) => {
+const XNav = make(({ send, menu }: { send: Send, menu: Option[] }) => {
   const
     hasMenu = menu.length > 0,
-    navigateTo = (v: V) => {
+    switchTo = (v: V) => {
+      send({ t: MsgType.Switch, d: v })
     },
-    menuItems = menu.map(o => toContextualMenuItem(o, navigateTo)),
+    menuItems = menu.map(o => toContextualMenuItem(o, switchTo)),
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = box(false),
     showMenu = () => showMenuB(true),
@@ -799,12 +800,12 @@ const HeaderSubtitle = styled.div`
 const WidgetsContainer = styled.div`
   padding: 1rem 2rem 2rem;
 `
-export const Header = make(({ conf }: { conf: Conf }) => {
+export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
   const
     render = () => {
       return (
         <HeaderContainer>
-          <XNav menu={conf.menu ?? []} />
+          <XNav send={send} menu={conf.menu ?? []} />
           <HeaderTitle>{conf.title}</HeaderTitle>
           <HeaderSubtitle>{conf.caption}</HeaderSubtitle>
         </HeaderContainer>

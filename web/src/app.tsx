@@ -112,7 +112,7 @@ export const App = make(({ client }: { client: Client }) => {
             <div>
               <Texture />
               <AppContainer>
-                <Header conf={state.conf} />
+                <Header send={state.socket.send} conf={state.conf} />
                 <XWidgets send={state.socket.send} widgets={state.inputs} />
               </AppContainer>
             </div>

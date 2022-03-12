@@ -1,4 +1,4 @@
-from h2o_nitro import UI, input, option
+from h2o_nitro import UI, input, option, ContextSwitchError
 import simple_websocket
 from flask import Flask, request
 
@@ -335,8 +335,26 @@ def main(ui: UI):
 
 # --- bootstrap ---
 
+def main_wrap(ui: UI):
+    try:
+        main(ui)
+    except ContextSwitchError as e:
+        # perform clean-up
+        raise e
 
-nitro = UI(main)
+
+nitro = UI(main_wrap, title='Nitro', caption='v0.1', menu=[
+    option(main2, text='Area Chart', icon='AreaChart'),
+    option(main2, text='Bar Chart', icon='BarChartVertical'),
+    option(main2, text='Line Chart', icon='LineChart'),
+    option(main2, text='Bar Chart', icon='BarChartVertical', options=[
+        option(main2, text='Area Chart', icon='AreaChart'),
+        option(main2, text='Line Chart', icon='LineChart'),
+        option(main2, text='Scatter Chart', icon='ScatterChart'),
+    ]),
+    option(''),
+    option(main2, text='Scatter Chart', icon='ScatterChart'),
+])
 
 app = Flask(__name__, static_folder='../web/build', static_url_path='')
 

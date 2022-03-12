@@ -26,6 +26,7 @@ class _MsgType(IntEnum):
     Update = 12
     Remove = 13
     Conf = 14
+    Switch = 15
 
 
 class _WidgetT(IntEnum):
@@ -39,6 +40,12 @@ Primitive = Union[bool, int, float, str]
 
 class RemoteError(Exception):
     pass
+
+
+class ContextSwitchError(Exception):
+    def __init__(self, context: str):
+        super().__init__('User switched context')
+        self.context = context
 
 
 class ProtocolError(Exception):
@@ -283,7 +290,7 @@ class UI:
             self,
             delegate: Delegate,
             title: str = 'H2O Nitro',
-            caption: str = 'v0.1.0', # XXX show actual version
+            caption: str = 'v0.1.0',  # XXX show actual version
             menu: Optional[Sequence[Option]] = None,
             send: Optional[Callable] = None,
             recv: Optional[Callable] = None,
@@ -298,19 +305,22 @@ class UI:
         self._recv = recv
         self.context = context
 
-    def delegate(self, ui: 'UI', key: Optional[str] = None):
-        if key is None:
-            self._delegate(ui)
-            return
-
+    def _delegate_for(self, key: str):
         d = self._delegates.get(key)
         if d is None:
             raise ProtocolError('Attempt to call unknown delegate')
-        d(ui)
+        return d
+
+    def delegate(self, key: Optional[str] = None):
+        if key is None:
+            self._delegate(self)
+            return
+
+        self._delegate_for(key)(self)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         UI(
-            self.delegate,
+            self._delegate,
             title=self._title,
             caption=self._caption,
             menu=self._menu,
@@ -330,7 +340,10 @@ class UI:
             ),
         )))
         while True:
-            self.delegate(self)
+            try:
+                self.delegate()
+            except ContextSwitchError as e:
+                self.delegate(e.context)
 
     def _read(self, expected: int):
         msg = _unmarshal(self._recv())
@@ -339,6 +352,8 @@ class UI:
             if t == _MsgType.Error:
                 code = msg.get('c')
                 raise RemoteError(f'code {code}')
+            if t == _MsgType.Switch:
+                raise ContextSwitchError(msg.get('d'))
             if (expected > -1) and t != expected:
                 raise ProtocolError(f'unexpected message: want {expected}, got {t}')
             if t == _MsgType.Input:

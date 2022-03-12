@@ -15,6 +15,7 @@ export enum MsgType {
   Update,
   Remove,
   Conf,
+  Switch,
 }
 
 export type Msg = {
@@ -40,6 +41,9 @@ export type Msg = {
 } | {
   t: MsgType.Conf,
   d: Conf
+} | {
+  t: MsgType.Switch,
+  d: V
 }
 
 export type Conf = {
