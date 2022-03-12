@@ -371,12 +371,20 @@ class XMultiSelectComboBox extends React.Component<InputProps, {}> {
   }
 }
 
-const toContextualMenuItem = (c: Option, capture: (v: V) => void): IContextualMenuItem => ({
-  key: String(c.value),
-  text: String(c.text),
-  iconProps: c.icon ? { iconName: c.icon } : undefined,
-  onClick: () => capture(c.value),
-})
+const toContextualMenuItem = ({ value, text, caption, icon, options }: Option, capture: (v: V) => void): IContextualMenuItem => {
+  return text
+    ? {
+      key: String(value),
+      text,
+      title: caption,
+      iconProps: icon ? { iconName: icon } : undefined,
+      subMenuProps: options ? toContextualMenuProps(options, capture) : undefined,
+      onClick: () => capture(value),
+    } : {
+      key: xid(),
+      itemType: ContextualMenuItemType.Divider,
+    }
+}
 const toContextualMenuProps = (cs: Option[], capture: (v: V) => void): IContextualMenuProps => ({ items: cs.map(c => toContextualMenuItem(c, capture)) })
 
 const continueAction: Option = { t: WidgetT.Option, value: 'continue', text: 'Continue', selected: true }
@@ -740,23 +748,12 @@ const NavContainer = styled.div`
   display: flex;
   align-items: center;
 `
-const toNavMenuItem = ({ value, text, caption, icon, options }: Option): IContextualMenuItem => {
-  return text
-    ? {
-      key: String(value),
-      text,
-      title: caption,
-      iconProps: icon ? { iconName: icon } : undefined,
-      subMenuProps: options ? { items: options.map(o => toNavMenuItem(o)) } : undefined,
-    } : {
-      key: xid(),
-      itemType: ContextualMenuItemType.Divider,
-    }
-}
 const XNav = make(({ menu }: { menu: Option[] }) => {
   const
     hasMenu = menu.length > 0,
-    menuItems = menu.map(o => toNavMenuItem(o)),
+    navigateTo = (v: V) => {
+    },
+    menuItems = menu.map(o => toContextualMenuItem(o, navigateTo)),
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = box(false),
     showMenu = () => showMenuB(true),
