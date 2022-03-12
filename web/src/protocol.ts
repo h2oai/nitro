@@ -14,6 +14,7 @@ export enum MsgType {
   Insert,
   Update,
   Remove,
+  Conf,
 }
 
 export type Msg = {
@@ -36,6 +37,15 @@ export type Msg = {
 } | {
   t: MsgType.Input,
   d: Array<V | null>
+} | {
+  t: MsgType.Conf,
+  d: Conf
+}
+
+export type Conf = {
+  title?: S,
+  caption?: S,
+  menu?: Option[]
 }
 
 export enum WidgetT {

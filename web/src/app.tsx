@@ -1,13 +1,13 @@
 import React from 'react';
 import { box, defer, isN, S, U, xid } from './core';
-import { XWidgets } from './inputs';
-import { Input, Msg, MsgType } from './protocol';
+import { AppContainer, Header, XWidgets } from './inputs';
+import { Input, Msg, MsgType, Conf } from './protocol';
 import { Client } from './client';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { make } from './ui';
 import styled from 'styled-components';
 
-enum AppStateT { Connecting, Disconnected, Invalid, Input, Outputs }
+enum AppStateT { Connecting, Disconnected, Invalid, Connected }
 
 type AppState = {
   t: AppStateT.Connecting
@@ -18,9 +18,10 @@ type AppState = {
   t: AppStateT.Invalid
   error: S
 } | {
-  t: AppStateT.Input
+  t: AppStateT.Connected
   socket: Socket
   inputs: Input[]
+  conf: Conf
 }
 
 const hello: Msg = {
@@ -59,14 +60,25 @@ export const App = make(({ client }: { client: Client }) => {
                 {
                   const { d: input, p: position } = msg
                   input.xid = xid()
-                  const { inputs } = client
+                  const { conf, inputs } = client
                   if (isN(position) && position >= 0 && position < inputs.length) {
                     inputs[position] = input
                   } else {
                     inputs.length = 0
                     inputs.push(input)
                   }
-                  stateB({ t: AppStateT.Input, socket, inputs })
+                  stateB({ t: AppStateT.Connected, socket, conf, inputs })
+                }
+                break
+              case MsgType.Conf:
+                {
+                  const { d: conf } = msg
+                  client.conf = conf
+                  const state = stateB()
+                  if (state.t === AppStateT.Connected) {
+                    const { conf, inputs } = client
+                    stateB({ t: AppStateT.Connected, socket, conf, inputs })
+                  }
                 }
                 break
               default:
@@ -95,11 +107,14 @@ export const App = make(({ client }: { client: Client }) => {
           return <div>disconnected, retrying in {state.retry} seconds </div>
         case AppStateT.Invalid:
           return <div>error: {state.error}</div>
-        case AppStateT.Input:
+        case AppStateT.Connected:
           return (
             <div>
               <Texture />
-              <XWidgets send={state.socket.send} widgets={state.inputs} />
+              <AppContainer>
+                <Header conf={state.conf} />
+                <XWidgets send={state.socket.send} widgets={state.inputs} />
+              </AppContainer>
             </div>
           )
       }

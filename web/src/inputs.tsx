@@ -1,9 +1,10 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, ContextualMenu, ContextualMenuItemType, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, ContextualMenu, ContextualMenuItemType, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
 import { B, box, gensym, I, isN, isO, isPair, isS, isV, N, on, S, U, V, xid } from './core';
 import { Markdown } from './markdown';
-import { Input, Widget, MsgType, Option, WidgetT, InputMode } from './protocol';
+import { Input, Widget, MsgType, Option, WidgetT, InputMode, Conf } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -732,25 +733,15 @@ const Logo = ({ size }: { size: U }) => (
   </svg>
 )
 
-const NavIcon = ({ size }: { size: U }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
-    <path d="M2048 640H0V512h2048v128zm0 1024H0v-128h2048v128zm0-513H0v-127h2048v127z" />
-  </svg>
-)
-
-const NavActiveIcon = ({ size }: { size: U }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width={size} height={size} focusable="false">
-    <path d="M1728 1024q-66 0-124-25t-102-68-69-102-25-125q0-66 25-124t68-102 102-69 125-25q66 0 124 25t102 68 69 102 25 125q0 66-25 124t-68 102-102 69-125 25zm-474-512q-12 31-19 63t-13 65H0V512h1254zm78 512q65 80 153 128H0v-128h1332zM0 1664v-128h2048v128H0z" />
-  </svg>
-)
-
 const NavContainer = styled.div`
   cursor: pointer;
   width: 20px;
   height: 20px;
 `
-const XNav = make(() => {
+const navMenuIconSize = { width: 20, height: 20 }
+const XNav = make(({ menu }: { menu: Option[] }) => {
   const
+    hasMenu = menu.length > 0,
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = box(false),
     showMenu = () => showMenuB(true),
@@ -759,7 +750,12 @@ const XNav = make(() => {
       const isMenuVisible = showMenuB()
       return (
         <NavContainer ref={containerRef} onClick={showMenu}>
-          {isMenuVisible ? <NavActiveIcon size={20} /> : <NavIcon size={20} />}
+          {hasMenu
+            ? isMenuVisible
+              ? <GlobalNavButtonActiveIcon style={navMenuIconSize} />
+              : <GlobalNavButtonIcon style={navMenuIconSize} />
+            : <RocketIcon style={navMenuIconSize} />
+          }
           <ContextualMenu
             items={menuItems}
             hidden={!isMenuVisible}
@@ -772,12 +768,12 @@ const XNav = make(() => {
     }
   return { render, showMenuB }
 })
-const WidgetsContainer = styled.div`
+export const AppContainer = styled.div`
   max-width: 640px;
   background-color: #fff;
   margin: 1rem auto 2rem;
 `
-const Header = styled.div`
+const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem 2rem;
@@ -794,7 +790,7 @@ const HeaderSubtitle = styled.div`
   color: #999;
   margin-left: 0.5rem;
 `
-const Body = styled.div`
+const WidgetsContainer = styled.div`
   padding: 1rem 2rem 2rem;
 `
 const menuItems: IContextualMenuItem[] = [
@@ -861,6 +857,19 @@ const menuItems: IContextualMenuItem[] = [
     onClick: () => console.error('Disabled item should not be clickable.'),
   },
 ]
+export const Header = make(({ conf }: { conf: Conf }) => {
+  const
+    render = () => {
+      return (
+        <HeaderContainer>
+          <XNav menu={conf.menu ?? []} />
+          <HeaderTitle>{conf.title}</HeaderTitle>
+          <HeaderSubtitle>{conf.caption}</HeaderSubtitle>
+        </HeaderContainer>
+      )
+    }
+  return { render }
+})
 export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
   // console.log(JSON.stringify(props.widgets))
   const
@@ -872,14 +881,7 @@ export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
   // console.log(JSON.stringify(widgets))
   return (
     <WidgetsContainer>
-      <Header>
-        <XNav />
-        <HeaderTitle>Nitro App</HeaderTitle>
-        <HeaderSubtitle>v1.0</HeaderSubtitle>
-      </Header>
-      <Body>
-        <Stackables context={context} widgets={widgets} />
-      </Body>
+      <Stackables context={context} widgets={widgets} />
     </WidgetsContainer>
   )
 }
