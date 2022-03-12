@@ -43,9 +43,9 @@ class RemoteError(Exception):
 
 
 class ContextSwitchError(Exception):
-    def __init__(self, context: str):
+    def __init__(self, target: str):
         super().__init__('User switched context')
-        self.context = context
+        self.target = target
 
 
 class ProtocolError(Exception):
@@ -339,11 +339,12 @@ class UI:
                 menu=_dump(self._menu),
             ),
         )))
+        target = None
         while True:
             try:
-                self.delegate()
+                self.delegate(target)
             except ContextSwitchError as e:
-                self.delegate(e.context)
+                target = e.target
 
     def _read(self, expected: int):
         msg = _unmarshal(self._recv())
