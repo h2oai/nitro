@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from './app';
 import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/react';
 import reportWebVitals from './reportWebVitals';
-import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon } from '@fluentui/react-icons-mdl2';
+import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon, ChevronRightIcon } from '@fluentui/react-icons-mdl2';
 import './index.css';
 import { newClient } from './client';
 
@@ -25,6 +25,7 @@ registerIcons({
     Calendar: <CalendarIcon />, // used by password text field
     ChevronUpSmall: <ChevronUpSmallIcon />, // used by spin button
     ChevronDownSmall: <ChevronDownSmallIcon />, // used by spin button
+    ChevronRight: <ChevronRightIcon />, // used by contextual menu submenu
     FavoriteStar: <FavoriteStarIcon />, // used by rating
     FavoriteStarFill: <FavoriteStarFillIcon />, // used by rating
     Up: <UpIcon />, // used by calendar

@@ -737,11 +737,26 @@ const NavContainer = styled.div`
   cursor: pointer;
   width: 20px;
   height: 20px;
+  display: flex;
+  align-items: center;
 `
-const navMenuIconSize = { width: 20, height: 20 }
+const toNavMenuItem = ({ value, text, caption, icon, options }: Option): IContextualMenuItem => {
+  return text
+    ? {
+      key: String(value),
+      text,
+      title: caption,
+      iconProps: icon ? { iconName: icon } : undefined,
+      subMenuProps: options ? { items: options.map(o => toNavMenuItem(o)) } : undefined,
+    } : {
+      key: xid(),
+      itemType: ContextualMenuItemType.Divider,
+    }
+}
 const XNav = make(({ menu }: { menu: Option[] }) => {
   const
     hasMenu = menu.length > 0,
+    menuItems = menu.map(o => toNavMenuItem(o)),
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = box(false),
     showMenu = () => showMenuB(true),
@@ -752,9 +767,9 @@ const XNav = make(({ menu }: { menu: Option[] }) => {
         <NavContainer ref={containerRef} onClick={showMenu}>
           {hasMenu
             ? isMenuVisible
-              ? <GlobalNavButtonActiveIcon style={navMenuIconSize} />
-              : <GlobalNavButtonIcon style={navMenuIconSize} />
-            : <RocketIcon style={navMenuIconSize} />
+              ? <GlobalNavButtonActiveIcon />
+              : <GlobalNavButtonIcon />
+            : <RocketIcon />
           }
           <ContextualMenu
             items={menuItems}
@@ -783,7 +798,7 @@ const HeaderTitle = styled.div`
   text-transform: uppercase;
   font-size: 1rem;
   color: #555;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
 `
 const HeaderSubtitle = styled.div`
   font-weight: 400;
@@ -793,70 +808,6 @@ const HeaderSubtitle = styled.div`
 const WidgetsContainer = styled.div`
   padding: 1rem 2rem 2rem;
 `
-const menuItems: IContextualMenuItem[] = [
-  { key: 'newItem', iconProps: { iconName: 'Add' }, text: 'New' },
-  {
-    key: 'upload',
-    iconProps: { iconName: 'Upload', style: { color: 'salmon' } },
-    text: 'Upload',
-    title: 'Upload a file',
-  },
-  { key: 'divider_1', itemType: ContextualMenuItemType.Divider },
-  { key: 'share', iconProps: { iconName: 'Share' }, text: 'Share' },
-  { key: 'print', iconProps: { iconName: 'Print' }, text: 'Print' },
-  { key: 'music', iconProps: { iconName: 'MusicInCollectionFill' }, text: 'Music' },
-  {
-    key: 'newItem2',
-    text: 'New',
-    onClick: () => console.log('New clicked'),
-  },
-  {
-    key: 'divider_2',
-    itemType: ContextualMenuItemType.Divider,
-  },
-  {
-    key: 'rename',
-    text: 'Rename',
-    onClick: () => console.log('Rename clicked'),
-  },
-  {
-    key: 'edit',
-    text: 'Edit',
-    onClick: () => console.log('Edit clicked'),
-  },
-  {
-    key: 'properties',
-    text: 'Properties',
-    onClick: () => console.log('Properties clicked'),
-  },
-  {
-    key: 'linkNoTarget',
-    text: 'Link same window',
-    href: 'http://bing.com',
-  },
-  {
-    key: 'linkWithTarget',
-    text: 'Link new window',
-    href: 'http://bing.com',
-    target: '_blank',
-  },
-  {
-    key: 'linkWithOnClick',
-    name: 'Link click',
-    href: 'http://bing.com',
-    onClick: (ev) => {
-      alert('Link clicked')
-      if (ev) ev.preventDefault()
-    },
-    target: '_blank',
-  },
-  {
-    key: 'disabled',
-    text: 'Disabled item',
-    disabled: true,
-    onClick: () => console.error('Disabled item should not be clickable.'),
-  },
-]
 export const Header = make(({ conf }: { conf: Conf }) => {
   const
     render = () => {
