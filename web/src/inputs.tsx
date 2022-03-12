@@ -737,8 +737,8 @@ const sanitizeWidget = (widget: Widget, incr: Incr): Widget => {
 
 const NavContainer = styled.div`
   cursor: pointer;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
 `
@@ -757,11 +757,12 @@ const XNav = make(({ send, menu }: { send: Send, menu: Option[] }) => {
       const isMenuVisible = showMenuB()
       return (
         <NavContainer ref={containerRef} onClick={showMenu}>
-          {hasMenu
-            ? isMenuVisible
-              ? <GlobalNavButtonActiveIcon />
-              : <GlobalNavButtonIcon />
-            : <RocketIcon />
+          {
+            hasMenu
+              ? isMenuVisible
+                ? <GlobalNavButtonActiveIcon />
+                : <GlobalNavButtonIcon />
+              : <RocketIcon />
           }
           <ContextualMenu
             items={menuItems}
