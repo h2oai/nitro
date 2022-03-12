@@ -285,6 +285,15 @@ def input(
     )
 
 
+def _collect_delegates(d: Dict[str, Delegate], options: Sequence[Option]) -> Dict[str, Delegate]:
+    for opt in options:
+        if opt.delegate:
+            d[opt.value] = opt.delegate
+        if opt.options:
+            _collect_delegates(d, opt.options)
+    return d
+
+
 class UI:
     def __init__(
             self,
@@ -300,7 +309,7 @@ class UI:
         self._title = title
         self._caption = caption
         self._menu = menu or []
-        self._delegates: Dict[str, Delegate] = {opt.value: opt.delegate for opt in self._menu if opt.delegate}
+        self._delegates = _collect_delegates(dict(), self._menu)
         self._send = send
         self._recv = recv
         self.context = context
