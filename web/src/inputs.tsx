@@ -390,6 +390,9 @@ const toContextualMenuProps = (cs: Option[], capture: (v: V) => void): IContextu
 const continueAction: Option = { t: WidgetT.Option, value: 'continue', text: 'Continue', selected: true }
 const continueWidget: Widget = { t: WidgetT.Input, xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [continueAction] }
 
+const ButtonsContainer = styled.div`
+  margin: 1rem 0 2rem;
+`
 const XButtons = make(({ context, input }: InputProps) => {
   const
     render = () => {
@@ -424,9 +427,11 @@ const XButtons = make(({ context, input }: InputProps) => {
           return <Stack.Item key={c.value}>{button}</Stack.Item>
         })
       return (
-        <WithLabel label={text}>
-          <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
-        </WithLabel>
+        <ButtonsContainer>
+          <WithLabel label={text}>
+            <Stack horizontal={horizontal} tokens={gap5}>{buttons}</Stack>
+          </WithLabel>
+        </ButtonsContainer>
       )
     }
   return { render }

@@ -11,7 +11,7 @@ import { newClient } from './client';
 // https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/
 const
   purple = createTheme({
-    defaultFontStyle: { fontFamily: 'Source Sans 3' },
+    defaultFontStyle: { fontFamily: '"Source Sans 3"' },
   });
 
 loadTheme(purple)
