@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { micromark, Options } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm'
 import { S } from './core';
+import hljs from 'highlight.js'
+import 'highlight.js/styles/atom-one-dark.css'
 
 const opts: Options = {
   allowDangerousHtml: false,
@@ -140,6 +142,10 @@ pre {
 `
 
 export const Markdown = ({ text }: { text: S }) => {
-  const html = micromark(text, opts)
+  const
+    html = micromark(text, opts)
+      .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
+        return hljs.highlight(code, { language }).value
+      })
   return <Container dangerouslySetInnerHTML={{ __html: html }} />
 }
