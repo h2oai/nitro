@@ -2,9 +2,9 @@ import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton,
 import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
-import { B, box, gensym, I, isN, isO, isPair, isS, isV, N, on, S, U, V, xid } from './core';
+import { B, box, Dict, gensym, I, isN, isO, isPair, isS, isV, N, on, S, U, V, xid } from './core';
 import { Markdown } from './markdown';
-import { Input, Widget, MsgType, Option, WidgetT, InputMode, Conf } from './protocol';
+import { Input, Widget, MsgType, Option, WidgetT, InputMode, Conf, Stacking, Stackable } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -539,41 +539,58 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
   }
 }
 
-const Stackable = ({ inline, size, children }: { inline?: B, size?: S | U, children: JSX.Element }) => {
-  const
-    width = inline ? size : undefined, // only process if inline
-    styles = isS(width) ? { root: { width } } : undefined,
-    grow = isN(width) ? width : styles ? undefined : 1 // set only if not sized
+const XStackItem = ({ stackable: { width, height, grow, shrink, basis }, children }: { stackable: Stackable, children: JSX.Element }) => {
+  const style: React.CSSProperties = { width, height, flexGrow: grow, flexShrink: shrink, flexBasis: basis }
   return (
-    <Stack.Item grow={grow} styles={styles} disableShrink>
+    <div style={style}>
       {children}
-    </Stack.Item >
+    </div>
   )
 }
 
-const Stackables = ({ context, widgets, inline, size }: { context: Context, widgets: Widget[], inline?: B, size?: S | U }) => {
-  const children = widgets.map(widget => {
-    const child = (widget.t === WidgetT.Input)
-      ? <XInput key={widget.xid} context={context} input={widget} />
-      : (widget.t === WidgetT.Text)
-        ? <Markdown key={widget.xid} text={widget.value} />
-        : <div>Unknown widget</div>
-    return <Stackable key={xid()} inline={inline} size={size}>{child}</Stackable>
-  })
+const flexStyles: Dict<S> = {
+  start: 'flex-start',
+  end: 'flex-end',
+  between: 'flex-between',
+  around: 'flex-around',
+  evenly: 'flex-evenly',
+}
 
-  return inline
-    ? <Stack horizontal tokens={gap5}>{children}</Stack>
-    : <Stack tokens={gap5}>{children}</Stack>
+const toFlexStyle = (s: S): S => flexStyles[s] ?? s
+
+const XStack = ({ context, widgets, stacking }: { context: Context, widgets: Widget[], stacking: Stacking }) => {
+  const
+    children = widgets.map(widget => {
+      const child = (widget.t === WidgetT.Stack)
+        ? <XStack context={context} widgets={widget.items} stacking={widget} />
+        : (widget.t === WidgetT.Input)
+          ? <XInput key={widget.xid} context={context} input={widget} />
+          : (widget.t === WidgetT.Text)
+            ? <Markdown key={widget.xid} text={widget.text} />
+            : <div>Unknown widget</div>
+      return <XStackItem key={xid()} stackable={widget}>{child}</XStackItem>
+    }),
+    { inline, justify, align, wrap, gap } = stacking,
+    style: React.CSSProperties = {
+      display: 'flex',
+      flexDirection: inline ? 'row' : 'column',
+      flexWrap: wrap ? 'wrap' : 'nowrap',
+      gap: gap ?? 5,
+      justifyItems: justify ? toFlexStyle(justify) : undefined,
+      alignItems: align ? toFlexStyle(align) : undefined,
+      alignContent: wrap ? toFlexStyle(wrap) : undefined,
+    }
+
+  return (
+    <div style={style}>{children}</div>
+  )
 }
 
 const gap5: IStackTokens = { childrenGap: 5 }
 
 const inputHasActions = (input: Input): B => { // recursive
-  const { mode, options, items } = input
+  const { mode, options } = input
   if (mode === 'button' && options.length) return true
-  if (items) {
-    for (const item of items) if (item.t === WidgetT.Input && inputHasActions(item)) return true
-  }
   return false
 }
 
@@ -628,10 +645,7 @@ const determineMode = (input: Input): InputMode => {
 }
 
 const XInput = ({ context, input }: InputProps) => { // recursive 
-  const { mode, items, options, editable, multiple } = input
-  if (items) {
-    return <Stackables context={context} widgets={items} inline={input.inline} size={input.size} />
-  }
+  const { mode, options, editable, multiple } = input
   switch (mode) {
     case 'button':
       return <XButtons context={context} input={input} />
@@ -718,25 +732,24 @@ const sanitizeRange = (input: Input) => {
   }
 }
 
-const sanitizeInput = (input: Input, incr: Incr): Input => {
-  const { mode, options, items } = input
+const sanitizeInput = (input: Input, incr: Incr) => {
+  const { mode, options } = input
   input.index ??= incr()
   input.options = sanitizeOptions(options)
-
   sanitizeRange(input)
-
-  if (Array.isArray(items)) {
-    input.items = items.map(w => sanitizeWidget(w, incr))
-  }
-
   if (!mode) input.mode = determineMode(input)
-
-  return input
 }
 
 const sanitizeWidget = (widget: Widget, incr: Incr): Widget => {
-  if (isS(widget)) return { t: WidgetT.Text, xid: xid(), value: widget }
-  if (widget.t === WidgetT.Input) return sanitizeInput(widget, incr)
+  if (isS(widget)) return { t: WidgetT.Text, xid: xid(), text: widget }
+  switch (widget.t) {
+    case WidgetT.Stack:
+      widget.items = widget.items.map(w => sanitizeWidget(w, incr))
+      break
+    case WidgetT.Input:
+      sanitizeInput(widget, incr)
+      break
+  }
   return widget
 }
 
@@ -830,7 +843,7 @@ export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
   // console.log(JSON.stringify(widgets))
   return (
     <WidgetsContainer>
-      <Stackables context={context} widgets={widgets} />
+      <XStack context={context} widgets={widgets} stacking={{}} />
     </WidgetsContainer>
   )
 }

@@ -1,6 +1,6 @@
 from typing import Optional, Tuple, Sequence, List, Dict, Union, Callable, Set
 import msgpack
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 __xid = 0
 
@@ -30,8 +30,10 @@ class _MsgType(IntEnum):
 
 
 class _WidgetT(IntEnum):
-    Input = 1
-    Option = 2
+    Stack = 1
+    Text = 2
+    Input = 3
+    Option = 4
 
 
 _primitive = (bool, int, float, str)
@@ -126,7 +128,7 @@ Options = Union[
     Set[OptionPair],
 ]
 
-Item = Union['Input', str]
+Item = Union[str, 'Stack', 'Text', 'Input']
 Items = Union[List[Item], Tuple[Item, ...]]
 Range = Union[
     Tuple[V, V],
@@ -140,6 +142,35 @@ Value = Union[
     Tuple[V, V],
     List[V],
 ]
+
+
+class Text:
+    def __init__(
+            self,
+            text: str,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[str] = None,
+    ):
+        self.text = text
+        self.width = width
+        self.height = height
+        self.grow = grow
+        self.shrink = shrink
+        self.basis = basis
+
+    def dump(self) -> dict:
+        return _clean(dict(
+            t=_WidgetT.Input,
+            text=self.text,
+            width=self.width,
+            height=self.height,
+            grow=self.grow,
+            shrink=self.shrink,
+            basis=self.basis,
+        ))
 
 
 class Input:
@@ -166,10 +197,16 @@ class Input:
             password: Optional[bool] = None,
             editable: Optional[bool] = None,
             options: Optional[Options] = None,
-            items: Optional[Items] = None,
             inline: Optional[bool] = None,
-            size: Optional[V] = None,
+            justify: Optional[str] = None,
             align: Optional[str] = None,
+            wrap: Optional[str] = None,
+            gap: Optional[str] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[str] = None,
     ):
         self.text = text
         self.name = name
@@ -192,13 +229,19 @@ class Input:
         self.password = password
         self.editable = editable
         self.options = options
-        self.items = items
         self.inline = inline
-        self.size = size
+        self.justify = justify
         self.align = align
+        self.wrap = wrap
+        self.gap = gap
+        self.width = width
+        self.height = height
+        self.grow = grow
+        self.shrink = shrink
+        self.basis = basis
 
     def dump(self) -> dict:
-        d = dict(
+        return _clean(dict(
             t=_WidgetT.Input,
             text=self.text,
             name=self.name,
@@ -221,68 +264,96 @@ class Input:
             password=self.password,
             editable=self.editable,
             options=_dump(self.options),
+            inline=self.inline,
+            justify=self.justify,
+            align=self.align,
+            wrap=self.wrap,
+            gap=self.gap,
+            width=self.width,
+            height=self.height,
+            grow=self.grow,
+            shrink=self.shrink,
+            basis=self.basis,
+        ))
+
+
+input = Input
+
+
+class StackJustify(Enum):
+    Normal = 'normal'
+    Stretch = 'stretch'
+    Center = 'center'
+    Start = 'start'
+    End = 'end'
+    Between = 'between'
+    Around = 'around'
+    Evenly = 'evenly'
+
+
+class StackAlign(Enum):
+    Normal = 'normal'
+    Stretch = 'stretch'
+    Center = 'center'
+    Start = 'start'
+    End = 'end'
+
+
+class StackWrap(Enum):
+    Normal = 'normal'
+    Stretch = 'stretch'
+    Center = 'center'
+    Start = 'start'
+    End = 'end'
+    Between = 'between'
+    Around = 'around'
+    Evenly = 'evenly'
+
+
+class Stack:
+    def __init__(
+            self,
+            *items: Item,
+            inline: Optional[bool] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
+            wrap: Optional[str] = None,
+            gap: Optional[str] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[str] = None,
+    ):
+        self.items = items
+        self.inline = inline
+        self.justify = justify
+        self.align = align
+        self.wrap = wrap
+        self.gap = gap
+        self.width = width
+        self.height = height
+        self.grow = grow
+        self.shrink = shrink
+        self.basis = basis
+
+    def dump(self) -> dict:
+        return _clean(dict(
+            t=_WidgetT.Stack,
             items=_dump(self.items),
             inline=self.inline,
-            size=self.size,
+            justify=self.justify,
             align=self.align,
-        )
-        return _clean(d)
+            wrap=self.wrap,
+            gap=self.gap,
+            height=self.height,
+            grow=self.grow,
+            shrink=self.shrink,
+            basis=self.basis,
+        ))
 
 
-def input(
-        content: Optional[Union[str, Items]] = None,
-        name: Optional[str] = None,
-        mode: Optional[str] = None,
-        icon: Optional[str] = None,
-        value: Optional[Value] = None,
-        min: Optional[V] = None,
-        max: Optional[V] = None,
-        step: Optional[N] = None,
-        precision: Optional[int] = None,
-        range: Optional[Range] = None,
-        mask: Optional[str] = None,
-        prefix: Optional[str] = None,
-        suffix: Optional[str] = None,
-        placeholder: Optional[str] = None,
-        error: Optional[str] = None,
-        lines: Optional[int] = None,
-        multiple: Optional[bool] = None,
-        required: Optional[bool] = None,
-        password: Optional[bool] = None,
-        editable: Optional[bool] = None,
-        options: Optional[Options] = None,
-        inline: Optional[bool] = None,
-        size: Optional[V] = None,
-        align: Optional[str] = None,
-) -> Input:
-    text, items = (None, content) if isinstance(content, (tuple, list)) else (content, None)
-    return Input(
-        text,
-        name,
-        mode,
-        icon,
-        value,
-        min,
-        max,
-        step,
-        precision,
-        range,
-        mask,
-        prefix,
-        suffix,
-        placeholder,
-        error,
-        lines,
-        multiple,
-        required,
-        password,
-        editable,
-        options,
-        items,
-        inline,
-        size,
-        align,
-    )
+stack = Stack
 
 
 def _collect_delegates(d: Dict[str, Delegate], options: Sequence[Option]) -> Dict[str, Delegate]:
@@ -383,60 +454,24 @@ class UI:
 
     def __call__(
             self,
-            content: Optional[Union[str, Items]] = None,
+            *items: Item,
+            inline: Optional[bool] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
+            wrap: Optional[str] = None,
+            gap: Optional[str] = None,
             position: Optional[int] = None,
             insert: Optional[bool] = False,
-            name: Optional[str] = None,
-            mode: Optional[str] = None,
-            icon: Optional[str] = None,
-            value: Optional[Value] = None,
-            min: Optional[V] = None,
-            max: Optional[V] = None,
-            step: Optional[N] = None,
-            precision: Optional[int] = None,
-            range: Optional[Range] = None,
-            mask: Optional[str] = None,
-            prefix: Optional[str] = None,
-            suffix: Optional[str] = None,
-            placeholder: Optional[str] = None,
-            error: Optional[str] = None,
-            lines: Optional[int] = None,
-            multiple: Optional[bool] = None,
-            required: Optional[bool] = None,
-            password: Optional[bool] = None,
-            editable: Optional[bool] = None,
-            options: Optional[Options] = None,
-            inline: Optional[bool] = None,
-            size: Optional[V] = None,
-            align: Optional[str] = None,
     ):
-        d = input(
-            content,
-            name,
-            mode,
-            icon,
-            value,
-            min,
-            max,
-            step,
-            precision,
-            range,
-            mask,
-            prefix,
-            suffix,
-            placeholder,
-            error,
-            lines,
-            multiple,
-            required,
-            password,
-            editable,
-            options,
-            inline,
-            size,
-            align,
-        ).dump()
-        msg = dict(t=_MsgType.Insert if insert else _MsgType.Update, d=d)
+        s = stack(
+            *items,
+            inline=inline,
+            justify=justify,
+            align=align,
+            wrap=wrap,
+            gap=gap,
+        )
+        msg = dict(t=_MsgType.Insert if insert else _MsgType.Update, d=s.dump())
         if position is not None:
             msg['p'] = position
         self._send(_marshal(msg))
