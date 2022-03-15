@@ -3,7 +3,7 @@ import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@flu
 import React from 'react';
 import styled from 'styled-components';
 import { B, box, Dict, gensym, I, isN, isO, isPair, isS, isV, N, on, S, U, V, xid } from './core';
-import { Markdown } from './markdown';
+import { markdown, Markdown } from './markdown';
 import { Input, Widget, MsgType, Option, WidgetT, InputMode, Conf, Stacking, Stackable } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
@@ -539,6 +539,11 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
   }
 }
 
+const XMarkdown = ({ context, input }: InputProps) => {
+  const html = markdown(input.text ?? '')
+  return <Markdown dangerouslySetInnerHTML={{ __html: html }} />
+}
+
 const XStackItem = ({ stackable: { width, height, grow, shrink, basis }, children }: { stackable: Stackable, children: JSX.Element }) => {
   const style: React.CSSProperties = { width, height, flexGrow: grow, flexShrink: shrink, flexBasis: basis }
   return (
@@ -565,9 +570,7 @@ const XStack = ({ context, widgets, stacking }: { context: Context, widgets: Wid
         ? <XStack context={context} widgets={widget.items} stacking={widget} />
         : (widget.t === WidgetT.Input)
           ? <XInput key={widget.xid} context={context} input={widget} />
-          : (widget.t === WidgetT.Text)
-            ? <Markdown key={widget.xid} text={widget.text} />
-            : <div>Unknown widget</div>
+          : <div>Unknown widget</div>
       return <XStackItem key={xid()} stackable={widget}>{child}</XStackItem>
     }),
     { row, justify, align, wrap, gap } = stacking,
@@ -647,6 +650,8 @@ const determineMode = (input: Input): InputMode => {
 const XInput = ({ context, input }: InputProps) => { // recursive 
   const { mode, options, editable, multiple } = input
   switch (mode) {
+    case 'md':
+      return <XMarkdown context={context} input={input} />
     case 'button':
       return <XButtons context={context} input={input} />
     case 'check':
@@ -741,7 +746,7 @@ const sanitizeInput = (input: Input, incr: Incr) => {
 }
 
 const sanitizeWidget = (widget: Widget, incr: Incr): Widget => {
-  if (isS(widget)) return { t: WidgetT.Text, xid: xid(), text: widget }
+  if (isS(widget)) return { t: WidgetT.Input, mode: 'md', xid: xid(), text: widget, options: [] }
   switch (widget.t) {
     case WidgetT.Stack:
       widget.items = widget.items.map(w => sanitizeWidget(w, incr))

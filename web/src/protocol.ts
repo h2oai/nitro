@@ -54,7 +54,6 @@ export type Conf = {
 
 export enum WidgetT {
   Stack = 1,
-  Text,
   Input,
   Option,
 }
@@ -67,9 +66,9 @@ export type Stackable = {
   basis?: S
 }
 
-export type Widget = Stackable & (Stack | Input | Text)
+export type Widget = Stackable & (Stack | Input)
 
-export type InputMode = 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+export type InputMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
 
 export type Stacking = {
   row?: B
@@ -82,12 +81,6 @@ export type Stacking = {
 export type Stack = Stacking & {
   t: WidgetT.Stack
   items: Widget[]
-}
-
-export type Text = {
-  t: WidgetT.Text
-  xid: S
-  text: S
 }
 
 export type Input = Stacking & {

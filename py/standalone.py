@@ -287,7 +287,7 @@ def main(ui: UI):
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
-    ], inline=False))
+    ], row=False))
     x = ui(input('Compound buttons', options=[
         option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
         option('no', 'Not now', caption="I'll decide later"),
@@ -321,13 +321,13 @@ def main(ui: UI):
     x = ui(
         input('Username', placeholder='someone@company.com'),
         input('Password', password=True),
-        inline=True,
+        row=True,
     )
     x = ui(
         input('Username', placeholder='someone@company.com'),
         input('Password', password=True),
         input(options=[option('login', 'Login', selected=True)]),
-        inline=True,
+        row=True,
     )
     x = ui(
         row(input('First name'), input('Last name')),

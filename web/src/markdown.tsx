@@ -12,7 +12,7 @@ const opts: Options = {
   htmlExtensions: [gfmHtml()]
 }
 
-const Container = styled.div`
+export const Markdown = styled.div`
 /* Don't add margins before/after first/last paragraph */
 &>p:first-child {
   margin-top: 0;
@@ -171,11 +171,9 @@ pre {
 }
 `
 
-export const Markdown = ({ text }: { text: S }) => {
-  const
-    html = micromark(text, opts)
-      .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
-        return hljs.highlight(code, { language }).value
-      })
-  return <Container dangerouslySetInnerHTML={{ __html: html }} />
-}
+export const
+  highlight = (html: S) => html
+    .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
+      return hljs.highlight(code, { language }).value
+    }),
+  markdown = (text: S) => highlight(micromark(text, opts))

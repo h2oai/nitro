@@ -31,9 +31,8 @@ class _MsgType(IntEnum):
 
 class _WidgetT(IntEnum):
     Stack = 1
-    Text = 2
-    Input = 3
-    Option = 4
+    Input = 2
+    Option = 3
 
 
 _primitive = (bool, int, float, str)
@@ -128,7 +127,7 @@ Options = Union[
     Set[OptionPair],
 ]
 
-Item = Union[str, 'Stack', 'Text', 'Input']
+Item = Union[str, 'Stack', 'Input']
 Items = Union[List[Item], Tuple[Item, ...]]
 Range = Union[
     Tuple[V, V],
@@ -142,35 +141,6 @@ Value = Union[
     Tuple[V, V],
     List[V],
 ]
-
-
-class Text:
-    def __init__(
-            self,
-            text: str,
-            width: Optional[str] = None,
-            height: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[str] = None,
-    ):
-        self.text = text
-        self.width = width
-        self.height = height
-        self.grow = grow
-        self.shrink = shrink
-        self.basis = basis
-
-    def dump(self) -> dict:
-        return _clean(dict(
-            t=_WidgetT.Input,
-            text=self.text,
-            width=self.width,
-            height=self.height,
-            grow=self.grow,
-            shrink=self.shrink,
-            basis=self.basis,
-        ))
 
 
 class Input:
