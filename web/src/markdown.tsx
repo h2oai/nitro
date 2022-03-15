@@ -139,6 +139,36 @@ pre {
   margin-bottom: 1rem;
   background-color: #eee;
 }
+
+/* Source: https://github.com/micromark/micromark-extension-gfm-footnote */
+
+/* Style the footnotes section. */
+.footnotes {
+  font-size: smaller;
+  color: #8b949e;
+  border-top: 1px solid #30363d;
+}
+
+/* Hide the section label for visual users. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  word-wrap: normal;
+  border: 0;
+}
+
+/* Place [ and ] around footnote calls. */
+[data-footnote-ref]::before {
+  content: '[';
+}
+
+[data-footnote-ref]::after {
+  content: ']';
+}
 `
 
 export const Markdown = ({ text }: { text: S }) => {
