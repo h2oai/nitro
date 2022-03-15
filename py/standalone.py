@@ -1,4 +1,4 @@
-from h2o_nitro import UI, input, option, stack, ContextSwitchError
+from h2o_nitro import UI, input, option, row, col, ContextSwitchError
 import simple_websocket
 from flask import Flask, request
 
@@ -330,16 +330,16 @@ def main(ui: UI):
         inline=True,
     )
     x = ui(
-        stack(input('First name'), input('Last name'), inline=True),
+        row(input('First name'), input('Last name')),
         input('Address line 1'),
         input('Address line 2'),
-        stack(input('City'), input('State'), input('Zip'), inline=True),
+        row(input('City'), input('State'), input('Zip')),
     )
     x = ui(
-        stack(input('First name'), input('M.I.', width='10%'), input('Last name'), inline=True),
+        row(input('First name'), input('M.I.', width='10%'), input('Last name')),
         input('Address line 1'),
         input('Address line 2'),
-        stack(input('City', grow=5), input('State', width='20%'), input('Zip', grow=1), inline=True),
+        row(input('City', grow=5), input('State', width='20%'), input('Zip', grow=1)),
         input(options=[
             option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
             option('no', 'Not now', caption="I'll decide later"),

@@ -346,6 +346,7 @@ class Stack:
             align=self.align,
             wrap=self.wrap,
             gap=self.gap,
+            width=self.width,
             height=self.height,
             grow=self.grow,
             shrink=self.shrink,
@@ -353,7 +354,58 @@ class Stack:
         ))
 
 
-stack = Stack
+def row(
+        *items: Item,
+        justify: Optional[str] = None,
+        align: Optional[str] = None,
+        wrap: Optional[str] = None,
+        gap: Optional[str] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+        grow: Optional[int] = None,
+        shrink: Optional[int] = None,
+        basis: Optional[str] = None,
+) -> Stack:
+    return Stack(
+        *items,
+        inline=True,
+        justify=justify,
+        align=align,
+        wrap=wrap,
+        gap=gap,
+        width=width,
+        height=height,
+        grow=grow,
+        shrink=shrink,
+        basis=basis,
+    )
+
+
+def col(
+        *items: Item,
+        justify: Optional[str] = None,
+        align: Optional[str] = None,
+        wrap: Optional[str] = None,
+        gap: Optional[str] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+        grow: Optional[int] = None,
+        shrink: Optional[int] = None,
+        basis: Optional[str] = None,
+) -> Stack:
+    return Stack(
+        *items,
+        inline=None,
+        justify=justify,
+        align=align,
+        wrap=wrap,
+        gap=gap,
+        width=width,
+        height=height,
+        grow=grow,
+        shrink=shrink,
+        basis=basis,
+    )
 
 
 def _collect_delegates(d: Dict[str, Delegate], options: Sequence[Option]) -> Dict[str, Delegate]:
@@ -460,16 +512,20 @@ class UI:
             align: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
             position: Optional[int] = None,
             insert: Optional[bool] = False,
     ):
-        s = stack(
+        s = Stack(
             *items,
             inline=inline,
             justify=justify,
             align=align,
             wrap=wrap,
             gap=gap,
+            width=width,
+            height=height,
         )
         msg = dict(t=_MsgType.Insert if insert else _MsgType.Update, d=s.dump())
         if position is not None:
