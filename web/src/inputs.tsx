@@ -539,10 +539,30 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
   }
 }
 
-const XMarkdown = ({ context, input }: InputProps) => {
-  const html = markdown(input.text ?? '')
-  return <Markdown dangerouslySetInnerHTML={{ __html: html }} />
-}
+const XMarkdown = make(({ context, input }: InputProps) => {
+  const
+    { index, text } = input,
+    ref = React.createRef<HTMLDivElement>(),
+    html = markdown(text ?? ''),
+    render = () => {
+    if (index >= 0) {
+      const el = ref.current
+      if (el) {
+        [...el.getElementsByTagName('a')].forEach(link => {
+          const { href } = link
+          if (href.startsWith('#')) {
+            link.onclick = () => {
+              context.capture(index, href.substring(1))
+              context.submit()
+            }
+          }
+        })
+      }
+    }
+      return <Markdown ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
+    }
+  return { render }
+})
 
 const XStackItem = ({ stackable: { width, height, grow, shrink, basis }, children }: { stackable: Stackable, children: JSX.Element }) => {
   const style: React.CSSProperties = { width, height, flexGrow: grow, flexShrink: shrink, flexBasis: basis }
@@ -650,7 +670,7 @@ const determineMode = (input: Input): InputMode => {
 const XInput = ({ context, input }: InputProps) => { // recursive 
   const { mode, options, editable, multiple } = input
   switch (mode) {
-    case 'md':
+    case 'markdown':
       return <XMarkdown context={context} input={input} />
     case 'button':
       return <XButtons context={context} input={input} />
@@ -746,7 +766,7 @@ const sanitizeInput = (input: Input, incr: Incr) => {
 }
 
 const sanitizeWidget = (widget: Widget, incr: Incr): Widget => {
-  if (isS(widget)) return { t: WidgetT.Input, mode: 'md', xid: xid(), text: widget, options: [] }
+  if (isS(widget)) return { t: WidgetT.Input, mode: 'markdown', xid: xid(), text: widget, options: [] }
   switch (widget.t) {
     case WidgetT.Stack:
       widget.items = widget.items.map(w => sanitizeWidget(w, incr))
