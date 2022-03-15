@@ -86,6 +86,12 @@ git add
 git commit
 ```
 
+Python code:
+```py
+def hello(foo):
+    print(foo)
+````
+
 This site was built using [GitHub Pages](https://pages.github.com/).
 
 ![This is an image](https://myoctocat.com/assets/images/base-octocat.svg)

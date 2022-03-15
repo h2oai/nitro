@@ -4,7 +4,7 @@ import { micromark, Options } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm'
 import { S } from './core';
 import hljs from 'highlight.js'
-import 'highlight.js/styles/atom-one-dark.css'
+import 'highlight.js/styles/github.css'
 
 const opts: Options = {
   allowDangerousHtml: false,
