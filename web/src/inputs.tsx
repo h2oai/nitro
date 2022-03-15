@@ -397,8 +397,8 @@ const XButtons = make(({ context, input }: InputProps) => {
   const
     render = () => {
       const
-        { text, index, inline, options } = input,
-        horizontal = inline !== false,
+        { text, index, row, options } = input,
+        horizontal = row !== false,
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
         capture = (value: V) => {
@@ -570,10 +570,10 @@ const XStack = ({ context, widgets, stacking }: { context: Context, widgets: Wid
             : <div>Unknown widget</div>
       return <XStackItem key={xid()} stackable={widget}>{child}</XStackItem>
     }),
-    { inline, justify, align, wrap, gap } = stacking,
+    { row, justify, align, wrap, gap } = stacking,
     style: React.CSSProperties = {
       display: 'flex',
-      flexDirection: inline ? 'row' : 'column',
+      flexDirection: row ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       gap: gap ?? 5,
       justifyItems: justify ? toFlexStyle(justify) : undefined,

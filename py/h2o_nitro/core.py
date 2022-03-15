@@ -197,7 +197,7 @@ class Input:
             password: Optional[bool] = None,
             editable: Optional[bool] = None,
             options: Optional[Options] = None,
-            inline: Optional[bool] = None,
+            row: Optional[bool] = None,
             justify: Optional[str] = None,
             align: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -229,7 +229,7 @@ class Input:
         self.password = password
         self.editable = editable
         self.options = options
-        self.inline = inline
+        self.row = row
         self.justify = justify
         self.align = align
         self.wrap = wrap
@@ -264,7 +264,7 @@ class Input:
             password=self.password,
             editable=self.editable,
             options=_dump(self.options),
-            inline=self.inline,
+            row=self.row,
             justify=self.justify,
             align=self.align,
             wrap=self.wrap,
@@ -314,7 +314,7 @@ class Stack:
     def __init__(
             self,
             *items: Item,
-            inline: Optional[bool] = None,
+            row: Optional[bool] = None,
             justify: Optional[str] = None,
             align: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -326,7 +326,7 @@ class Stack:
             basis: Optional[str] = None,
     ):
         self.items = items
-        self.inline = inline
+        self.row = row
         self.justify = justify
         self.align = align
         self.wrap = wrap
@@ -341,7 +341,7 @@ class Stack:
         return _clean(dict(
             t=_WidgetT.Stack,
             items=_dump(self.items),
-            inline=self.inline,
+            row=self.row,
             justify=self.justify,
             align=self.align,
             wrap=self.wrap,
@@ -368,7 +368,7 @@ def row(
 ) -> Stack:
     return Stack(
         *items,
-        inline=True,
+        row=True,
         justify=justify,
         align=align,
         wrap=wrap,
@@ -395,7 +395,6 @@ def col(
 ) -> Stack:
     return Stack(
         *items,
-        inline=None,
         justify=justify,
         align=align,
         wrap=wrap,
@@ -507,7 +506,7 @@ class UI:
     def __call__(
             self,
             *items: Item,
-            inline: Optional[bool] = None,
+            row: Optional[bool] = None,
             justify: Optional[str] = None,
             align: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -519,7 +518,7 @@ class UI:
     ):
         s = Stack(
             *items,
-            inline=inline,
+            row=row,
             justify=justify,
             align=align,
             wrap=wrap,

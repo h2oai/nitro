@@ -72,7 +72,7 @@ export type Widget = Stackable & (Stack | Input | Text)
 export type InputMode = 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
 
 export type Stacking = {
-  inline?: B
+  row?: B
   justify?: S
   align?: S
   wrap?: S
