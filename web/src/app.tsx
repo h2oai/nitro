@@ -1,11 +1,13 @@
 import React from 'react';
-import { box, defer, isN, S, U, xid } from './core';
+import { box, defer, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
 import { AppContainer, Header, XWidgets } from './inputs';
-import { Input, Msg, MsgType, Conf } from './protocol';
+import { Input, Msg, MsgType, Conf, Widget, Option, WidgetT, InputMode } from './protocol';
 import { Client } from './client';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { make } from './ui';
 import styled from 'styled-components';
+import { markdown } from './markdown';
+import { reIndex, sanitizeWidget } from './heuristics';
 
 enum AppStateT { Connecting, Disconnected, Invalid, Connected }
 
@@ -20,7 +22,7 @@ type AppState = {
 } | {
   t: AppStateT.Connected
   socket: Socket
-  inputs: Input[]
+  widgets: Widget[]
   conf: Conf
 }
 
@@ -58,16 +60,17 @@ export const App = make(({ client }: { client: Client }) => {
                 break
               case MsgType.Update:
                 {
-                  const { d: input, p: position } = msg
-                  input.xid = xid()
-                  const { conf, inputs } = client
-                  if (isN(position) && position >= 0 && position < inputs.length) {
-                    inputs[position] = input
+                  const { d: widget, p: position } = msg
+                  widget.xid = xid()
+                  const { conf, widgets } = client
+                  if (isN(position) && position >= 0 && position < widgets.length) {
+                    widgets[position] = widget
                   } else {
-                    inputs.length = 0
-                    inputs.push(input)
+                    widgets.length = 0
+                    widgets.push(sanitizeWidget(widget))
                   }
-                  stateB({ t: AppStateT.Connected, socket, conf, inputs })
+                  reIndex(widgets, newIncr())
+                  stateB({ t: AppStateT.Connected, socket, conf, widgets })
                 }
                 break
               case MsgType.Conf:
@@ -76,8 +79,8 @@ export const App = make(({ client }: { client: Client }) => {
                   client.conf = conf
                   const state = stateB()
                   if (state.t === AppStateT.Connected) {
-                    const { conf, inputs } = client
-                    stateB({ t: AppStateT.Connected, socket, conf, inputs })
+                    const { conf, widgets } = client
+                    stateB({ t: AppStateT.Connected, socket, conf, widgets })
                   }
                 }
                 break
@@ -113,7 +116,7 @@ export const App = make(({ client }: { client: Client }) => {
               <Texture />
               <AppContainer>
                 <Header send={state.socket.send} conf={state.conf} />
-                <XWidgets send={state.socket.send} widgets={state.inputs} />
+                <XWidgets send={state.socket.send} widgets={state.widgets} />
               </AppContainer>
             </div>
           )

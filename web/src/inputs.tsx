@@ -20,52 +20,10 @@ type Context = ReturnType<typeof newCaptureContext>
 
 type InputProps = { context: Context, input: Input }
 
-const words = (x: S) => x.trim().split(/\s+/g)
 const unum = (x: any): N | undefined => isN(x) ? x : undefined
 const ustr = (x: any): S | undefined => isS(x) ? x : undefined
 const udate = (x: any): Date | undefined => isS(x) ? new Date(x) : undefined
 const snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase())
-const sanitizeOptions = (x: any): Option[] => { // recursive
-  if (!x) return []
-  if (Array.isArray(x)) {
-    const c: Option[] = []
-    for (const v of x) {
-      if (isV(v)) { // value
-        c.push({ t: WidgetT.Option, text: String(v), value: v })
-      } else if (isPair(v)) { // [value, text]
-        const [value, text] = v
-        if (isS(text) && isV(value)) {
-          c.push({ t: WidgetT.Option, text, value })
-        } else {
-          console.warn('Invalid choice pair. Want [string, value], got ', v)
-        }
-      } else if (isO(v) && isV(v.value)) { // { value: v }
-        if (!v.text) v.text = String(v.value)
-        if (v.options) v.options = sanitizeOptions(v.options)
-        c.push(v)
-      }
-    }
-    return c
-  }
-  if (isS(x)) { // 'value1 value2 value3...'
-    return words(x).map((value): Option => ({ t: WidgetT.Option, text: value, value }))
-  }
-  if (isO(x)) { // { text1: value1, text2: value2, ... }
-    const c: Option[] = []
-    for (const text in x) {
-      const value = x[text]
-      if (isV(value)) {
-        c.push({ t: WidgetT.Option, text, value })
-      } else {
-        console.warn('Invalid choice value in dictionary. Want string or number, got ', value)
-      }
-    }
-    return c
-  }
-  console.warn('Invalid choice list. Want string or array or dictionary, got ', x)
-  return []
-}
-
 const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefined => {
   if (isN(value)) return value
   if (isN(min)) return Math.max(0, min)
@@ -541,25 +499,24 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
 
 const XMarkdown = make(({ context, input }: InputProps) => {
   const
-    { index, text } = input,
     ref = React.createRef<HTMLDivElement>(),
-    html = markdown(text ?? ''),
     render = () => {
-    if (index >= 0) {
-      const el = ref.current
-      if (el) {
-        [...el.getElementsByTagName('a')].forEach(link => {
-          const { href } = link
-          if (href.startsWith('#')) {
-            link.onclick = () => {
-              context.capture(index, href.substring(1))
-              context.submit()
+      const { index, text } = input
+      if (index >= 0) {
+        const el = ref.current
+        if (el) {
+          [...el.getElementsByTagName('a')].forEach(link => {
+            const { href } = link
+            if (href.startsWith('#')) {
+              link.onclick = () => {
+                context.capture(index, href.substring(1))
+                context.submit()
+              }
             }
-          }
-        })
+          })
+        }
       }
-    }
-      return <Markdown ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
+      return <Markdown ref={ref} dangerouslySetInnerHTML={{ __html: text ?? '' }} />
     }
   return { render }
 })
@@ -611,60 +568,23 @@ const XStack = ({ context, widgets, stacking }: { context: Context, widgets: Wid
 
 const gap5: IStackTokens = { childrenGap: 5 }
 
-const inputHasActions = (input: Input): B => { // recursive
-  const { mode, options } = input
-  if (mode === 'button' && options.length) return true
-  return false
-}
 
-const widgetsHaveActions = (widgets: Widget[]): B => {
-  for (const widget of widgets) if (widget.t === WidgetT.Input && inputHasActions(widget)) return true
-  return false
-}
-
-const determineMode = (input: Input): InputMode => {
-  // This function contains the heuristics for determining which widget to use.
-  const { options, editable, multiple } = input
-
-  if (options.length) {
-    if (multiple) {
-      if (editable) {
-        return 'menu'
-      }
-      const hasLongLabels = options.some(({ text }) => text && (text.length > 75))
-      if (!hasLongLabels && options.length > 10) {
-        return 'menu'
-      }
-      return 'check'
+const widgetsHaveActions = (widgets: Widget[]): B => { // recursive
+  for (const w of widgets) {
+    switch (w.t) {
+      case WidgetT.Stack:
+        if (widgetsHaveActions(w.items)) return true
+        break
+      case WidgetT.Input:
+        {
+          const { mode } = w
+          if (mode === 'button' && w.options.length) return true
+          if (mode === 'markdown' && w.index >= 0) return true
+        }
+        break
     }
-
-    const hasGroups = options.some(c => c.options?.length ? true : false)
-    if (editable) {
-      return 'menu'
-    }
-    if (options.length <= 3) {
-      return 'button'
-    }
-    if (options.length <= 7 && !hasGroups) {
-      return 'radio'
-    }
-    return 'menu'
   }
-
-  const
-    { value, min, max, step } = input,
-    hasRange = isN(min) && isN(max) && min < max
-
-  if (isN(value) || hasRange) {
-    if (!editable && hasRange) {
-      const steps = (max - min) / (isN(step) ? step : 1)
-      if (steps <= 16) {
-        return 'range'
-      }
-    }
-    return 'number'
-  }
-  return 'text'
+  return false
 }
 
 const XInput = ({ context, input }: InputProps) => { // recursive 
@@ -709,73 +629,6 @@ const XInput = ({ context, input }: InputProps) => { // recursive
     default:
       return <div>Unknown input</div>
   }
-}
-
-const newIncr = () => {
-  let i = 0
-  return () => i++
-}
-type Incr = ReturnType<typeof newIncr>
-
-const sanitizeRange = (input: Input) => {
-  const { range } = input
-  if (Array.isArray(range)) {
-    switch (range.length) {
-      case 2:
-        {
-          const [x, y] = range
-          if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
-            input.min = x
-            input.max = y
-          }
-        }
-        break
-      case 3:
-        {
-          const [x, y, z] = range
-          // TODO string x, y?
-          if (isN(x) && isN(y) && isN(z)) {
-            input.min = x
-            input.max = y
-            input.step = z
-          }
-        }
-        break
-      case 4:
-        {
-          const [x, y, z, p] = range
-          // TODO string x, y?
-          if (isN(x) && isN(y) && isN(z) && isN(p)) {
-            input.min = x
-            input.max = y
-            input.step = z
-            input.precision = p
-          }
-        }
-        break
-    }
-  }
-}
-
-const sanitizeInput = (input: Input, incr: Incr) => {
-  const { mode, options } = input
-  input.index ??= incr()
-  input.options = sanitizeOptions(options)
-  sanitizeRange(input)
-  if (!mode) input.mode = determineMode(input)
-}
-
-const sanitizeWidget = (widget: Widget, incr: Incr): Widget => {
-  if (isS(widget)) return { t: WidgetT.Input, mode: 'markdown', xid: xid(), text: widget, options: [] }
-  switch (widget.t) {
-    case WidgetT.Stack:
-      widget.items = widget.items.map(w => sanitizeWidget(w, incr))
-      break
-    case WidgetT.Input:
-      sanitizeInput(widget, incr)
-      break
-  }
-  return widget
 }
 
 const NavContainer = styled.div`
@@ -858,14 +711,11 @@ export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
   return { render }
 })
 export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
-  // console.log(JSON.stringify(props.widgets))
   const
-    next = newIncr(),
-    sanitizedWidgets = props.widgets.map(w => sanitizeWidget(w, next)),
-    hasActions = widgetsHaveActions(sanitizedWidgets),
-    widgets: Widget[] = hasActions ? sanitizedWidgets : [...sanitizedWidgets, continueWidget],
+    original = props.widgets,
+    hasActions = widgetsHaveActions(original),
+    widgets: Widget[] = hasActions ? original : [...original, continueWidget],
     context = newCaptureContext(props.send, [])
-  // console.log(JSON.stringify(widgets))
   return (
     <WidgetsContainer>
       <XStack context={context} widgets={widgets} stacking={{}} />

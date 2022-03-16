@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { micromark, Options } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm'
-import { S } from './core';
+import { B, S } from './core';
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 
@@ -176,4 +176,9 @@ export const
     .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
       return hljs.highlight(code, { language }).value
     }),
-  markdown = (text: S) => highlight(micromark(text, opts))
+  markdown = (text: S): [S, B] => {
+    const
+      md = highlight(micromark(text, opts)),
+      hasLinks = /href="#/g.test(md)
+    return [md, hasLinks]
+  }

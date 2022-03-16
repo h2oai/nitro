@@ -169,3 +169,9 @@ export const isV = (x: any): x is S | N => isS(x) || isN(x)
 export const isO = (x: any) => x && (typeof x === 'object')
 export const isPair = (x: any): x is any[] => Array.isArray(x) && x.length === 2
 export const defer = (seconds: U, f: TimerHandler) => window.setTimeout(f, seconds * 1000)
+export const words = (x: S) => x.trim().split(/\s+/g)
+export const newIncr = (start = 0) => {
+  let i = start
+  return () => i++
+}
+export type Incr = ReturnType<typeof newIncr>

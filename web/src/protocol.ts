@@ -86,7 +86,7 @@ export type Stack = Stacking & {
 export type Input = Stacking & {
   t: WidgetT.Input
   xid: S
-  index?: U
+  index: I // -1 = don't capture
   text?: S
   name?: S
   mode?: InputMode
