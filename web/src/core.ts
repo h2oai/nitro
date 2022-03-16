@@ -95,7 +95,7 @@ export function box<T>(...args: any[]): Box<T> {
 /** Is this a Box? */
 export function boxed<T>(x: any): x is Box<T> { return x && x.__boxed__ === true }
 /** Get the value from a Box, if a Box, else return the argument as-is. */
-export function unbox<T>(x: T | Box<T>): T { return boxed(x) ? x() : x }
+export function unbox<T>(x: T | Box<T>): T { return boxed<T>(x) ? x() : x }
 /** Send a Box's value to f() and broadcast its value. */
 export function rebox<T>(b: Box<T>, f: Eff<T>) { const x = b(); f(x); (b as Boxed<T>).touch() }
 /** Subscribe to changes in a Box. */
