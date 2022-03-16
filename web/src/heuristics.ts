@@ -50,13 +50,16 @@ const determineMode = (input: Input): InputMode => {
 const sanitizeInput = (input: Input) => {
   const { mode, options } = input
   input.options = sanitizeOptions(options)
+  input.index = 0
   sanitizeRange(input)
   if (!mode) input.mode = determineMode(input)
 
   if (input.mode === 'markdown') {
     const [md, hasLinks] = markdown(input.text ?? '')
     input.text = md
-    if (!hasLinks) input.index = -1 // don't capture
+    if (!hasLinks) {
+      input.index = -1 // don't capture
+    }
   }
 }
 
@@ -143,7 +146,7 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
 
 export const sanitizeWidget = (widget: Widget): Widget => {
   if (isS(widget)) {
-    widget = { t: WidgetT.Input, xid: xid(), index: -1, mode: 'markdown', text: widget, options: [] }
+    widget = { t: WidgetT.Input, xid: xid(), index: 0, mode: 'markdown', text: widget, options: [] }
   }
   switch (widget.t) {
     case WidgetT.Stack:
@@ -163,7 +166,9 @@ export const reIndex = (widgets: Widget[], incr: Incr) => {
         reIndex(w.items, incr)
         break
       case WidgetT.Input:
-        w.index ??= incr()
+        if (w.index >= 0) {
+          w.index = incr()
+        }
         break
     }
   }

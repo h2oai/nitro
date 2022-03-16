@@ -500,25 +500,28 @@ class XChoiceGroup extends React.Component<InputProps, {}> {
 const XMarkdown = make(({ context, input }: InputProps) => {
   const
     ref = React.createRef<HTMLDivElement>(),
-    render = () => {
-      const { index, text } = input
-      if (index >= 0) {
-        const el = ref.current
-        if (el) {
-          [...el.getElementsByTagName('a')].forEach(link => {
-            const { href } = link
-            if (href.startsWith('#')) {
-              link.onclick = () => {
-                context.capture(index, href.substring(1))
-                context.submit()
-              }
-            }
-          })
+    update = () => {
+      const { index } = input
+      if (index < 0) return
+
+      const el = ref.current
+      if (!el) return
+
+      el.querySelectorAll<HTMLAnchorElement>('a[data-jump]').forEach(link => {
+        const value = link.getAttribute('data-jump')
+        if (value) {
+          link.onclick = e => {
+            context.capture(index, value)
+            context.submit()
+            e.preventDefault()
+          }
         }
-      }
-      return <Markdown ref={ref} dangerouslySetInnerHTML={{ __html: text ?? '' }} />
+      })
+    },
+    render = () => {
+      return <Markdown ref={ref} dangerouslySetInnerHTML={{ __html: input.text ?? '' }} />
     }
-  return { render }
+  return { init: update, update, render }
 })
 
 const XStackItem = ({ stackable: { width, height, grow, shrink, basis }, children }: { stackable: Stackable, children: JSX.Element }) => {

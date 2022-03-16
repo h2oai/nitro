@@ -176,9 +176,17 @@ export const
     .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
       return hljs.highlight(code, { language }).value
     }),
+  isFootnoteLink = (s: S) => s.startsWith('user-content'), // gfm-footnote default
   markdown = (text: S): [S, B] => {
-    const
-      md = highlight(micromark(text, opts)),
-      hasLinks = /href="#/g.test(md)
+    let hasLinks = false
+    const md = highlight(micromark(text, opts))
+      // Change <a href="#foo"> to <a data-jump="foo" href>
+      // Exclude footnote references.
+      // We need the links to be rendered as such, but not affect the address bar.
+      .replaceAll(/href="#(.+?)"/g, (all, ref) => {
+        if (isFootnoteLink(ref)) return all
+        hasLinks = true
+        return `data-jump="${ref}" href`
+      })
     return [md, hasLinks]
   }
