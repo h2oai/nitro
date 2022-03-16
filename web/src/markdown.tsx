@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { micromark, Options } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm'
-import { B, S } from './core';
+import { B, S, U } from './core';
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 
@@ -171,6 +171,31 @@ pre {
 }
 `
 
+const getIndentation = (rx: RegExp, lines: S[]): U => {
+  const indents: U[] = []
+  for (const line of lines) {
+    const m = line.match(rx)
+    if (!m) return 0
+    indents.push(m[0].length)
+  }
+  return Math.min(...indents)
+}
+const getSpaceIndentation = (lines: S[]): U => getIndentation(/^ +/, lines)
+const getTabIndentation = (lines: S[]): U => getIndentation(/^\t+/, lines)
+const dedent = (s: S): S => {
+  let lines = s.split(/\r?\n/)
+  const n = lines.length
+  if (n > 0) {
+    lines = lines.slice(
+      lines[0].trim().length === 0 ? 1 : 0,
+      lines[n - 1].trim().length === 0 ? n - 1 : n
+    )
+  }
+  const indent = getSpaceIndentation(lines) || getTabIndentation(lines)
+  return indent === 0
+    ? s
+    : lines.map(line => line.substring(indent)).join('\n')
+}
 export const
   highlight = (html: S) => html
     .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
@@ -179,7 +204,7 @@ export const
   isFootnoteLink = (s: S) => s.startsWith('user-content'), // gfm-footnote default
   markdown = (text: S): [S, B] => {
     let hasLinks = false
-    const md = highlight(micromark(text, opts))
+    const md = highlight(micromark(dedent(text), opts))
       // Change <a href="#foo"> to <a data-jump="foo" href>
       // Exclude footnote references.
       // We need the links to be rendered as such, but not affect the address bar.
