@@ -1,14 +1,14 @@
-from h2o_nitro import UI, input, option, row, col, ContextSwitchError
+from h2o_nitro import View, box, option, row, col, ContextSwitchError
 import simple_websocket
 from flask import Flask, request
 
 
-def main2(ui: UI):
+def main2(view: View):
     counter = 0
     while True:
-        choice = ui(
+        choice = view(
             f'Count={counter}',
-            input(options=('+', '-')),
+            box(options=('+', '-')),
         )
         counter += 1 if choice == '+' else -1
 
@@ -134,120 +134,133 @@ You can also use words, to fit your writing style more closely[^note].
 '''
 
 
-def text_field_with_label(ui: UI):
-    x = ui(input('Text field with label'))
-    ui(f'You entered `{x}`.')
+# zone area
+# part slot div item unit panel
+
+def hello_word(view: View):
+    view('hello world')
 
 
-def main(ui: UI):
-    x = ui(sample_markdown)
-    x = ui(input('Text field with label'))
-    ui(f'You entered `{x}`')
-    x = ui(input('Text field with placeholder', placeholder='Enter text here'))
-    x = ui(input('Text field with value', value='Some text'))
-    x = ui(input('Text field, required', required=True))
-    x = ui(input('Text field with input mask', mask='(999) 999 - 9999'))
-    x = ui(input('Text field with icon', icon='Calendar'))
-    x = ui(input('Text field with prefix', prefix='https://'))
-    x = ui(input('Text field with suffix', suffix='.com'))
-    x = ui(input('Text field with prefix and suffix', prefix='https://', suffix='.com'))
-    x = ui(input('Text field with error', error='Something went wrong'))
-    x = ui(input('Password field', password=True))
-    x = ui(input('Multiline text field', lines=1))
-    x = ui(input('Multiline text field, taller', lines=5))
-    x = ui(input('Integer', value=5))
-    x = ui(input('Integer within range', range=(0, 10)))
-    x = ui(input('Integer within range, with step', range=(0, 10, 2)))
-    x = ui(input('Integer within range, with default', value=5, range=(0, 10)))
-    x = ui(input('Integer within range, origin from zero', value=3, range=(-5, 5)))
-    x = ui(input('Decimal within range, with step', value=0.6, range=(-1, 1, 0.2)))
-    x = ui(input('Integer range', value=(3, 7), range=(1, 10)))
-    x = ui(input('Integer range, origin from zero', value=(-1, 3), range=(-5, 5)))
-    x = ui(input('Integer field', value=5, editable=True))
-    x = ui(input('Integer field with range', value=5, range=(1, 10), editable=True))
-    x = ui(input('Integer field with range and step', value=50, range=(0, 100, 10), editable=True))
-    x = ui(input('Decimal field with range and step', value=0.5, range=(0.0, 1.0, 0.05), editable=True))
-    x = ui(input('Decimal field with range, step, and precision', value=0.5, range=(0.0, 1.0, 0.05, 2), editable=True))
-    x = ui(input('Rating', mode='rating'))
-    x = ui(input('Rating with value', mode='rating', value=3))
-    x = ui(input('Rating with zero allowed', mode='rating', min=0))
-    x = ui(input('Rating with max', mode='rating', value=3, max=10))
-    x = ui(input('Rating with range', mode='rating', value=3, range=(0, 7)))
-    x = ui(input('Time', mode='time', value='3:04PM'))
-    x = ui(input('Time, with seconds', mode='time', value='3:04:05PM'))
-    x = ui(input('Time, hour only', mode='time', value='3PM'))
-    x = ui(input('Time, 24-hr clock', mode='time', value='15:04'))
-    x = ui(input('Time, 24-hr clock, with seconds', mode='time', value='15:04:05'))
-    x = ui(input('Time, hour only, 24-hour clock', mode='time', value='15'))
-    x = ui(input('Day picker', mode='day', value='2021-10-10'))
-    x = ui(input('Day picker with range', mode='day', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
-    x = ui(input('Week picker', mode='week', value='2021-10-10'))
-    x = ui(input('Week picker with range', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
-    x = ui(input('Month picker', mode='month', value='2021-10-10'))
-    x = ui(input('Month picker with range', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
-    x = ui(input('Options from string', options='Apples Bananas Cherries'))
-    x = ui(input('Options from tuple', options=('Apples', 'Bananas', 'Cherries')))
-    x = ui(input('Options from list', options=['Apples', 'Bananas', 'Cherries']))
-    x = ui(input('Options from set', options={'Apples', 'Bananas', 'Cherries'}))
-    x = ui(input('Options from tuples', options=(('a', 'Apples'), ('b', 'Bananas'), ('c', 'Cherries'))))
-    x = ui(input('Options from dict', options={'Apples': 'a', 'Bananas': 'b', 'Cherries': 'c'}))
-    x = ui(input('Options from dict', options=dict(Apples='a', Bananas='b', Cherries='c')))
-    x = ui(input('Options', options=[
+def text_field_with_label(view: View):
+    x = view(box('Text field with label'))
+    view(f'You entered `{x}`.')
+
+
+def main(view: View):
+    x = view(sample_markdown)
+    x = view('''
+        - [Apples](#apples)
+        - [Bananas](#bananas)
+        - [Cherries](#cherries)
+    ''')
+    view(f'You clicked on `{x}`.')
+    x = view(box('Text field with label'))
+    view(f'You entered `{x}`')
+    x = view(box('Text field with placeholder', placeholder='Enter text here'))
+    x = view(box('Text field with value', value='Some text'))
+    x = view(box('Text field, required', required=True))
+    x = view(box('Text field with input mask', mask='(999) 999 - 9999'))
+    x = view(box('Text field with icon', icon='Calendar'))
+    x = view(box('Text field with prefix', prefix='https://'))
+    x = view(box('Text field with suffix', suffix='.com'))
+    x = view(box('Text field with prefix and suffix', prefix='https://', suffix='.com'))
+    x = view(box('Text field with error', error='Something went wrong'))
+    x = view(box('Password field', password=True))
+    x = view(box('Multiline text field', lines=1))
+    x = view(box('Multiline text field, taller', lines=5))
+    x = view(box('Integer', value=5))
+    x = view(box('Integer within range', range=(0, 10)))
+    x = view(box('Integer within range, with step', range=(0, 10, 2)))
+    x = view(box('Integer within range, with default', value=5, range=(0, 10)))
+    x = view(box('Integer within range, origin from zero', value=3, range=(-5, 5)))
+    x = view(box('Decimal within range, with step', value=0.6, range=(-1, 1, 0.2)))
+    x = view(box('Integer range', value=(3, 7), range=(1, 10)))
+    x = view(box('Integer range, origin from zero', value=(-1, 3), range=(-5, 5)))
+    x = view(box('Integer field', value=5, editable=True))
+    x = view(box('Integer field with range', value=5, range=(1, 10), editable=True))
+    x = view(box('Integer field with range and step', value=50, range=(0, 100, 10), editable=True))
+    x = view(box('Decimal field with range and step', value=0.5, range=(0.0, 1.0, 0.05), editable=True))
+    x = view(box('Decimal field with range, step, and precision', value=0.5, range=(0.0, 1.0, 0.05, 2), editable=True))
+    x = view(box('Rating', mode='rating'))
+    x = view(box('Rating with value', mode='rating', value=3))
+    x = view(box('Rating with zero allowed', mode='rating', min=0))
+    x = view(box('Rating with max', mode='rating', value=3, max=10))
+    x = view(box('Rating with range', mode='rating', value=3, range=(0, 7)))
+    x = view(box('Time', mode='time', value='3:04PM'))
+    x = view(box('Time, with seconds', mode='time', value='3:04:05PM'))
+    x = view(box('Time, hour only', mode='time', value='3PM'))
+    x = view(box('Time, 24-hr clock', mode='time', value='15:04'))
+    x = view(box('Time, 24-hr clock, with seconds', mode='time', value='15:04:05'))
+    x = view(box('Time, hour only, 24-hour clock', mode='time', value='15'))
+    x = view(box('Day picker', mode='day', value='2021-10-10'))
+    x = view(box('Day picker with range', mode='day', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+    x = view(box('Week picker', mode='week', value='2021-10-10'))
+    x = view(box('Week picker with range', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+    x = view(box('Month picker', mode='month', value='2021-10-10'))
+    x = view(box('Month picker with range', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+    x = view(box('Options from string', options='Apples Bananas Cherries'))
+    x = view(box('Options from tuple', options=('Apples', 'Bananas', 'Cherries')))
+    x = view(box('Options from list', options=['Apples', 'Bananas', 'Cherries']))
+    x = view(box('Options from set', options={'Apples', 'Bananas', 'Cherries'}))
+    x = view(box('Options from tuples', options=(('a', 'Apples'), ('b', 'Bananas'), ('c', 'Cherries'))))
+    x = view(box('Options from dict', options={'Apples': 'a', 'Bananas': 'b', 'Cherries': 'c'}))
+    x = view(box('Options from dict', options=dict(Apples='a', Bananas='b', Cherries='c')))
+    x = view(box('Options', options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Options with selection', options=[
+    x = view(box('Options with selection', options=[
         option('a', 'Apples', selected=True),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Multiple choice', multiple=True, options=[
+    x = view(box('Multiple choice', multiple=True, options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Multiple choice, with selection', multiple=True, options=[
+    x = view(box('Multiple choice, with selection', multiple=True, options=[
         option('a', 'Apples', selected=True),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Multiple choice, with multiple selections', multiple=True, options=[
+    x = view(box('Multiple choice, with multiple selections', multiple=True, options=[
         option('a', 'Apples', selected=True),
         option('b', 'Bananas', selected=True),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Multiple choice, required', multiple=True, required=True, options=[
+    x = view(box('Multiple choice, required', multiple=True, required=True, options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Multiple choice, with error message', multiple=True, error='Something went wrong', options=[
+    x = view(box('Multiple choice, with error message', multiple=True, error='Something went wrong', options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Multiple choice, editable', multiple=True, editable=True, options=[
+    x = view(box('Multiple choice, editable', multiple=True, editable=True, options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Tag Picker', mode='tag', options=[
+    x = view(box('Tag Picker', mode='tag', options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Choice list', placeholder='Pick a fruit', options=[
+    x = view(box('Choice list', placeholder='Pick a fruit', options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Choice list, required', placeholder='Pick a fruit', required=True, options=[
+    x = view(box('Choice list, required', placeholder='Pick a fruit', required=True, options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Choice list, with icons', placeholder='Pick a fruit', required=True, options=[
+    x = view(box('Choice list, with icons', placeholder='Pick a fruit', required=True, options=[
         option('area', 'Area', icon='AreaChart', selected=True),
         option('bar', 'Bar', icon='BarChartHorizontal'),
         option('column', 'Column', icon='BarChartVertical'),
@@ -255,17 +268,17 @@ def main(ui: UI):
         option('scatter', 'Scatter', icon='ScatterChart'),
         option('donut', 'Donut', icon='DonutChart'),
     ]))
-    x = ui(input('Choice list, with error message', placeholder='Pick a fruit', error='Something went wrong', options=[
+    x = view(box('Choice list, with error message', placeholder='Pick a fruit', error='Something went wrong', options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Choice list, editable', placeholder='Pick a fruit', editable=True, options=[
+    x = view(box('Choice list, editable', placeholder='Pick a fruit', editable=True, options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ]))
-    x = ui(input('Choice list, grouped', placeholder='Pick an item', options=[
+    x = view(box('Choice list, grouped', placeholder='Pick an item', options=[
         option('f', 'Fruits', options=[
             option('a', 'Apples'),
             option('b', 'Bananas'),
@@ -276,37 +289,37 @@ def main(ui: UI):
             option('t', 'Tomato'),
         ]),
     ]))
-    x = ui(input('Color picker', mode='color', value='#a241e8'))
-    x = ui(input('Color picker, with choices', mode='color', options=[
+    x = view(box('Color picker', mode='color', value='#a241e8'))
+    x = view(box('Color picker, with choices', mode='color', options=[
         option('#ca5010', 'Orange'),
         option('#038387', 'Cyan'),
         option('#8764b8', 'Purple'),
         option('#881798', 'Magenta'),
     ]))
-    x = ui(input('Buttons, vertical', options=[
+    x = view(box('Buttons, vertical', options=[
         option('a', 'Apples'),
         option('b', 'Bananas'),
         option('c', 'Cherries'),
     ], row=False))
-    x = ui(input('Compound buttons', options=[
+    x = view(box('Compound buttons', options=[
         option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
         option('no', 'Not now', caption="I'll decide later"),
     ]))
-    x = ui(input('Button with menu', options=[
+    x = view(box('Button with menu', options=[
         option('yes', 'Yes', selected=True, options=[
             option('later', 'Remind me later', icon='ChatBot'),
             option('never', "Don't ask me again", icon='MuteChat'),
         ]),
         option('no', 'No'),
     ]))
-    x = ui(input('Button with menu', options=[
+    x = view(box('Button with menu', options=[
         option('yes', 'Yes', selected=True),
         option('no', 'No', options=[
             option('later', 'Remind me later', icon='ChatBot'),
             option('never', "Don't ask me again", icon='MuteChat'),
         ]),
     ]))
-    x = ui(input('Add a new chart', options=[
+    x = view(box('Add a new chart', options=[
         option('area', 'Area', icon='AreaChart'),
         option('bar', 'Bar', icon='BarChartHorizontal'),
         option('column', 'Column', icon='BarChartVertical'),
@@ -314,33 +327,33 @@ def main(ui: UI):
         option('scatter', 'Scatter', icon='ScatterChart'),
         option('donut', 'Donut', icon='DonutChart'),
     ]))
-    x = ui(
-        input('Username', placeholder='someone@company.com'),
-        input('Password', password=True),
+    x = view(
+        box('Username', placeholder='someone@company.com'),
+        box('Password', password=True),
     )
-    x = ui(
-        input('Username', placeholder='someone@company.com'),
-        input('Password', password=True),
+    x = view(
+        box('Username', placeholder='someone@company.com'),
+        box('Password', password=True),
         row=True,
     )
-    x = ui(
-        input('Username', placeholder='someone@company.com'),
-        input('Password', password=True),
-        input(options=[option('login', 'Login', selected=True)]),
+    x = view(
+        box('Username', placeholder='someone@company.com'),
+        box('Password', password=True),
+        box(options=[option('login', 'Login', selected=True)]),
         row=True,
     )
-    x = ui(
-        row(input('First name'), input('Last name')),
-        input('Address line 1'),
-        input('Address line 2'),
-        row(input('City'), input('State'), input('Zip')),
+    x = view(
+        row(box('First name'), box('Last name')),
+        box('Address line 1'),
+        box('Address line 2'),
+        row(box('City'), box('State'), box('Zip')),
     )
-    x = ui(
-        row(input('First name'), input('M.I.', width='10%'), input('Last name')),
-        input('Address line 1'),
-        input('Address line 2'),
-        row(input('City', grow=5), input('State', width='20%'), input('Zip', grow=1)),
-        input(options=[
+    x = view(
+        row(box('First name'), box('M.I.', width='10%'), box('Last name')),
+        box('Address line 1'),
+        box('Address line 2'),
+        row(box('City', grow=5), box('State', width='20%'), box('Zip', grow=1)),
+        box(options=[
             option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
             option('no', 'Not now', caption="I'll decide later"),
         ])
@@ -349,7 +362,7 @@ def main(ui: UI):
 
 # --- bootstrap ---
 
-def main_wrap(ui: UI):
+def main_wrap(ui: View):
     try:
         main(ui)
     except ContextSwitchError as e:
@@ -357,7 +370,7 @@ def main_wrap(ui: UI):
         raise e
 
 
-nitro = UI(main_wrap, title='Nitro', caption='v0.1', menu=[
+nitro = View(main_wrap, title='Nitro', caption='v0.1', menu=[
     option(main2, 'Area Chart', icon='AreaChart'),
     option(main2, 'Bar Chart', icon='BarChartVertical'),
     option(main2, 'Line Chart', icon='LineChart'),

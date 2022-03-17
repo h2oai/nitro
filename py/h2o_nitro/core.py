@@ -76,7 +76,7 @@ def _clean(d: dict) -> dict:
 N = Union[int, float]
 V = Union[N, str]
 
-Delegate = Callable[['UI'], None]
+Delegate = Callable[['View'], None]
 
 
 class Option:
@@ -127,7 +127,7 @@ Options = Union[
     Set[OptionPair],
 ]
 
-Item = Union[str, 'Stack', 'Input']
+Item = Union[str, 'Zone', 'Box']
 Items = Union[List[Item], Tuple[Item, ...]]
 Range = Union[
     Tuple[V, V],
@@ -143,7 +143,7 @@ Value = Union[
 ]
 
 
-class Input:
+class Box:
     def __init__(
             self,
             text: Optional[str] = None,
@@ -247,7 +247,7 @@ class Input:
         ))
 
 
-input = Input
+box = Box
 
 
 class StackJustify(Enum):
@@ -280,7 +280,7 @@ class StackWrap(Enum):
     Evenly = 'evenly'
 
 
-class Stack:
+class Zone:
     def __init__(
             self,
             *items: Item,
@@ -335,8 +335,8 @@ def row(
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
         basis: Optional[str] = None,
-) -> Stack:
-    return Stack(
+) -> Zone:
+    return Zone(
         *items,
         row=True,
         justify=justify,
@@ -362,8 +362,8 @@ def col(
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
         basis: Optional[str] = None,
-) -> Stack:
-    return Stack(
+) -> Zone:
+    return Zone(
         *items,
         justify=justify,
         align=align,
@@ -386,7 +386,7 @@ def _collect_delegates(d: Dict[str, Delegate], options: Sequence[Option]) -> Dic
     return d
 
 
-class UI:
+class View:
     def __init__(
             self,
             delegate: Delegate,
@@ -406,6 +406,12 @@ class UI:
         self._recv = recv
         self.context = context
 
+    def __getitem__(self, key):
+        return self.context.get(key)
+
+    def __setitem__(self, key, value):
+        self.context[key] = value
+
     def _delegate_for(self, key: str):
         d = self._delegates.get(key)
         if d is None:
@@ -420,7 +426,7 @@ class UI:
         self._delegate_for(key)(self)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
-        UI(
+        View(
             self._delegate,
             title=self._title,
             caption=self._caption,
@@ -473,6 +479,66 @@ class UI:
             raise ProtocolError(f'unknown message type {t}')
         raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
 
+    def _write(self, t: _MsgType, s: Zone, position: Optional[int]):
+        msg = dict(t=t, d=s.dump())
+        if position is not None:
+            msg['p'] = position
+        self._send(_marshal(msg))
+
+    def read(self):
+        return self._read(_MsgType.Input)
+
+    def show(
+            self,
+            *items: Item,
+            row: Optional[bool] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
+            wrap: Optional[str] = None,
+            gap: Optional[str] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+            position: Optional[int] = None,
+    ):
+        s = Zone(
+            *items,
+            row=row,
+            justify=justify,
+            align=align,
+            wrap=wrap,
+            gap=gap,
+            width=width,
+            height=height,
+        )
+        self._write(_MsgType.Update, s, position)
+
+    def add(
+            self,
+            *items: Item,
+            row: Optional[bool] = None,
+            justify: Optional[str] = None,
+            align: Optional[str] = None,
+            wrap: Optional[str] = None,
+            gap: Optional[str] = None,
+            width: Optional[str] = None,
+            height: Optional[str] = None,
+            position: Optional[int] = None,
+    ):
+        s = Zone(
+            *items,
+            row=row,
+            justify=justify,
+            align=align,
+            wrap=wrap,
+            gap=gap,
+            width=width,
+            height=height,
+        )
+        self._write(_MsgType.Insert, s, position)
+
+    def remove(self, position: int):
+        pass
+
     def __call__(
             self,
             *items: Item,
@@ -484,9 +550,8 @@ class UI:
             width: Optional[str] = None,
             height: Optional[str] = None,
             position: Optional[int] = None,
-            insert: Optional[bool] = False,
     ):
-        s = Stack(
+        self.show(
             *items,
             row=row,
             justify=justify,
@@ -495,9 +560,6 @@ class UI:
             gap=gap,
             width=width,
             height=height,
+            position=position,
         )
-        msg = dict(t=_MsgType.Insert if insert else _MsgType.Update, d=s.dump())
-        if position is not None:
-            msg['p'] = position
-        self._send(_marshal(msg))
-        return self._read(_MsgType.Input)
+        return self.read()
