@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CompoundButton, ContextualMenu, ContextualMenuItemType, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColorCellProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, FocusTrapZone, IButtonProps, IButtonStyles, IChoiceGroupOption, IColorCellProps, ICommandBarItemProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, setVirtualParent, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
@@ -526,6 +526,7 @@ const XMarkdown = make(({ context, input }: InputProps) => {
 
 const applyBoxStyles = (css: React.CSSProperties, { width, height, margin, padding, grow, shrink, basis }: Stackable) => {
   css.boxSizing = 'border-box'
+  css.overflow = 'auto'
   if (width) {
     if (Array.isArray(width)) {
       switch (width.length) {
@@ -702,20 +703,32 @@ const XInput = ({ context, input }: InputProps) => { // recursive
   }
 }
 
-const NavContainer = styled.div`
+const XCommandBar = make(({ send, options }: { send: Send, options: Option[] }) => {
+  const
+    switchTo = (v: V) => {
+      send({ t: MsgType.Switch, d: v })
+    },
+    items = options.map(o => toContextualMenuItem(o, switchTo)),
+    render = () => (
+      <CommandBar items={items} />
+    )
+  return { render }
+})
+
+const MenuContainer = styled.div`
   cursor: pointer;
   width: 22px;
   height: 22px;
   display: flex;
   align-items: center;
 `
-const XNav = make(({ send, menu }: { send: Send, menu: Option[] }) => {
+const XMenu = make(({ send, options }: { send: Send, options: Option[] }) => {
   const
-    hasMenu = menu.length > 0,
+    hasMenu = options.length > 0,
     switchTo = (v: V) => {
       send({ t: MsgType.Switch, d: v })
     },
-    menuItems = menu.map(o => toContextualMenuItem(o, switchTo)),
+    items = options.map(o => toContextualMenuItem(o, switchTo)),
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = box(false),
     showMenu = () => showMenuB(true),
@@ -723,7 +736,7 @@ const XNav = make(({ send, menu }: { send: Send, menu: Option[] }) => {
     render = () => {
       const isMenuVisible = showMenuB()
       return (
-        <NavContainer ref={containerRef} onClick={showMenu}>
+        <MenuContainer ref={containerRef} onClick={showMenu}>
           {
             hasMenu
               ? isMenuVisible
@@ -732,17 +745,18 @@ const XNav = make(({ send, menu }: { send: Send, menu: Option[] }) => {
               : <RocketIcon />
           }
           <ContextualMenu
-            items={menuItems}
+            items={items}
             hidden={!isMenuVisible}
             target={containerRef}
             onItemClick={hideMenu}
             onDismiss={hideMenu}
           />
-        </NavContainer>
+        </MenuContainer>
       )
     }
   return { render, showMenuB }
 })
+
 export const AppContainer = styled.div`
   max-width: 640px;
   background-color: #fff;
@@ -768,19 +782,28 @@ const HeaderSubtitle = styled.div`
 const WidgetsContainer = styled.div`
   padding: 1rem 2rem 2rem;
 `
+const NavBar = styled.div`
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+`
 export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
   const
     render = () => {
       return (
         <HeaderContainer>
-          <XNav send={send} menu={conf.menu ?? []} />
+          <XMenu send={send} options={conf.menu ?? []} />
           <HeaderTitle>{conf.title}</HeaderTitle>
           <HeaderSubtitle>{conf.caption}</HeaderSubtitle>
+          <NavBar>
+            <XCommandBar send={send} options={conf.nav ?? []} />
+          </NavBar>
         </HeaderContainer>
       )
     }
   return { render }
 })
+
 export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
   const
     original = props.widgets,

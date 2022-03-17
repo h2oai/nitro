@@ -256,7 +256,7 @@ class Box:
 box = Box
 
 
-class StackJustify(Enum):
+class ZoneJustify(Enum):
     Normal = 'normal'
     Stretch = 'stretch'
     Center = 'center'
@@ -267,7 +267,7 @@ class StackJustify(Enum):
     Evenly = 'evenly'
 
 
-class StackAlign(Enum):
+class ZoneAlign(Enum):
     Normal = 'normal'
     Stretch = 'stretch'
     Center = 'center'
@@ -275,7 +275,7 @@ class StackAlign(Enum):
     End = 'end'
 
 
-class StackWrap(Enum):
+class ZoneWrap(Enum):
     Normal = 'normal'
     Stretch = 'stretch'
     Center = 'center'
@@ -397,13 +397,12 @@ def col(
     )
 
 
-def _collect_delegates(d: Dict[str, Delegate], options: Sequence[Option]) -> Dict[str, Delegate]:
+def _collect_delegates(d: Dict[str, Delegate], options: Sequence[Option]):
     for opt in options:
         if opt.delegate:
             d[opt.value] = opt.delegate
         if opt.options:
             _collect_delegates(d, opt.options)
-    return d
 
 
 class View:
@@ -413,6 +412,7 @@ class View:
             title: str = 'H2O Nitro',
             caption: str = 'v0.1.0',  # XXX show actual version
             menu: Optional[Sequence[Option]] = None,
+            nav: Optional[Sequence[Option]] = None,
             send: Optional[Callable] = None,
             recv: Optional[Callable] = None,
             context: any = None,
@@ -421,7 +421,10 @@ class View:
         self._title = title
         self._caption = caption
         self._menu = menu or []
-        self._delegates = _collect_delegates(dict(), self._menu)
+        self._nav = nav or []
+        self._delegates: Dict[str, Delegate] = dict()
+        _collect_delegates(self._delegates, self._menu)
+        _collect_delegates(self._delegates, self._nav)
         self._send = send
         self._recv = recv
         self.context = context
@@ -451,6 +454,7 @@ class View:
             title=self._title,
             caption=self._caption,
             menu=self._menu,
+            nav=self._nav,
             send=send,
             recv=recv,
             context=context or {},
@@ -464,6 +468,7 @@ class View:
                 title=self._title,
                 caption=self._caption,
                 menu=_dump(self._menu),
+                nav=_dump(self._nav),
             ),
         )))
         target = None

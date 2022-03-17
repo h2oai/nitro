@@ -50,6 +50,7 @@ export type Conf = {
   title?: S,
   caption?: S,
   menu?: Option[]
+  nav?: Option[]
 }
 
 export enum WidgetT {

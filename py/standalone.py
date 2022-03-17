@@ -370,18 +370,35 @@ def main_wrap(ui: View):
         raise e
 
 
-nitro = View(main_wrap, title='Nitro', caption='v0.1', menu=[
-    option(main2, 'Area Chart', icon='AreaChart'),
-    option(main2, 'Bar Chart', icon='BarChartVertical'),
-    option(main2, 'Line Chart', icon='LineChart'),
-    option(main2, 'Bar Chart', icon='BarChartVertical', options=[
+nitro = View(
+    main_wrap,
+    title='Nitro',
+    caption='v0.1',
+    menu=[
         option(main2, 'Area Chart', icon='AreaChart'),
+        option(main2, 'Bar Chart', icon='BarChartVertical'),
         option(main2, 'Line Chart', icon='LineChart'),
+        option(main2, 'Bar Chart', icon='BarChartVertical', options=[
+            option(main2, 'Area Chart', icon='AreaChart'),
+            option(main2, 'Line Chart', icon='LineChart'),
+            option(main2, 'Scatter Chart', icon='ScatterChart'),
+        ]),
+        option(''),
         option(main2, 'Scatter Chart', icon='ScatterChart'),
-    ]),
-    option(''),
-    option(main2, 'Scatter Chart', icon='ScatterChart'),
-])
+    ],
+    nav=[
+        option(main2, 'Area', icon='AreaChart', options=[
+            option(main2, 'Bar Chart', icon='BarChartVertical'),
+            option(main2, 'Line Chart', icon='LineChart'),
+        ]),
+        option(main2, 'Bar', icon='BarChartVertical', options=[
+            option(main2, 'Area Chart', icon='AreaChart'),
+            option(main2, 'Line Chart', icon='LineChart'),
+            option(main2, 'Scatter Chart', icon='ScatterChart'),
+        ]),
+        option(main2, 'Scatter', icon='ScatterChart'),
+    ],
+)
 
 app = Flask(__name__, static_folder='../web/build', static_url_path='')
 

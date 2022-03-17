@@ -9,6 +9,7 @@ export const newClient = (endpoint: S) => {
     title: 'H2O Nitro',
     caption: 'v0.1.0', // XXX show actual version
     menu: [],
+    nav: [],
   }
 
   let _socket: Socket | null = null

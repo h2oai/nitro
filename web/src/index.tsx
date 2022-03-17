@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from './app';
 import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/react';
 import reportWebVitals from './reportWebVitals';
-import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon, ChevronRightIcon } from '@fluentui/react-icons-mdl2';
+import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon, ChevronRightIcon, MoreIcon } from '@fluentui/react-icons-mdl2';
 import './index.css';
 import { newClient } from './client';
 
@@ -33,6 +33,7 @@ registerIcons({
     CheckMark: <CheckMarkIcon />, // used by checkbox
     ChevronDown: <ChevronDownIcon />, // used by dropdown
     Cancel: <CancelIcon />, // used by tag picker
+    More: <MoreIcon />, // used by command bar
     // Used by examples
     AreaChart: <AreaChartIcon />,
     BarChartHorizontal: <BarChartHorizontalIcon />,
