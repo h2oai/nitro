@@ -1,4 +1,4 @@
-import { S, N, B, U, V, Pair, I } from "./core"
+import { S, N, B, U, V, Pair, Triple, I } from "./core"
 
 export enum MsgType {
   Error = 1,
@@ -59,8 +59,8 @@ export enum WidgetT {
 }
 
 export type Stackable = {
-  width?: S
-  height?: S
+  width?: S | [S] | Pair<S> | Triple<S>
+  height?: S | [S] | Pair<S> | Triple<S>
   margin?: S
   padding?: S
   grow?: U

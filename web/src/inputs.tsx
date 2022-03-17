@@ -524,23 +524,81 @@ const XMarkdown = make(({ context, input }: InputProps) => {
   return { init: update, update, render }
 })
 
-const XStackItem = ({ stackable: { width, height, margin, padding, grow, shrink, basis }, children }: { stackable: Stackable, children: JSX.Element }) => {
-  const style: React.CSSProperties = {
-    boxSizing: 'border-box',
-    width,
-    height,
-    margin,
-    padding,
-    flexGrow: grow,
-    flexShrink: shrink,
-    flexBasis: basis,
+const applyBoxStyles = (css: React.CSSProperties, { width, height, margin, padding, grow, shrink, basis }: Stackable) => {
+  css.boxSizing = 'border-box'
+  if (width) {
+    if (Array.isArray(width)) {
+      switch (width.length) {
+        case 1:
+          {
+            const [min] = width
+            if (min) css.minWidth = min
+          }
+          break
+        case 2:
+          {
+            const [min, max] = width
+            if (min) css.minWidth = min
+            if (max) css.maxWidth = max
+          }
+          break
+        case 3:
+          {
+            const [min, max, initial] = width
+            if (min) css.minWidth = min
+            if (max) css.maxWidth = max
+            if (initial) css.width = initial
+          }
+          break
+      }
+    } else {
+      css.width = width
+    }
   }
-  return (
-    <div style={style}>
-      {children}
-    </div>
-  )
+  if (height) {
+    if (Array.isArray(height)) {
+      switch (height.length) {
+        case 1:
+          {
+            const [min] = height
+            if (min) css.minHeight = min
+          }
+          break
+        case 2:
+          {
+            const [min, max] = height
+            if (min) css.minHeight = min
+            if (max) css.maxHeight = max
+          }
+          break
+        case 3:
+          {
+            const [min, max, initial] = height
+            if (min) css.minHeight = min
+            if (max) css.maxHeight = max
+            if (initial) css.height = initial
+          }
+          break
+      }
+    } else {
+      css.height = height
+    }
+  }
+  if (margin) css.margin = margin
+  if (padding) css.padding = padding
+  if (grow) css.flexGrow = grow
+  if (shrink) css.flexShrink = shrink
+  if (basis) css.flexBasis = basis
+
+  return css
 }
+
+const XStackItem = ({ stackable, children }: { stackable: Stackable, children: JSX.Element }) => (
+  <div style={applyBoxStyles({}, stackable)}>
+    {children}
+  </div>
+)
+
 
 const flexStyles: Dict<S> = {
   start: 'flex-start',
@@ -562,8 +620,8 @@ const XStack = ({ context, widgets, stack }: { context: Context, widgets: Widget
           : <div>Unknown widget</div>
       return <XStackItem key={xid()} stackable={widget}>{child}</XStackItem>
     }),
-    { row, justify, align, wrap, gap, width, height, margin, padding, grow, shrink, basis } = stack,
-    style: React.CSSProperties = {
+    { row, justify, align, wrap, gap } = stack,
+    css: React.CSSProperties = {
       boxSizing: 'border-box',
       display: 'flex',
       flexDirection: row ? 'row' : 'column',
@@ -572,17 +630,10 @@ const XStack = ({ context, widgets, stack }: { context: Context, widgets: Widget
       justifyItems: justify ? toFlexStyle(justify) : undefined,
       alignItems: align ? toFlexStyle(align) : undefined,
       alignContent: wrap ? toFlexStyle(wrap) : undefined,
-      width,
-      height,
-      margin,
-      padding,
-      flexGrow: grow,
-      flexShrink: shrink,
-      flexBasis: basis,
     }
 
   return (
-    <div style={style}>{children}</div>
+    <div style={applyBoxStyles(css, stack)}>{children}</div>
   )
 }
 

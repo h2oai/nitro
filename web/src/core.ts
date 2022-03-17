@@ -23,6 +23,7 @@ export interface Dict<T> { [key: string]: T }
 /** Identifier (non-empty string). */
 // export type Id = S
 export type Pair<T> = [T, T]
+export type Triple<T> = [T, T, T]
 
 
 /** Action. */
