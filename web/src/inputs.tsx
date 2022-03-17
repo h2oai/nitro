@@ -525,8 +525,6 @@ const XMarkdown = make(({ context, input }: InputProps) => {
 })
 
 const applyBoxStyles = (css: React.CSSProperties, { width, height, margin, padding, grow, shrink, basis }: Stackable) => {
-  css.boxSizing = 'border-box'
-  css.overflow = 'auto'
   if (width) {
     if (Array.isArray(width)) {
       switch (width.length) {
@@ -594,10 +592,15 @@ const applyBoxStyles = (css: React.CSSProperties, { width, height, margin, paddi
   return css
 }
 
-const XStackItem = ({ stackable, children }: { stackable: Stackable, children: JSX.Element }) => (
-  <div style={applyBoxStyles({}, stackable)}>
+const ZoneItemContainer = styled.div`
+  box-sizing: border-box;
+  overflow: auto;
+`
+
+const XZoneItem = ({ stackable, children }: { stackable: Stackable, children: JSX.Element }) => (
+  <ZoneItemContainer style={applyBoxStyles({}, stackable)}>
     {children}
-  </div>
+  </ZoneItemContainer>
 )
 
 
@@ -611,20 +614,24 @@ const flexStyles: Dict<S> = {
 
 const toFlexStyle = (s: S): S => flexStyles[s] ?? s
 
-const XStack = ({ context, widgets, stack }: { context: Context, widgets: Widget[], stack: Stacking & Stackable }) => {
+const ZoneContainer = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  overflow: auto;
+`
+
+const XZone = ({ context, widgets, stack }: { context: Context, widgets: Widget[], stack: Stacking & Stackable }) => {
   const
     children = widgets.map(widget => {
       const child = (widget.t === WidgetT.Stack)
-        ? <XStack context={context} widgets={widget.items} stack={widget} />
+        ? <XZone context={context} widgets={widget.items} stack={widget} />
         : (widget.t === WidgetT.Input)
           ? <XInput key={widget.xid} context={context} input={widget} />
           : <div>Unknown widget</div>
-      return <XStackItem key={xid()} stackable={widget}>{child}</XStackItem>
+      return <XZoneItem key={xid()} stackable={widget}>{child}</XZoneItem>
     }),
     { row, justify, align, wrap, gap } = stack,
     css: React.CSSProperties = {
-      boxSizing: 'border-box',
-      display: 'flex',
       flexDirection: row ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       gap: gap ?? 5,
@@ -634,7 +641,9 @@ const XStack = ({ context, widgets, stack }: { context: Context, widgets: Widget
     }
 
   return (
-    <div style={applyBoxStyles(css, stack)}>{children}</div>
+    <ZoneContainer style={applyBoxStyles(css, stack)}>
+      {children}
+    </ZoneContainer>
   )
 }
 
@@ -812,7 +821,7 @@ export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
     context = newCaptureContext(props.send, [])
   return (
     <WidgetsContainer>
-      <XStack context={context} widgets={widgets} stack={{}} />
+      <XZone context={context} widgets={widgets} stack={{}} />
     </WidgetsContainer>
   )
 }
