@@ -61,6 +61,8 @@ export enum WidgetT {
 export type Stackable = {
   width?: S
   height?: S
+  margin?: S
+  padding?: S
   grow?: U
   shrink?: U
   basis?: S

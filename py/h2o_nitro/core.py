@@ -291,6 +291,8 @@ class Zone:
             gap: Optional[str] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            margin: Optional[str] = None,
+            padding: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
             basis: Optional[str] = None,
@@ -303,6 +305,8 @@ class Zone:
         self.gap = gap
         self.width = width
         self.height = height
+        self.margin = margin
+        self.padding = padding
         self.grow = grow
         self.shrink = shrink
         self.basis = basis
@@ -318,6 +322,8 @@ class Zone:
             gap=self.gap,
             width=self.width,
             height=self.height,
+            margin=self.margin,
+            padding=self.padding,
             grow=self.grow,
             shrink=self.shrink,
             basis=self.basis,
@@ -332,6 +338,8 @@ def row(
         gap: Optional[str] = None,
         width: Optional[str] = None,
         height: Optional[str] = None,
+        margin: Optional[str] = None,
+        padding: Optional[str] = None,
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
         basis: Optional[str] = None,
@@ -345,6 +353,8 @@ def row(
         gap=gap,
         width=width,
         height=height,
+        margin=margin,
+        padding=padding,
         grow=grow,
         shrink=shrink,
         basis=basis,
@@ -359,6 +369,8 @@ def col(
         gap: Optional[str] = None,
         width: Optional[str] = None,
         height: Optional[str] = None,
+        margin: Optional[str] = None,
+        padding: Optional[str] = None,
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
         basis: Optional[str] = None,
@@ -371,6 +383,8 @@ def col(
         gap=gap,
         width=width,
         height=height,
+        margin=margin,
+        padding=padding,
         grow=grow,
         shrink=shrink,
         basis=basis,
@@ -498,6 +512,11 @@ class View:
             gap: Optional[str] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            margin: Optional[str] = None,
+            padding: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[str] = None,
             position: Optional[int] = None,
     ):
         s = Zone(
@@ -509,6 +528,11 @@ class View:
             gap=gap,
             width=width,
             height=height,
+            margin=margin,
+            padding=padding,
+            grow=grow,
+            shrink=shrink,
+            basis=basis,
         )
         self._write(_MsgType.Update, s, position)
 
@@ -522,6 +546,11 @@ class View:
             gap: Optional[str] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            margin: Optional[str] = None,
+            padding: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[str] = None,
             position: Optional[int] = None,
     ):
         s = Zone(
@@ -533,6 +562,11 @@ class View:
             gap=gap,
             width=width,
             height=height,
+            margin=margin,
+            padding=padding,
+            grow=grow,
+            shrink=shrink,
+            basis=basis,
         )
         self._write(_MsgType.Insert, s, position)
 
@@ -549,6 +583,11 @@ class View:
             gap: Optional[str] = None,
             width: Optional[str] = None,
             height: Optional[str] = None,
+            margin: Optional[str] = None,
+            padding: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[str] = None,
             position: Optional[int] = None,
     ):
         self.show(
@@ -560,6 +599,11 @@ class View:
             gap=gap,
             width=width,
             height=height,
+            margin=margin,
+            padding=padding,
+            grow=grow,
+            shrink=shrink,
+            basis=basis,
             position=position,
         )
         return self.read()

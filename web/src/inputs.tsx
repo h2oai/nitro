@@ -524,8 +524,17 @@ const XMarkdown = make(({ context, input }: InputProps) => {
   return { init: update, update, render }
 })
 
-const XStackItem = ({ stackable: { width, height, grow, shrink, basis }, children }: { stackable: Stackable, children: JSX.Element }) => {
-  const style: React.CSSProperties = { width, height, flexGrow: grow, flexShrink: shrink, flexBasis: basis }
+const XStackItem = ({ stackable: { width, height, margin, padding, grow, shrink, basis }, children }: { stackable: Stackable, children: JSX.Element }) => {
+  const style: React.CSSProperties = {
+    boxSizing: 'border-box',
+    width,
+    height,
+    margin,
+    padding,
+    flexGrow: grow,
+    flexShrink: shrink,
+    flexBasis: basis,
+  }
   return (
     <div style={style}>
       {children}
@@ -543,18 +552,19 @@ const flexStyles: Dict<S> = {
 
 const toFlexStyle = (s: S): S => flexStyles[s] ?? s
 
-const XStack = ({ context, widgets, stacking }: { context: Context, widgets: Widget[], stacking: Stacking }) => {
+const XStack = ({ context, widgets, stack }: { context: Context, widgets: Widget[], stack: Stacking & Stackable }) => {
   const
     children = widgets.map(widget => {
       const child = (widget.t === WidgetT.Stack)
-        ? <XStack context={context} widgets={widget.items} stacking={widget} />
+        ? <XStack context={context} widgets={widget.items} stack={widget} />
         : (widget.t === WidgetT.Input)
           ? <XInput key={widget.xid} context={context} input={widget} />
           : <div>Unknown widget</div>
       return <XStackItem key={xid()} stackable={widget}>{child}</XStackItem>
     }),
-    { row, justify, align, wrap, gap } = stacking,
+    { row, justify, align, wrap, gap, width, height, margin, padding, grow, shrink, basis } = stack,
     style: React.CSSProperties = {
+      boxSizing: 'border-box',
       display: 'flex',
       flexDirection: row ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
@@ -562,6 +572,13 @@ const XStack = ({ context, widgets, stacking }: { context: Context, widgets: Wid
       justifyItems: justify ? toFlexStyle(justify) : undefined,
       alignItems: align ? toFlexStyle(align) : undefined,
       alignContent: wrap ? toFlexStyle(wrap) : undefined,
+      width,
+      height,
+      margin,
+      padding,
+      flexGrow: grow,
+      flexShrink: shrink,
+      flexBasis: basis,
     }
 
   return (
@@ -721,7 +738,7 @@ export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
     context = newCaptureContext(props.send, [])
   return (
     <WidgetsContainer>
-      <XStack context={context} widgets={widgets} stacking={{}} />
+      <XStack context={context} widgets={widgets} stack={{}} />
     </WidgetsContainer>
   )
 }
