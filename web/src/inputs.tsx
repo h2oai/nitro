@@ -651,7 +651,7 @@ const widgetsHaveActions = (widgets: Widget[]): B => { // recursive
         {
           const { mode } = w
           if (mode === 'button' && w.options.length) return true
-          if (mode === 'markdown' && w.index >= 0) return true
+          if (mode === 'md' && w.index >= 0) return true
         }
         break
     }
@@ -662,7 +662,7 @@ const widgetsHaveActions = (widgets: Widget[]): B => { // recursive
 const XInput = ({ context, input }: InputProps) => { // recursive 
   const { mode, options, editable, multiple } = input
   switch (mode) {
-    case 'markdown':
+    case 'md':
       return <XMarkdown context={context} input={input} />
     case 'button':
       return <XButtons context={context} input={input} />

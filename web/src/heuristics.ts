@@ -54,7 +54,7 @@ const sanitizeInput = (input: Input) => {
   sanitizeRange(input)
   if (!mode) input.mode = determineMode(input)
 
-  if (input.mode === 'markdown') {
+  if (input.mode === 'md') {
     const [md, hasLinks] = markdown(input.text ?? '')
     input.text = md
     if (!hasLinks) {
@@ -146,7 +146,7 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
 
 export const sanitizeWidget = (widget: Widget): Widget => {
   if (isS(widget)) {
-    widget = { t: WidgetT.Input, xid: xid(), index: 0, mode: 'markdown', text: widget, options: [] }
+    widget = { t: WidgetT.Input, xid: xid(), index: 0, mode: 'md', text: widget, options: [] }
   }
   switch (widget.t) {
     case WidgetT.Stack:
