@@ -6,7 +6,7 @@ from h2o_nitro import View, box, row, col
 # ## Hello World!
 # The simplest possible app looks like this:
 def hello_world(view: View):
-    # Print a message
+    # Print a message.
     view('Hello World!')
 
 
@@ -42,8 +42,95 @@ def display_multiple(view: View):
     )
 
 
+# ## Sequencing views
+# Call `view()` multiple times to display multiple views in sequence, one after the other.
+def sequence_views(view: View):
+    view('Begin at the beginning,')
+    view('And go on till you come to the end,')
+    view('Then stop.')
+
+
+# ## Accepting user input
+# Call `box()` to create an input field.
+#
+# The `view()` function returns user inputs when it contains one or more input fields.
+def accept_input(view: View):
+    # Display a textbox and assign the entered value to a variable.
+    x = view(box('What is your name?', value='Boaty McBoatface'))
+    # Print the entered value.
+    view(f'Hello, {x}!')
+
+
+# Here, `view()` behaves similar to Python's built-in `input()` function.
+
+# ## Sequencing inputs
+# Capture multiple inputs one after the other by simply calling `view()` mutliple times
+# and using the return values.
+def sequence_inputs(view: View):
+    # Prompt for first name.
+    first_name = view(box('First name', value='Boaty'))
+    # Prompt for last name.
+    last_name = view(box('Last name', value='McBoatface'))
+    # Print the entered values.
+    view(f'Hello, {first_name} {last_name}!')
+
+
+# ## Accepting multiple inputs
+# Pass multiple input fields to `view()` to display them one below the other, top to bottom.
+#
+# The `view()` function returns multiple values if it contains
+# multiple input fields.
+def accept_multiple_inputs(view: View):
+    # Prompt for first and last names.
+    first_name, last_name = view(
+        box('First name', value='Boaty'),
+        box('Last name', value='McBoatface'),
+    )
+    # Print the entered values
+    view(f'Hello, {first_name} {last_name}!')
+
+
+# ## Putting it all together
+# `view()` and `box()` can be chained together to author sophisticated workflows and wizards.
+#
+# Building such a multi-page interactive app with ordinary web frameworks can be
+# a fairly complex endeavor weaving together requests and replies with logic spread across
+# multiple functions or callbacks, but Nitro makes this delightfully simple!
+#
+# Note how the example below combines `view()` with conditions and loops, while keeping the code
+# simple and clear.
+def dunk_your_donuts(view: View):
+    order = ''
+    food = view(box(
+        'What would you like to order today?',
+        options=['Donuts', 'Coffees']
+    ))
+    n = view(box(f'How many {food} would you like?', value=3))
+    if food == 'Donuts':
+        for i in range(n):
+            flavor = view(box(
+                f'Pick a flavor for donut {i + 1}.',
+                options=['Plain', 'Frosted', 'Chocolate']
+            ))
+            order += f'1. {flavor} donut\n'
+    else:
+        for i in range(n):
+            flavor = view(box(
+                f'Pick a flavor for coffee {i + 1}.',
+                options=['Dark-roast', 'Medium-roast', 'Decaf']
+            ))
+            order += f'1. {flavor} coffee\n'
+    view(f'''
+### Order summary:
+{order}
+Thank you for your order!
+    ''')
+
+
+# # Layout
+
 # ## Row-wise
-# Use `row()` to display multiple items on the same row, left to right.
+# Use `row()` to display multiple items along a row, left to right.
 def display_row(view: View):
     view(row(
         'Begin at the beginning,',
@@ -61,17 +148,6 @@ def display_row_alt(view: View):
         row=True,
     )
 
-
-# ## Sequencing views
-# To display multiple views in sequence, call `view()` multiple times.
-def display_in_sequence(view: View):
-    view('Begin at the beginning,')
-    view('And go on till you come to the end,')
-    view('Then stop.')
-
-
-# Here, `view()` prints its arguments to the web page.
-# The `view()` is comparable to Python's built-in `input()` function.
 
 # # Textbox
 
