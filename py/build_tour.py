@@ -140,13 +140,15 @@ def write_tour(groups: List[Group]):
 
 
 def write_examples(groups: List[Group]):
+    template = Path('example.template.py').read_text()
     examples_dir = Path('examples')
     for g in groups:
         group_dir = examples_dir / g.title.lower()
         shutil.rmtree(group_dir)
         group_dir.mkdir(parents=True)
         for e in g.examples:
-            (group_dir / f'{e.name}.py').write_text('\n'.join(e.code))
+            code = template.replace('# CODE', '\n' + '\n'.join(e.code).strip() + '\n')
+            (group_dir / f'{e.name}.py').write_text(code)
 
 
 def main():
