@@ -35,6 +35,7 @@ class Example:
 
 class Group:
     def __init__(self, title: str, examples: List[Example]):
+        self.name = title.lower()
         self.title = title
         self.examples = examples
 
@@ -143,8 +144,8 @@ def write_examples(groups: List[Group]):
     template = Path('example.template.py').read_text()
     examples_dir = Path('examples')
     for g in groups:
-        group_dir = examples_dir / g.title.lower()
-        shutil.rmtree(group_dir,ignore_errors=True)
+        group_dir = examples_dir / g.name
+        shutil.rmtree(group_dir, ignore_errors=True)
         group_dir.mkdir(parents=True)
         for e in g.examples:
             code = template.replace('# CODE', '\n' + '\n'.join(e.code).strip() + '\n')
@@ -163,17 +164,45 @@ def write_example(p: Printer, e: Example):
     p()
 
 
+docs_dir = Path('..') / 'docs'
+
+
 def write_docs_examples(groups: List[Group]):
-    examples_dir = Path('..') / 'docs' / 'examples'
+    examples_dir = docs_dir / 'examples'
     for g in groups:
-        group_dir = examples_dir / g.title.lower()
-        shutil.rmtree(group_dir,ignore_errors=True)
+        group_dir = examples_dir / g.name
+        shutil.rmtree(group_dir, ignore_errors=True)
         group_dir.mkdir(parents=True)
         for e in g.examples:
             p = Printer()
             p(f'# {g.title} - {e.title}')
             write_example(p, e)
             (group_dir / f'{e.name}.md').write_text(str(p))
+
+
+yaml_separator = '# Examples (generated)'
+
+
+def write_docs_yaml(groups: List[Group]):
+    p = Printer('  ')
+
+    yaml_path = Path('..') / 'mkdocs.yml'
+    yaml = yaml_path.read_text().split(yaml_separator)[0].strip()
+    p(yaml)
+    
+    p.indent()
+    p(yaml_separator)
+
+    p('- Examples:')
+    p.indent()
+    for g in groups:
+        p(f"- '{g.title}':")
+        p.indent()
+        for e in g.examples:
+            p(f"- 'examples/{g.name}/{e.name}.md'")
+        p.dedent()
+
+    yaml_path.write_text(str(p))
 
 
 def write_readme(groups: List[Group]):
@@ -193,6 +222,7 @@ def main():
     write_examples(groups)
     write_readme(groups)
     write_docs_examples(groups)
+    write_docs_yaml(groups)
 
 
 if __name__ == '__main__':
