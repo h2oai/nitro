@@ -92,6 +92,7 @@ def parse_example(src: str) -> Example:
     for block in blocks:
         if isinstance(block, Code):
             name = re.match(r'^def\s+(\w+)', block.lines[0]).group(1)
+            break
 
     if name is None:
         raise ValueError('could not determine example name')
@@ -118,7 +119,7 @@ def build_funcs(groups: List[Group]) -> str:
 
             p.indent()
 
-            p("'''")
+            p('"""')
             p(f'## {g.title} - {e.title}')
             for block in e.blocks:
                 if isinstance(block, Comment):
@@ -129,7 +130,7 @@ def build_funcs(groups: List[Group]) -> str:
                     for line in block.lines:
                         p(f'{line}')
                     p("```")
-            p("''',")
+            p('""",')
             p("'### Output',")
 
             p.dedent()
