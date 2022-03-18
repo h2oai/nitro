@@ -131,11 +131,11 @@ def build_menu(groups: List[Group]) -> str:
 
 
 def write_tour(groups: List[Group]):
-    tour = Path('tour_bootstrap.py').read_text()
-    tour = tour.replace('# EXAMPLES', build_funcs(groups))
-    tour = tour.replace('    # TOPIC_MAP', build_topic_map(groups))
-    tour = tour.replace('TOC', build_toc(groups))
-    tour = tour.replace('        # MENU', build_menu(groups))
+    tour = Path('tour.template.py').read_text(). \
+        replace('# EXAMPLES', build_funcs(groups)). \
+        replace('    # TOPIC_MAP', build_topic_map(groups)). \
+        replace('TOC', build_toc(groups)). \
+        replace('        # MENU', build_menu(groups))
     Path('tour.py').write_text(tour)
 
 
@@ -151,10 +151,30 @@ def write_examples(groups: List[Group]):
             (group_dir / f'{e.name}.py').write_text(code)
 
 
+def write_readme(groups: List[Group]):
+    p = Printer()
+    for g in groups:
+        for e in g.examples:
+            p(f'### {g.title} - {e.title}')
+            p()
+            for line in e.comments:
+                p(line)
+            p()
+            p('```py')
+            for line in e.code:
+                p(line)
+            p('```')
+            p()
+    readme = Path('README.template.md').read_text(). \
+        replace('EXAMPLES', str(p))
+    Path('../README.md').write_text(readme)
+
+
 def main():
     groups = parse_groups(Path('examples.py').read_text())
     write_tour(groups)
     write_examples(groups)
+    write_readme(groups)
 
 
 if __name__ == '__main__':
