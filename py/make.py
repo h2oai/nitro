@@ -5,7 +5,7 @@
 # Warning: Super-fragile, but gets the job done. Tread carefully.
 #
 
-from typing import List
+from typing import Union, List
 import shutil
 import re
 from pathlib import Path
@@ -32,12 +32,28 @@ class Printer:
         return '\n'.join(self._lines)
 
 
+def strip_lines(lines: List[str]) -> List[str]:
+    return '\n'.join(lines).strip().splitlines()
+
+
+class Code:
+    def __init__(self):
+        self.lines: List[str] = []
+
+
+class Comment:
+    def __init__(self):
+        self.lines: List[str] = []
+
+
+Block = Union[Code, Comment]
+
+
 class Example:
-    def __init__(self, title: str, name: str, comments: List[str], code: List[str]):
+    def __init__(self, title: str, name: str, blocks: List[Block]):
         self.title = title
         self.name = name
-        self.comments = comments
-        self.code = code
+        self.blocks = blocks
 
 
 class Group:
@@ -50,22 +66,37 @@ class Group:
 def parse_example(src: str) -> Example:
     lines = src.strip().splitlines()
     title = lines[0].strip()
-    comments = []
-    code = []
+    blocks: List[Block] = []
+    block = None
+
+    def save():
+        if block:
+            block.lines = strip_lines(block.lines)
+            blocks.append(block)
+
     for line in lines[1:]:
         if line.startswith('#'):
-            comments.append(line.lstrip('# '))
+            if not isinstance(block, Comment):
+                save()
+                block = Comment()
+            block.lines.append(line.lstrip('# '))
         else:
-            code.append(line)
+            if not isinstance(block, Code):
+                save()
+                block = Code()
+            block.lines.append(line)
 
-    if len(comments) == 0:
-        raise ValueError(f'{title}: no comments')
-    if len(code) == 0:
-        raise ValueError(f'{title}: no code')
+    save()
 
-    name = re.match(r'^def\s+(\w+)', code[0]).group(1)
+    name = None
+    for block in blocks:
+        if isinstance(block, Code):
+            name = re.match(r'^def\s+(\w+)', block.lines[0]).group(1)
 
-    return Example(title, name, comments, code)
+    if name is None:
+        raise ValueError('could not determine example name')
+
+    return Example(title, name, blocks)
 
 
 def parse_groups(src: str) -> List[Group]:
@@ -89,22 +120,27 @@ def build_funcs(groups: List[Group]) -> str:
 
             p("'''")
             p(f'## {g.title} - {e.title}')
-            for line in e.comments:
-                p(f'{line}')
-            p("```py")
-            for line in e.code:
-                p(f'{line}')
-            p("```")
+            for block in e.blocks:
+                if isinstance(block, Comment):
+                    for line in block.lines:
+                        p(f'{line}')
+                else:
+                    p("```py")
+                    for line in block.lines:
+                        p(f'{line}')
+                    p("```")
             p("''',")
             p("'### Output',")
 
             p.dedent()
             p(')')
             p()
-            p()
-            for line in e.code:
-                p(line.replace('view(', f'view(*{doc_var}, '))
-            p()
+            for block in e.blocks:
+                if isinstance(block, Code):
+                    p()
+                    for line in block.lines:
+                        p(line.replace('view(', f'view(*{doc_var}, '))
+                    p()
     return str(p)
 
 
@@ -147,28 +183,20 @@ def write_tour(groups: List[Group]):
     (Path('examples') / 'tour.py').write_text(tour)
 
 
-def write_examples(groups: List[Group]):
-    template = Path('example.template.py').read_text()
-    examples_dir = Path('examples')
-    for g in groups:
-        group_dir = examples_dir / g.name
-        shutil.rmtree(group_dir, ignore_errors=True)
-        group_dir.mkdir(parents=True)
-        for e in g.examples:
-            code = template.replace('# CODE', '\n' + '\n'.join(e.code).strip() + '\n')
-            (group_dir / f'{e.name}.py').write_text(code)
-
-
 def write_example(p: Printer, e: Example):
-    p()
-    for line in e.comments:
-        p(line)
-    p()
-    p('```py')
-    for line in e.code:
-        p(line)
-    p('```')
-    p()
+    for block in e.blocks:
+        if isinstance(block, Comment):
+            p()
+            for line in block.lines:
+                p(line)
+            p()
+        else:
+            p()
+            p('```py')
+            for line in block.lines:
+                p(line)
+            p('```')
+            p()
 
 
 docs_dir = Path('..') / 'docs'
@@ -238,9 +266,6 @@ def main():
 
     print('Generating tour...')
     write_tour(groups)
-
-    print('Generating examples...')
-    write_examples(groups)
 
     print('Generating README.md...')
     write_readme(groups)
