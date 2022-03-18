@@ -116,9 +116,6 @@ def build_funcs(groups: List[Group]) -> str:
             doc_var = e.name + '_docs'
             p()
             p(f'{doc_var} = (')
-
-            p.indent()
-
             p('"""')
             p(f'## {g.title} - {e.title}')
             for block in e.blocks:
@@ -131,9 +128,7 @@ def build_funcs(groups: List[Group]) -> str:
                         p(f'{line}')
                     p("```")
             p('""",')
-            p("'### Output',")
-
-            p.dedent()
+            p("    '### Output',")
             p(')')
             p()
             for block in e.blocks:
