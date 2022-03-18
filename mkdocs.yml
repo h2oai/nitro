@@ -1,0 +1,24 @@
+site_name: Nitro
+site_description: The quickest way to build web apps in Python
+repo_name: h2oai/nitro
+repo_url: https://github.com/h2oai/nitro
+theme:
+  name: material
+  icon:
+    logo: material/desktop-mac
+  features:
+    - navigation.tabs
+    - header.autohide
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/h2o_nitro
+markdown_extensions:
+  - admonition
+  - def_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: true

@@ -2,7 +2,6 @@ setuptools
 wheel
 flake8==4.0.1
 Flask==2.0.3
-mkdocs-material==8.2.5
 msgpack==1.0.3
 pytest==7.0.1
 simple-websocket==0.5.1
