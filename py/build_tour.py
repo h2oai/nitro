@@ -3,6 +3,27 @@ import re
 from pathlib import Path
 
 
+class Printer:
+    def __init__(self, indent='    '):
+        self.lines = []
+        self._indent = indent
+        self._level = 0
+
+    def indent(self):
+        self._level += 1
+        return self
+
+    def dedent(self):
+        self._level -= 1
+        return self
+
+    def __call__(self, line=''):
+        self.lines.append((self._indent * self._level) + line)
+
+    def join(self, prefix: str = '') -> str:
+        return '\n'.join([prefix + line for line in self.lines])
+
+
 def read_file(p: str) -> str:
     return Path(p).read_text()
 
@@ -46,10 +67,6 @@ def parse_example(src: str) -> Example:
     return Example(title, name, comments, code)
 
 
-def indent(prefix: str, lines: List[str]) -> str:
-    return '\n'.join([prefix + line for line in lines])
-
-
 def parse_groups(src: str) -> List[Group]:
     groups = []
     parts = src.split('# # ')[1:]
@@ -60,42 +77,64 @@ def parse_groups(src: str) -> List[Group]:
 
 
 def build_funcs(groups: List[Group]) -> str:
-    lines = []
+    p = Printer()
     for g in groups:
         for e in g.examples:
-            lines.append('')
+            doc_var = e.name + '_docs'
+            p()
+            p(f'{doc_var} = (')
+
+            p.indent()
+
+            p("'''")
+            p(f'## {g.title} - {e.title}')
+            for line in e.comments:
+                p(f'{line}')
+            p("```py")
             for line in e.code:
-                lines.append(line)
-            lines.append('')
-    return '\n'.join(lines)
+                p(f'{line}')
+            p("```")
+            p("''',")
+            p("'### Output',")
+
+            p.dedent()
+            p(')')
+            p()
+            p()
+            for line in e.code:
+                p(line.replace('view(', f'view(*{doc_var}, '))
+            p()
+    return p.join()
 
 
 def build_topic_map(groups: List[Group]) -> str:
-    lines = []
+    p = Printer().indent()
     for g in groups:
         for e in g.examples:
-            lines.append(f'{e.name}={e.name},')
+            p(f'{e.name}={e.name},')
 
-    return indent('    ', lines)
+    return p.join()
 
 
 def build_toc(groups: List[Group]) -> str:
-    lines = []
+    p = Printer()
     for g in groups:
-        lines.append(f'- {g.title}')
+        p(f'- {g.title}')
         for e in g.examples:
-            lines.append(f'  - [{e.title}](#{e.name})')
-    return indent('', lines)
+            p(f'  - [{e.title}](#{e.name})')
+    return p.join()
 
 
 def build_menu(groups: List[Group]) -> str:
-    lines = []
+    p = Printer().indent().indent()
     for g in groups:
-        lines.append(f'option(main, "{g.title}", icon="TextDocument", options=[')
+        p(f'option(main, "{g.title}", icon="TextDocument", options=[')
+        p.indent()
         for e in g.examples:
-            lines.append(f'    option({e.name}, "{e.title}", icon="TextDocument"),')
-        lines.append(']),')
-    return indent('        ', lines)
+            p(f'option({e.name}, "{e.title}", icon="TextDocument"),')
+        p.dedent()
+        p(']),')
+    return p.join()
 
 
 def main():
