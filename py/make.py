@@ -1,3 +1,10 @@
+#
+# This script extracts all the examples from examples.py and exports them
+# to the interactive tour, README, docs, etc.
+#
+# Warning: Super-fragile, but gets the job done. Tread carefully.
+#
+
 from typing import List
 import shutil
 import re
@@ -35,7 +42,7 @@ class Example:
 
 class Group:
     def __init__(self, title: str, examples: List[Example]):
-        self.name = title.lower()
+        self.name = title.lower().replace(' ', '-')
         self.title = title
         self.examples = examples
 
@@ -137,7 +144,7 @@ def write_tour(groups: List[Group]):
         replace('    # TOPIC_MAP', build_topic_map(groups)). \
         replace('TOC', build_toc(groups)). \
         replace('        # MENU', build_menu(groups))
-    Path('tour.py').write_text(tour)
+    (Path('examples') / 'tour.py').write_text(tour)
 
 
 def write_examples(groups: List[Group]):
@@ -175,7 +182,7 @@ def write_docs_examples(groups: List[Group]):
         group_dir.mkdir(parents=True)
         for e in g.examples:
             p = Printer()
-            p(f'# {g.title} - {e.title}')
+            p(f'# {e.title}')
             write_example(p, e)
             (group_dir / f'{e.name}.md').write_text(str(p))
 
@@ -189,7 +196,7 @@ def write_docs_yaml(groups: List[Group]):
     yaml_path = Path('..') / 'mkdocs.yml'
     yaml = yaml_path.read_text().split(yaml_separator)[0].strip()
     p(yaml)
-    
+
     p.indent()
     p(yaml_separator)
 
@@ -216,13 +223,35 @@ def write_readme(groups: List[Group]):
     (Path('..') / 'README.md').write_text(readme)
 
 
+def count_examples(groups: List[Group]):
+    n = 0
+    for g in groups:
+        n += len(g.examples)
+    return n
+
+
 def main():
+    print('Reading examples...')
     groups = parse_groups(Path('examples.py').read_text())
+
+    print(f'Found {count_examples(groups)} examples in {len(groups)} groups.')
+
+    print('Generating tour...')
     write_tour(groups)
+
+    print('Generating examples...')
     write_examples(groups)
+
+    print('Generating README.md...')
     write_readme(groups)
+
+    print('Generating examples for docs...')
     write_docs_examples(groups)
+
+    print('Updating mkdocs.yml...')
     write_docs_yaml(groups)
+
+    print('Done!')
 
 
 if __name__ == '__main__':
