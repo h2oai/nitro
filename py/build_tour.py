@@ -144,11 +144,36 @@ def write_examples(groups: List[Group]):
     examples_dir = Path('examples')
     for g in groups:
         group_dir = examples_dir / g.title.lower()
-        shutil.rmtree(group_dir)
+        shutil.rmtree(group_dir,ignore_errors=True)
         group_dir.mkdir(parents=True)
         for e in g.examples:
             code = template.replace('# CODE', '\n' + '\n'.join(e.code).strip() + '\n')
             (group_dir / f'{e.name}.py').write_text(code)
+
+
+def write_example(p: Printer, e: Example):
+    p()
+    for line in e.comments:
+        p(line)
+    p()
+    p('```py')
+    for line in e.code:
+        p(line)
+    p('```')
+    p()
+
+
+def write_docs_examples(groups: List[Group]):
+    examples_dir = Path('..') / 'docs' / 'examples'
+    for g in groups:
+        group_dir = examples_dir / g.title.lower()
+        shutil.rmtree(group_dir,ignore_errors=True)
+        group_dir.mkdir(parents=True)
+        for e in g.examples:
+            p = Printer()
+            p(f'# {g.title} - {e.title}')
+            write_example(p, e)
+            (group_dir / f'{e.name}.md').write_text(str(p))
 
 
 def write_readme(groups: List[Group]):
@@ -156,18 +181,10 @@ def write_readme(groups: List[Group]):
     for g in groups:
         for e in g.examples:
             p(f'### {g.title} - {e.title}')
-            p()
-            for line in e.comments:
-                p(line)
-            p()
-            p('```py')
-            for line in e.code:
-                p(line)
-            p('```')
-            p()
+            write_example(p, e)
     readme = Path('README.template.md').read_text(). \
         replace('EXAMPLES', str(p))
-    Path('../README.md').write_text(readme)
+    (Path('..') / 'README.md').write_text(readme)
 
 
 def main():
@@ -175,6 +192,7 @@ def main():
     write_tour(groups)
     write_examples(groups)
     write_readme(groups)
+    write_docs_examples(groups)
 
 
 if __name__ == '__main__':
