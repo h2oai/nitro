@@ -44,26 +44,25 @@ h1 {
   font-weight: 200;
   font-size: 3rem;
   line-height: 3.3rem;
-  margin-bottom: 0.5rem;
 }
 h2 {
   font-weight: 300;
   font-size: 2rem;
   line-height: 2.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 h3 {
   font-size: 1.44rem;
   line-height: 2rem;
   font-weight: 400;
-  margin-bottom: 0.25rem;
+  margin-top: 0.5rem;
   color: #333;
 }
 h4 {
   font-size: 1.2rem;
   line-height: 1.75rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
   color: #333;
 }
 h5 {
@@ -82,7 +81,7 @@ h6 {
 p, ul, ol {
   font-size: 1.2rem;
   line-height: 1.75rem;
-  margin-bottom: 1rem;
+  margin: 0.5rem 0;
   color: #242424;
 }
 strong {
