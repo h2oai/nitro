@@ -1,11 +1,12 @@
 from typing import List
+import shutil
 import re
 from pathlib import Path
 
 
 class Printer:
     def __init__(self, indent='    '):
-        self.lines = []
+        self._lines = []
         self._indent = indent
         self._level = 0
 
@@ -18,18 +19,10 @@ class Printer:
         return self
 
     def __call__(self, line=''):
-        self.lines.append((self._indent * self._level) + line)
+        self._lines.append((self._indent * self._level) + line)
 
-    def join(self, prefix: str = '') -> str:
-        return '\n'.join([prefix + line for line in self.lines])
-
-
-def read_file(p: str) -> str:
-    return Path(p).read_text()
-
-
-def write_file(p: str, text: str):
-    Path(p).write_text(text)
+    def __str__(self):
+        return '\n'.join(self._lines)
 
 
 class Example:
@@ -104,7 +97,7 @@ def build_funcs(groups: List[Group]) -> str:
             for line in e.code:
                 p(line.replace('view(', f'view(*{doc_var}, '))
             p()
-    return p.join()
+    return str(p)
 
 
 def build_topic_map(groups: List[Group]) -> str:
@@ -113,7 +106,7 @@ def build_topic_map(groups: List[Group]) -> str:
         for e in g.examples:
             p(f'{e.name}={e.name},')
 
-    return p.join()
+    return str(p)
 
 
 def build_toc(groups: List[Group]) -> str:
@@ -122,7 +115,7 @@ def build_toc(groups: List[Group]) -> str:
         p(f'- {g.title}')
         for e in g.examples:
             p(f'  - [{e.title}](#{e.name})')
-    return p.join()
+    return str(p)
 
 
 def build_menu(groups: List[Group]) -> str:
@@ -134,21 +127,32 @@ def build_menu(groups: List[Group]) -> str:
             p(f'option({e.name}, "{e.title}", icon="TextDocument"),')
         p.dedent()
         p(']),')
-    return p.join()
+    return str(p)
 
 
-def main():
-    src = read_file('examples.py')
-    groups = parse_groups(src)
-
-    tour = read_file('tour_bootstrap.py')
-
+def write_tour(groups: List[Group]):
+    tour = Path('tour_bootstrap.py').read_text()
     tour = tour.replace('# EXAMPLES', build_funcs(groups))
     tour = tour.replace('    # TOPIC_MAP', build_topic_map(groups))
     tour = tour.replace('TOC', build_toc(groups))
     tour = tour.replace('        # MENU', build_menu(groups))
+    Path('tour.py').write_text(tour)
 
-    write_file('tour.py', tour)
+
+def write_examples(groups: List[Group]):
+    examples_dir = Path('examples')
+    for g in groups:
+        group_dir = examples_dir / g.title.lower()
+        shutil.rmtree(group_dir)
+        group_dir.mkdir(parents=True)
+        for e in g.examples:
+            (group_dir / f'{e.name}.py').write_text('\n'.join(e.code))
+
+
+def main():
+    groups = parse_groups(Path('examples.py').read_text())
+    write_tour(groups)
+    write_examples(groups)
 
 
 if __name__ == '__main__':
