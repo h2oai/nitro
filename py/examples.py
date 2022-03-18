@@ -98,32 +98,33 @@ def accept_multiple_inputs(view: View):
 # multiple functions or callbacks, but Nitro makes this delightfully simple!
 #
 # Note how the example below combines `view()` with conditions and loops, while keeping the code
-# simple and clear.
+# simple, concise, and clear.
 def dunk_your_donuts(view: View):
-    order = ''
-    food = view(box(
+    menu = dict(
+        Donut=['Plain', 'Frosted', 'Chocolate'],
+        Coffee=['Dark-roast', 'Medium-roast', 'Decaf'],
+    )
+
+    items = view(box(
         'What would you like to order today?',
-        options=['Donuts', 'Coffees']
+        options=list(menu.keys()),
+        multiple=True,
     ))
-    n = view(box(f'How many {food} would you like?', value=3))
-    if food == 'Donuts':
-        for i in range(n):
+
+    summary = ''
+    for item in items:
+        count = view(box(f'How many orders of {item} would you like?', value=3))
+        for i in range(count):
             flavor = view(box(
-                f'Pick a flavor for donut {i + 1}.',
-                options=['Plain', 'Frosted', 'Chocolate']
+                f'Pick a flavor for {item} #{i + 1}',
+                options=menu[item],
             ))
-            order += f'1. {flavor} donut\n'
-    else:
-        for i in range(n):
-            flavor = view(box(
-                f'Pick a flavor for coffee {i + 1}.',
-                options=['Dark-roast', 'Medium-roast', 'Decaf']
-            ))
-            order += f'1. {flavor} coffee\n'
+            summary += f'    1. {flavor} {item}\n'
+
     view(f'''
-### Order summary:
-{order}
-Thank you for your order!
+    ### Order summary:
+    {summary}
+    Thank you for your order!
     ''')
 
 
