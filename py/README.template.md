@@ -2,6 +2,8 @@
 
 Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
 
+![Nitro](assets/gh-readme-banner.png)
+
 ## Philosophy
 
 Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`?
