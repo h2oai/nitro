@@ -2,6 +2,38 @@
 
 Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
 
+## Philosophy
+
+Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`?
+
+```py
+def main():
+    name = input('What is your name?')
+    feel = input(f'How do you feel today, {name}?')
+    print(f'What a coincidence, {name}, I feel {feel}, too!')
+```
+
+Output:
+
+```
+> What is your name?
+> Boaty McBoatface
+> How do you feel today, Boaty McBoatface?
+> intrigued
+> What a coincidence, Boaty McBoatface, I feel intrigued, too!
+```
+
+Nitro brings that same level of simplicity to authoring web applications. Compare:
+
+```py
+from h2o_nitro import View, box
+
+def main(view: View):
+    name = view(box('What is your name?'))
+    feel = view(box(f'How do you feel today, {name}?'))
+    view(f'What a coincidence, {name}, I feel {feel}, too!')
+```
+
 ## Features
 
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.

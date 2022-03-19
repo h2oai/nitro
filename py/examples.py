@@ -13,13 +13,13 @@ def hello_world(view: View):
 # Here, `view()` is comparable to Python's built-in `print()` function,
 # and prints its arguments to the web page.
 
-# ## Formatting content
+# ## Format content
 # Strings passed to `view()` are interpreted as [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 def format_content(view: View):
     view('This is **bold**.')
 
 
-# ## Markdown blocks
+# ## Display multiline content
 # Triple-quote strings to pass multiple lines of markdown.
 def format_multiline_content(view: View):
     view('''
@@ -32,8 +32,8 @@ def format_multiline_content(view: View):
 
 # Any leading whitespace on each line are automatically ignored.
 
-# ## Multiple content
-# Pass multiple items to `view()` to display them one below the other, top to bottom.
+# ## Display items in parallel
+# Pass multiple items to `view()` to lay them out top to bottom.
 def display_multiple(view: View):
     view(
         'Begin at the beginning,',
@@ -42,18 +42,21 @@ def display_multiple(view: View):
     )
 
 
-# ## Sequencing views
-# Call `view()` multiple times to display multiple views in sequence, one after the other.
+# ## Display items in sequence
+# Call `view()` multiple times to present a sequence of items, one at a time.
 def sequence_views(view: View):
     view('Begin at the beginning,')
     view('And go on till you come to the end,')
     view('Then stop.')
 
 
-# ## Accepting user input
+# ## Accept user input
 # Call `box()` to create an input field.
 #
 # The `view()` function returns user inputs when it contains one or more input fields.
+#
+# `box()` creates a textbox by default, but can also create other kinds of # input fields, like checkboxes,
+# dropdowns, spinboxes, etc.
 def accept_input(view: View):
     # Display a textbox and assign the entered value to a variable.
     x = view(box('What is your name?', value='Boaty McBoatface'))
@@ -63,9 +66,8 @@ def accept_input(view: View):
 
 # Here, `view()` behaves similar to Python's built-in `input()` function.
 
-# ## Sequencing inputs
-# Capture multiple inputs one after the other by simply calling `view()` mutliple times
-# and using the return values.
+# ## Accept inputs in sequence
+# Call `view()` multiple times to accept a sequence of inputs, one at a time.
 def sequence_inputs(view: View):
     # Prompt for first name.
     first_name = view(box('First name', value='Boaty'))
@@ -75,11 +77,10 @@ def sequence_inputs(view: View):
     view(f'Hello, {first_name} {last_name}!')
 
 
-# ## Accepting multiple inputs
-# Pass multiple input fields to `view()` to display them one below the other, top to bottom.
+# ## Accept inputs in parallel
+# Pass multiple items to `view()` to display them together.
 #
-# The `view()` function returns multiple values if it contains
-# multiple input fields.
+# The `view()` function returns multiple values if it contains # multiple input fields.
 def accept_multiple_inputs(view: View):
     # Prompt for first and last names.
     first_name, last_name = view(
@@ -91,13 +92,13 @@ def accept_multiple_inputs(view: View):
 
 
 # ## Putting it all together
-# `view()` and `box()` can be chained together to author sophisticated workflows and wizards.
+# `view()` and `box()` can be chained together to form sophisticated workflows and wizards.
 #
-# Building such a multi-page interactive app with ordinary web frameworks can be
-# a fairly complex endeavor weaving together requests and replies with logic spread across
-# multiple functions or callbacks, but Nitro makes this delightfully simple!
+# Building such a multi-page interactive app with plain web frameworks can be
+# a fairly complex endeavor, weaving together requests and replies with logic spread across
+# multiple functions or callbacks, but Nitro makes all this delightfully simple!
 #
-# Note how the example below combines `view()` with conditions and loops, while keeping the code
+# Note how the example below combines `view()` with conditionals and loops, while keeping the code
 # simple, concise, and clear.
 def dunk_your_donuts(view: View):
     menu = dict(
@@ -107,11 +108,15 @@ def dunk_your_donuts(view: View):
 
     items = view(box(
         'What would you like to order today?',
-        options=list(menu.keys()),
-        multiple=True,
+        options=list(menu.keys()),  # Menu item names.
+        multiple=True,  # Allow multiple selections.
     ))
 
-    summary = ''
+    if len(items) == 0:  # Nothing selected.
+        view(f'Nothing to order? Goodbye!')
+        return
+
+    summary = ''  # The order summary, which we'll display later.
     for item in items:
         count = view(box(f'How many orders of {item} would you like?', value=3))
         for i in range(count):

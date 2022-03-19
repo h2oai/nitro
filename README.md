@@ -2,6 +2,38 @@
 
 Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
 
+## Philosophy
+
+Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`?
+
+```py
+def main():
+    name = input('What is your name?')
+    feel = input(f'How do you feel today, {name}?')
+    print(f'What a coincidence, {name}, I feel {feel}, too!')
+```
+
+Output:
+
+```
+> What is your name?
+> Boaty McBoatface
+> How do you feel today, Boaty McBoatface?
+> intrigued
+> What a coincidence, Boaty McBoatface, I feel intrigued, too!
+```
+
+Nitro brings that same level of simplicity to authoring web applications. Compare:
+
+```py
+from h2o_nitro import View, box
+
+def main(view: View):
+    name = view(box('What is your name?'))
+    feel = view(box(f'How do you feel today, {name}?'))
+    view(f'What a coincidence, {name}, I feel {feel}, too!')
+```
+
 ## Features
 
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
@@ -48,7 +80,7 @@ def hello_world(view: View):
 Here, `view()` is comparable to Python's built-in `print()` function,
 and prints its arguments to the web page.
 
-### Basics - Formatting content
+### Basics - Format content
 
 Strings passed to `view()` are interpreted as [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
@@ -58,7 +90,7 @@ def format_content(view: View):
     view('This is **bold**.')
 ```
 
-### Basics - Markdown blocks
+### Basics - Display multiline content
 
 Triple-quote strings to pass multiple lines of markdown.
 
@@ -76,9 +108,9 @@ def format_multiline_content(view: View):
 
 Any leading whitespace on each line are automatically ignored.
 
-### Basics - Multiple content
+### Basics - Display items in parallel
 
-Pass multiple items to `view()` to display them one below the other, top to bottom.
+Pass multiple items to `view()` to lay them out top to bottom.
 
 
 ```py
@@ -90,9 +122,9 @@ def display_multiple(view: View):
     )
 ```
 
-### Basics - Sequencing views
+### Basics - Display items in sequence
 
-Call `view()` multiple times to display multiple views in sequence, one after the other.
+Call `view()` multiple times to present a sequence of items, one at a time.
 
 
 ```py
@@ -102,11 +134,14 @@ def sequence_views(view: View):
     view('Then stop.')
 ```
 
-### Basics - Accepting user input
+### Basics - Accept user input
 
 Call `box()` to create an input field.
 
 The `view()` function returns user inputs when it contains one or more input fields.
+
+`box()` creates a textbox by default, but can also create other kinds of # input fields, like checkboxes,
+dropdowns, spinboxes, etc.
 
 
 ```py
@@ -120,10 +155,9 @@ def accept_input(view: View):
 
 Here, `view()` behaves similar to Python's built-in `input()` function.
 
-### Basics - Sequencing inputs
+### Basics - Accept inputs in sequence
 
-Capture multiple inputs one after the other by simply calling `view()` mutliple times
-and using the return values.
+Call `view()` multiple times to accept a sequence of inputs, one at a time.
 
 
 ```py
@@ -136,12 +170,11 @@ def sequence_inputs(view: View):
     view(f'Hello, {first_name} {last_name}!')
 ```
 
-### Basics - Accepting multiple inputs
+### Basics - Accept inputs in parallel
 
-Pass multiple input fields to `view()` to display them one below the other, top to bottom.
+Pass multiple items to `view()` to display them together.
 
-The `view()` function returns multiple values if it contains
-multiple input fields.
+The `view()` function returns multiple values if it contains # multiple input fields.
 
 
 ```py
@@ -157,13 +190,13 @@ def accept_multiple_inputs(view: View):
 
 ### Basics - Putting it all together
 
-`view()` and `box()` can be chained together to author sophisticated workflows and wizards.
+`view()` and `box()` can be chained together to form sophisticated workflows and wizards.
 
-Building such a multi-page interactive app with ordinary web frameworks can be
-a fairly complex endeavor weaving together requests and replies with logic spread across
-multiple functions or callbacks, but Nitro makes this delightfully simple!
+Building such a multi-page interactive app with plain web frameworks can be
+a fairly complex endeavor, weaving together requests and replies with logic spread across
+multiple functions or callbacks, but Nitro makes all this delightfully simple!
 
-Note how the example below combines `view()` with conditions and loops, while keeping the code
+Note how the example below combines `view()` with conditionals and loops, while keeping the code
 simple, concise, and clear.
 
 
@@ -176,11 +209,15 @@ def dunk_your_donuts(view: View):
 
     items = view(box(
         'What would you like to order today?',
-        options=list(menu.keys()),
-        multiple=True,
+        options=list(menu.keys()),  # Menu item names.
+        multiple=True,  # Allow multiple selections.
     ))
 
-    summary = ''
+    if len(items) == 0:  # Nothing selected.
+        view(f'Nothing to order? Goodbye!')
+        return
+
+    summary = ''  # The order summary, which we'll display later.
     for item in items:
         count = view(box(f'How many orders of {item} would you like?', value=3))
         for i in range(count):
