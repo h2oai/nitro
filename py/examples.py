@@ -157,9 +157,9 @@ def display_row_alt(view: View):
 
 # # Textbox
 
-# ## Basic textbox
+# ## Basic
 # `box()` without any arguments creates a textbox.
-# The return value is the text entered into the textbox.
+# The return value is the text entered into the box.
 def textbox_basic(view: View):
     x = view(box())
     view(f'You entered {x}.')
@@ -172,15 +172,15 @@ def textbox_label(view: View):
     view(f'Your speed is {speed} km/h.')
 
 
-# ## Default Value
-# Use `value=` to prefill the textbox with a value.
+# ## Value
+# Use `value=` to prefill the box with a value.
 def textbox_value(view: View):
     speed = view(box('Speed (km/h)', value='60'))
     view(f'Your speed is {speed} km/h.')
 
 
 # ## Placeholder
-# Use `placeholder=` to display placeholder text inside the textbox.
+# Use `placeholder=` to display placeholder text inside the box.
 def textbox_placeholder(view: View):
     speed = view(box('Speed', placeholder='0 km/h'))
     view(f'Your speed is {speed} km/h.')
@@ -211,21 +211,21 @@ def textbox_mask(view: View):
 # - Use a backslash to escape any character.
 
 # ## Icon
-# Set `icon=` to display an icon at the end of the textbox.
+# Set `icon=` to display an icon at the end of the box.
 def textbox_icon(view: View):
     phrase = view(box('Filter results containing:', icon='Filter'))
     view(f'You set a filter on `{phrase}`.')
 
 
 # ## Prefix
-# Set `prefix=` to display a prefix at the start of the textbox.
+# Set `prefix=` to display a prefix at the start of the box.
 def textbox_prefix(view: View):
     website = view(box('Website', prefix='https://', value='example.com'))
     view(f'Your website is https://{website}.')
 
 
 # ## Suffix
-# Set `suffix=` to display a suffix at the end of the textbox.
+# Set `suffix=` to display a suffix at the end of the box.
 def textbox_suffix(view: View):
     website = view(box('Website', suffix='.com', value='example'))
     view(f'Your website is {website}.com.')
@@ -239,7 +239,7 @@ def textbox_prefix_suffix(view: View):
 
 
 # ## Error
-# Set `error=` to display an error message below the textbox.
+# Set `error=` to display an error message below the box.
 def textbox_error(view: View):
     speed = view(box('Speed (km/h)', error='Invalid input'))
 
@@ -261,31 +261,43 @@ def textarea(view: View):
 # Note that `lines=` only controls the initial height of the textbox, and
 # multi-line textboxes can be resized by the user.
 
-# ## Numeric
-# Set `value=` to a numeric value to accept numeric inputs.
-#
-# By default, this displays a textbox with increment/decrement buttons
+# # Spinbox
+
+# ## Basic
+# Call `box()` with `mode='number'` to display a box with increment/decrement buttons
 # (also called a *spinbox*).
 def spinbox_basic(view: View):
+    speed = view(box('Speed (km/h)', mode='number'))
+    view(f'Your speed is {speed} km/h')
+
+
+# ## Value
+# Set `value=` to a numeric value to prefill the box with the value.
+#
+# The mode setting `mode='number'` is implied, and can be elided.
+def spinbox_value(view: View):
     speed = view(box('Speed (km/h)', value=42))
     view(f'Your speed is {speed} km/h')
 
 
-# ## Numeric with min
+# In other words, calling `box()` with a numeric `value` has the same effect
+# as setting `mode='number'`, and is the preferred usage.
+
+# ## Min
 # Set `min=` to specify a minimum value.
 def spinbox_min(view: View):
     speed = view(box('Speed (km/h)', min=10))
     view(f'Your speed is {speed} km/h')
 
 
-# ## Numeric with max
+# ## Max
 # Set `max=` to specify a maximum value.
 def spinbox_max(view: View):
     speed = view(box('Speed (km/h)', max=100))
     view(f'Your speed is {speed} km/h')
 
 
-# ## Numeric with step
+# ## Step
 # Set `step=` to specify how much to increment or decrement by.
 #
 # The default step is `1`.
@@ -294,14 +306,26 @@ def spinbox_step(view: View):
     view(f'Your speed is {speed} km/h')
 
 
-# ## Numeric with min, max and step
-# `min=`, `max=` and `step=` can be combined in any which way to restrict input.
+# ## Precision
+# Set `precision=` to specify how many decimal places the value should be rounded to.
+#
+# The default is calculated based on the precision of step:
+# - if step = 1, precision = 0
+# - if step = 42.00, precision = 2
+# - if step = 0.0042, precision = 4
+def spinbox_precision(view: View):
+    speed = view(box('Speed (m/s)', value=0.6, min=-2, max=2, step=0.2, precision=2))
+    view(f'Your speed is {speed} m/s')
+
+
+# ## Min, Max, Step, Precision
+# `min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
 def spinbox_range(view: View):
     speed = view(box('Speed (km/h)', min=10, max=100, step=5))
     view(f'Your speed is {speed} km/h')
 
 
-# ## Numeric with range
+# ## Range
 # Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 #
 # This is a shorthand notation for setting both `min=` and `max=`.
@@ -310,7 +334,7 @@ def spinbox_range_alt(view: View):
     view(f'Your speed is {speed} km/h')
 
 
-# ## Numeric with range and step
+# ## Range with step
 # Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 #
 # This is a shorthand notation for setting `min=`, `max=` and `step`.
@@ -319,15 +343,44 @@ def spinbox_range_alt_step(view: View):
     view(f'Your speed is {speed} km/h')
 
 
-# ## Numeric with zero-crossing range
+# ## Range with precision
+# Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
+# Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
+# `min=`, `max=`, `step` and `precision`.
+def spinbox_range_alt_precision(view: View):
+    speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2, 2)))
+    view(f'Your speed is {speed} m/s')
+
+
+# ## Zero-crossing range
 # Ranges can cross zero.
 def spinbox_negative(view: View):
     speed = view(box('Speed (m/s)', value=-3, range=(-5, 5)))
     view(f'Your speed is {speed} m/s')
 
 
-# ## Numeric with fractional step
+# ## Fractional steps
 # Steps can be fractional.
 def spinbox_decimal_step(view: View):
     speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2)))
     view(f'Your speed is {speed} m/s')
+
+
+# # Slider
+
+# ## Basic
+# Set `mode='range'` to display a slider.
+def slider(view: View):
+    speed = view(box('Speed (km/h)', mode='range'))
+    view(f'Your speed is {speed} km/h')
+
+
+# # Range Slider
+
+# ## Basic
+# Set `value=` to a `(start, end)` tuple to display a range slider.
+#
+# The mode setting `mode='range'` is implied, and can be elided.
+def range_slider(view: View):
+    start, end = view(box('Speed range (km/h)', value=(3, 7)))
+    view(f'Your speed ranges between {start} and {end} km/h')

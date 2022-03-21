@@ -264,10 +264,10 @@ def display_row_alt(view: View):
     )
 ```
 
-### Textbox - Basic textbox
+### Textbox - Basic
 
 `box()` without any arguments creates a textbox.
-The return value is the text entered into the textbox.
+The return value is the text entered into the box.
 
 
 ```py
@@ -287,9 +287,9 @@ def textbox_label(view: View):
     view(f'Your speed is {speed} km/h.')
 ```
 
-### Textbox - Default Value
+### Textbox - Value
 
-Use `value=` to prefill the textbox with a value.
+Use `value=` to prefill the box with a value.
 
 
 ```py
@@ -300,7 +300,7 @@ def textbox_value(view: View):
 
 ### Textbox - Placeholder
 
-Use `placeholder=` to display placeholder text inside the textbox.
+Use `placeholder=` to display placeholder text inside the box.
 
 
 ```py
@@ -344,7 +344,7 @@ To construct the input mask:
 
 ### Textbox - Icon
 
-Set `icon=` to display an icon at the end of the textbox.
+Set `icon=` to display an icon at the end of the box.
 
 
 ```py
@@ -355,7 +355,7 @@ def textbox_icon(view: View):
 
 ### Textbox - Prefix
 
-Set `prefix=` to display a prefix at the start of the textbox.
+Set `prefix=` to display a prefix at the start of the box.
 
 
 ```py
@@ -366,7 +366,7 @@ def textbox_prefix(view: View):
 
 ### Textbox - Suffix
 
-Set `suffix=` to display a suffix at the end of the textbox.
+Set `suffix=` to display a suffix at the end of the box.
 
 
 ```py
@@ -388,7 +388,7 @@ def textbox_prefix_suffix(view: View):
 
 ### Textbox - Error
 
-Set `error=` to display an error message below the textbox.
+Set `error=` to display an error message below the box.
 
 
 ```py
@@ -422,21 +422,36 @@ def textarea(view: View):
 Note that `lines=` only controls the initial height of the textbox, and
 multi-line textboxes can be resized by the user.
 
-### Textbox - Numeric
+### Spinbox - Basic
 
-Set `value=` to a numeric value to accept numeric inputs.
-
-By default, this displays a textbox with increment/decrement buttons
+Call `box()` with `mode='number'` to display a box with increment/decrement buttons
 (also called a *spinbox*).
 
 
 ```py
 def spinbox_basic(view: View):
+    speed = view(box('Speed (km/h)', mode='number'))
+    view(f'Your speed is {speed} km/h')
+```
+
+### Spinbox - Value
+
+Set `value=` to a numeric value to prefill the box with the value.
+
+The mode setting `mode='number'` is implied, and can be elided.
+
+
+```py
+def spinbox_value(view: View):
     speed = view(box('Speed (km/h)', value=42))
     view(f'Your speed is {speed} km/h')
 ```
 
-### Textbox - Numeric with min
+
+In other words, calling `box()` with a numeric `value` has the same effect
+as setting `mode='number'`, and is the preferred usage.
+
+### Spinbox - Min
 
 Set `min=` to specify a minimum value.
 
@@ -447,7 +462,7 @@ def spinbox_min(view: View):
     view(f'Your speed is {speed} km/h')
 ```
 
-### Textbox - Numeric with max
+### Spinbox - Max
 
 Set `max=` to specify a maximum value.
 
@@ -458,7 +473,7 @@ def spinbox_max(view: View):
     view(f'Your speed is {speed} km/h')
 ```
 
-### Textbox - Numeric with step
+### Spinbox - Step
 
 Set `step=` to specify how much to increment or decrement by.
 
@@ -471,9 +486,25 @@ def spinbox_step(view: View):
     view(f'Your speed is {speed} km/h')
 ```
 
-### Textbox - Numeric with min, max and step
+### Spinbox - Precision
 
-`min=`, `max=` and `step=` can be combined in any which way to restrict input.
+Set `precision=` to specify how many decimal places the value should be rounded to.
+
+The default is calculated based on the precision of step:
+- if step = 1, precision = 0
+- if step = 42.00, precision = 2
+- if step = 0.0042, precision = 4
+
+
+```py
+def spinbox_precision(view: View):
+    speed = view(box('Speed (m/s)', value=0.6, min=-2, max=2, step=0.2, precision=2))
+    view(f'Your speed is {speed} m/s')
+```
+
+### Spinbox - Min, Max, Step, Precision
+
+`min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
 
 
 ```py
@@ -482,7 +513,7 @@ def spinbox_range(view: View):
     view(f'Your speed is {speed} km/h')
 ```
 
-### Textbox - Numeric with range
+### Spinbox - Range
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
@@ -495,7 +526,7 @@ def spinbox_range_alt(view: View):
     view(f'Your speed is {speed} km/h')
 ```
 
-### Textbox - Numeric with range and step
+### Spinbox - Range with step
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 
@@ -508,7 +539,20 @@ def spinbox_range_alt_step(view: View):
     view(f'Your speed is {speed} km/h')
 ```
 
-### Textbox - Numeric with zero-crossing range
+### Spinbox - Range with precision
+
+Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
+Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
+`min=`, `max=`, `step` and `precision`.
+
+
+```py
+def spinbox_range_alt_precision(view: View):
+    speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2, 2)))
+    view(f'Your speed is {speed} m/s')
+```
+
+### Spinbox - Zero-crossing range
 
 Ranges can cross zero.
 
@@ -519,7 +563,7 @@ def spinbox_negative(view: View):
     view(f'Your speed is {speed} m/s')
 ```
 
-### Textbox - Numeric with fractional step
+### Spinbox - Fractional steps
 
 Steps can be fractional.
 
@@ -528,4 +572,28 @@ Steps can be fractional.
 def spinbox_decimal_step(view: View):
     speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2)))
     view(f'Your speed is {speed} m/s')
+```
+
+### Slider - Basic
+
+Set `mode='range'` to display a slider.
+
+
+```py
+def slider(view: View):
+    speed = view(box('Speed (km/h)', mode='range'))
+    view(f'Your speed is {speed} km/h')
+```
+
+### Range Slider - Basic
+
+Set `value=` to a `(start, end)` tuple to display a range slider.
+
+The mode setting `mode='range'` is implied, and can be elided.
+
+
+```py
+def range_slider(view: View):
+    start, end = view(box('Speed range (km/h)', value=(3, 7)))
+    view(f'Your speed ranges between {start} and {end} km/h')
 ```
