@@ -32,16 +32,10 @@ const determineMode = (input: Input): InputMode => {
   }
 
   const
-    { value, min, max, step } = input,
+    { value, min, max } = input,
     hasRange = isN(min) && isN(max) && min < max
 
   if (isN(value) || hasRange) {
-    if (!editable && hasRange) {
-      const steps = (max - min) / (isN(step) ? step : 1)
-      if (steps <= 16) {
-        return 'range'
-      }
-    }
     return 'number'
   }
   return 'text'
