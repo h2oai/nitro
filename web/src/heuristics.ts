@@ -31,9 +31,7 @@ const determineMode = (input: Input): InputMode => {
     return 'menu'
   }
 
-  const
-    { value, min, max } = input,
-    hasRange = isN(min) && isN(max) && min < max
+  const { value, min, max, step, precision } = input
 
   if (isPair(value)) {
     const [a, b] = value
@@ -42,7 +40,7 @@ const determineMode = (input: Input): InputMode => {
     }
   }
 
-  if (isN(value) || hasRange) {
+  if (isN(value) || isN(min) || isN(max) || isN(step) || isN(precision)) {
     return 'number'
   }
   return 'text'
