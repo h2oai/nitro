@@ -57,9 +57,10 @@ class Example:
 
 
 class Group:
-    def __init__(self, title: str, examples: List[Example]):
+    def __init__(self, title: str, description: str, examples: List[Example]):
         self.name = title.lower().replace(' ', '-')
         self.title = title
+        self.description = description
         self.examples = examples
 
 
@@ -105,7 +106,10 @@ def parse_groups(src: str) -> List[Group]:
     parts = src.split('# # ')[1:]
     for part in parts:
         subparts = part.split('# ## ')
-        groups.append(Group(subparts[0].strip(), [parse_example(x) for x in subparts[1:]]))
+        header = subparts[0].strip().splitlines()
+        title = header[0]
+        description = '\n'.join(header[1:])
+        groups.append(Group(title, description, [parse_example(x) for x in subparts[1:]]))
     return groups
 
 
