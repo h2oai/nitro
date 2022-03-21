@@ -35,6 +35,13 @@ const determineMode = (input: Input): InputMode => {
     { value, min, max } = input,
     hasRange = isN(min) && isN(max) && min < max
 
+  if (isPair(value)) {
+    const [a, b] = value
+    if (isN(a) && isN(b)) {
+      return 'range'
+    }
+  }
+
   if (isN(value) || hasRange) {
     return 'number'
   }
