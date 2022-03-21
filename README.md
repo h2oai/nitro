@@ -6,7 +6,7 @@ Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No fr
 
 ## Philosophy
 
-Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`?
+Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`:
 
 ```py
 def main():
@@ -25,7 +25,7 @@ Output:
 > What a coincidence, Boaty McBoatface, I feel intrigued, too!
 ```
 
-Nitro brings that same level of simplicity to authoring web applications. Compare:
+Nitro brings that same level of simplicity to authoring web applications:
 
 ```py
 from h2o_nitro import View, box
@@ -40,9 +40,9 @@ def main(view: View):
 
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
 - **Code.** Laser-focused on keeping application code simple, concise, and clear.
-    - **Simplicity.** Page flow follows code flow.
-    - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
-    - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
+  - **Simplicity.** Page flow follows code flow.
+  - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
+  - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
 - **Widgets.** Huge library of sophisticated, accessible input controls and data visualization.
 - **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
   Use it in existing applications.
@@ -142,7 +142,7 @@ Call `box()` to create an input field.
 
 The `view()` function returns user inputs when it contains one or more input fields.
 
-`box()` creates a textbox by default, but can also create other kinds of # input fields, like checkboxes,
+`box()` creates a textbox by default, but can also create other kinds of input fields, like checkboxes,
 dropdowns, spinboxes, etc.
 
 
@@ -176,7 +176,7 @@ def sequence_inputs(view: View):
 
 Pass multiple items to `view()` to display them together.
 
-The `view()` function returns multiple values if it contains # multiple input fields.
+The `view()` function returns multiple values if it contains multiple input fields.
 
 
 ```py
@@ -289,7 +289,7 @@ def textbox_label(view: View):
 
 ### Textbox - Placeholder
 
-Pass `placeholder=` to display placeholder text inside the textbox.
+Use `placeholder=` to display placeholder text inside the textbox.
 
 
 ```py
@@ -297,3 +297,127 @@ def textbox_placeholder(view: View):
     speed = view(box('Speed', placeholder='0 km/s'))
     view(f'Your speed is {speed} km/s.')
 ```
+
+### Textbox - Default Value
+
+Use 'value=` to pre-fill the textbox with a value.
+
+
+```py
+def textbox_value(view: View):
+    speed = view(box('Speed (km/s)', value='60'))
+    view(f'Your speed is {speed} km/s.')
+```
+
+### Textbox - Required
+
+Set 'required=True` to indicate that input is required.
+
+
+```py
+def textbox_required(view: View):
+    speed = view(box('Speed (km/s)', required=True))
+    view(f'Your speed is {speed} km/s.')
+```
+
+### Textbox - Input Mask
+
+Set `mask=` to specify an input mask. An input mask is used to format the text field
+for the expected entry.
+
+For example, when someone needs to enter a phone number,
+use an input mask to indicate that three sets of digits should be entered.
+
+
+```py
+def textbox_mask(view: View):
+    phone = view(box('Phone', mask='(999) 999 - 9999'))
+    view(f'Your phone number is {phone}.')
+```
+
+
+To construct the input mask:
+- Use `a` to indicate a letter.
+- Use `9` to indicate a number.
+- Use `*` to indicate a letter or number.
+- Use a backslash to escape any character.
+
+### Textbox - Icon
+
+Use `icon=` to specify an icon, displayed at the end of the textbox.
+
+
+```py
+def textbox_icon(view: View):
+    phrase = view(box('Filter results containing:', icon='Filter'))
+    view(f'You set a filter on `{phrase}`.')
+```
+
+### Textbox - Prefix
+
+Use `prefix=` to specify a prefix, displayed at the start of the textbox.
+
+
+```py
+def textbox_prefix(view: View):
+    website = view(box('Website', prefix='https://', value='example.com'))
+    view(f'Your website is https://{website}.')
+```
+
+### Textbox - Suffix
+
+Use `suffix=` to specify a suffix, displayed at the end of the textbox.
+
+
+```py
+def textbox_suffix(view: View):
+    website = view(box('Website', suffix='.com', value='example'))
+    view(f'Your website is {website}.com.')
+```
+
+### Textbox - Prefix and Suffix
+
+A textbox can display both a prefix and a suffix at the same time.
+
+
+```py
+def textbox_prefix_suffix(view: View):
+    website = view(box('Website', prefix='https://', suffix='.com', value='example'))
+    view(f'Your website is https://{website}.com.')
+```
+
+### Textbox - Error
+
+Use `error=` to display an error message below the textbox.
+
+
+```py
+def textbox_error(view: View):
+    speed = view(box('Speed (km/s)', error='Invalid input'))
+```
+
+### Textbox - Password
+
+Set `password=True` when accepting passwords and other confidential inputs.
+
+
+```py
+def textbox_password(view: View):
+    password = view(box('Password field', password=True))
+    view(f'Your password `{password}` is not strong enough!')
+```
+
+### Textbox - Multiple lines
+
+Set `lines=` to display a multi-line text box.
+
+
+```py
+def textarea(view: View):
+    bio = view(box('Bio:', lines=5))
+    view(f'**Bio:** {bio}')
+```
+
+
+Note that the height of multi-line textboxes can be adjusted by the user, and
+`lines=` only controls the initial height of the textbox.
