@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from './app';
 import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/react';
 import reportWebVitals from './reportWebVitals';
-import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon, ChevronRightIcon, MoreIcon, TextDocumentIcon, DocumentationIcon } from '@fluentui/react-icons-mdl2';
+import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon, ChevronRightIcon, MoreIcon, TextDocumentIcon, DocumentationIcon, FilterIcon } from '@fluentui/react-icons-mdl2';
 import './index.css';
 import { newClient } from './client';
 
@@ -45,6 +45,7 @@ registerIcons({
     MuteChat: <MuteChatIcon />,
     Documentation: <DocumentationIcon />,
     TextDocument: <TextDocumentIcon />,
+    Filter: <FilterIcon />,
   },
 })
 

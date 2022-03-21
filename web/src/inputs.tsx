@@ -66,26 +66,38 @@ const XTextField = make(({ context, input }: InputProps) => {
 })
 
 
-class XSpinButton extends React.Component<InputProps, {}> {
-  // TODO format string
-  render() {
-    const
-      { text, value, min, max, step, precision } = this.props.input
+const XSpinButton = make(({ context, input }: InputProps) => {
+  const
+    { index, min, max, step, value } = input,
+    defaultValue = getDefaultValue(value, min, max, step) ?? 0
 
-    return (
-      <SpinButton
-        label={text}
-        labelPosition={Position.top}
-        defaultValue={isS(value) ? value : isN(value) ? String(value) : undefined}
-        min={unum(min)}
-        max={unum(max)}
-        step={step}
-        precision={precision}
-        styles={{ labelWrapper: { marginBottom: -4 } }} // Make textbox top match textfield
-      />
-    )
-  }
-}
+  context.capture(index, defaultValue)
+  const
+    onChange = (event: React.SyntheticEvent<HTMLElement>, value?: string): void => {
+      let v = isS(value) ? parseFloat(value) : defaultValue
+      if (isNaN(v)) v = defaultValue
+      context.capture(index, v)
+    },
+    render = () => {
+      const
+        { text, value, min, max, step, precision } = input
+
+      return (
+        <SpinButton
+          label={text}
+          labelPosition={Position.top}
+          defaultValue={isS(value) ? value : isN(value) ? String(value) : undefined}
+          min={unum(min)}
+          max={unum(max)}
+          step={step}
+          precision={precision}
+          styles={{ labelWrapper: { marginBottom: -4 } }} // Make textbox top match textfield
+          onChange={onChange}
+        />
+      )
+    }
+  return { render }
+})
 
 class XSlider extends React.Component<InputProps, {}> {
   // TODO format string
@@ -681,7 +693,7 @@ const XInput = ({ context, input }: InputProps) => { // recursive
       return options.length
         ? <XSwatchPicker context={context} input={input} />
         : <XColorPicker context={context} input={input} />
-    case 'day':
+    case 'date':
     case 'month':
     case 'week':
       return <XCalendar context={context} input={input} />
