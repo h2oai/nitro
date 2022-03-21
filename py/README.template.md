@@ -6,7 +6,7 @@ Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No fr
 
 ## Philosophy
 
-Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`?
+Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`:
 
 ```py
 def main():
@@ -25,7 +25,7 @@ Output:
 > What a coincidence, Boaty McBoatface, I feel intrigued, too!
 ```
 
-Nitro brings that same level of simplicity to authoring web applications. Compare:
+Nitro brings that same level of simplicity to authoring web applications:
 
 ```py
 from h2o_nitro import View, box
@@ -40,9 +40,9 @@ def main(view: View):
 
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
 - **Code.** Laser-focused on keeping application code simple, concise, and clear.
-    - **Simplicity.** Page flow follows code flow.
-    - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
-    - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
+  - **Simplicity.** Page flow follows code flow.
+  - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
+  - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
 - **Widgets.** Huge library of sophisticated, accessible input controls and data visualization.
 - **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
   Use it in existing applications.
