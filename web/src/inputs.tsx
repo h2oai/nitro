@@ -2,14 +2,14 @@ import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, Com
 import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
-import { B, box, Dict, gensym, I, isN, isO, isPair, isS, isV, N, on, S, U, V, xid } from './core';
+import { B, box, Dict, gensym, I, isN, isO, isPair, isS, isV, N, on, Pair, S, U, V, xid } from './core';
 import { markdown, Markdown } from './markdown';
 import { Input, Widget, MsgType, Option, WidgetT, InputMode, Conf, Stacking, Stackable } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
-const newCaptureContext = (send: Send, data: V[]) => {
-  const capture = (index: any, value: V) => {
+const newCaptureContext = (send: Send, data: Array<V | Pair<V>>) => {
+  const capture = (index: any, value: V | Pair<V>) => {
     if (index >= 0) data[index] = value
   }
   const submit = () => send({ t: MsgType.Input, d: data })
@@ -72,6 +72,7 @@ const XSpinButton = make(({ context, input }: InputProps) => {
     defaultValue = getDefaultValue(value, min, max, step) ?? 0
 
   context.capture(index, defaultValue)
+
   const
     onChange = (event: React.SyntheticEvent<HTMLElement>, value?: string): void => {
       let v = isS(value) ? parseFloat(value) : defaultValue
@@ -99,31 +100,50 @@ const XSpinButton = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-class XSlider extends React.Component<InputProps, {}> {
-  // TODO format string
-  render() {
-    const
-      { text, value, min, max, step } = this.props.input,
-      originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
-      props: Partial<ISliderProps> = { label: text, min: unum(min), max: unum(max), step, originFromZero }
+const XSlider = make(({ context, input }: InputProps) => {
+  const
+    { index, min, max, step, value } = input,
+    defaultValue = getDefaultValue(value, min, max, step) ?? 0
 
-    return Array.isArray(value) && value.length === 2 && isN(value[0]) && isN(value[1])
-      ? (
-        <Slider
-          {...props}
-          ranged
-          defaultLowerValue={getDefaultValue(value[0], min, max, step)}
-          defaultValue={getDefaultValue(value[1], min, max, step)}
-        />
-      ) : (
-        <Slider
-          {...props}
-          defaultValue={getDefaultValue(value, min, max, step)}
-        />
-      )
+  context.capture(index, defaultValue)
 
-  }
-}
+  const
+    onChange = (v: U, range?: [U, U]) => {
+      context.capture(index, range ? range : v)
+    },
+    render = () => {
+      const
+        { text, value, min, max, step } = input,
+        originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
+        ranged = isPair(value) && isN(value[0]) && isN(value[1]),
+        props: Partial<ISliderProps> = {
+          label: text,
+          min: unum(min),
+          max: unum(max),
+          step,
+          originFromZero,
+          ranged,
+          onChange,
+        }
+
+      return ranged
+        ? (
+          <Slider
+            {...props}
+            defaultLowerValue={getDefaultValue(value[0], min, max, step)}
+            defaultValue={getDefaultValue(value[1], min, max, step)}
+          />
+        ) : (
+          <Slider
+            {...props}
+            defaultValue={getDefaultValue(value, min, max, step)}
+          />
+        )
+
+
+    }
+  return { render }
+})
 
 const WithLabel = ({ label, children }: { label?: S, children: JSX.Element }) => (
   label

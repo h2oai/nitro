@@ -37,7 +37,7 @@ export type Msg = {
   d: Input
 } | {
   t: MsgType.Input,
-  d: Array<V | null>
+  d: Array<V | Pair<V> | null>
 } | {
   t: MsgType.Conf,
   d: Conf
