@@ -55,7 +55,7 @@ def sequence_views(view: View):
 #
 # The `view()` function returns user inputs when it contains one or more input fields.
 #
-# `box()` creates a textbox by default, but can also create other kinds of # input fields, like checkboxes,
+# `box()` creates a textbox by default, but can also create other kinds of input fields, like checkboxes,
 # dropdowns, spinboxes, etc.
 def accept_input(view: View):
     # Display a textbox and assign the entered value to a variable.
@@ -80,7 +80,7 @@ def sequence_inputs(view: View):
 # ## Accept inputs in parallel
 # Pass multiple items to `view()` to display them together.
 #
-# The `view()` function returns multiple values if it contains # multiple input fields.
+# The `view()` function returns multiple values if it contains multiple input fields.
 def accept_multiple_inputs(view: View):
     # Prompt for first and last names.
     first_name, last_name = view(
@@ -173,7 +173,89 @@ def textbox_label(view: View):
 
 
 # ## Placeholder
-# Pass `placeholder=` to display placeholder text inside the textbox.
+# Use `placeholder=` to display placeholder text inside the textbox.
 def textbox_placeholder(view: View):
     speed = view(box('Speed', placeholder='0 km/s'))
     view(f'Your speed is {speed} km/s.')
+
+
+# ## Default Value
+# Use 'value=` to pre-fill the textbox with a value.
+def textbox_value(view: View):
+    speed = view(box('Speed (km/s)', value='60'))
+    view(f'Your speed is {speed} km/s.')
+
+
+# ## Required
+# Set 'required=True` to indicate that input is required.
+def textbox_required(view: View):
+    speed = view(box('Speed (km/s)', required=True))
+    view(f'Your speed is {speed} km/s.')
+
+
+# ## Input Mask
+# Set `mask=` to specify an input mask. An input mask is used to format the text field
+# for the expected entry.
+#
+# For example, when someone needs to enter a phone number,
+# use an input mask to indicate that three sets of digits should be entered.
+def textbox_mask(view: View):
+    phone = view(box('Phone', mask='(999) 999 - 9999'))
+    view(f'Your phone number is {phone}.')
+
+
+# To construct the input mask:
+# - Use `a` to indicate a letter.
+# - Use `9` to indicate a number.
+# - Use `*` to indicate a letter or number.
+# - Use a backslash to escape any character.
+
+# ## Icon
+# Use `icon=` to specify an icon, displayed at the end of the textbox.
+def textbox_icon(view: View):
+    phrase = view(box('Filter results containing:', icon='Filter'))
+    view(f'You set a filter on `{phrase}`.')
+
+
+# ## Prefix
+# Use `prefix=` to specify a prefix, displayed at the start of the textbox.
+def textbox_prefix(view: View):
+    website = view(box('Website', prefix='https://', value='example.com'))
+    view(f'Your website is https://{website}.')
+
+
+# ## Suffix
+# Use `suffix=` to specify a suffix, displayed at the end of the textbox.
+def textbox_suffix(view: View):
+    website = view(box('Website', suffix='.com', value='example'))
+    view(f'Your website is {website}.com.')
+
+
+# ## Prefix and Suffix
+# A textbox can display both a prefix and a suffix at the same time.
+def textbox_prefix_suffix(view: View):
+    website = view(box('Website', prefix='https://', suffix='.com', value='example'))
+    view(f'Your website is https://{website}.com.')
+
+
+# ## Error
+# Use `error=` to display an error message below the textbox.
+def textbox_error(view: View):
+    speed = view(box('Speed (km/s)', error='Invalid input'))
+
+
+# ## Password
+# Set `password=True` when accepting passwords and other confidential inputs.
+def textbox_password(view: View):
+    password = view(box('Password field', password=True))
+    view(f'Your password `{password}` is not strong enough!')
+
+
+# ## Multiple lines
+# Set `lines=` to display a multi-line text box.
+def textarea(view: View):
+    bio = view(box('Bio:', lines=5))
+    view(f'**Bio:** {bio}')
+
+# Note that the height of multi-line textboxes can be adjusted by the user, and
+# `lines=` only controls the initial height of the textbox.
