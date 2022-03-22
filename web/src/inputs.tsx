@@ -179,77 +179,109 @@ const XRating = make(({ context, input }: InputProps) => {
   return { render }
 })
 
+const leftPad = (c: S, n: U) => {
+  let pad = ''
+  for (let i = 0; i < n; i++) pad += c
+  return (s: S) => {
+    if (s.length >= n) return s
+    s = pad + s
+    return s.substring(s.length - n)
+  }
+}
+
+const lpad2 = leftPad('0', 2)
+
+type Clock = {
+  hh: U, mm: U, ss: U,
+  pm: B, c24: B,
+}
+const
+  parseClock = (t: S): Clock => {
+    const
+      am = t.endsWith('am'),
+      pm = !am && t.endsWith('pm'),
+      c24 = !(am || pm),
+      hhmmss = c24 ? t : t.substring(0, t.length - 2),
+      [hh, mm, ss] = hhmmss.split(':').map(t => parseInt(t, 10))
+    return { hh, mm, ss, pm, c24 }
+  },
+  clockToString = ({ hh, mm, ss, pm, c24 }: Clock) => {
+    const parts: S[] = []
+    if (!isNaN(hh)) parts.push(lpad2(String(hh)))
+    if (!isNaN(mm)) parts.push(lpad2(String(mm)))
+    if (!isNaN(ss)) parts.push(lpad2(String(ss)))
+    const s = parts.join(':')
+    return c24 ? s : s + (pm ? 'PM' : 'AM')
+  }
+
 const XTimePicker = make(({ context, input }: InputProps) => {
   const
-    { index } = input,
-    capture = (h: U, m: U, s: U, z?: S) => {
-      context.capture(index, `${h}:${m}:${s}` + (z ?? ''))
+    { index, text, value } = input,
+    clock = parseClock(String(value).toLowerCase()),
+    capture = () => context.capture(index, clockToString(clock)),
+    hide: IStackItemStyles = { root: { display: 'none' } },
+    narrow: Partial<ISpinButtonStyles> = { labelWrapper: { marginBottom: -4 }, spinButtonWrapper: { width: 50 } },
+    onHoursChange = (_: React.SyntheticEvent<HTMLElement>, value?: S): void => {
+      if (value) clock.hh = parseInt(value)
+      capture()
     },
-    onHoursChange = (event: React.SyntheticEvent<HTMLElement>, value?: string): void => {
+    onMinutesChange = (_: React.SyntheticEvent<HTMLElement>, value?: S): void => {
+      if (value) clock.mm = parseInt(value)
+      capture()
     },
-    onMinutesChange = (event: React.SyntheticEvent<HTMLElement>, value?: S): void => {
+    onSecondsChange = (_: React.SyntheticEvent<HTMLElement>, value?: S): void => {
+      if (value) clock.ss = parseInt(value)
+      capture()
     },
-    onSecondsChange = (event: React.SyntheticEvent<HTMLElement>, value?: S): void => {
+    onToggleChange = (_: React.SyntheticEvent<HTMLElement>, checked?: B): void => {
+      if (checked !== undefined) clock.pm = checked
+      capture()
     },
-    onToggleChange = (event: React.SyntheticEvent<HTMLElement>, checked?: B): void => {
+    init = () => {
+      capture()
     },
     render = () => {
-      const
-        { text, value } = input,
-        t = String(value).toLowerCase(),
-        am = t.endsWith('am'),
-        pm = !am && t.endsWith('pm'),
-        c24 = !(am || pm),
-        hhmmss = c24 ? t : t.substring(0, t.length - 2),
-        tokens = hhmmss.split(':'),
-        [hh, mm, ss] = tokens.map(t => parseInt(t, 10)),
-        hhp = !isNaN(hh),
-        mmp = !isNaN(mm),
-        ssp = !isNaN(ss),
-        hide: IStackItemStyles = { root: { display: 'none' } },
-        narrow: Partial<ISpinButtonStyles> = { labelWrapper: { marginBottom: -4 }, spinButtonWrapper: { width: 50 } }
-
       return (
         <WithLabel label={text}>
           <Stack horizontal horizontalAlign='start' tokens={gap5}>
-            <Stack.Item styles={hhp ? undefined : hide}>
+            <Stack.Item styles={isNaN(clock.hh) ? hide : undefined}>
               <SpinButton
                 label='Hours'
                 labelPosition={Position.top}
-                defaultValue={String(hh)}
-                min={c24 ? 0 : 1}
-                max={c24 ? 23 : 12}
+                defaultValue={String(clock.hh)}
+                min={clock.c24 ? 0 : 1}
+                max={clock.c24 ? 23 : 12}
                 styles={narrow}
                 onChange={onHoursChange}
               />
             </Stack.Item>
-            <Stack.Item styles={mmp ? undefined : hide}>
+            <Stack.Item styles={isNaN(clock.mm) ? hide : undefined}>
               <SpinButton
                 label='Minutes'
                 labelPosition={Position.top}
-                defaultValue={String(mm)}
+                defaultValue={String(clock.mm)}
                 min={0}
                 max={59}
                 styles={narrow}
                 onChange={onMinutesChange}
               />
             </Stack.Item>
-            <Stack.Item styles={ssp ? undefined : hide}>
+            <Stack.Item styles={isNaN(clock.ss) ? hide : undefined}>
               <SpinButton
                 label='Seconds'
                 labelPosition={Position.top}
-                defaultValue={String(ss)}
+                defaultValue={String(clock.ss)}
                 min={0}
                 max={59}
                 styles={narrow}
                 onChange={onSecondsChange}
               />
             </Stack.Item>
-            <Stack.Item styles={!c24 ? undefined : hide} align='end'>
+            <Stack.Item styles={clock.c24 ? hide : undefined} align='end'>
               <Toggle
                 offText='AM'
                 onText='PM'
-                defaultChecked={pm}
+                defaultChecked={clock.pm}
                 onChange={onToggleChange}
               />
             </Stack.Item>
@@ -257,7 +289,7 @@ const XTimePicker = make(({ context, input }: InputProps) => {
         </WithLabel>
       )
     }
-  return { render }
+  return { init, render }
 })
 
 class XCalendar extends React.Component<InputProps, {}> {
