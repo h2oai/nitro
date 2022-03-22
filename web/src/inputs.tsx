@@ -176,49 +176,89 @@ const XRating = make(({ context, input }: InputProps) => {
         </WithLabel>
       )
     }
-  console.log(input, defaultRating)
   return { render }
 })
 
+const XTimePicker = make(({ context, input }: InputProps) => {
+  const
+    { index } = input,
+    capture = (h: U, m: U, s: U, z?: S) => {
+      context.capture(index, `${h}:${m}:${s}` + (z ?? ''))
+    },
+    onHoursChange = (event: React.SyntheticEvent<HTMLElement>, value?: string): void => {
+    },
+    onMinutesChange = (event: React.SyntheticEvent<HTMLElement>, value?: S): void => {
+    },
+    onSecondsChange = (event: React.SyntheticEvent<HTMLElement>, value?: S): void => {
+    },
+    onToggleChange = (event: React.SyntheticEvent<HTMLElement>, checked?: B): void => {
+    },
+    render = () => {
+      const
+        { text, value } = input,
+        t = String(value).toLowerCase(),
+        am = t.endsWith('am'),
+        pm = !am && t.endsWith('pm'),
+        c24 = !(am || pm),
+        hhmmss = c24 ? t : t.substring(0, t.length - 2),
+        tokens = hhmmss.split(':'),
+        [hh, mm, ss] = tokens.map(t => parseInt(t, 10)),
+        hhp = !isNaN(hh),
+        mmp = !isNaN(mm),
+        ssp = !isNaN(ss),
+        hide: IStackItemStyles = { root: { display: 'none' } },
+        narrow: Partial<ISpinButtonStyles> = { labelWrapper: { marginBottom: -4 }, spinButtonWrapper: { width: 50 } }
 
-class XTimePicker extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, value } = this.props.input,
-      t = String(value).toLowerCase(),
-      am = t.endsWith('am'),
-      pm = !am && t.endsWith('pm'),
-      c24 = !(am || pm),
-      hhmmss = c24 ? t : t.substring(0, t.length - 2),
-      tokens = hhmmss.split(':'),
-      [hh, mm, ss] = tokens.map(t => parseInt(t, 10)),
-      hhp = !isNaN(hh),
-      mmp = !isNaN(mm),
-      ssp = !isNaN(ss),
-      hide: IStackItemStyles = { root: { display: 'none' } },
-      narrow: Partial<ISpinButtonStyles> = { labelWrapper: { marginBottom: -4 }, spinButtonWrapper: { width: 50 } }
-
-
-    return (
-      <WithLabel label={text}>
-        <Stack horizontal horizontalAlign='start' tokens={gap5}>
-          <Stack.Item styles={hhp ? undefined : hide}>
-            <SpinButton label='Hours' labelPosition={Position.top} defaultValue={String(hh)} min={c24 ? 0 : 1} max={c24 ? 23 : 12} styles={narrow} />
-          </Stack.Item>
-          <Stack.Item styles={mmp ? undefined : hide}>
-            <SpinButton label='Minutes' labelPosition={Position.top} defaultValue={String(mm)} min={0} max={59} styles={narrow} />
-          </Stack.Item>
-          <Stack.Item styles={ssp ? undefined : hide}>
-            <SpinButton label='Seconds' labelPosition={Position.top} defaultValue={String(ss)} min={0} max={59} styles={narrow} />
-          </Stack.Item>
-          <Stack.Item styles={!c24 ? undefined : hide} align='end'>
-            <Toggle offText='AM' onText='PM' defaultChecked={pm} />
-          </Stack.Item>
-        </Stack>
-      </WithLabel>
-    )
-  }
-}
+      return (
+        <WithLabel label={text}>
+          <Stack horizontal horizontalAlign='start' tokens={gap5}>
+            <Stack.Item styles={hhp ? undefined : hide}>
+              <SpinButton
+                label='Hours'
+                labelPosition={Position.top}
+                defaultValue={String(hh)}
+                min={c24 ? 0 : 1}
+                max={c24 ? 23 : 12}
+                styles={narrow}
+                onChange={onHoursChange}
+              />
+            </Stack.Item>
+            <Stack.Item styles={mmp ? undefined : hide}>
+              <SpinButton
+                label='Minutes'
+                labelPosition={Position.top}
+                defaultValue={String(mm)}
+                min={0}
+                max={59}
+                styles={narrow}
+                onChange={onMinutesChange}
+              />
+            </Stack.Item>
+            <Stack.Item styles={ssp ? undefined : hide}>
+              <SpinButton
+                label='Seconds'
+                labelPosition={Position.top}
+                defaultValue={String(ss)}
+                min={0}
+                max={59}
+                styles={narrow}
+                onChange={onSecondsChange}
+              />
+            </Stack.Item>
+            <Stack.Item styles={!c24 ? undefined : hide} align='end'>
+              <Toggle
+                offText='AM'
+                onText='PM'
+                defaultChecked={pm}
+                onChange={onToggleChange}
+              />
+            </Stack.Item>
+          </Stack>
+        </WithLabel>
+      )
+    }
+  return { render }
+})
 
 class XCalendar extends React.Component<InputProps, {}> {
   // TODO format string; aria-label
