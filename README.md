@@ -517,7 +517,7 @@ def spinbox_range(view: View):
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
-This is a shorthand notation for setting both `min=` and `max=`.
+This is a shorthand notation for setting both `min=` and `max=` individually.
 
 
 ```py
@@ -582,7 +582,7 @@ The default range is between `0` and `10`.
 
 
 ```py
-def slider(view: View):
+def slider_basic(view: View):
     speed = view(box('Speed (km/h)', mode='range'))
     view(f'Your speed is {speed} km/h')
 ```
@@ -664,7 +664,7 @@ def slider_range(view: View):
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
-This is a shorthand notation for setting both `min=` and `max=`.
+This is a shorthand notation for setting both `min=` and `max=` individually.
 
 
 ```py
@@ -729,7 +729,130 @@ The mode setting `mode='range'` is implied, and can be elided.
 
 
 ```py
-def range_slider(view: View):
+def range_slider_basic(view: View):
     start, end = view(box('Speed range (km/h)', value=(3, 7)))
     view(f'Your speed ranges between {start} and {end} km/h')
+```
+
+### Range Slider - Min
+
+Set `min=` to specify a minimum value.
+
+
+```py
+def range_slider_min(view: View):
+    start, end = view(box('Speed range (km/h)', value=(3, 7), min=3))
+    view(f'Your speed ranges between {start} and {end} km/h')
+```
+
+### Range Slider - Max
+
+Set `max=` to specify a maximum value.
+
+
+```py
+def range_slider_max(view: View):
+    start, end = view(box('Speed range (km/h)', value=(30, 70), max=100))
+    view(f'Your speed ranges between {start} and {end} km/h')
+```
+
+### Range Slider - Step
+
+Set `step=` to specify how much to increment or decrement by.
+
+The default step is `1`.
+
+
+```py
+def range_slider_step(view: View):
+    start, end = view(box('Speed range (km/h)', value=(2, 6), step=2))
+    view(f'Your speed ranges between {start} and {end} km/h')
+```
+
+### Range Slider - Precision
+
+Set `precision=` to specify how many decimal places the value should be rounded to.
+
+The default is calculated based on the precision of step:
+- if step = 1, precision = 0
+- if step = 42.00, precision = 2
+- if step = 0.0042, precision = 4
+
+
+```py
+def range_slider_precision(view: View):
+    start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), min=-2, max=2, step=0.2, precision=2))
+    view(f'Your speed ranges between {start} and {end} m/s')
+```
+
+### Range Slider - Min, Max, Step, Precision
+
+`min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
+
+
+```py
+def range_slider_range(view: View):
+    start, end = view(box('Speed range (km/h)', value=(30, 70), min=10, max=100, step=5))
+    view(f'Your speed ranges between {start} and {end} km/h')
+```
+
+### Range Slider - Range
+
+Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
+
+This is a shorthand notation for setting both `min=` and `max=` individually.
+
+
+```py
+def range_slider_range_alt(view: View):
+    start, end = view(box('Speed range (km/h)', value=(30, 70), range=(10, 100)))
+    view(f'Your speed ranges between {start} and {end} km/h')
+```
+
+### Range Slider - Range with step
+
+Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
+
+This is a shorthand notation for setting `min=`, `max=` and `step` individually.
+
+
+```py
+def range_slider_range_alt_step(view: View):
+    start, end = view(box('Speed range (km/h)', value=(30, 70), range=(10, 100, 5)))
+    view(f'Your speed ranges between {start} and {end} km/h')
+```
+
+### Range Slider - Range with precision
+
+Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
+Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
+`min=`, `max=`, `step` and `precision` individually.
+
+
+```py
+def range_slider_range_alt_precision(view: View):
+    start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), range=(-2, 2, 0.2, 2)))
+    view(f'Your speed ranges between {start} and {end} m/s')
+```
+
+### Range Slider - Zero-crossing range
+
+Ranges can cross zero.
+
+
+```py
+def range_slider_negative(view: View):
+    start, end = view(box('Speed range (m/s)', value=(-3, 3), range=(-5, 5)))
+    view(f'Your speed ranges between {start} and {end} m/s')
+```
+
+### Range Slider - Fractional steps
+
+Steps can be fractional.
+
+
+```py
+def range_slider_decimal_step(view: View):
+    start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), range=(-2, 2, 0.2)))
+    view(f'Your speed ranges between {start} and {end} m/s')
 ```
