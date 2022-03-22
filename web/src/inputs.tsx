@@ -9,8 +9,9 @@ import { Send } from './socket';
 import { make } from './ui';
 
 const newCaptureContext = (send: Send, data: Array<V | Pair<V>>) => {
-  const capture = (index: any, value: V | Pair<V>) => {
+  const capture = <T extends V | Pair<V>>(index: any, value: T) => {
     if (index >= 0) data[index] = value
+    return value
   }
   const submit = () => send({ t: MsgType.Input, d: data })
   return { capture, submit }
@@ -31,6 +32,20 @@ const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefin
   if (isN(step)) return 0
   return undefined
 }
+
+const WithLabel = ({ label, children }: { label?: S, children: JSX.Element }) => (
+  label
+    ? (
+      <Stack>
+        <Stack.Item>
+          <Label>{label}</Label>
+        </Stack.Item>
+        <Stack.Item>{children}</Stack.Item>
+      </Stack>
+    ) : (
+      children
+    )
+)
 
 const XTextField = make(({ context, input }: InputProps) => {
   const { index, value } = input
@@ -69,11 +84,7 @@ const XTextField = make(({ context, input }: InputProps) => {
 const XSpinButton = make(({ context, input }: InputProps) => {
   const
     { index, min, max, step, value } = input,
-    defaultValue = getDefaultValue(value, min, max, step) ?? 0
-
-  context.capture(index, defaultValue)
-
-  const
+    defaultValue = context.capture(index, getDefaultValue(value, min, max, step) ?? 0),
     onChange = (event: React.SyntheticEvent<HTMLElement>, value?: string): void => {
       let v = isS(value) ? parseFloat(value) : defaultValue
       if (isNaN(v)) v = defaultValue
@@ -104,11 +115,7 @@ const XSlider = make(({ context, input }: InputProps) => {
   const
     { index, min, max, step, value } = input,
     ranged = isPair(value) && isN(value[0]) && isN(value[1]),
-    defaultValue = ranged ? value : getDefaultValue(value, min, max, step) ?? 0
-
-  context.capture(index, defaultValue)
-
-  const
+    defaultValue = context.capture(index, ranged ? value : getDefaultValue(value, min, max, step) ?? 0),
     onChange = (v: U, range?: [U, U]) => {
       context.capture(index, range ? range : v)
     },
@@ -146,37 +153,32 @@ const XSlider = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-const WithLabel = ({ label, children }: { label?: S, children: JSX.Element }) => (
-  label
-    ? (
-      <Stack>
-        <Stack.Item>
-          <Label>{label}</Label>
-        </Stack.Item>
-        <Stack.Item>{children}</Stack.Item>
-      </Stack>
-    ) : (
-      children
-    )
-)
-
-
-class XRating extends React.Component<InputProps, {}> {
-  // TODO format string; aria-label
-  render() {
-    const
-      { text: label, value, min, max } = this.props.input
-    return (
-      <WithLabel label={label}>
-        <Rating
-          defaultRating={unum(value)}
-          allowZeroStars={isN(min) && min <= 0}
-          max={unum(max)}
-        />
-      </WithLabel>
-    )
-  }
-}
+const XRating = make(({ context, input }: InputProps) => {
+  const
+    { index, min, value } = input,
+    allowZeroStars = isN(min) && min <= 0,
+    defaultRating = context.capture(index, unum(value) ?? (allowZeroStars ? 0 : 1)),
+    onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {
+      if (rating === undefined) return
+      context.capture(index, rating)
+    },
+    render = () => {
+      const
+        { text, max } = input
+      return (
+        <WithLabel label={text}>
+          <Rating
+            defaultRating={defaultRating}
+            allowZeroStars={allowZeroStars}
+            max={unum(max)}
+            onChange={onChange}
+          />
+        </WithLabel>
+      )
+    }
+  console.log(input, defaultRating)
+  return { render }
+})
 
 
 class XTimePicker extends React.Component<InputProps, {}> {
