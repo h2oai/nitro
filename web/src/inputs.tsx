@@ -103,7 +103,8 @@ const XSpinButton = make(({ context, input }: InputProps) => {
 const XSlider = make(({ context, input }: InputProps) => {
   const
     { index, min, max, step, value } = input,
-    defaultValue = getDefaultValue(value, min, max, step) ?? 0
+    ranged = isPair(value) && isN(value[0]) && isN(value[1]),
+    defaultValue = ranged ? value : getDefaultValue(value, min, max, step) ?? 0
 
   context.capture(index, defaultValue)
 
