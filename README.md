@@ -236,6 +236,88 @@ def dunk_your_donuts(view: View):
     ''')
 ```
 
+### Markdown - Formatting
+
+Markdown blocks support GFM (Github Flavored Markdown).
+
+
+```py
+def markdown_basic(view: View):
+    view('''
+    # Heading 1
+    ## Heading 2
+    ### Heading 3 
+    #### Heading 4
+    ##### Heading 5 
+    ###### Small print
+
+    This is a paragraph, with **bold**, *italics* (or _italics_), ***important***, `code`
+    and ~~strikethrough~~ formatting.
+
+    Here's a [hyperlink](https://example.com) to https://example.com.
+
+    ![An image](https://picsum.photos/200)
+
+    > This is a block quote.
+
+    - List item 1
+    - List item 2
+      - Sublist item 1
+      - Sublist item 2
+    - List item 3
+
+    1. Numbered list item 1
+    1. Numbered list item 2
+      1. Sublist item 1
+      1. Sublist item 2
+    1. Numbered list item 3
+
+    Here is a footnote[^1] and another one[^another].
+
+    [^1]: A reference.
+    [^another]: Another reference.
+
+    ''')
+```
+
+### Markdown - Syntax highlighting
+
+Code blocks in Markdown support syntax highlighting.
+
+
+```py
+def markdown_syntax_highlighting(view: View):
+    view('''
+    Python:
+    ```py
+    def hello():
+        print('Hello!')
+    ```
+
+    Javascript:
+    ```js
+    function hello() {
+        console.log('Hello!');
+    }
+    ```
+    ''')
+```
+
+### Markdown - Links
+
+Local links in markdown content behave like any other input. Clicking on a local link returns the name of the link.
+
+
+```py
+def markdown_links(view: View):
+    choice = view('''
+    - [Apples](#apples)
+    - [Bananas](#bananas)
+    - [Cherries](#cherries)
+    ''')
+    view(f'You clicked on {choice}.')
+```
+
 ### Layout - Row-wise
 
 Use `row()` to display multiple items along a row, left to right.
@@ -927,84 +1009,68 @@ def rating_range(view: View):
     view(f'Your rating was {stars} stars.')
 ```
 
-### Markdown - Formatting
+### Time - Basic
 
-Markdown blocks support GFM (Github Flavored Markdown).
+Set `mode='time'` to display a time picker.
 
 
 ```py
-def markdown_basic(view: View):
-    view('''
-    # Heading 1
-    ## Heading 2
-    ### Heading 3 
-    #### Heading 4
-    ##### Heading 5 
-    ###### Small print
-    
-    This is a paragraph, with **bold**, *italics* (or _italics_), ***important***, `code`
-    and ~~strikethrough~~ formatting.
-    
-    Here's a [hyperlink](https://example.com) to https://example.com.
-    
-    ![An image](https://picsum.photos/200)
-    
-    > This is a block quote.
-    
-    - List item 1
-    - List item 2
-      - Sublist item 1
-      - Sublist item 2
-    - List item 3
-      
-    1. Numbered list item 1
-    1. Numbered list item 2
-      1. Sublist item 1
-      1. Sublist item 2
-    1. Numbered list item 3
-    
-    Here is a footnote[^1] and another one[^another].
-    
-    [^1]: A reference.
-    [^another]: Another reference.
-    
-    ''')
+def time_basic(view: View):
+    time = view(box('Set alarm for:', mode='time', value='3:04PM'))
+    view(f'Alarm set for {time}.')
 ```
 
-### Markdown - Syntax highlighting
+### Time - With seconds
 
-Code blocks in Markdown support syntax highlighting.
+Include seconds in the `value` to show a seconds component.
 
 
 ```py
-def markdown_syntax_highlighting(view: View):
-    view('''
-    Python:
-    ```py
-    def hello():
-        print('Hello!')
-    ```
-    
-    Javascript:
-    ```js
-    function hello() {
-        console.log('Hello!');
-    }
-    ```
-    ''')
+def time_seconds(view: View):
+    time = view(box('Set alarm for:', mode='time', value='3:04:05PM'))
+    view(f'Alarm set for {time}.')
 ```
 
-### Markdown - Links
+### Time - Hour only
 
-Local links in markdown content behave like any other input. Clicking on a local link returns the name of the link.
+Exclude minutes and seconds from the `value` to show only the hour component.
 
 
 ```py
-def markdown_links(view: View):
-    choice = view('''
-    - [Apples](#apples)
-    - [Bananas](#bananas)
-    - [Cherries](#cherries)
-    ''')
-    view(f'You clicked on {choice}.')
+def time_hour(view: View):
+    time = view(box('Set alarm for:', mode='time', value='3PM'))
+    view(f'Alarm set for {time}.')
+```
+
+### Time - 24-hour clock
+
+Exclude AM/PM from the `value` to accept input in military time.
+
+
+```py
+def time_24(view: View):
+    time = view(box('Set alarm for:', mode='time', value='15:04'))
+    view(f'Alarm set for {time}.')
+```
+
+### Time - 24-hour clock, with seconds
+
+Include seconds in the `value` to show a seconds component.
+
+
+```py
+def time_24_seconds(view: View):
+    time = view(box('Set alarm for:', mode='time', value='15:04:05'))
+    view(f'Alarm set for {time}.')
+```
+
+### Time - 24-hour clock, hour only
+
+Exclude minutes and seconds from the `value` to show only the hour component.
+
+
+```py
+def time_24_hour(view: View):
+    time = view(box('Set alarm for:', mode='time', value='15'))
+    view(f'Alarm set for {time}.')
 ```
