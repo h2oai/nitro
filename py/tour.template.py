@@ -43,7 +43,7 @@ nitro = View(
     ],
 )
 
-app = Flask(__name__, static_folder='../web/build', static_url_path='')
+app = Flask(__name__, static_folder='../../web/build', static_url_path='')
 
 
 @app.route('/nitro', websocket=True)
