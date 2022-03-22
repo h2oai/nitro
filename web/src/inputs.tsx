@@ -802,7 +802,7 @@ const XMenu = make(({ send, options }: { send: Send, options: Option[] }) => {
 })
 
 export const AppContainer = styled.div`
-  max-width: 640px;
+  max-width: 720px;
   background-color: #fff;
   margin: 1rem auto 2rem;
 `
