@@ -319,7 +319,7 @@ def spinbox_precision(view: View):
 
 
 # ## Min, Max, Step, Precision
-# `min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
+# `min=`, `max=`, `step=` and `precision=` can be combined.
 def spinbox_range(view: View):
     speed = view(box('Speed (km/h)', min=10, max=100, step=5))
     view(f'Your speed is {speed} km/h')
@@ -328,7 +328,7 @@ def spinbox_range(view: View):
 # ## Range
 # Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 #
-# This is a shorthand notation for setting both `min=` and `max=` individually.
+# This is a shorthand notation for setting `min=` and `max=` individually.
 def spinbox_range_alt(view: View):
     speed = view(box('Speed (km/h)', range=(10, 100)))
     view(f'Your speed is {speed} km/h')
@@ -420,7 +420,7 @@ def slider_precision(view: View):
 
 
 # ## Min, Max, Step, Precision
-# `min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
+# `min=`, `max=`, `step=` and `precision=` can be combined.
 def slider_range(view: View):
     speed = view(box('Speed (km/h)', mode='range', min=10, max=100, step=5))
     view(f'Your speed is {speed} km/h')
@@ -429,7 +429,7 @@ def slider_range(view: View):
 # ## Range
 # Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 #
-# This is a shorthand notation for setting both `min=` and `max=` individually.
+# This is a shorthand notation for setting `min=` and `max=` individually.
 def slider_range_alt(view: View):
     speed = view(box('Speed (km/h)', mode='range', range=(10, 100)))
     view(f'Your speed is {speed} km/h')
@@ -514,7 +514,7 @@ def range_slider_precision(view: View):
 
 
 # ## Min, Max, Step, Precision
-# `min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
+# `min=`, `max=`, `step=` and `precision=` can be combined.
 def range_slider_range(view: View):
     start, end = view(box('Speed range (km/h)', value=(30, 70), min=10, max=100, step=5))
     view(f'Your speed ranges between {start} and {end} km/h')
@@ -523,7 +523,7 @@ def range_slider_range(view: View):
 # ## Range
 # Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 #
-# This is a shorthand notation for setting both `min=` and `max=` individually.
+# This is a shorthand notation for setting `min=` and `max=` individually.
 def range_slider_range_alt(view: View):
     start, end = view(box('Speed range (km/h)', value=(30, 70), range=(10, 100)))
     view(f'Your speed ranges between {start} and {end} km/h')
@@ -559,3 +559,51 @@ def range_slider_negative(view: View):
 def range_slider_decimal_step(view: View):
     start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), range=(-2, 2, 0.2)))
     view(f'Your speed ranges between {start} and {end} m/s')
+
+
+# # Rating
+
+# ## Basic
+# Set `mode='rating'` to accept a star-rating.
+#
+# By default, five stars are displayed.
+def rating_basic(view: View):
+    stars = view(box('Rating', mode='rating'))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Value
+# Set `value=` to specify a default value.
+def rating_value(view: View):
+    stars = view(box('Rating with value', mode='rating', value=3))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Min
+# Set `min=` to specify a minimum value.
+def rating_min(view: View):
+    stars = view(box('Rating with zero allowed', mode='rating', min=0))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Max
+# Set `max=` to specify a maximum value.
+def rating_max(view: View):
+    stars = view(box('Rating with max', mode='rating', value=3, max=10))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Min and max
+# `min=` and `max=` can be combined.
+def rating_min_max(view: View):
+    stars = view(box('Rating with range', mode='rating', value=3, min=0, max=10))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Range
+# Set `range=` to a `(min, max)` tuple to control min/max stars.
+#
+# This is a shorthand notation for setting `min=` and `max=` individually.
+def rating_range(view: View):
+    stars = view(box('Rating with range', mode='rating', value=3, range=(0, 10)))
+    view(f'Your rating was {stars} stars.')

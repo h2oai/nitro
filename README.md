@@ -504,7 +504,7 @@ def spinbox_precision(view: View):
 
 ### Spinbox - Min, Max, Step, Precision
 
-`min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
+`min=`, `max=`, `step=` and `precision=` can be combined.
 
 
 ```py
@@ -517,7 +517,7 @@ def spinbox_range(view: View):
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
-This is a shorthand notation for setting both `min=` and `max=` individually.
+This is a shorthand notation for setting `min=` and `max=` individually.
 
 
 ```py
@@ -651,7 +651,7 @@ def slider_precision(view: View):
 
 ### Slider - Min, Max, Step, Precision
 
-`min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
+`min=`, `max=`, `step=` and `precision=` can be combined.
 
 
 ```py
@@ -664,7 +664,7 @@ def slider_range(view: View):
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
-This is a shorthand notation for setting both `min=` and `max=` individually.
+This is a shorthand notation for setting `min=` and `max=` individually.
 
 
 ```py
@@ -787,7 +787,7 @@ def range_slider_precision(view: View):
 
 ### Range Slider - Min, Max, Step, Precision
 
-`min=`, `max=`, `step=` and `precision=` can be combined in any which way to restrict input.
+`min=`, `max=`, `step=` and `precision=` can be combined.
 
 
 ```py
@@ -800,7 +800,7 @@ def range_slider_range(view: View):
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
-This is a shorthand notation for setting both `min=` and `max=` individually.
+This is a shorthand notation for setting `min=` and `max=` individually.
 
 
 ```py
@@ -855,4 +855,74 @@ Steps can be fractional.
 def range_slider_decimal_step(view: View):
     start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), range=(-2, 2, 0.2)))
     view(f'Your speed ranges between {start} and {end} m/s')
+```
+
+### Rating - Basic
+
+Set `mode='rating'` to accept a star-rating.
+
+By default, five stars are displayed.
+
+
+```py
+def rating_basic(view: View):
+    stars = view(box('Rating', mode='rating'))
+    view(f'Your rating was {stars} stars.')
+```
+
+### Rating - Value
+
+Set `value=` to specify a default value.
+
+
+```py
+def rating_value(view: View):
+    stars = view(box('Rating with value', mode='rating', value=3))
+    view(f'Your rating was {stars} stars.')
+```
+
+### Rating - Min
+
+Set `min=` to specify a minimum value.
+
+
+```py
+def rating_min(view: View):
+    stars = view(box('Rating with zero allowed', mode='rating', min=0))
+    view(f'Your rating was {stars} stars.')
+```
+
+### Rating - Max
+
+Set `max=` to specify a maximum value.
+
+
+```py
+def rating_max(view: View):
+    stars = view(box('Rating with max', mode='rating', value=3, max=10))
+    view(f'Your rating was {stars} stars.')
+```
+
+### Rating - Min and max
+
+`min=` and `max=` can be combined.
+
+
+```py
+def rating_min_max(view: View):
+    stars = view(box('Rating with range', mode='rating', value=3, min=0, max=10))
+    view(f'Your rating was {stars} stars.')
+```
+
+### Rating - Range
+
+Set `range=` to a `(min, max)` tuple to control min/max stars.
+
+This is a shorthand notation for setting `min=` and `max=` individually.
+
+
+```py
+def rating_range(view: View):
+    stars = view(box('Rating with range', mode='rating', value=3, range=(0, 10)))
+    view(f'Your rating was {stars} stars.')
 ```
