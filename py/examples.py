@@ -171,7 +171,6 @@ def markdown_basic(view: View):
 
     [^1]: A reference.
     [^another]: Another reference.
-
     ''')
 
 
@@ -416,7 +415,6 @@ def spinbox_range_alt_step(view: View):
 
 
 # ## Range with precision
-# Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 # Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
 # `min=`, `max=`, `step` and `precision` individually.
 def spinbox_range_alt_precision(view: View):
@@ -517,7 +515,6 @@ def slider_range_alt_step(view: View):
 
 
 # ## Range with precision
-# Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 # Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
 # `min=`, `max=`, `step` and `precision` individually.
 def slider_range_alt_precision(view: View):
