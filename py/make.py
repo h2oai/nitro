@@ -32,6 +32,25 @@ class Printer:
         return '\n'.join(self._lines)
 
 
+def dedent(lines: List[str]) -> List[str]:
+    return [line[4:] if line.startswith('    ') else line for line in lines]
+
+
+def is_def(line: str) -> bool:
+    return line.lstrip().startswith('def ')
+
+
+def remove_def_if_only_def(lines: List[str]) -> List[str]:
+    n = 0
+    for line in lines:
+        if is_def(line):
+            n += 1
+    if n == 1:
+        if is_def(lines[0]):
+            return dedent(lines[1:])
+    return lines
+
+
 def strip_lines(lines: List[str]) -> List[str]:
     return '\n'.join(lines).strip().splitlines()
 
@@ -128,7 +147,7 @@ def build_funcs(groups: List[Group]) -> str:
                         p(f'{line}')
                 else:
                     p("```py")
-                    for line in block.lines:
+                    for line in remove_def_if_only_def(block.lines):
                         p(f'{line}')
                     p("```")
             p('""",')
@@ -193,7 +212,7 @@ def write_example(p: Printer, e: Example):
         else:
             p()
             p('```py')
-            for line in block.lines:
+            for line in remove_def_if_only_def(block.lines):
                 p(line)
             p('```')
             p()
