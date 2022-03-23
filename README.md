@@ -1001,24 +1001,31 @@ view(f'Alarm set for {time}.')
 
 ### Date - Basic
 
-Set `mode='day'` to display a date-picker.
+Set `mode='date'` to display a date-picker.
 
 
 ```py
-date = view(box('Pick a date', mode='day'))
+date = view(box('Pick a date', mode='date'))
+view(f'You picked {date}.')
+```
+
+### Date - Placeholder
+
+Set `placeholder=` to show placeholder text.
+
+
+```py
+date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
 view(f'You picked {date}.')
 ```
 
 ### Date - Value
 
-Set `value='day'` to pre-select a date.
-
-Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
-Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
+Set `value=` to pre-select a date.
 
 
 ```py
-date = view(box('Pick a date', mode='day', value='2021-10-10'))
+date = view(box('Pick a date', mode='date', value='2021-10-10'))
 view(f'You picked {date}.')
 ```
 
@@ -1028,7 +1035,7 @@ Set `min=` to specify a minimum date.
 
 
 ```py
-date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01'))
+date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01'))
 view(f'You picked {date}.')
 ```
 
@@ -1038,7 +1045,7 @@ Set `max=` to specify a maximum date.
 
 
 ```py
-date = view(box('Pick a date', mode='day', value='2021-10-10', max='2022-12-31'))
+date = view(box('Pick a date', mode='date', value='2021-10-10', max='2022-12-31'))
 view(f'You picked {date}.')
 ```
 
@@ -1048,7 +1055,7 @@ Set both `min=` and `max=` to restrict selection between two dates.
 
 
 ```py
-date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
+date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
 view(f'You picked {date}.')
 ```
 
@@ -1060,13 +1067,78 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 
 
 ```py
+date = view(box('Pick a date', mode='date', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+view(f'You picked {date}.')
+```
+
+### Calendar - Day - Basic
+
+Set `mode='day'` to display a calendar.
+
+
+```py
+date = view(box('Pick a date', mode='day'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Day - Value
+
+Set `value=` to pre-select a date.
+
+Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Day - Min
+
+Set `min=` to specify a minimum date.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Day - Max
+
+Set `max=` to specify a maximum date.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10', max='2022-12-31'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Day - Min and Max
+
+Set both `min=` and `max=` to restrict selection between two dates.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Day - Range
+
+Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
+
+This is a shorthand notation for setting `min=` and `max=` individually.
+
+
+```py
 date = view(box('Pick a date', mode='day', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
 view(f'You picked {date}.')
 ```
 
-### Week - Basic
+### Calendar - Week - Basic
 
-Set `mode='week'` to display a week-picker.
+Set `mode='week'` to display a week picker.
 
 
 ```py
@@ -1074,9 +1146,9 @@ week = view(box('Pick a week', mode='week'))
 view(f'You picked {week}.')
 ```
 
-### Week - Value
+### Calendar - Week - Value
 
-Set `mode='week'` to display a week-picker.
+Set `value=` to pre-select a week.
 
 
 ```py
@@ -1084,7 +1156,7 @@ week = view(box('Pick a week', mode='week', value='2021-10-10'))
 view(f'You picked {week}.')
 ```
 
-### Week - Min
+### Calendar - Week - Min
 
 Set `min=` to specify a minimum date.
 
@@ -1094,7 +1166,7 @@ week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01'
 view(f'You picked {week}.')
 ```
 
-### Week - Max
+### Calendar - Week - Max
 
 Set `max=` to specify a maximum date.
 
@@ -1104,7 +1176,7 @@ week = view(box('Pick a week', mode='week', value='2021-10-10', max='2022-12-31'
 view(f'You picked {week}.')
 ```
 
-### Week - Min and Max
+### Calendar - Week - Min and Max
 
 Set both `min=` and `max=` to restrict selection between two dates.
 
@@ -1114,9 +1186,11 @@ week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01'
 view(f'You picked {week}.')
 ```
 
-### Week - Range
+### Calendar - Week - Range
 
 Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
+
+This is a shorthand notation for setting `min=` and `max=` individually.
 
 
 ```py
@@ -1124,9 +1198,9 @@ week = view(box('Pick a week', mode='week', value='2021-10-10', range=('2019-01-
 view(f'You picked {week}.')
 ```
 
-### Month - Basic
+### Calendar - Month - Basic
 
-Set `mode='month'` to display a month-picker.
+Set `mode='month'` to display a month picker.
 
 
 ```py
@@ -1134,9 +1208,9 @@ month = view(box('Pick a month', mode='month'))
 view(f'You picked {month}.')
 ```
 
-### Month - Value
+### Calendar - Month - Value
 
-Set `mode='month'` to display a month-picker.
+Set `value=` to pre-select a month.
 
 
 ```py
@@ -1144,7 +1218,7 @@ month = view(box('Pick a month', mode='month', value='2021-10-10'))
 view(f'You picked {month}.')
 ```
 
-### Month - Min
+### Calendar - Month - Min
 
 Set `min=` to specify a minimum date.
 
@@ -1154,7 +1228,7 @@ month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-
 view(f'You picked {month}.')
 ```
 
-### Month - Max
+### Calendar - Month - Max
 
 Set `max=` to specify a maximum date.
 
@@ -1164,7 +1238,7 @@ month = view(box('Pick a month', mode='month', value='2021-10-10', max='2022-12-
 view(f'You picked {month}.')
 ```
 
-### Month - Min and Max
+### Calendar - Month - Min and Max
 
 Set both `min=` and `max=` to restrict selection between two dates.
 
@@ -1174,9 +1248,11 @@ month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-
 view(f'You picked {month}.')
 ```
 
-### Month - Range
+### Calendar - Month - Range
 
 Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
+
+This is a shorthand notation for setting `min=` and `max=` individually.
 
 
 ```py
