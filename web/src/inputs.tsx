@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, FocusTrapZone, IButtonProps, IButtonStyles, IChoiceGroupOption, IColorCellProps, ICommandBarItemProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, setVirtualParent, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, FocusTrapZone, IButtonProps, IButtonStyles, IChoiceGroupOption, IColorCellProps, ICommandBarItemProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, setVirtualParent, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
@@ -292,34 +292,82 @@ const XTimePicker = make(({ context, input }: InputProps) => {
   return { init, render }
 })
 
-class XCalendar extends React.Component<InputProps, {}> {
-  // TODO format string; aria-label
-  render() {
-    const
-      { text, mode, value, min, max } = this.props.input,
-      date = udate(value),
-      minDate = udate(min),
-      maxDate = udate(max),
-      dateRangeType = mode === 'week'
-        ? DateRangeType.Week
-        : mode === 'month'
-          ? DateRangeType.Month
-          : DateRangeType.Day
-    return (
-      <WithLabel label={text}>
-        <Calendar
-          dateRangeType={dateRangeType}
+const dateToString = (d: Date) => d.toISOString().substring(0, 10)
+
+const XDatePicker = make(({ context, input }: InputProps) => {
+  console.log('in date picker')
+  const
+    { index, value } = input,
+    defaultDate = udate(value) ?? new Date(),
+    defaultValue = context.capture(index, dateToString(defaultDate)),
+    onSelectDate = (d?: Date | null) => {
+      console.log('in select', d)
+      context.capture(index, dateToString(d ?? defaultDate))
+    },
+    render = () => {
+      const
+        { text, placeholder, value, min, max } = input,
+        date = udate(value),
+        minDate = udate(min),
+        maxDate = udate(max)
+
+      // TODO firstDayOfWeek, firstWeekOfYear customization
+      // TODO pass strings for localization
+      return (
+        <DatePicker
+          label={text}
           value={date}
           minDate={minDate}
           maxDate={maxDate}
-          isDayPickerVisible={mode !== 'month'}
+          placeholder={placeholder}
+          onSelectDate={onSelectDate}
           highlightSelectedMonth
           showGoToToday
         />
-      </WithLabel>
-    )
-  }
-}
+      )
+    }
+  return { render }
+})
+
+const XCalendar = make(({ context, input }: InputProps) => {
+  const
+    { index, value } = input,
+    defaultDate = udate(value) ?? new Date(),
+    defaultValue = context.capture(index, dateToString(defaultDate)),
+    onSelectDate = (d?: Date) => {
+      context.capture(index, dateToString(d ?? new Date()))
+    },
+    render = () => {
+      // TODO format string; aria-label
+      const
+        { text, mode, value, min, max } = input,
+        date = udate(value),
+        minDate = udate(min),
+        maxDate = udate(max),
+        dateRangeType = mode === 'week'
+          ? DateRangeType.Week
+          : mode === 'month'
+            ? DateRangeType.Month
+            : DateRangeType.Day
+      // TODO firstDayOfWeek, firstWeekOfYear customization
+      // TODO pass strings for localization
+      return (
+        <WithLabel label={text}>
+          <Calendar
+            dateRangeType={dateRangeType}
+            value={date}
+            minDate={minDate}
+            maxDate={maxDate}
+            isDayPickerVisible={mode !== 'month'}
+            onSelectDate={onSelectDate}
+            highlightSelectedMonth
+            showGoToToday
+          />
+        </WithLabel>
+      )
+    }
+  return { render }
+})
 
 class XColorPicker extends React.Component<InputProps, {}> {
   render() {
@@ -789,6 +837,8 @@ const XInput = ({ context, input }: InputProps) => { // recursive
         ? <XSwatchPicker context={context} input={input} />
         : <XColorPicker context={context} input={input} />
     case 'date':
+      return <XDatePicker context={context} input={input} />
+    case 'day':
     case 'month':
     case 'week':
       return <XCalendar context={context} input={input} />

@@ -71,7 +71,7 @@ export type Stackable = {
 
 export type Widget = Stackable & (Stack | Input)
 
-export type InputMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+export type InputMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
 
 export type Stacking = {
   row?: B
