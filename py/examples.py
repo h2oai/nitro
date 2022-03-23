@@ -779,21 +779,42 @@ def date_range(view: View):
 # ## Basic
 # Set `mode='week'` to display a week-picker.
 def week_basic(view: View):
-    week = view(box('Pick a date', mode='week'))
+    week = view(box('Pick a week', mode='week'))
     view(f'You picked {week}.')
 
 
 # ## Value
 # Set `mode='week'` to display a week-picker.
 def week_value(view: View):
-    week = view(box('Pick a date', mode='week', value='2021-10-10'))
+    week = view(box('Pick a week', mode='week', value='2021-10-10'))
+    view(f'You picked {week}.')
+
+
+# ## Min
+# Set `min=` to specify a minimum date.
+def week_min(view: View):
+    week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01'))
+    view(f'You picked {week}.')
+
+
+# ## Max
+# Set `max=` to specify a maximum date.
+def week_max(view: View):
+    week = view(box('Pick a week', mode='week', value='2021-10-10', max='2022-12-31'))
+    view(f'You picked {week}.')
+
+
+# ## Min and Max
+# Set both `min=` and `max=` to restrict selection between two dates.
+def week_min_max(view: View):
+    week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {week}.')
 
 
 # ## Range
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 def week_range(view: View):
-    week = view(box('Pick a date', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+    week = view(box('Pick a week', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {week}.')
 
 
@@ -802,19 +823,40 @@ def week_range(view: View):
 # ## Basic
 # Set `mode='month'` to display a month-picker.
 def month_basic(view: View):
-    month = view(box('Pick a date', mode='month'))
+    month = view(box('Pick a month', mode='month'))
     view(f'You picked {month}.')
 
 
 # ## Value
 # Set `mode='month'` to display a month-picker.
 def month_value(view: View):
-    month = view(box('Pick a date', mode='month', value='2021-10-10'))
+    month = view(box('Pick a month', mode='month', value='2021-10-10'))
+    view(f'You picked {month}.')
+
+
+# ## Min
+# Set `min=` to specify a minimum date.
+def month_min(view: View):
+    month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01'))
+    view(f'You picked {month}.')
+
+
+# ## Max
+# Set `max=` to specify a maximum date.
+def month_max(view: View):
+    month = view(box('Pick a month', mode='month', value='2021-10-10', max='2022-12-31'))
+    view(f'You picked {month}.')
+
+
+# ## Min and Max
+# Set both `min=` and `max=` to restrict selection between two dates.
+def month_min_max(view: View):
+    month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {month}.')
 
 
 # ## Range
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 def month_range(view: View):
-    month = view(box('Pick a date', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+    month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {month}.')
