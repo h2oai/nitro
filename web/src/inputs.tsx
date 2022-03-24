@@ -306,7 +306,7 @@ const XDatePicker = make(({ context, input }: InputProps) => {
     },
     render = () => {
       const
-        { text, placeholder, value, min, max } = input,
+        { text, placeholder, value, min, max, required } = input,
         date = udate(value),
         minDate = udate(min),
         maxDate = udate(max)
@@ -321,6 +321,7 @@ const XDatePicker = make(({ context, input }: InputProps) => {
           maxDate={maxDate}
           placeholder={placeholder}
           onSelectDate={onSelectDate}
+          isRequired={required}
           highlightSelectedMonth
           showGoToToday
         />

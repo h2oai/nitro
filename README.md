@@ -196,7 +196,7 @@ simple, concise, and clear.
 
 ```py
 menu = dict(
-    Donut=['Plain', 'Frosted', 'Chocolate'],
+    Donut=['Plain', 'Glazed', 'Chocolate'],
     Coffee=['Dark-roast', 'Medium-roast', 'Decaf'],
 )
 
@@ -1016,6 +1016,16 @@ Set `placeholder=` to show placeholder text.
 
 ```py
 date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
+view(f'You picked {date}.')
+```
+
+### Date - Required
+
+Set `required=True` to indicate that input is required.
+
+
+```py
+date = view(box('Pick a date', mode='date', required=True))
 view(f'You picked {date}.')
 ```
 

@@ -102,7 +102,7 @@ def accept_multiple_inputs(view: View):
 # simple, concise, and clear.
 def dunk_your_donuts(view: View):
     menu = dict(
-        Donut=['Plain', 'Frosted', 'Chocolate'],
+        Donut=['Plain', 'Glazed', 'Chocolate'],
         Coffee=['Dark-roast', 'Medium-roast', 'Decaf'],
     )
 
@@ -734,6 +734,13 @@ def date_basic(view: View):
 # Set `placeholder=` to show placeholder text.
 def date_placeholder(view: View):
     date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
+    view(f'You picked {date}.')
+
+
+# ## Required
+# Set `required=True` to indicate that input is required.
+def date_required(view: View):
+    date = view(box('Pick a date', mode='date', required=True))
     view(f'You picked {date}.')
 
 
