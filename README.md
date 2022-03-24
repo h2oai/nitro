@@ -1074,6 +1074,18 @@ view(f'You chose {color}.')
 
 Set `value=` to pre-select a color.
 
+A color value can be:
+- `#RRGGBB` e.g. `#ff0033`
+- `#RRGGBBAA` e.g. `#ff003388`
+- `#RGB` e.g. `#f03` (same as `#ff0033`)
+- `#RGBA` e.g. `#f038` (same as `#ff003388`)
+- `rgb(R,G,B)` e.g. `rgb(255, 0, 127)` or `rgb(100%, 0%, 50%)`
+- `rgba(R,G,B,A)` e.g. `rgb(255, 0, 127, 0.5)` or `rgb(100%, 0%, 50%, 0.5)`
+- `hsl(H,S,L)` e.g. `hsl(348, 100%, 50%)`
+- `hsl(H,S,L,A)` e.g. `hsl(348, 100%, 50%, 0.5)`
+- A [named color](https://drafts.csswg.org/css-color-3/#svg-color) e.g. `red`, `green`, `blue`, etc.
+- `transparent` (same as `rgba(0,0,0,0)`)
+
 
 ```py
 color = view(box('Choose a color', mode='color', value='#a241e8'))
