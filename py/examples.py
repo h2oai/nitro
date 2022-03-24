@@ -13,10 +13,10 @@ def hello_world(view: View):
 # Here, `view()` is comparable to Python's built-in `print()` function,
 # and prints its arguments to the web page.
 
-# ## Format content
+# ## Formatting
 # Strings passed to `view()` are interpreted as [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 def format_content(view: View):
-    view('This is **bold**.')
+    view('_Less_ `code` means _less_ **bugs**.')
 
 
 # ## Display multiline content
@@ -135,7 +135,7 @@ def dunk_your_donuts(view: View):
 
 # # Markdown
 
-# ## Formatting
+# ## Syntax
 # Markdown blocks support GFM (Github Flavored Markdown).
 def markdown_basic(view: View):
     view('''
@@ -193,7 +193,7 @@ def markdown_syntax_highlighting(view: View):
     ''')
 
 
-# ## Links
+# ## Links as inputs
 # Local links in markdown content behave just like any other input.
 # Clicking on a local link returns the name of the link.
 def markdown_links(view: View):
@@ -207,8 +207,8 @@ def markdown_links(view: View):
 
 # # Layout
 
-# ## Row-wise
-# Use `row()` to show multiple items along a row, left to right.
+# ## Rows
+# Use `row()` to lay out multiple items along a row, left to right.
 def display_row(view: View):
     view(row(
         'Begin at the beginning,',
@@ -217,13 +217,94 @@ def display_row(view: View):
     ))
 
 
-# Passing `row=True` to `view()` produces the same result:
+# Setting `row=True` produces the same result as wrapping items with `row()`.
 def display_row_alt(view: View):
     view(
         'Begin at the beginning,',
         'and go on till you come to the end,',
         'then stop.',
         row=True,
+    )
+
+
+# ## Columns
+# Use `col()` to lay out multiple items along a column, top to bottom.
+#
+# The example shows one row split into three columns containing three rows each.
+def display_col(view: View):
+    view(
+        row(
+            col(
+                '(1, 1)',
+                '(1, 2)',
+                '(1, 3)',
+            ),
+            col(
+                '(2, 1)',
+                '(2, 2)',
+                '(2, 3)',
+            ),
+            col(
+                '(3, 1)',
+                '(3, 2)',
+                '(3, 3)',
+            ),
+        ),
+    )
+
+
+# ## Form, vertical
+# Text/markdown and inputs created with `box()` are laid out the same way.
+#
+# By default, items are laid out top to bottom.
+def form_basic(view: View):
+    view(
+        box('Username', placeholder='someone@company.com'),
+        box('Password', password=True),
+        box(['Login']),
+    )
+
+
+# ## Form, horizontal
+# Wrap items with `row()` to lay them out left to right.
+def form_horizontal(view: View):
+    view(
+        row(
+            box('Username', placeholder='someone@company.com'),
+            box('Password', password=True),
+            box(['Login']),
+        )
+    )
+
+
+# ## Form, combined
+# Use `row()` and `col()` to mix and match how items are laid out.
+def form_combo(view: View):
+    view(
+        row(box('First name'), box('Last name')),
+        box('Address line 1'),
+        box('Address line 2'),
+        row(box('City'), box('State'), box('Zip')),
+        box([
+            option('yes', 'Sign me up!', selected=True),
+            option('no', 'Not now'),
+        ])
+    )
+
+
+# ## Form, improved
+# Specify additional layout parameters like `width=`, `grow=`, etc. to get more control over
+# how items are laid out.
+def form_improved(view: View):
+    view(
+        row(box('First name'), box('M.I.', width='10%'), box('Last name')),
+        box('Address line 1'),
+        box('Address line 2'),
+        row(box('City', grow=5), box('State', width='20%'), box('Zip', grow=1)),
+        box([
+            option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+            option('no', 'Not now', caption="I'll decide later"),
+        ])
     )
 
 
@@ -820,7 +901,7 @@ def options_layout(view: View):
     view(f'You chose {choice}.')
 
 
-# # Color
+# # Color Picker
 
 # ## Basic
 # Set `mode='color'` to show a color picker.

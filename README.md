@@ -43,6 +43,7 @@ def main(view: View):
   - **Simplicity.** Page flow follows code flow.
   - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
   - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
+- **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
 - **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
   Can be integrated into your existing applications.
@@ -81,13 +82,13 @@ view('Hello World!')
 Here, `view()` is comparable to Python's built-in `print()` function,
 and prints its arguments to the web page.
 
-### Basics - Format content
+### Basics - Formatting
 
 Strings passed to `view()` are interpreted as [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
 
 ```py
-view('This is **bold**.')
+view('_Less_ `code` means _less_ **bugs**.')
 ```
 
 ### Basics - Display multiline content
@@ -227,7 +228,7 @@ Thank you for your order!
 ''')
 ```
 
-### Markdown - Formatting
+### Markdown - Syntax
 
 Markdown blocks support GFM (Github Flavored Markdown).
 
@@ -292,7 +293,7 @@ def markdown_syntax_highlighting(view: View):
     ''')
 ```
 
-### Markdown - Links
+### Markdown - Links as inputs
 
 Local links in markdown content behave just like any other input.
 Clicking on a local link returns the name of the link.
@@ -307,9 +308,9 @@ choice = view('''
 view(f'You clicked on {choice}.')
 ```
 
-### Layout - Row-wise
+### Layout - Rows
 
-Use `row()` to show multiple items along a row, left to right.
+Use `row()` to lay out multiple items along a row, left to right.
 
 
 ```py
@@ -321,7 +322,7 @@ view(row(
 ```
 
 
-Passing `row=True` to `view()` produces the same result:
+Setting `row=True` produces the same result as wrapping items with `row()`.
 
 
 ```py
@@ -330,6 +331,102 @@ view(
     'and go on till you come to the end,',
     'then stop.',
     row=True,
+)
+```
+
+### Layout - Columns
+
+Use `col()` to lay out multiple items along a column, top to bottom.
+
+The example shows one row split into three columns containing three rows each.
+
+
+```py
+view(
+    row(
+        col(
+            '(1, 1)',
+            '(1, 2)',
+            '(1, 3)',
+        ),
+        col(
+            '(2, 1)',
+            '(2, 2)',
+            '(2, 3)',
+        ),
+        col(
+            '(3, 1)',
+            '(3, 2)',
+            '(3, 3)',
+        ),
+    ),
+)
+```
+
+### Layout - Form, vertical
+
+Text/markdown and inputs created with `box()` are laid out the same way.
+
+By default, items are laid out top to bottom.
+
+
+```py
+view(
+    box('Username', placeholder='someone@company.com'),
+    box('Password', password=True),
+    box(['Login']),
+)
+```
+
+### Layout - Form, horizontal
+
+Wrap items with `row()` to lay them out left to right.
+
+
+```py
+view(
+    row(
+        box('Username', placeholder='someone@company.com'),
+        box('Password', password=True),
+        box(['Login']),
+    )
+)
+```
+
+### Layout - Form, combined
+
+Use `row()` and `col()` to mix and match how items are laid out.
+
+
+```py
+view(
+    row(box('First name'), box('Last name')),
+    box('Address line 1'),
+    box('Address line 2'),
+    row(box('City'), box('State'), box('Zip')),
+    box([
+        option('yes', 'Sign me up!', selected=True),
+        option('no', 'Not now'),
+    ])
+)
+```
+
+### Layout - Form, improved
+
+Specify additional layout parameters like `width=`, `grow=`, etc. to get more control over
+how items are laid out.
+
+
+```py
+view(
+    row(box('First name'), box('M.I.', width='10%'), box('Last name')),
+    box('Address line 1'),
+    box('Address line 2'),
+    row(box('City', grow=5), box('State', width='20%'), box('Zip', grow=1)),
+    box([
+        option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+        option('no', 'Not now', caption="I'll decide later"),
+    ])
 )
 ```
 
@@ -1086,7 +1183,7 @@ choice = view(box('Choose a color', mode='button', row=False, options=[
 view(f'You chose {choice}.')
 ```
 
-### Color - Basic
+### Color Picker - Basic
 
 Set `mode='color'` to show a color picker.
 
@@ -1096,7 +1193,7 @@ color = view(box('Choose a color', mode='color'))
 view(f'You chose {color}.')
 ```
 
-### Color - Value
+### Color Picker - Value
 
 Set `value=` to pre-select a color.
 
@@ -1118,7 +1215,7 @@ color = view(box('Choose a color', mode='color', value='#a241e8'))
 view(f'You chose {color}.')
 ```
 
-### Color - Palette
+### Color Picker - Palette
 
 Set `options=` to restrict colors to a pre-defined palette.
 
@@ -1137,7 +1234,7 @@ color = view(box('Choose a color', mode='color', options=[
 view(f'You chose {color}.')
 ```
 
-### Color - Selected
+### Color Picker - Selected
 
 Set `selected=True` to pre-select a color in the palette.
 
