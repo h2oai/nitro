@@ -737,6 +737,8 @@ view(f'You chose {choice}.')
 
 Set `editable=True` to allow arbitrary input in addition to the presented options.
 
+`mode=menu` is implied if `editable=True`.
+
 
 ```py
 choice = view(box('Choose a color', editable=True, options=[
@@ -890,17 +892,17 @@ view(f'You chose {choice}.')
 ### Options - Selected (Buttons)
 
 Selected buttons are shown in alternate (primary) colors.
+
 This is useful when you want to emphasize certain actions over others.
 
 
 ```py
-choice = view(box('Choose a color', mode='button', options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
+choice = view(box('Updates are available for your system.', mode='button', options=[
+    option('now', 'Update now', selected=True),
+    option('tomorrow', 'Remind me tomorrow'),
+    option('never', 'Never update'),
 ]))
-view(f'You chose {choice}.')
+view(f'You chose to update {choice}.')
 ```
 
 ### Options - Selected (Radio-buttons)
@@ -958,9 +960,11 @@ view(f'You chose {choice}.')
 
 Set `icon=` to show graphical options.
 
+Icons are shown only if `mode='radio'`.
+
 
 ```py
-choice = view(box('Choose a chart type', options=[
+choice = view(box('Choose a chart type', mode='radio', options=[
     option('area', 'Area', icon='AreaChart', selected=True),
     option('bar', 'Bar', icon='BarChartHorizontal'),
     option('column', 'Column', icon='BarChartVertical'),
@@ -971,6 +975,90 @@ choice = view(box('Choose a chart type', options=[
 view(f'You chose {choice}.')
 ```
 
+### Options - Group
+
+Options can have sub-options. This is useful for grouping options into categories.
+
+`mode=menu` is implied if options are grouped.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    option('primary', 'Primary Colors', options=[
+        option('red', 'Red'),
+        option('blue', 'Blue'),
+        option('yellow', 'Yellow'),
+    ]),
+    option('secondary', 'Secondary Colors', options=[
+        option('violet', 'Violet'),
+        option('green', 'Green'),
+        option('orange', 'Orange'),
+    ]),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Group (Buttons)
+
+Sub-options are shown as split buttons if `mode='button'`.
+
+
+```py
+choice = view(box('Send fresh donuts every day?', mode='button', options=[
+    option('yes', 'Yes!', selected=True),
+    option('no', 'No', options=[
+        option('later', 'Remind me later', icon='ChatBot'),
+        option('never', "Don't ask me again", icon='MuteChat'),
+    ]),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Group selected (Buttons)
+
+Sub-options work on selected (primary) buttons, too.
+
+
+```py
+choice = view(box('Send fresh donuts every day?', mode='button', options=[
+    option('yes', 'Yes!', selected=True, options=[
+        option('later', 'Remind me later', icon='ChatBot'),
+        option('never', "Don't ask me again", icon='MuteChat'),
+    ]),
+    option('no', 'No'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Caption
+
+Set `caption=` to describe options.
+
+Captions are shown only if `mode='button'`.
+
+
+```py
+choice = view(box('Send fresh donuts every day?', options=[
+    option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+    option('no', 'Not now', caption='I will decide later'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Layout
+
+By default, buttons are shown row-wise. Set `row=False` to lay them out column-wise.
+
+
+```py
+choice = view(box('Choose a color', mode='button', row=False, options=[
+    option('auto', 'Automatic', selected=True),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
 ### Slider - Basic
 
 Set `mode='range'` to show a slider.

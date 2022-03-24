@@ -532,6 +532,8 @@ def menu_dropdown_multiple(view: View):
 
 # ## Editable
 # Set `editable=True` to allow arbitrary input in addition to the presented options.
+#
+# `mode=menu` is implied if `editable=True`.
 def menu_editable(view: View):
     choice = view(box('Choose a color', editable=True, options=[
         'yellow', 'orange', 'red', 'black'
@@ -656,15 +658,15 @@ def options_selected_menu(view: View):
 
 # ## Selected (Buttons)
 # Selected buttons are shown in alternate (primary) colors.
+#
 # This is useful when you want to emphasize certain actions over others.
 def options_selected_button(view: View):
-    choice = view(box('Choose a color', mode='button', options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow', selected=True),
-        option('orange', 'Orange'),
-        option('red', 'Red'),
+    choice = view(box('Updates are available for your system.', mode='button', options=[
+        option('now', 'Update now', selected=True),
+        option('tomorrow', 'Remind me tomorrow'),
+        option('never', 'Never update'),
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose to update {choice}.')
 
 
 # ## Selected (Radio-buttons)
@@ -714,8 +716,10 @@ def options_selected_multiple_menu(view: View):
 
 # ## Icons
 # Set `icon=` to show graphical options.
+#
+# Icons are shown only if `mode='radio'`.
 def options_icon(view: View):
-    choice = view(box('Choose a chart type', options=[
+    choice = view(box('Choose a chart type', mode='radio', options=[
         option('area', 'Area', icon='AreaChart', selected=True),
         option('bar', 'Bar', icon='BarChartHorizontal'),
         option('column', 'Column', icon='BarChartVertical'),
@@ -726,6 +730,74 @@ def options_icon(view: View):
     view(f'You chose {choice}.')
 
 
+# ## Group
+# Options can have sub-options. This is useful for grouping options into categories.
+#
+# `mode=menu` is implied if options are grouped.
+def options_group(view: View):
+    choice = view(box('Choose a color', options=[
+        option('primary', 'Primary Colors', options=[
+            option('red', 'Red'),
+            option('blue', 'Blue'),
+            option('yellow', 'Yellow'),
+        ]),
+        option('secondary', 'Secondary Colors', options=[
+            option('violet', 'Violet'),
+            option('green', 'Green'),
+            option('orange', 'Orange'),
+        ]),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Group (Buttons)
+# Sub-options are shown as split buttons if `mode='button'`.
+def options_group_button(view: View):
+    choice = view(box('Send fresh donuts every day?', mode='button', options=[
+        option('yes', 'Yes!', selected=True),
+        option('no', 'No', options=[
+            option('later', 'Remind me later', icon='ChatBot'),
+            option('never', "Don't ask me again", icon='MuteChat'),
+        ]),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Group selected (Buttons)
+# Sub-options work on selected (primary) buttons, too.
+def options_group_selected_button(view: View):
+    choice = view(box('Send fresh donuts every day?', mode='button', options=[
+        option('yes', 'Yes!', selected=True, options=[
+            option('later', 'Remind me later', icon='ChatBot'),
+            option('never', "Don't ask me again", icon='MuteChat'),
+        ]),
+        option('no', 'No'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Caption
+# Set `caption=` to describe options.
+#
+# Captions are shown only if `mode='button'`.
+def options_caption(view: View):
+    choice = view(box('Send fresh donuts every day?', options=[
+        option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+        option('no', 'Not now', caption='I will decide later'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Layout
+# By default, buttons are shown row-wise. Set `row=False` to lay them out column-wise.
+def options_layout(view: View):
+    choice = view(box('Choose a color', mode='button', row=False, options=[
+        option('auto', 'Automatic', selected=True),
+        option('yellow', 'Yellow'),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
 # # Slider
 
 # ## Basic
