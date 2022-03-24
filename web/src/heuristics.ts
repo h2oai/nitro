@@ -19,13 +19,13 @@ const determineMode = (input: Input): InputMode => {
     }
 
     const hasGroups = options.some(c => c.options?.length ? true : false)
-    if (editable) {
+    if (editable || hasGroups) {
       return 'menu'
     }
     if (options.length <= 3) {
       return 'button'
     }
-    if (options.length <= 7 && !hasGroups) {
+    if (options.length <= 7) {
       return 'radio'
     }
     return 'menu'

@@ -401,6 +401,7 @@ class XCheckList extends React.Component<InputProps, {}> {
   }
 }
 
+// TODO support icons on items. See "Customized Dropdown" Fluent example.
 class XDropdown extends React.Component<InputProps, {}> {
   render() {
     const
