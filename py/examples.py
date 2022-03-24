@@ -78,7 +78,7 @@ def sequence_inputs(view: View):
 
 
 # ## Accept inputs in parallel
-# Pass multiple items to `view()` to display them together.
+# Pass multiple items to `view()` to show them together.
 #
 # The `view()` function returns multiple values if it contains multiple input fields.
 def accept_multiple_inputs(view: View):
@@ -194,7 +194,8 @@ def markdown_syntax_highlighting(view: View):
 
 
 # ## Links
-# Local links in markdown content behave like any other input. Clicking on a local link returns the name of the link.
+# Local links in markdown content behave just like any other input.
+# Clicking on a local link returns the name of the link.
 def markdown_links(view: View):
     choice = view('''
     - [Apples](#apples)
@@ -207,7 +208,7 @@ def markdown_links(view: View):
 # # Layout
 
 # ## Row-wise
-# Use `row()` to display multiple items along a row, left to right.
+# Use `row()` to show multiple items along a row, left to right.
 def display_row(view: View):
     view(row(
         'Begin at the beginning,',
@@ -251,7 +252,7 @@ def textbox_value(view: View):
 
 
 # ## Placeholder
-# Use `placeholder=` to display placeholder text inside the box.
+# Use `placeholder=` to show placeholder text inside the box.
 def textbox_placeholder(view: View):
     speed = view(box('Speed', placeholder='0 km/h'))
     view(f'Your speed is {speed} km/h.')
@@ -268,8 +269,7 @@ def textbox_required(view: View):
 # Set `mask=` to specify an input mask. An input mask is used to format the text field
 # for the expected entry.
 #
-# For example, when someone needs to enter a phone number,
-# use an input mask to indicate that three sets of digits should be entered.
+# For example, to accept a phone number, use an input mask containing three sets of digits.
 def textbox_mask(view: View):
     phone = view(box('Phone', mask='(999) 999 - 9999'))
     view(f'Your phone number is {phone}.')
@@ -282,35 +282,35 @@ def textbox_mask(view: View):
 # - Use a backslash to escape any character.
 
 # ## Icon
-# Set `icon=` to display an icon at the end of the box.
+# Set `icon=` to show an icon at the end of the box.
 def textbox_icon(view: View):
     phrase = view(box('Filter results containing:', icon='Filter'))
     view(f'You set a filter on `{phrase}`.')
 
 
 # ## Prefix
-# Set `prefix=` to display a prefix at the start of the box.
+# Set `prefix=` to show a prefix at the start of the box.
 def textbox_prefix(view: View):
     website = view(box('Website', prefix='https://', value='example.com'))
     view(f'Your website is https://{website}.')
 
 
 # ## Suffix
-# Set `suffix=` to display a suffix at the end of the box.
+# Set `suffix=` to show a suffix at the end of the box.
 def textbox_suffix(view: View):
     website = view(box('Website', suffix='.com', value='example'))
     view(f'Your website is {website}.com.')
 
 
 # ## Prefix and Suffix
-# A textbox can display both a prefix and a suffix at the same time.
+# A textbox can show both a prefix and a suffix at the same time.
 def textbox_prefix_suffix(view: View):
     website = view(box('Website', prefix='https://', suffix='.com', value='example'))
     view(f'Your website is https://{website}.com.')
 
 
 # ## Error
-# Set `error=` to display an error message below the box.
+# Set `error=` to show an error message below the box.
 def textbox_error(view: View):
     speed = view(box('Speed (km/h)', error='Invalid input'))
 
@@ -323,7 +323,7 @@ def textbox_password(view: View):
 
 
 # ## Multiple lines
-# Set `lines=` to display a multi-line text box (also called a *text area*).
+# Set `lines=` to show a multi-line text box (also called a *text area*).
 def textarea(view: View):
     bio = view(box('Bio:', lines=5))
     view(f'**Bio:** {bio}')
@@ -332,10 +332,10 @@ def textarea(view: View):
 # Note that `lines=` only controls the initial height of the textbox, and
 # multi-line textboxes can be resized by the user.
 
-# # Spinbox
+# # Numeric Textbox
 
 # ## Basic
-# Call `box()` with `mode='number'` to display a box with increment/decrement buttons
+# Call `box()` with `mode='number'` to show a box with increment/decrement buttons
 # (also called a *spinbox*).
 def spinbox_basic(view: View):
     speed = view(box('Speed (km/h)', mode='number'))
@@ -436,10 +436,186 @@ def spinbox_decimal_step(view: View):
     view(f'Your speed is {speed} m/s')
 
 
+# # Menu
+
+# ## Basic
+# To show a menu, set `options=` to a sequence of options (a tuple, set or list).
+#
+# By default, this displays buttons for up to 3 options, radio-buttons for up to 7 options,
+# or a dropdown menu for more than 7 options.
+#
+# The example below has 4 options, hence radio-buttons are shown.
+def menu_basic(view: View):
+    choice = view(box('Choose a color', options=[
+        'green', 'yellow', 'orange', 'red'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Fewer options
+# Buttons are shown for up to 3 options.
+#
+def menu_short(view: View):
+    choice = view(box('Choose a color', options=[
+        'yellow', 'orange', 'red'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## More options
+# A dropdown is shown for more than 7 options.
+#
+def menu_long(view: View):
+    choice = view(box('Choose a color', options=[
+        'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Dropdown
+# Set `mode='menu'` to force a dropdown menu regardless of the number of options.
+def menu_dropdown(view: View):
+    choice = view(box('Choose a color', mode='menu', options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Buttons
+# Set `mode='button'` to force buttons regardless of the number of options.
+def menu_buttons(view: View):
+    choice = view(box('Choose a color', mode='button', options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Radio-buttons
+# Set `mode='radio'` to force radio-buttons regardless of the number of options,
+def menu_radio_buttons(view: View):
+    choice = view(box('Choose a color', mode='radio', options=[
+        'blue', 'green', 'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Multi-select
+# Set `multiple=True` to allow choosing more than one option,
+#
+# By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
+def menu_multiple(view: View):
+    choice = view(box('Choose a color', multiple=True, options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Checkboxes
+# Set `mode='check'` to force checkboxes regardless of the number of options,
+def menu_check(view: View):
+    choice = view(box('Choose a color', mode='check', multiple=True, options=[
+        'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Multi-select Dropdown
+# Set `mode='menu'` to force a multi-select dropdown menu regardless of the number of options.
+def menu_dropdown_multiple(view: View):
+    choice = view(box('Choose a color', mode='menu', multiple=True, options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Editable
+# Set `editable=True` to allow arbitrary input in addition to the presented options.
+def menu_editable(view: View):
+    choice = view(box('Choose a color', editable=True, options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Multi-select and editable
+# `multiple=True` and `editable=True` can be combined.
+def menu_multiple_editable(view: View):
+    choice = view(box('Choose a color', multiple=True, editable=True, options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# # Options
+
+# ## From sequence
+# If `options` is a sequence (tuple, set or list), the elements of the sequence are used
+# as both values and labels.
+
+def options_sequence(view: View):
+    choice = view(box('Choose a color', options=[
+        'green', 'yellow', 'orange', 'red'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## From string
+# If `options=` is set to a string, each word in the string is used as an option.
+def options_string(view: View):
+    choice = view(box('Choose a color', options='green yellow orange red'))
+    view(f'You chose {choice}.')
+
+
+# In other words, `'green yellow orange red'` is a shorthand notation for `['green', 'yellow', 'orange', 'red']`.
+
+
+# ## Labels
+# Use `option(value, label)` to create options having labels different from their values.
+#
+# There are other, more concise ways to specify options, explained later.
+def options_labels(view: View):
+    choice = view(box('Choose a color', options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow'),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## From tuples
+# `options=` can also be specified as a sequence of `(value, label)` tuples.
+def options_tuples(view: View):
+    choice = view(box('Choose a color', options=[
+        ('green', 'Green'),
+        ('yellow', 'Yellow'),
+        ('orange', 'Orange'),
+        ('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# Here, `(value, label)` is a shorthand notation for `option(value, label)`.
+
+# ## From dictionary
+# `options=` can also be specified as a `dict` of `value: label` entries.
+def options_dict(view: View):
+    choice = view(box('Choose a color', options=dict(
+        green='Green',
+        yellow='Yellow',
+        orange='Orange',
+        red='Red',
+    )))
+    view(f'You chose {choice}.')
+
+
+# The above example shows the most concise way to specify options having labels different from their values.
+
+
 # # Slider
 
 # ## Basic
-# Set `mode='range'` to display a slider.
+# Set `mode='range'` to show a slider.
 #
 # The default range is between `0` and `10`.
 def slider_basic(view: View):
@@ -539,7 +715,7 @@ def slider_decimal_step(view: View):
 # # Range Slider
 
 # ## Basic
-# Set `value=` to a `(start, end)` tuple to display a range slider.
+# Set `value=` to a `(start, end)` tuple to show a range slider.
 #
 # The mode setting `mode='range'` is implied, and can be elided.
 def range_slider_basic(view: View):
@@ -630,58 +806,10 @@ def range_slider_decimal_step(view: View):
     view(f'Your speed ranges between {start} and {end} m/s')
 
 
-# # Rating
+# # Time Picker
 
 # ## Basic
-# Set `mode='rating'` to accept a star-rating.
-#
-# By default, five stars are displayed.
-def rating_basic(view: View):
-    stars = view(box('Rating', mode='rating'))
-    view(f'Your rating was {stars} stars.')
-
-
-# ## Value
-# Set `value=` to specify a default value.
-def rating_value(view: View):
-    stars = view(box('Rating with value', mode='rating', value=3))
-    view(f'Your rating was {stars} stars.')
-
-
-# ## Min
-# Set `min=` to specify a minimum value.
-def rating_min(view: View):
-    stars = view(box('Rating with zero allowed', mode='rating', min=0))
-    view(f'Your rating was {stars} stars.')
-
-
-# ## Max
-# Set `max=` to specify a maximum value.
-def rating_max(view: View):
-    stars = view(box('Rating with max', mode='rating', value=3, max=10))
-    view(f'Your rating was {stars} stars.')
-
-
-# ## Min and max
-# `min=` and `max=` can be combined.
-def rating_min_max(view: View):
-    stars = view(box('Rating with range', mode='rating', value=3, min=0, max=10))
-    view(f'Your rating was {stars} stars.')
-
-
-# ## Range
-# Set `range=` to a `(min, max)` tuple to control min/max stars.
-#
-# This is a shorthand notation for setting `min=` and `max=` individually.
-def rating_range(view: View):
-    stars = view(box('Rating with range', mode='rating', value=3, range=(0, 10)))
-    view(f'Your rating was {stars} stars.')
-
-
-# # Time
-
-# ## Basic
-# Set `mode='time'` to display a time picker.
+# Set `mode='time'` to show a time picker.
 def time_basic(view: View):
     time = view(box('Set alarm for:', mode='time', value='3:04PM'))
     view(f'Alarm set for {time}.')
@@ -722,9 +850,9 @@ def time_24_hour(view: View):
     view(f'Alarm set for {time}.')
 
 
-# # Date
+# # Date Picker
 # ## Basic
-# Set `mode='date'` to display a date-picker.
+# Set `mode='date'` to show a date-picker.
 def date_basic(view: View):
     date = view(box('Pick a date', mode='date'))
     view(f'You picked {date}.')
@@ -781,10 +909,10 @@ def date_range(view: View):
     view(f'You picked {date}.')
 
 
-# # Calendar - Day
+# # Calendar
 
 # ## Basic
-# Set `mode='day'` to display a calendar.
+# Set `mode='day'` to show a calendar.
 def day_basic(view: View):
     date = view(box('Pick a date', mode='day'))
     view(f'You picked {date}.')
@@ -830,10 +958,10 @@ def day_range(view: View):
     view(f'You picked {date}.')
 
 
-# # Calendar - Week
+# # Week Picker
 
 # ## Basic
-# Set `mode='week'` to display a week picker.
+# Set `mode='week'` to show a week picker.
 def week_basic(view: View):
     week = view(box('Pick a week', mode='week'))
     view(f'You picked {week}.')
@@ -876,10 +1004,10 @@ def week_range(view: View):
     view(f'You picked {week}.')
 
 
-# # Calendar - Month
+# # Month Picker
 
 # ## Basic
-# Set `mode='month'` to display a month picker.
+# Set `mode='month'` to show a month picker.
 def month_basic(view: View):
     month = view(box('Pick a month', mode='month'))
     view(f'You picked {month}.')
@@ -922,109 +1050,49 @@ def month_range(view: View):
     view(f'You picked {month}.')
 
 
-# # Menu
+# # Rating
 
 # ## Basic
-# To display a menu, set `options=` to a sequence of options (a tuple, set or list).
+# Set `mode='rating'` to accept a star-rating.
 #
-# By default, this displays buttons for up to 3 options, radio-buttons for up to 7 options,
-# or a dropdown menu for more than 7 options.
-def options_basic(view: View):
-    choice = view(box('Choose a color', options=[
-        'green', 'yellow', 'orange', 'red'
-    ]))
-    view(f'You chose {choice}.')
+# By default, five stars are displayed.
+def rating_basic(view: View):
+    stars = view(box('Rating', mode='rating'))
+    view(f'Your rating was {stars} stars.')
 
 
-# ## Fewer options
-# Buttons are displayed for up to 3 options.
+# ## Value
+# Set `value=` to specify a default value.
+def rating_value(view: View):
+    stars = view(box('Rating with value', mode='rating', value=3))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Min
+# Set `min=` to specify a minimum value.
+def rating_min(view: View):
+    stars = view(box('Rating with zero allowed', mode='rating', min=0))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Max
+# Set `max=` to specify a maximum value.
+def rating_max(view: View):
+    stars = view(box('Rating with max', mode='rating', value=3, max=10))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Min and max
+# `min=` and `max=` can be combined.
+def rating_min_max(view: View):
+    stars = view(box('Rating with range', mode='rating', value=3, min=0, max=10))
+    view(f'Your rating was {stars} stars.')
+
+
+# ## Range
+# Set `range=` to a `(min, max)` tuple to control min/max stars.
 #
-def options_short(view: View):
-    choice = view(box('Choose a color', options=[
-        'yellow', 'orange', 'red'
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## More options
-# A dropdown is displayed for more than 7 options.
-#
-def options_long(view: View):
-    choice = view(box('Choose a color', options=[
-        'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## Dropdown
-# Set `mode='menu'` to force dropdowns regardless of the number of options.
-def options_dropdown(view: View):
-    choice = view(box('Choose a color', mode='menu', options=[
-        'yellow', 'orange', 'red', 'black'
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## Buttons
-# Set `mode='button'` to force buttons regardless of the number of options.
-def options_buttons(view: View):
-    choice = view(box('Choose a color', mode='button', options=[
-        'yellow', 'orange', 'red', 'black'
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## Radio-buttons
-# Set `mode='radio'` to force radio-buttons regardless of the number of options,
-def options_radio_buttons(view: View):
-    choice = view(box('Choose a color', mode='radio', options=[
-        'blue', 'green', 'yellow', 'orange', 'red', 'black'
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## From string
-# If `options=` is set to a string, each word in the string is used as an option.
-def options_string(view: View):
-    choice = view(box('Choose a color', options='green yellow orange red'))
-    view(f'You chose {choice}.')
-
-
-# ## Option labels
-# Use `option(value, label)` to create options having labels different from their values.
-#
-# There are other, simpler, ways to create options, explained later.
-def options_labels(view: View):
-    choice = view(box('Choose a color', options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow'),
-        option('orange', 'Orange'),
-        option('red', 'Red'),
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## From tuples
-# `options=` can also be specified as a sequence of `(value, label)` tuples.
-def options_tuples(view: View):
-    choice = view(box('Choose a color', options=[
-        ('green', 'Green'),
-        ('yellow', 'Yellow'),
-        ('orange', 'Orange'),
-        ('red', 'Red'),
-    ]))
-    view(f'You chose {choice}.')
-
-
-# Here, `(value, label)` is a shorthand notation for `option(value, label)`.
-
-# ## From dictionary
-# `options=` can also be specified as a `dict` of `value: label` entries.
-def options_dict(view: View):
-    choice = view(box('Choose a color', options=dict(
-        green='Green',
-        yellow='Yellow',
-        orange='Orange',
-        red='Red',
-    )))
-    view(f'You chose {choice}.')
+# This is a shorthand notation for setting `min=` and `max=` individually.
+def rating_range(view: View):
+    stars = view(box('Rating with range', mode='rating', value=3, range=(0, 10)))
+    view(f'Your rating was {stars} stars.')

@@ -167,7 +167,7 @@ view(f'Hello, {first_name} {last_name}!')
 
 ### Basics - Accept inputs in parallel
 
-Pass multiple items to `view()` to display them together.
+Pass multiple items to `view()` to show them together.
 
 The `view()` function returns multiple values if it contains multiple input fields.
 
@@ -294,7 +294,8 @@ def markdown_syntax_highlighting(view: View):
 
 ### Markdown - Links
 
-Local links in markdown content behave like any other input. Clicking on a local link returns the name of the link.
+Local links in markdown content behave just like any other input.
+Clicking on a local link returns the name of the link.
 
 
 ```py
@@ -308,7 +309,7 @@ view(f'You clicked on {choice}.')
 
 ### Layout - Row-wise
 
-Use `row()` to display multiple items along a row, left to right.
+Use `row()` to show multiple items along a row, left to right.
 
 
 ```py
@@ -365,7 +366,7 @@ view(f'Your speed is {speed} km/h.')
 
 ### Textbox - Placeholder
 
-Use `placeholder=` to display placeholder text inside the box.
+Use `placeholder=` to show placeholder text inside the box.
 
 
 ```py
@@ -388,8 +389,7 @@ view(f'Your speed is {speed} km/h.')
 Set `mask=` to specify an input mask. An input mask is used to format the text field
 for the expected entry.
 
-For example, when someone needs to enter a phone number,
-use an input mask to indicate that three sets of digits should be entered.
+For example, to accept a phone number, use an input mask containing three sets of digits.
 
 
 ```py
@@ -406,7 +406,7 @@ To construct the input mask:
 
 ### Textbox - Icon
 
-Set `icon=` to display an icon at the end of the box.
+Set `icon=` to show an icon at the end of the box.
 
 
 ```py
@@ -416,7 +416,7 @@ view(f'You set a filter on `{phrase}`.')
 
 ### Textbox - Prefix
 
-Set `prefix=` to display a prefix at the start of the box.
+Set `prefix=` to show a prefix at the start of the box.
 
 
 ```py
@@ -426,7 +426,7 @@ view(f'Your website is https://{website}.')
 
 ### Textbox - Suffix
 
-Set `suffix=` to display a suffix at the end of the box.
+Set `suffix=` to show a suffix at the end of the box.
 
 
 ```py
@@ -436,7 +436,7 @@ view(f'Your website is {website}.com.')
 
 ### Textbox - Prefix and Suffix
 
-A textbox can display both a prefix and a suffix at the same time.
+A textbox can show both a prefix and a suffix at the same time.
 
 
 ```py
@@ -446,7 +446,7 @@ view(f'Your website is https://{website}.com.')
 
 ### Textbox - Error
 
-Set `error=` to display an error message below the box.
+Set `error=` to show an error message below the box.
 
 
 ```py
@@ -465,7 +465,7 @@ view(f'Your password `{password}` is not strong enough!')
 
 ### Textbox - Multiple lines
 
-Set `lines=` to display a multi-line text box (also called a *text area*).
+Set `lines=` to show a multi-line text box (also called a *text area*).
 
 
 ```py
@@ -477,9 +477,9 @@ view(f'**Bio:** {bio}')
 Note that `lines=` only controls the initial height of the textbox, and
 multi-line textboxes can be resized by the user.
 
-### Spinbox - Basic
+### Numeric Textbox - Basic
 
-Call `box()` with `mode='number'` to display a box with increment/decrement buttons
+Call `box()` with `mode='number'` to show a box with increment/decrement buttons
 (also called a *spinbox*).
 
 
@@ -488,7 +488,7 @@ speed = view(box('Speed (km/h)', mode='number'))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Spinbox - Value
+### Numeric Textbox - Value
 
 Set `value=` to a numeric value to prefill the box with the value.
 
@@ -504,7 +504,7 @@ view(f'Your speed is {speed} km/h')
 In other words, calling `box()` with a numeric `value` has the same effect
 as setting `mode='number'`, and is the preferred usage.
 
-### Spinbox - Min
+### Numeric Textbox - Min
 
 Set `min=` to specify a minimum value.
 
@@ -514,7 +514,7 @@ speed = view(box('Speed (km/h)', min=10))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Spinbox - Max
+### Numeric Textbox - Max
 
 Set `max=` to specify a maximum value.
 
@@ -524,7 +524,7 @@ speed = view(box('Speed (km/h)', max=100))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Spinbox - Step
+### Numeric Textbox - Step
 
 Set `step=` to specify how much to increment or decrement by.
 
@@ -536,7 +536,7 @@ speed = view(box('Speed (km/h)', step=5))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Spinbox - Precision
+### Numeric Textbox - Precision
 
 Set `precision=` to specify how many decimal places the value should be rounded to.
 
@@ -551,7 +551,7 @@ speed = view(box('Speed (m/s)', value=0.6, min=-2, max=2, step=0.2, precision=2)
 view(f'Your speed is {speed} m/s')
 ```
 
-### Spinbox - Min, Max, Step, Precision
+### Numeric Textbox - Min, Max, Step, Precision
 
 `min=`, `max=`, `step=` and `precision=` can be combined.
 
@@ -561,7 +561,7 @@ speed = view(box('Speed (km/h)', min=10, max=100, step=5))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Spinbox - Range
+### Numeric Textbox - Range
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
@@ -573,7 +573,7 @@ speed = view(box('Speed (km/h)', range=(10, 100)))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Spinbox - Range with step
+### Numeric Textbox - Range with step
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 
@@ -585,7 +585,7 @@ speed = view(box('Speed (km/h)', range=(10, 100, 5)))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Spinbox - Range with precision
+### Numeric Textbox - Range with precision
 
 Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
 `min=`, `max=`, `step` and `precision` individually.
@@ -596,7 +596,7 @@ speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2, 2)))
 view(f'Your speed is {speed} m/s')
 ```
 
-### Spinbox - Zero-crossing range
+### Numeric Textbox - Zero-crossing range
 
 Ranges can cross zero.
 
@@ -606,7 +606,7 @@ speed = view(box('Speed (m/s)', value=-3, range=(-5, 5)))
 view(f'Your speed is {speed} m/s')
 ```
 
-### Spinbox - Fractional steps
+### Numeric Textbox - Fractional steps
 
 Steps can be fractional.
 
@@ -616,9 +616,227 @@ speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2)))
 view(f'Your speed is {speed} m/s')
 ```
 
+### Menu - Basic
+
+To show a menu, set `options=` to a sequence of options (a tuple, set or list).
+
+By default, this displays buttons for up to 3 options, radio-buttons for up to 7 options,
+or a dropdown menu for more than 7 options.
+
+The example below has 4 options, hence radio-buttons are shown.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Fewer options
+
+Buttons are shown for up to 3 options.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'yellow', 'orange', 'red'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - More options
+
+A dropdown is shown for more than 7 options.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Dropdown
+
+Set `mode='menu'` to force a dropdown menu regardless of the number of options.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Buttons
+
+Set `mode='button'` to force buttons regardless of the number of options.
+
+
+```py
+choice = view(box('Choose a color', mode='button', options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Radio-buttons
+
+Set `mode='radio'` to force radio-buttons regardless of the number of options,
+
+
+```py
+choice = view(box('Choose a color', mode='radio', options=[
+    'blue', 'green', 'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Multi-select
+
+Set `multiple=True` to allow choosing more than one option,
+
+By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
+
+
+```py
+choice = view(box('Choose a color', multiple=True, options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Checkboxes
+
+Set `mode='check'` to force checkboxes regardless of the number of options,
+
+
+```py
+choice = view(box('Choose a color', mode='check', multiple=True, options=[
+    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Multi-select Dropdown
+
+Set `mode='menu'` to force a multi-select dropdown menu regardless of the number of options.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', multiple=True, options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Editable
+
+Set `editable=True` to allow arbitrary input in addition to the presented options.
+
+
+```py
+choice = view(box('Choose a color', editable=True, options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Multi-select and editable
+
+`multiple=True` and `editable=True` can be combined.
+
+
+```py
+choice = view(box('Choose a color', multiple=True, editable=True, options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - From sequence
+
+If `options` is a sequence (tuple, set or list), the elements of the sequence are used
+as both values and labels.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - From string
+
+If `options=` is set to a string, each word in the string is used as an option.
+
+
+```py
+choice = view(box('Choose a color', options='green yellow orange red'))
+view(f'You chose {choice}.')
+```
+
+
+In other words, `'green yellow orange red'` is a shorthand notation for `['green', 'yellow', 'orange', 'red']`.
+
+### Options - Labels
+
+Use `option(value, label)` to create options having labels different from their values.
+
+There are other, more concise ways to specify options, explained later.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - From tuples
+
+`options=` can also be specified as a sequence of `(value, label)` tuples.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    ('green', 'Green'),
+    ('yellow', 'Yellow'),
+    ('orange', 'Orange'),
+    ('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+
+Here, `(value, label)` is a shorthand notation for `option(value, label)`.
+
+### Options - From dictionary
+
+`options=` can also be specified as a `dict` of `value: label` entries.
+
+
+```py
+choice = view(box('Choose a color', options=dict(
+    green='Green',
+    yellow='Yellow',
+    orange='Orange',
+    red='Red',
+)))
+view(f'You chose {choice}.')
+```
+
+
+The above example shows the most concise way to specify options having labels different from their values.
+
 ### Slider - Basic
 
-Set `mode='range'` to display a slider.
+Set `mode='range'` to show a slider.
 
 The default range is between `0` and `10`.
 
@@ -752,7 +970,7 @@ view(f'Your speed is {speed} m/s')
 
 ### Range Slider - Basic
 
-Set `value=` to a `(start, end)` tuple to display a range slider.
+Set `value=` to a `(start, end)` tuple to show a range slider.
 
 The mode setting `mode='range'` is implied, and can be elided.
 
@@ -875,6 +1093,337 @@ start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), range=(-2, 2, 0.2)
 view(f'Your speed ranges between {start} and {end} m/s')
 ```
 
+### Time Picker - Basic
+
+Set `mode='time'` to show a time picker.
+
+
+```py
+time = view(box('Set alarm for:', mode='time', value='3:04PM'))
+view(f'Alarm set for {time}.')
+```
+
+### Time Picker - With seconds
+
+Include seconds in the `value` to show a seconds component.
+
+
+```py
+time = view(box('Set alarm for:', mode='time', value='3:04:05PM'))
+view(f'Alarm set for {time}.')
+```
+
+### Time Picker - Hour only
+
+Exclude minutes and seconds from the `value` to show only the hour component.
+
+
+```py
+time = view(box('Set alarm for:', mode='time', value='3PM'))
+view(f'Alarm set for {time}.')
+```
+
+### Time Picker - 24-hour clock
+
+Exclude AM/PM from the `value` to accept input in military time.
+
+
+```py
+time = view(box('Set alarm for:', mode='time', value='15:04'))
+view(f'Alarm set for {time}.')
+```
+
+### Time Picker - 24-hour clock, with seconds
+
+Include seconds in the `value` to show a seconds component.
+
+
+```py
+time = view(box('Set alarm for:', mode='time', value='15:04:05'))
+view(f'Alarm set for {time}.')
+```
+
+### Time Picker - 24-hour clock, hour only
+
+Exclude minutes and seconds from the `value` to show only the hour component.
+
+
+```py
+time = view(box('Set alarm for:', mode='time', value='15'))
+view(f'Alarm set for {time}.')
+```
+
+### Date Picker - Basic
+
+Set `mode='date'` to show a date-picker.
+
+
+```py
+date = view(box('Pick a date', mode='date'))
+view(f'You picked {date}.')
+```
+
+### Date Picker - Placeholder
+
+Set `placeholder=` to show placeholder text.
+
+
+```py
+date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
+view(f'You picked {date}.')
+```
+
+### Date Picker - Required
+
+Set `required=True` to indicate that input is required.
+
+
+```py
+date = view(box('Pick a date', mode='date', required=True))
+view(f'You picked {date}.')
+```
+
+### Date Picker - Value
+
+Set `value=` to pre-select a date.
+
+
+```py
+date = view(box('Pick a date', mode='date', value='2021-10-10'))
+view(f'You picked {date}.')
+```
+
+### Date Picker - Min
+
+Set `min=` to specify a minimum date.
+
+
+```py
+date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01'))
+view(f'You picked {date}.')
+```
+
+### Date Picker - Max
+
+Set `max=` to specify a maximum date.
+
+
+```py
+date = view(box('Pick a date', mode='date', value='2021-10-10', max='2022-12-31'))
+view(f'You picked {date}.')
+```
+
+### Date Picker - Min and Max
+
+Set both `min=` and `max=` to restrict selection between two dates.
+
+
+```py
+date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
+view(f'You picked {date}.')
+```
+
+### Date Picker - Range
+
+Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
+
+This is a shorthand notation for setting `min=` and `max=` individually.
+
+
+```py
+date = view(box('Pick a date', mode='date', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+view(f'You picked {date}.')
+```
+
+### Calendar - Basic
+
+Set `mode='day'` to show a calendar.
+
+
+```py
+date = view(box('Pick a date', mode='day'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Value
+
+Set `value=` to pre-select a date.
+
+Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Min
+
+Set `min=` to specify a minimum date.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Max
+
+Set `max=` to specify a maximum date.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10', max='2022-12-31'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Min and Max
+
+Set both `min=` and `max=` to restrict selection between two dates.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
+view(f'You picked {date}.')
+```
+
+### Calendar - Range
+
+Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
+
+This is a shorthand notation for setting `min=` and `max=` individually.
+
+
+```py
+date = view(box('Pick a date', mode='day', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+view(f'You picked {date}.')
+```
+
+### Week Picker - Basic
+
+Set `mode='week'` to show a week picker.
+
+
+```py
+week = view(box('Pick a week', mode='week'))
+view(f'You picked {week}.')
+```
+
+### Week Picker - Value
+
+Set `value=` to pre-select a week.
+
+
+```py
+week = view(box('Pick a week', mode='week', value='2021-10-10'))
+view(f'You picked {week}.')
+```
+
+### Week Picker - Min
+
+Set `min=` to specify a minimum date.
+
+
+```py
+week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01'))
+view(f'You picked {week}.')
+```
+
+### Week Picker - Max
+
+Set `max=` to specify a maximum date.
+
+
+```py
+week = view(box('Pick a week', mode='week', value='2021-10-10', max='2022-12-31'))
+view(f'You picked {week}.')
+```
+
+### Week Picker - Min and Max
+
+Set both `min=` and `max=` to restrict selection between two dates.
+
+
+```py
+week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
+view(f'You picked {week}.')
+```
+
+### Week Picker - Range
+
+Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
+
+This is a shorthand notation for setting `min=` and `max=` individually.
+
+
+```py
+week = view(box('Pick a week', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+view(f'You picked {week}.')
+```
+
+### Month Picker - Basic
+
+Set `mode='month'` to show a month picker.
+
+
+```py
+month = view(box('Pick a month', mode='month'))
+view(f'You picked {month}.')
+```
+
+### Month Picker - Value
+
+Set `value=` to pre-select a month.
+
+
+```py
+month = view(box('Pick a month', mode='month', value='2021-10-10'))
+view(f'You picked {month}.')
+```
+
+### Month Picker - Min
+
+Set `min=` to specify a minimum date.
+
+
+```py
+month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01'))
+view(f'You picked {month}.')
+```
+
+### Month Picker - Max
+
+Set `max=` to specify a maximum date.
+
+
+```py
+month = view(box('Pick a month', mode='month', value='2021-10-10', max='2022-12-31'))
+view(f'You picked {month}.')
+```
+
+### Month Picker - Min and Max
+
+Set both `min=` and `max=` to restrict selection between two dates.
+
+
+```py
+month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
+view(f'You picked {month}.')
+```
+
+### Month Picker - Range
+
+Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
+
+This is a shorthand notation for setting `min=` and `max=` individually.
+
+
+```py
+month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+view(f'You picked {month}.')
+```
+
 ### Rating - Basic
 
 Set `mode='rating'` to accept a star-rating.
@@ -938,470 +1487,3 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 stars = view(box('Rating with range', mode='rating', value=3, range=(0, 10)))
 view(f'Your rating was {stars} stars.')
 ```
-
-### Time - Basic
-
-Set `mode='time'` to display a time picker.
-
-
-```py
-time = view(box('Set alarm for:', mode='time', value='3:04PM'))
-view(f'Alarm set for {time}.')
-```
-
-### Time - With seconds
-
-Include seconds in the `value` to show a seconds component.
-
-
-```py
-time = view(box('Set alarm for:', mode='time', value='3:04:05PM'))
-view(f'Alarm set for {time}.')
-```
-
-### Time - Hour only
-
-Exclude minutes and seconds from the `value` to show only the hour component.
-
-
-```py
-time = view(box('Set alarm for:', mode='time', value='3PM'))
-view(f'Alarm set for {time}.')
-```
-
-### Time - 24-hour clock
-
-Exclude AM/PM from the `value` to accept input in military time.
-
-
-```py
-time = view(box('Set alarm for:', mode='time', value='15:04'))
-view(f'Alarm set for {time}.')
-```
-
-### Time - 24-hour clock, with seconds
-
-Include seconds in the `value` to show a seconds component.
-
-
-```py
-time = view(box('Set alarm for:', mode='time', value='15:04:05'))
-view(f'Alarm set for {time}.')
-```
-
-### Time - 24-hour clock, hour only
-
-Exclude minutes and seconds from the `value` to show only the hour component.
-
-
-```py
-time = view(box('Set alarm for:', mode='time', value='15'))
-view(f'Alarm set for {time}.')
-```
-
-### Date - Basic
-
-Set `mode='date'` to display a date-picker.
-
-
-```py
-date = view(box('Pick a date', mode='date'))
-view(f'You picked {date}.')
-```
-
-### Date - Placeholder
-
-Set `placeholder=` to show placeholder text.
-
-
-```py
-date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
-view(f'You picked {date}.')
-```
-
-### Date - Required
-
-Set `required=True` to indicate that input is required.
-
-
-```py
-date = view(box('Pick a date', mode='date', required=True))
-view(f'You picked {date}.')
-```
-
-### Date - Value
-
-Set `value=` to pre-select a date.
-
-
-```py
-date = view(box('Pick a date', mode='date', value='2021-10-10'))
-view(f'You picked {date}.')
-```
-
-### Date - Min
-
-Set `min=` to specify a minimum date.
-
-
-```py
-date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01'))
-view(f'You picked {date}.')
-```
-
-### Date - Max
-
-Set `max=` to specify a maximum date.
-
-
-```py
-date = view(box('Pick a date', mode='date', value='2021-10-10', max='2022-12-31'))
-view(f'You picked {date}.')
-```
-
-### Date - Min and Max
-
-Set both `min=` and `max=` to restrict selection between two dates.
-
-
-```py
-date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
-view(f'You picked {date}.')
-```
-
-### Date - Range
-
-Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
-
-This is a shorthand notation for setting `min=` and `max=` individually.
-
-
-```py
-date = view(box('Pick a date', mode='date', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
-view(f'You picked {date}.')
-```
-
-### Calendar - Day - Basic
-
-Set `mode='day'` to display a calendar.
-
-
-```py
-date = view(box('Pick a date', mode='day'))
-view(f'You picked {date}.')
-```
-
-### Calendar - Day - Value
-
-Set `value=` to pre-select a date.
-
-Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
-Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
-
-
-```py
-date = view(box('Pick a date', mode='day', value='2021-10-10'))
-view(f'You picked {date}.')
-```
-
-### Calendar - Day - Min
-
-Set `min=` to specify a minimum date.
-
-
-```py
-date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01'))
-view(f'You picked {date}.')
-```
-
-### Calendar - Day - Max
-
-Set `max=` to specify a maximum date.
-
-
-```py
-date = view(box('Pick a date', mode='day', value='2021-10-10', max='2022-12-31'))
-view(f'You picked {date}.')
-```
-
-### Calendar - Day - Min and Max
-
-Set both `min=` and `max=` to restrict selection between two dates.
-
-
-```py
-date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
-view(f'You picked {date}.')
-```
-
-### Calendar - Day - Range
-
-Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
-
-This is a shorthand notation for setting `min=` and `max=` individually.
-
-
-```py
-date = view(box('Pick a date', mode='day', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
-view(f'You picked {date}.')
-```
-
-### Calendar - Week - Basic
-
-Set `mode='week'` to display a week picker.
-
-
-```py
-week = view(box('Pick a week', mode='week'))
-view(f'You picked {week}.')
-```
-
-### Calendar - Week - Value
-
-Set `value=` to pre-select a week.
-
-
-```py
-week = view(box('Pick a week', mode='week', value='2021-10-10'))
-view(f'You picked {week}.')
-```
-
-### Calendar - Week - Min
-
-Set `min=` to specify a minimum date.
-
-
-```py
-week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01'))
-view(f'You picked {week}.')
-```
-
-### Calendar - Week - Max
-
-Set `max=` to specify a maximum date.
-
-
-```py
-week = view(box('Pick a week', mode='week', value='2021-10-10', max='2022-12-31'))
-view(f'You picked {week}.')
-```
-
-### Calendar - Week - Min and Max
-
-Set both `min=` and `max=` to restrict selection between two dates.
-
-
-```py
-week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
-view(f'You picked {week}.')
-```
-
-### Calendar - Week - Range
-
-Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
-
-This is a shorthand notation for setting `min=` and `max=` individually.
-
-
-```py
-week = view(box('Pick a week', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
-view(f'You picked {week}.')
-```
-
-### Calendar - Month - Basic
-
-Set `mode='month'` to display a month picker.
-
-
-```py
-month = view(box('Pick a month', mode='month'))
-view(f'You picked {month}.')
-```
-
-### Calendar - Month - Value
-
-Set `value=` to pre-select a month.
-
-
-```py
-month = view(box('Pick a month', mode='month', value='2021-10-10'))
-view(f'You picked {month}.')
-```
-
-### Calendar - Month - Min
-
-Set `min=` to specify a minimum date.
-
-
-```py
-month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01'))
-view(f'You picked {month}.')
-```
-
-### Calendar - Month - Max
-
-Set `max=` to specify a maximum date.
-
-
-```py
-month = view(box('Pick a month', mode='month', value='2021-10-10', max='2022-12-31'))
-view(f'You picked {month}.')
-```
-
-### Calendar - Month - Min and Max
-
-Set both `min=` and `max=` to restrict selection between two dates.
-
-
-```py
-month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
-view(f'You picked {month}.')
-```
-
-### Calendar - Month - Range
-
-Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
-
-This is a shorthand notation for setting `min=` and `max=` individually.
-
-
-```py
-month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
-view(f'You picked {month}.')
-```
-
-### Menu - Basic
-
-To display a menu, set `options=` to a sequence of options (a tuple, set or list).
-
-By default, this displays buttons for up to 3 options, radio-buttons for up to 7 options,
-or a dropdown menu for more than 7 options.
-
-
-```py
-choice = view(box('Choose a color', options=[
-    'green', 'yellow', 'orange', 'red'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - Fewer options
-
-Buttons are displayed for up to 3 options.
-
-
-```py
-choice = view(box('Choose a color', options=[
-    'yellow', 'orange', 'red'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - More options
-
-A dropdown is displayed for more than 7 options.
-
-
-```py
-choice = view(box('Choose a color', options=[
-    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - Dropdown
-
-Set `mode='menu'` to force dropdowns regardless of the number of options.
-
-
-```py
-choice = view(box('Choose a color', mode='menu', options=[
-    'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - Buttons
-
-Set `mode='button'` to force buttons regardless of the number of options.
-
-
-```py
-choice = view(box('Choose a color', mode='button', options=[
-    'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - Radio-buttons
-
-Set `mode='radio'` to force radio-buttons regardless of the number of options,
-
-
-```py
-choice = view(box('Choose a color', mode='radio', options=[
-    'blue', 'green', 'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - From string
-
-If `options=` is set to a string, each word in the string is used as an option.
-
-
-```py
-choice = view(box('Choose a color', options='green yellow orange red'))
-view(f'You chose {choice}.')
-```
-
-### Menu - Option labels
-
-Use `option(value, label)` to create options having labels different from their values.
-
-There are other, simpler, ways to create options, explained later.
-
-
-```py
-choice = view(box('Choose a color', options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow'),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - From tuples
-
-`options=` can also be specified as a sequence of `(value, label)` tuples.
-
-
-```py
-choice = view(box('Choose a color', options=[
-    ('green', 'Green'),
-    ('yellow', 'Yellow'),
-    ('orange', 'Orange'),
-    ('red', 'Red'),
-]))
-view(f'You chose {choice}.')
-```
-
-
-Here, `(value, label)` is a shorthand notation for `option(value, label)`.
-
-### Menu - From dictionary
-
-`options=` can also be specified as a `dict` of `value: label` entries.
-
-
-```py
-choice = view(box('Choose a color', options=dict(
-    green='Green',
-    yellow='Yellow',
-    orange='Orange',
-    red='Red',
-)))
-view(f'You chose {choice}.')
-```
-
