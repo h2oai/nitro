@@ -1059,6 +1059,63 @@ choice = view(box('Choose a color', mode='button', row=False, options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+### Color - Basic
+
+Set `mode='color'` to show a color picker.
+
+
+```py
+color = view(box('Choose a color', mode='color'))
+view(f'You chose {color}.')
+```
+
+### Color - Value
+
+Set `value=` to pre-select a color.
+
+
+```py
+color = view(box('Choose a color', mode='color', value='#a241e8'))
+view(f'You chose {color}.')
+```
+
+### Color - Palette
+
+Set `options=` to restrict colors to a pre-defined palette.
+
+The option `value` must be a valid color.
+
+
+```py
+color = view(box('Choose a color', mode='color', options=[
+    option('#ff0000', 'Red'),
+    option('#00ff00', 'Green'),
+    option('#0000ff', 'Blue'),
+    option('#ffff00', 'Yellow'),
+    option('#00ffff', 'Cyan'),
+    option('#ff00ff', 'Magenta'),
+]))
+view(f'You chose {color}.')
+```
+
+### Color - Selected
+
+Set `selected=True` to pre-select a color in the palette.
+
+
+```py
+color = view(box('Choose a color', mode='color', options=[
+    option('#ff0000', 'Red'),
+    option('#00ff00', 'Green'),
+    option('#0000ff', 'Blue', selected=True),
+    option('#ffff00', 'Yellow'),
+    option('#00ffff', 'Cyan'),
+    option('#ff00ff', 'Magenta'),
+]))
+view(f'You chose {color}.')
+```
+
 ### Slider - Basic
 
 Set `mode='range'` to show a slider.

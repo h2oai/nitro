@@ -798,6 +798,54 @@ def options_layout(view: View):
         option('red', 'Red'),
     ]))
     view(f'You chose {choice}.')
+
+
+# # Color
+
+# ## Basic
+# Set `mode='color'` to show a color picker.
+def color_basic(view: View):
+    color = view(box('Choose a color', mode='color'))
+    view(f'You chose {color}.')
+
+
+# ## Value
+# Set `value=` to pre-select a color.
+def color_value(view: View):
+    color = view(box('Choose a color', mode='color', value='#a241e8'))
+    view(f'You chose {color}.')
+
+
+# ## Palette
+# Set `options=` to restrict colors to a pre-defined palette.
+#
+# The option `value` must be a valid color.
+def color_palette(view: View):
+    color = view(box('Choose a color', mode='color', options=[
+        option('#ff0000', 'Red'),
+        option('#00ff00', 'Green'),
+        option('#0000ff', 'Blue'),
+        option('#ffff00', 'Yellow'),
+        option('#00ffff', 'Cyan'),
+        option('#ff00ff', 'Magenta'),
+    ]))
+    view(f'You chose {color}.')
+
+
+# ## Selected
+# Set `selected=True` to pre-select a color in the palette.
+def color_palette_selected(view: View):
+    color = view(box('Choose a color', mode='color', options=[
+        option('#ff0000', 'Red'),
+        option('#00ff00', 'Green'),
+        option('#0000ff', 'Blue', selected=True),
+        option('#ffff00', 'Yellow'),
+        option('#00ffff', 'Cyan'),
+        option('#ff00ff', 'Magenta'),
+    ]))
+    view(f'You chose {color}.')
+
+
 # # Slider
 
 # ## Basic
