@@ -609,7 +609,14 @@ class XTagPicker extends React.Component<InputProps, TagPickerState> {
       { autocompleter } = this.state
     return (
       <WithLabel label={text}>
-        <TagPicker onResolveSuggestions={autocompleter.suggest} getTextFromItem={autocompleter.resolve} />
+        <TagPicker
+          onResolveSuggestions={autocompleter.suggest}
+          getTextFromItem={autocompleter.resolve}
+          pickerSuggestionsProps={{
+            suggestionsHeaderText: 'Suggested options',
+            noResultsFoundText: 'No options found',
+          }}
+        />
       </WithLabel>
     )
   }
