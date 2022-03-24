@@ -530,6 +530,15 @@ def menu_dropdown_multiple(view: View):
     view(f'You chose {choice}.')
 
 
+# ## Tag Picker
+# Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
+def menu_tag(view: View):
+    tags = view(box('Choose some tags', mode='tag', options=[
+        'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {tags}.')
+
+
 # ## Editable
 # Set `editable=True` to allow arbitrary input in addition to the presented options.
 #

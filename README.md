@@ -733,6 +733,18 @@ choice = view(box('Choose a color', mode='menu', multiple=True, options=[
 view(f'You chose {choice}.')
 ```
 
+### Menu - Tag Picker
+
+Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
+
+
+```py
+tags = view(box('Choose some tags', mode='tag', options=[
+    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {tags}.')
+```
+
 ### Menu - Editable
 
 Set `editable=True` to allow arbitrary input in addition to the presented options.
