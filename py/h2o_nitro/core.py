@@ -155,7 +155,7 @@ Sizing = Union[
 class Box:
     def __init__(
             self,
-            text: Optional[str] = None,
+            text: Optional[Union[str, Options]] = None,
             name: Optional[str] = None,
             mode: Optional[str] = None,
             icon: Optional[str] = None,
@@ -187,7 +187,17 @@ class Box:
             shrink: Optional[int] = None,
             basis: Optional[str] = None,
     ):
-        self.text = text
+        if isinstance(text, (tuple, set, list, dict, OrderedDict)):
+            if options is not None:
+                raise ValueError('options= must not be set if first argument is a collection.')
+            label = None
+            opts = text
+            mode = 'button'
+        else:
+            label = text
+            opts = options
+
+        self.text = label
         self.name = name
         self.mode = mode
         self.icon = icon
@@ -207,7 +217,7 @@ class Box:
         self.required = required
         self.password = password
         self.editable = editable
-        self.options = options
+        self.options = opts
         self.row = row
         self.justify = justify
         self.align = align

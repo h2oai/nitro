@@ -683,6 +683,20 @@ choice = view(box('Choose a color', mode='button', options=[
 view(f'You chose {choice}.')
 ```
 
+### Menu - Buttons, shorthand
+
+Most often, it doesn't make sense to show a text prompt for a set of buttons.
+In such cases, `box(text=None, options=[a, b, c])` can be shortened to `box([a, b, c])`.
+
+In other words, `box()` can accept options instead of text as its first argument,
+and `mode='button'` is implied.
+
+
+```py
+choice = view(box(['green', 'yellow', 'orange', 'red']))
+view(f'You chose {choice}.')
+```
+
 ### Menu - Radio-buttons
 
 Set `mode='radio'` to force radio-buttons regardless of the number of options,
