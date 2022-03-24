@@ -19,8 +19,6 @@ Nitro, and the various features it provides. It acts as a reference for how to
 do various things using Nitro, but can also be used as a guide to learn about
 many of the features Nitro provides.
 
-## Examples
-
 TOC
 '''
 
