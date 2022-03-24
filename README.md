@@ -1269,3 +1269,139 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
 view(f'You picked {month}.')
 ```
+
+### Menu - Basic
+
+To display a menu, set `options=` to a sequence of options (a tuple, set or list).
+
+By default, this displays buttons for up to 3 options, radio-buttons for up to 7 options,
+or a dropdown menu for more than 7 options.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Fewer options
+
+Buttons are displayed for up to 3 options.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'yellow', 'orange', 'red'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - More options
+
+A dropdown is displayed for more than 7 options.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Dropdown
+
+Set `mode='menu'` to force dropdowns regardless of the number of options.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Buttons
+
+Set `mode='button'` to force buttons regardless of the number of options.
+
+
+```py
+choice = view(box('Choose a color', mode='button', options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Radio-buttons
+
+Set `mode='radio'` to force radio-buttons regardless of the number of options,
+
+
+```py
+choice = view(box('Choose a color', mode='radio', options=[
+    'blue', 'green', 'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - From string
+
+If `options=` is set to a string, each word in the string is used as an option.
+
+
+```py
+choice = view(box('Choose a color', options='green yellow orange red'))
+view(f'You chose {choice}.')
+```
+
+### Menu - Option labels
+
+Use `option(value, label)` to create options having labels different from their values.
+
+There are other, simpler, ways to create options, explained later.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - From tuples
+
+`options=` can also be specified as a sequence of `(value, label)` tuples.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    ('green', 'Green'),
+    ('yellow', 'Yellow'),
+    ('orange', 'Orange'),
+    ('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+
+Here, `(value, label)` is a shorthand notation for `option(value, label)`.
+
+### Menu - From dictionary
+
+`options=` can also be specified as a `dict` of `value: label` entries.
+
+
+```py
+choice = view(box('Choose a color', options=dict(
+    green='Green',
+    yellow='Yellow',
+    orange='Orange',
+    red='Red',
+)))
+view(f'You chose {choice}.')
+```
+
