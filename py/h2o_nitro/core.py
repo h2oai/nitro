@@ -1,4 +1,5 @@
 from typing import Optional, Tuple, Sequence, List, Dict, Union, Callable, Set
+from collections import OrderedDict
 import msgpack
 from enum import Enum, IntEnum
 
@@ -62,6 +63,8 @@ def _unmarshal(b) -> dict:
 
 
 def _dump(x):  # recursive
+    if isinstance(x, OrderedDict):
+        return _dump([(k, v) for k, v in x.items()])
     if isinstance(x, (tuple, list, set)):
         return [_dump(e) for e in x]
     if callable(getattr(x, 'dump', None)):
