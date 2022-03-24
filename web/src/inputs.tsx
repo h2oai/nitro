@@ -637,29 +637,42 @@ class XSwatchPicker extends React.Component<InputProps, {}> {
   }
 }
 
-class XChoiceGroup extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, placeholder, required, options } = this.props.input,
-      items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
-        key: String(value),
-        text: String(text),
-        iconProps: iconName ? { iconName } : undefined,
-      })),
-      selectedItem = options.find(c => c.selected),
-      selectedKey = selectedItem ? selectedItem.value : undefined
+const XChoiceGroup = make(({ context, input }: InputProps) => {
+  const
+    { index, options } = input,
+    selectedItem = options.find(c => c.selected)
 
-    return (
-      <ChoiceGroup
-        label={text}
-        placeholder={placeholder}
-        options={items}
-        defaultSelectedKey={selectedKey}
-        required={required ? true : false}
-      />
-    )
-  }
-}
+  if (selectedItem) context.capture(index, selectedItem.value)
+
+  const
+    onChange = (_?: React.FormEvent<HTMLElement>, option?: IChoiceGroupOption) => {
+      if (option) context.capture(index, option?.key)
+    },
+    render = () => {
+      const
+        { text, placeholder, required, options } = input,
+        items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
+          key: String(value),
+          text: String(text),
+          iconProps: iconName ? { iconName } : undefined,
+        })),
+        selectedItem = options.find(c => c.selected),
+        selectedKey = selectedItem ? selectedItem.value : undefined
+
+      return (
+        <ChoiceGroup
+          label={text}
+          placeholder={placeholder}
+          options={items}
+          defaultSelectedKey={selectedKey}
+          required={required ? true : false}
+          onChange={onChange}
+        />
+      )
+    }
+  return { render }
+})
+
 
 const XMarkdown = make(({ context, input }: InputProps) => {
   const
