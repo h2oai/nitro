@@ -623,26 +623,48 @@ class XTagPicker extends React.Component<InputProps, TagPickerState> {
 }
 
 const swatchCellSize = 25
-class XSwatchPicker extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, options } = this.props.input,
-      cells: IColorCellProps[] = options.map(c => ({ id: String(c.value), label: String(c.text), color: String(c.value) }))
+const XSwatchPicker = make(({ context, input }: InputProps) => {
+  const
+    { index } = input,
+    selected = selectedOf(input)
 
-    return (
-      <WithLabel label={text}>
-        <SwatchColorPicker columnCount={10} colorCells={cells} cellWidth={swatchCellSize} cellHeight={swatchCellSize} />
-      </WithLabel>
-    )
-  }
-}
+  if (selected) context.capture(index, selected.value)
+
+  const
+    onChange = (_e: React.FormEvent<HTMLElement>, _id?: S, color?: S) => {
+      if (color) context.capture(index, color)
+    },
+    render = () => {
+      const
+        { text, options } = input,
+        cells: IColorCellProps[] = options.map(c => ({ id: String(c.value), label: String(c.text), color: String(c.value) }))
+
+      return (
+        <WithLabel label={text}>
+          <SwatchColorPicker
+            columnCount={10}
+            colorCells={cells}
+            cellWidth={swatchCellSize}
+            cellHeight={swatchCellSize}
+            defaultSelectedId={selected ? String(selected.value) : undefined}
+            onChange={onChange}
+          />
+        </WithLabel>
+      )
+    }
+  return { render }
+})
+
+const selectedOf = ({ value, options }: Input): Option | undefined => value
+  ? options.find(c => c.value === value)
+  : options.find(c => c.selected)
 
 const XChoiceGroup = make(({ context, input }: InputProps) => {
   const
-    { index, options } = input,
-    selectedItem = options.find(c => c.selected)
+    { index } = input,
+    selected = selectedOf(input)
 
-  if (selectedItem) context.capture(index, selectedItem.value)
+  if (selected) context.capture(index, selected.value)
 
   const
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IChoiceGroupOption) => {
@@ -656,8 +678,7 @@ const XChoiceGroup = make(({ context, input }: InputProps) => {
           text: String(text),
           iconProps: iconName ? { iconName } : undefined,
         })),
-        selectedItem = options.find(c => c.selected),
-        selectedKey = selectedItem ? selectedItem.value : undefined
+        selectedKey = selected ? selected.value : undefined
 
       return (
         <ChoiceGroup
