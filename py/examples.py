@@ -382,7 +382,7 @@ def spinbox_step(view: View):
 #
 # The default is calculated based on the precision of step:
 # - if step = 1, precision = 0
-# - if step = 42.00, precision = 2
+# - if step = 0.42, precision = 2
 # - if step = 0.0042, precision = 4
 def spinbox_precision(view: View):
     speed = view(box('Speed (m/s)', value=0.6, min=-2, max=2, step=0.2, precision=2))
@@ -441,7 +441,9 @@ def spinbox_decimal_step(view: View):
 # ## Basic
 # To show a menu, set `options=` to a sequence of options (a tuple, set or list).
 #
-# By default, this displays buttons for up to 3 options, radio-buttons for up to 7 options,
+# There are several ways to create options. These are explained in the next section.
+#
+# By default, setting `options=` shows buttons for up to 3 options, radio-buttons for up to 7 options,
 # or a dropdown menu for more than 7 options.
 #
 # The example below has 4 options, hence radio-buttons are shown.
@@ -546,6 +548,24 @@ def menu_multiple_editable(view: View):
     view(f'You chose {choice}.')
 
 
+# ## Required
+# Set `required=True` to indicate that input is required.
+def menu_dropdown_required(view: View):
+    choice = view(box('Choose a color', mode='menu', required=True, options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Error
+# Set `error=` to show an error message below the box.
+def menu_dropdown_error(view: View):
+    choice = view(box('Choose a color', mode='menu', error='Invalid input', options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
 # # Options
 
 # ## From sequence
@@ -583,7 +603,7 @@ def options_labels(view: View):
     view(f'You chose {choice}.')
 
 
-# ## From tuples
+# ## Labels from tuples
 # `options=` can also be specified as a sequence of `(value, label)` tuples.
 def options_tuples(view: View):
     choice = view(box('Choose a color', options=[
@@ -597,7 +617,7 @@ def options_tuples(view: View):
 
 # Here, `(value, label)` is a shorthand notation for `option(value, label)`.
 
-# ## From dictionary
+# ## Labels from dictionary
 # `options=` can also be specified as a `dict` of `value: label` entries.
 def options_dict(view: View):
     choice = view(box('Choose a color', options=dict(
@@ -610,6 +630,100 @@ def options_dict(view: View):
 
 
 # The above example shows the most concise way to specify options having labels different from their values.
+
+# ## Selected
+# Set `selected=True` to pre-select an option.
+def options_selected(view: View):
+    choice = view(box('Choose a color', options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Selected (Dropdown)
+def options_selected_menu(view: View):
+    choice = view(box('Choose a color', mode='menu', options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Selected (Buttons)
+# Selected buttons are shown in alternate (primary) colors.
+# This is useful when you want to emphasize certain actions over others.
+def options_selected_button(view: View):
+    choice = view(box('Choose a color', mode='button', options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Selected (Radio-buttons)
+def options_selected_radio(view: View):
+    choice = view(box('Choose a color', mode='radio', options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Multiple Selected
+# Multiple options can be pre-selected if the box supports multiple selections (`multiple=True`).
+def options_selected_multiple(view: View):
+    choice = view(box('Choose a color', multiple=True, options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red', selected=True),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Multiple Selected (Checkboxes)
+def options_selected_multiple_check(view: View):
+    choice = view(box('Choose a color', mode='check', multiple=True, options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red', selected=True),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Multiple Selected (Dropdown)
+def options_selected_multiple_menu(view: View):
+    choice = view(box('Choose a color', mode='menu', multiple=True, options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red', selected=True),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Icons
+# Set `icon=` to show graphical options.
+def options_icon(view: View):
+    choice = view(box('Choose a chart type', options=[
+        option('area', 'Area', icon='AreaChart', selected=True),
+        option('bar', 'Bar', icon='BarChartHorizontal'),
+        option('column', 'Column', icon='BarChartVertical'),
+        option('line', 'Line', icon='LineChart'),
+        option('scatter', 'Scatter', icon='ScatterChart'),
+        option('donut', 'Donut', icon='DonutChart'),
+    ]))
+    view(f'You chose {choice}.')
 
 
 # # Slider
@@ -658,7 +772,7 @@ def slider_step(view: View):
 #
 # The default is calculated based on the precision of step:
 # - if step = 1, precision = 0
-# - if step = 42.00, precision = 2
+# - if step = 0.42, precision = 2
 # - if step = 0.0042, precision = 4
 def slider_precision(view: View):
     speed = view(box('Speed (m/s)', mode='range', value=0.6, min=-2, max=2, step=0.2, precision=2))
@@ -751,7 +865,7 @@ def range_slider_step(view: View):
 #
 # The default is calculated based on the precision of step:
 # - if step = 1, precision = 0
-# - if step = 42.00, precision = 2
+# - if step = 0.42, precision = 2
 # - if step = 0.0042, precision = 4
 def range_slider_precision(view: View):
     start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), min=-2, max=2, step=0.2, precision=2))

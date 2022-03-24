@@ -43,9 +43,9 @@ def main(view: View):
   - **Simplicity.** Page flow follows code flow.
   - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
   - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
-- **Widgets.** Huge library of sophisticated, accessible input controls and data visualization.
+- **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
 - **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
-  Use it in existing applications.
+  Can be integrated into your existing applications.
 - **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, and progressively improve
   presentation layout and aesthetics over time without affecting initial implementation simplicity, or sacrificing
   control.
@@ -55,10 +55,10 @@ def main(view: View):
 
 ## Differences from H<sub>2</sub>O Wave
 
-**TL;DR:** Use Wave for building visualization-heavy analytical dashboards. For everything else, use Nitro.
+**TL;DR:** Use [Wave](https://wave.h2o.ai/) for building visualization-heavy analytical dashboards. For everything else, use Nitro.
 
-- **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of Wave with a simpler,
-  different API, designed for integration with existing web frameworks.
+- **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of [Wave](https://wave.h2o.ai/) 
+  with a different, simpler API, designed for integration with existing web frameworks.
 - **Content Management.** Wave is capable of storing and broadcasting content and data, making it simple to build
   dashboards without having to deal with data management. Nitro has no such features.
 - **API.** Wave's API is *dashboard-oriented*, and has several features that make it easy to develop and deploy
@@ -542,7 +542,7 @@ Set `precision=` to specify how many decimal places the value should be rounded 
 
 The default is calculated based on the precision of step:
 - if step = 1, precision = 0
-- if step = 42.00, precision = 2
+- if step = 0.42, precision = 2
 - if step = 0.0042, precision = 4
 
 
@@ -620,7 +620,9 @@ view(f'Your speed is {speed} m/s')
 
 To show a menu, set `options=` to a sequence of options (a tuple, set or list).
 
-By default, this displays buttons for up to 3 options, radio-buttons for up to 7 options,
+There are several ways to create options. These are explained in the next section.
+
+By default, setting `options=` shows buttons for up to 3 options, radio-buttons for up to 7 options,
 or a dropdown menu for more than 7 options.
 
 The example below has 4 options, hence radio-buttons are shown.
@@ -755,6 +757,30 @@ choice = view(box('Choose a color', multiple=True, editable=True, options=[
 view(f'You chose {choice}.')
 ```
 
+### Menu - Required
+
+Set `required=True` to indicate that input is required.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', required=True, options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Error
+
+Set `error=` to show an error message below the box.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', error='Invalid input', options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
 ### Options - From sequence
 
 If `options` is a sequence (tuple, set or list), the elements of the sequence are used
@@ -798,7 +824,7 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Options - From tuples
+### Options - Labels from tuples
 
 `options=` can also be specified as a sequence of `(value, label)` tuples.
 
@@ -816,7 +842,7 @@ view(f'You chose {choice}.')
 
 Here, `(value, label)` is a shorthand notation for `option(value, label)`.
 
-### Options - From dictionary
+### Options - Labels from dictionary
 
 `options=` can also be specified as a `dict` of `value: label` entries.
 
@@ -833,6 +859,117 @@ view(f'You chose {choice}.')
 
 
 The above example shows the most concise way to specify options having labels different from their values.
+
+### Options - Selected
+
+Set `selected=True` to pre-select an option.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Selected (Dropdown)
+
+```py
+choice = view(box('Choose a color', mode='menu', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Selected (Buttons)
+
+Selected buttons are shown in alternate (primary) colors.
+This is useful when you want to emphasize certain actions over others.
+
+
+```py
+choice = view(box('Choose a color', mode='button', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Selected (Radio-buttons)
+
+```py
+choice = view(box('Choose a color', mode='radio', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Multiple Selected
+
+Multiple options can be pre-selected if the box supports multiple selections (`multiple=True`).
+
+
+```py
+choice = view(box('Choose a color', multiple=True, options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Multiple Selected (Checkboxes)
+
+```py
+choice = view(box('Choose a color', mode='check', multiple=True, options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Multiple Selected (Dropdown)
+
+```py
+choice = view(box('Choose a color', mode='menu', multiple=True, options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Icons
+
+Set `icon=` to show graphical options.
+
+
+```py
+choice = view(box('Choose a chart type', options=[
+    option('area', 'Area', icon='AreaChart', selected=True),
+    option('bar', 'Bar', icon='BarChartHorizontal'),
+    option('column', 'Column', icon='BarChartVertical'),
+    option('line', 'Line', icon='LineChart'),
+    option('scatter', 'Scatter', icon='ScatterChart'),
+    option('donut', 'Donut', icon='DonutChart'),
+]))
+view(f'You chose {choice}.')
+```
 
 ### Slider - Basic
 
@@ -894,7 +1031,7 @@ Set `precision=` to specify how many decimal places the value should be rounded 
 
 The default is calculated based on the precision of step:
 - if step = 1, precision = 0
-- if step = 42.00, precision = 2
+- if step = 0.42, precision = 2
 - if step = 0.0042, precision = 4
 
 
@@ -1018,7 +1155,7 @@ Set `precision=` to specify how many decimal places the value should be rounded 
 
 The default is calculated based on the precision of step:
 - if step = 1, precision = 0
-- if step = 42.00, precision = 2
+- if step = 0.42, precision = 2
 - if step = 0.0042, precision = 4
 
 
