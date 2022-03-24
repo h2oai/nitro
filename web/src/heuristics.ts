@@ -11,8 +11,8 @@ const determineMode = (input: Input): InputMode => {
       if (editable) {
         return 'menu'
       }
-      const hasLongLabels = options.some(({ text }) => text && (text.length > 75))
-      if (!hasLongLabels && options.length > 10) {
+      const hasShortLabels = options.some(({ text }) => text && (text.length <= 50))
+      if (hasShortLabels && options.length > 7) {
         return 'menu'
       }
       return 'check'
