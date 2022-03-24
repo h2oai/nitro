@@ -127,15 +127,11 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
   if (isS(x)) { // 'value1 value2 value3...'
     return words(x).map((value): Option => ({ t: WidgetT.Option, text: value, value }))
   }
-  if (isO(x)) { // { text1: value1, text2: value2, ... }
+  if (isO(x)) { // { value1: text1, value2: text2, ... }
     const c: Option[] = []
-    for (const text in x) {
-      const value = x[text]
-      if (isV(value)) {
-        c.push({ t: WidgetT.Option, text, value })
-      } else {
-        console.warn('Invalid choice value in dictionary. Want string or number, got ', value)
-      }
+    for (const value in x) {
+      const text = x[value]
+      c.push({ t: WidgetT.Option, text, value })
     }
     return c
   }
