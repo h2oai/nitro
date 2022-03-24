@@ -43,9 +43,9 @@ def main(view: View):
   - **Simplicity.** Page flow follows code flow.
   - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
   - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
-- **Widgets.** Huge library of sophisticated, accessible input controls and data visualization.
+- **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
 - **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
-  Use it in existing applications.
+  Can be integrated into your existing applications.
 - **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, and progressively improve
   presentation layout and aesthetics over time without affecting initial implementation simplicity, or sacrificing
   control.
@@ -55,10 +55,10 @@ def main(view: View):
 
 ## Differences from H<sub>2</sub>O Wave
 
-**TL;DR:** Use Wave for building visualization-heavy analytical dashboards. For everything else, use Nitro.
+**TL;DR:** Use [Wave](https://wave.h2o.ai/) for building visualization-heavy analytical dashboards. For everything else, use Nitro.
 
-- **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of Wave with a simpler,
-  different API, designed for integration with existing web frameworks.
+- **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of [Wave](https://wave.h2o.ai/) 
+  with a different, simpler API, designed for integration with existing web frameworks.
 - **Content Management.** Wave is capable of storing and broadcasting content and data, making it simple to build
   dashboards without having to deal with data management. Nitro has no such features.
 - **API.** Wave's API is *dashboard-oriented*, and has several features that make it easy to develop and deploy
