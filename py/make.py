@@ -175,9 +175,9 @@ def build_topic_map(groups: List[Group]) -> str:
 def build_toc(groups: List[Group]) -> str:
     p = Printer()
     for g in groups:
-        p(f'- {g.title}')
+        p(f'## {g.title}')
         for e in g.examples:
-            p(f'  - [{e.title}](#{e.name})')
+            p(f'- [{e.title}](#{e.name})')
     return str(p)
 
 
