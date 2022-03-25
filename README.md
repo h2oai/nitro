@@ -715,11 +715,12 @@ view(f'Your speed is {speed} m/s')
 
 ### Menu - Basic
 
-To show a menu, set `options=` to a sequence of options (a tuple, set or list).
+Set `options=` to allow the user to pick one or more options from several.
 
-There are several ways to create options. These are explained in the next section.
+There are several ways to create options. These are explained in the next section. The simplest way is to supply a
+sequence (tuple, set or list) of strings.
 
-By default, setting `options=` shows buttons for up to 3 options, radio-buttons for up to 7 options,
+By default, this shows buttons for up to 3 options, radio-buttons for up to 7 options,
 or a dropdown menu for more than 7 options.
 
 The example below has 4 options, hence radio-buttons are shown.
@@ -732,9 +733,27 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Menu - Fewer options
+
+
+### Menu - Radio-buttons
+
+Buttons are shown for 4-7 options.
+
+Set `mode='radio'` to display buttons regardless of the number of options.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {choice}.')
+```
+
+### Menu - Buttons
 
 Buttons are shown for up to 3 options.
+
+Set `mode='button'` to display buttons regardless of the number of options.
 
 
 ```py
@@ -744,9 +763,11 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Menu - More options
+### Menu - Dropdown
 
 A dropdown is shown for more than 7 options.
+
+Set `mode='menu'` to display a dropdown menu regardless of the number of options.
 
 
 ```py
@@ -756,61 +777,13 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Menu - Dropdown
-
-Set `mode='menu'` to force a dropdown menu regardless of the number of options.
-
-
-```py
-choice = view(box('Choose a color', mode='menu', options=[
-    'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - Buttons
-
-Set `mode='button'` to force buttons regardless of the number of options.
-
-
-```py
-choice = view(box('Choose a color', mode='button', options=[
-    'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - Buttons, shorthand
-
-Most often, it doesn't make sense to show a text prompt for a set of buttons.
-In such cases, `box(text=None, options=[a, b, c])` can be shortened to `box([a, b, c])`.
-
-In other words, `box()` can accept options instead of text as its first argument,
-and `mode='button'` is implied.
-
-
-```py
-choice = view(box(['green', 'yellow', 'orange', 'red']))
-view(f'You chose {choice}.')
-```
-
-### Menu - Radio-buttons
-
-Set `mode='radio'` to force radio-buttons regardless of the number of options,
-
-
-```py
-choice = view(box('Choose a color', mode='radio', options=[
-    'blue', 'green', 'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choice}.')
-```
-
-### Menu - Multi-select
+### Menu - Checklist
 
 Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 
 By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
+
+Set `mode='check'` to display a checklist regardless of the number of options.
 
 
 ```py
@@ -820,40 +793,20 @@ choices = view(box('Choose some colors', multiple=True, options=[
 view(f'You chose {choices}.')
 ```
 
-### Menu - Checkboxes
-
-Set `mode='check'` to force checkboxes regardless of the number of options,
-
-
-```py
-choices = view(box('Choose some colors', mode='check', multiple=True, options=[
-    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choices}.')
-```
-
 ### Menu - Multi-select Dropdown
 
-Set `mode='menu'` to force a multi-select dropdown menu regardless of the number of options.
+Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
+
+By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
+
+Set `mode='menu'` to display a dropdown menu regardless of the number of options.
 
 
 ```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-    'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choices}.')
-```
-
-### Menu - Tag Picker
-
-Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
-
-
-```py
-tags = view(box('Choose some tags', mode='tag', options=[
+choices = view(box('Choose some colors', multiple=True, options=[
     'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
 ]))
-view(f'You chose {tags}.')
+view(f'You chose {choices}.')
 ```
 
 ### Menu - Editable Dropdown
@@ -988,35 +941,24 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Options - Selected (Dropdown)
+### Radio-buttons - Basic
+
+Set `mode='radio'` to show radio-buttons.
+
+`mode=` can be elided when there are 4-7 options.
+
 
 ```py
-choice = view(box('Choose a color', mode='menu', options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
+choice = view(box('Choose a color', mode='radio', options=[
+    'blue', 'green', 'yellow', 'orange', 'red', 'black'
 ]))
 view(f'You chose {choice}.')
 ```
 
-### Options - Selected (Buttons)
+### Radio-buttons - Selected
 
-Selected buttons are shown in alternate (primary) colors.
+Set `selected=True` to pre-select an option.
 
-This is useful when you want to emphasize certain actions over others.
-
-
-```py
-choice = view(box('Updates are available for your system.', mode='button', options=[
-    option('now', 'Update now', selected=True),
-    option('tomorrow', 'Remind me tomorrow'),
-    option('never', 'Never update'),
-]))
-view(f'You chose to update {choice}.')
-```
-
-### Options - Selected (Radio-buttons)
 
 ```py
 choice = view(box('Choose a color', mode='radio', options=[
@@ -1028,50 +970,9 @@ choice = view(box('Choose a color', mode='radio', options=[
 view(f'You chose {choice}.')
 ```
 
-### Options - Multiple Selected
-
-Multiple options can be pre-selected if the box supports multiple selections (`multiple=True`).
-
-
-```py
-choices = view(box('Choose some colors', multiple=True, options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
-]))
-view(f'You chose {choices}.')
-```
-
-### Options - Multiple Selected (Checkboxes)
-
-```py
-choices = view(box('Choose some colors', mode='check', multiple=True, options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
-]))
-view(f'You chose {choices}.')
-```
-
-### Options - Multiple Selected (Dropdown)
-
-```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
-]))
-view(f'You chose {choices}.')
-```
-
-### Options - Icons
+### Radio-buttons - Icons
 
 Set `icon=` to show graphical options.
-
-Icons are shown only if `mode='radio'`.
 
 
 ```py
@@ -1086,7 +987,142 @@ choice = view(box('Choose a chart type', mode='radio', options=[
 view(f'You chose {choice}.')
 ```
 
-### Options - Group
+### Buttons - Basic
+
+Set `mode='button'` to show buttons.
+
+`mode=` can be elided when there are 1-3 options.
+
+
+```py
+choice = view(box('Choose a color', mode='button', options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Buttons - Shorthand
+
+Most often, it doesn't make sense to show a text prompt for a set of buttons.
+In such cases, `box(text=None, options=[a, b, c])` can be shortened to `box([a, b, c])`.
+
+In other words, `box()` can accept options instead of text as its first argument,
+and `mode='button'` is implied.
+
+
+```py
+choice = view(box(['green', 'yellow', 'orange', 'red']))
+view(f'You chose {choice}.')
+```
+
+### Buttons - Primary Buttons
+
+Options marked as `selected` are shown in alternate colors.
+
+This is useful when you want to emphasize certain actions over others.
+
+
+```py
+choice = view(box('Updates are available for your system.', mode='button', options=[
+    option('now', 'Update now', selected=True),
+    option('tomorrow', 'Remind me tomorrow'),
+    option('never', 'Never update'),
+]))
+view(f'You chose to update {choice}.')
+```
+
+### Buttons - Split Buttons
+
+Options can have sub-options. Sub-options are shown as split buttons.
+
+
+```py
+choice = view(box('Send fresh donuts every day?', mode='button', options=[
+    option('yes', 'Yes!', selected=True),
+    option('no', 'No', options=[
+        option('later', 'Remind me later', icon='ChatBot'),
+        option('never', "Don't ask me again", icon='MuteChat'),
+    ]),
+]))
+view(f'You chose {choice}.')
+```
+
+### Buttons - Primary Split Buttons
+
+Sub-options work on selected options, too, and are shown in alternate colors.
+
+
+```py
+choice = view(box('Send fresh donuts every day?', mode='button', options=[
+    option('yes', 'Yes!', selected=True, options=[
+        option('later', 'Remind me later', icon='ChatBot'),
+        option('never', "Don't ask me again", icon='MuteChat'),
+    ]),
+    option('no', 'No'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Buttons - Caption
+
+Set `caption=` to describe options.
+
+Captions are shown only if `mode='button'`.
+
+
+```py
+choice = view(box('Send fresh donuts every day?', options=[
+    option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+    option('no', 'Not now', caption='I will decide later'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Buttons - Layout
+
+By default, buttons are shown row-wise. Set `row=False` to lay them out column-wise.
+
+
+```py
+choice = view(box('Choose a color', mode='button', row=False, options=[
+    option('auto', 'Automatic', selected=True),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Dropdown - Basic
+
+Set `mode='menu'` to show a dropdown menu.
+
+`mode=` can be elided when there are more than 7 options.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Dropdown - Selected
+
+Set `selected=True` to pre-select an option.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Dropdown - Grouped
 
 Options can have sub-options. This is useful for grouping options into categories.
 
@@ -1109,66 +1145,74 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Options - Group (Buttons)
+### Checklist - Basic
 
-Sub-options are shown as split buttons if `mode='button'`.
+Set `mode='check'` to show a checklist
+
+`mode=` can be elided when there are 1-7 options.
 
 
 ```py
-choice = view(box('Send fresh donuts every day?', mode='button', options=[
-    option('yes', 'Yes!', selected=True),
-    option('no', 'No', options=[
-        option('later', 'Remind me later', icon='ChatBot'),
-        option('never', "Don't ask me again", icon='MuteChat'),
-    ]),
+choices = view(box('Choose some colors', mode='check', multiple=True, options=[
+    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
-### Options - Group selected (Buttons)
+### Checklist - Selected
 
-Sub-options work on selected (primary) buttons, too.
-
-
-```py
-choice = view(box('Send fresh donuts every day?', mode='button', options=[
-    option('yes', 'Yes!', selected=True, options=[
-        option('later', 'Remind me later', icon='ChatBot'),
-        option('never', "Don't ask me again", icon='MuteChat'),
-    ]),
-    option('no', 'No'),
-]))
-view(f'You chose {choice}.')
-```
-
-### Options - Caption
-
-Set `caption=` to describe options.
-
-Captions are shown only if `mode='button'`.
+Set `selected=True` to pre-select one or more options.
 
 
 ```py
-choice = view(box('Send fresh donuts every day?', options=[
-    option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
-    option('no', 'Not now', caption='I will decide later'),
-]))
-view(f'You chose {choice}.')
-```
-
-### Options - Layout
-
-By default, buttons are shown row-wise. Set `row=False` to lay them out column-wise.
-
-
-```py
-choice = view(box('Choose a color', mode='button', row=False, options=[
-    option('auto', 'Automatic', selected=True),
-    option('yellow', 'Yellow'),
+choices = view(box('Choose some colors', mode='check', multiple=True, options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
     option('orange', 'Orange'),
-    option('red', 'Red'),
+    option('red', 'Red', selected=True),
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
+```
+
+### Multi-select Dropdown - Basic
+
+Set `mode='menu'` with `multiple=True` to show a multi-select dropdown menu.
+
+`mode=` can be elided when there are more than 7 options.
+
+
+```py
+choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choices}.')
+```
+
+### Multi-select Dropdown - Selected
+
+Set `selected=True` to pre-select one or more options.
+
+
+```py
+choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
+]))
+view(f'You chose {choices}.')
+```
+
+### Tag Picker - Basic
+
+Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
+
+
+```py
+tags = view(box('Choose some tags', mode='tag', options=[
+    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {tags}.')
 ```
 
 ### Color Picker - Basic
