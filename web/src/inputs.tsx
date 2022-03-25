@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColor, IColorCellProps, IComboBox, IComboBoxOption, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, cssColor, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColor, IColorCellProps, IComboBox, IComboBoxOption, IContextualMenuItem, IContextualMenuProps, IDropdownOption, IRGB, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
@@ -374,14 +374,16 @@ const XCalendar = make(({ context, input }: InputProps) => {
 const XColorPicker = make(({ context, input }: InputProps) => {
   const
     { index, text, value } = input,
-    onChange = (_: React.SyntheticEvent<HTMLElement>, { str }: IColor) => {
-      context.capture(index, str)
-    },
+    colorValue = value ? String(value) : '#000',
+    defaultColor = cssColor(colorValue),
+    colorToTuple = ({ r, g, b, a }: IRGB) => [r, g, b, a ?? 100],
+    capture = (color: IRGB) => context.capture(index, colorToTuple(color)),
+    onChange = (_: React.SyntheticEvent<HTMLElement>, color: IColor) => capture(color),
     render = () => {
       return (
         <WithLabel label={text}>
           <ColorPicker
-            color={isS(value) ? value : '#00ced1'}
+            color={colorValue}
             alphaType='alpha'
             onChange={onChange}
             showPreview
@@ -389,7 +391,7 @@ const XColorPicker = make(({ context, input }: InputProps) => {
         </WithLabel>
       )
     }
-  if (value) context.capture(index, value)
+  if (defaultColor) capture(defaultColor)
   return { render }
 })
 
