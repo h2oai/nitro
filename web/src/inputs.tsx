@@ -503,7 +503,9 @@ const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
 const XComboBox = make(({ context, input }: InputProps) => {
   const
     { index, value } = input,
-    initialValue = value ? String(value) : undefined,
+    selected = selectedOf(input),
+    // Double-test because value may not be an available option.
+    initialValue = selected ? String(selected.value) : value ? String(value) : undefined,
     onChange = (_: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: N, value?: S) => {
       const v = option ? option.text : value
       if (v) context.capture(index, v)
