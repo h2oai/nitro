@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, FocusTrapZone, IButtonProps, IButtonStyles, IChoiceGroupOption, IColorCellProps, ICommandBarItemProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, setVirtualParent, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, FocusTrapZone, IButtonProps, IButtonStyles, IChoiceGroupOption, IColorCellProps, ICommandBarItemProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, SelectableOptionMenuItemType, setVirtualParent, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
@@ -8,8 +8,8 @@ import { Input, Widget, MsgType, Option, WidgetT, InputMode, Conf, Stacking, Sta
 import { Send } from './socket';
 import { make } from './ui';
 
-const newCaptureContext = (send: Send, data: Array<V | Pair<V>>) => {
-  const capture = <T extends V | Pair<V>>(index: any, value: T) => {
+const newCaptureContext = (send: Send, data: Array<V | V[]>) => {
+  const capture = <T extends V | V[]>(index: any, value: T) => {
     if (index >= 0) data[index] = value
     return value
   }
@@ -435,27 +435,51 @@ const XDropdown = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-class XMultiSelectDropdown extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, placeholder, error, required, options } = this.props.input,
-      items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
-      selectedKeys = options.filter(c => c.selected).map(c => String(c.value))
+const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
+  const
+    { index } = input,
+    selecteds = selectedsOf(input),
+    selection = new Set<S>(selecteds.map(s => String(s.value))),
+    capture = () => context.capture(index, Array.from(selection))
 
-    return (
+  capture()
 
-      <Dropdown
-        multiSelect
-        label={text}
-        placeholder={placeholder}
-        options={items}
-        defaultSelectedKeys={selectedKeys}
-        errorMessage={error}
-        required={required ? true : false}
-      />
-    )
-  }
-}
+  const
+    onChange = (_?: React.FormEvent<HTMLElement>, option?: IDropdownOption) => {
+      if (option) {
+        const key = String(option.key)
+        if (option.selected) {
+          selection.add(key)
+        } else {
+          selection.delete(key)
+        }
+        capture()
+      }
+    },
+    render = () => {
+      const
+        { text, placeholder, error, required, options } = input,
+        items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
+        selectedKeys = selecteds.map(c => String(c.value))
+
+      return (
+
+        <Dropdown
+          multiSelect
+          label={text}
+          placeholder={placeholder}
+          options={items}
+          defaultSelectedKeys={selectedKeys}
+          errorMessage={error}
+          required={required ? true : false}
+          onChange={onChange}
+        />
+      )
+    }
+
+  return { render }
+})
+
 
 class XComboBox extends React.Component<InputProps, {}> {
   render() {
@@ -669,6 +693,10 @@ const XSwatchPicker = make(({ context, input }: InputProps) => {
 const selectedOf = ({ value, options }: Input): Option | undefined => value
   ? options.find(c => c.value === value)
   : options.find(c => c.selected)
+
+const selectedsOf = ({ value, options }: Input): Option[] => Array.isArray(value)
+  ? options.filter(c => value.indexOf(c.value) >= 0)
+  : options.filter(c => c.selected)
 
 const XChoiceGroup = make(({ context, input }: InputProps) => {
   const
