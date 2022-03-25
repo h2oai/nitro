@@ -211,7 +211,9 @@ if len(items) == 0:  # Nothing selected.
     view(f'Nothing to order? Goodbye!')
     return
 
-summary = ''  # The order summary, which we'll display later.
+summary = ['### Order summary:']  # The order summary, which we'll display later.
+
+# Pick flavors for each item.
 for item in items:
     count = view(box(f'How many orders of {item} would you like?', value=3))
     for i in range(count):
@@ -219,13 +221,12 @@ for item in items:
             f'Pick a flavor for {item} #{i + 1}',
             options=menu[item],
         ))
-        summary += f'    1. {flavor} {item}\n'
+        summary.append(f'1. {flavor} {item}')
 
-view(f'''
-### Order summary:
-{summary}
-Thank you for your order!
-''')
+summary.append('\nThank you for your order!')
+
+# Finally, show summary.
+view('\n'.join(summary))
 ```
 
 ### Markdown - Syntax
