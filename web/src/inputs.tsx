@@ -436,7 +436,7 @@ const XCheckList = make(({ context, input }: InputProps) => {
           <CheckboxContainer key={c.value}>
             <Checkbox
               label={c.text}
-              defaultChecked={c.selected ? true : false}
+              defaultChecked={selection.has(String(c.value))}
               onChange={(_, checked) => onChecked(c.value, checked)}
             />
           </CheckboxContainer>
