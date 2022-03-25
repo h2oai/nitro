@@ -714,15 +714,19 @@ speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2)))
 view(f'Your speed is {speed} m/s')
 ```
 
-### Menu - Basic
+### Pickers - Basic
 
-Set `options=` to allow the user to pick one or more options from several.
+A *picker* is a box that allows the user to pick one or more options from several presented options, like buttons,
+checklists, dropdowns, color pickers, and so on.
+
+Set `options=` to create a picker.
 
 There are several ways to create options. These are explained in the next section. The simplest way is to supply a
 sequence (tuple, set or list) of strings.
 
 By default, this shows buttons for up to 3 options, radio-buttons for up to 7 options,
 or a dropdown menu for more than 7 options.
+This behavior can be controlled using `mode=`, explained in later examples.
 
 The example below has 4 options, hence radio-buttons are shown.
 
@@ -736,9 +740,9 @@ view(f'You chose {choice}.')
 
 
 
-### Menu - Radio-buttons
+### Pickers - Radio-buttons
 
-Buttons are shown for 4-7 options.
+Radio-buttons are shown for 4-7 options.
 
 Set `mode='radio'` to display buttons regardless of the number of options.
 
@@ -750,7 +754,7 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Menu - Buttons
+### Pickers - Buttons
 
 Buttons are shown for up to 3 options.
 
@@ -764,7 +768,7 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Menu - Dropdown
+### Pickers - Dropdown
 
 A dropdown is shown for more than 7 options.
 
@@ -778,7 +782,7 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Menu - Checklist
+### Pickers - Checklist
 
 Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 
@@ -794,7 +798,7 @@ choices = view(box('Choose some colors', multiple=True, options=[
 view(f'You chose {choices}.')
 ```
 
-### Menu - Multi-select Dropdown
+### Pickers - Multi-select Dropdown
 
 Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 
@@ -810,7 +814,7 @@ choices = view(box('Choose some colors', multiple=True, options=[
 view(f'You chose {choices}.')
 ```
 
-### Menu - Editable Dropdown
+### Pickers - Editable Dropdown
 
 Set `editable=True` to allow arbitrary input in addition to the presented options.
 
@@ -824,7 +828,7 @@ choice = view(box('Choose a color', editable=True, options=[
 view(f'You chose {choice}.')
 ```
 
-### Menu - Required
+### Pickers - Required
 
 Set `required=True` to indicate that input is required.
 
@@ -836,7 +840,7 @@ choice = view(box('Choose a color', mode='menu', required=True, options=[
 view(f'You chose {choice}.')
 ```
 
-### Menu - Error
+### Pickers - Error
 
 Set `error=` to show an error message below the box.
 
@@ -844,6 +848,30 @@ Set `error=` to show an error message below the box.
 ```py
 choice = view(box('Choose a color', mode='menu', error='Invalid input', options=[
     'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Basic
+
+An `option` represents one of several choices to be presented to the user.
+It's used by all pickers: buttons, dropdowns, checklists, color pickers, and so on.
+
+An option has a `value` and `text`, created using `option(value, text)`.
+- The `value` is the value returned when the user picks that option. It is not user-visible.
+- The `text` is user-visible, and is typically used as a label for the option.
+
+If `text` is not provided, then the `value` is also used as the `text`.
+
+There are other, more concise ways to specify options, explained later.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
 ]))
 view(f'You chose {choice}.')
 ```
@@ -874,26 +902,9 @@ view(f'You chose {choice}.')
 
 In other words, `'green yellow orange red'` is a shorthand notation for `['green', 'yellow', 'orange', 'red']`.
 
-### Options - Labels
+### Options - From tuples
 
-Use `option(value, label)` to create options having labels different from their values.
-
-There are other, more concise ways to specify options, explained later.
-
-
-```py
-choice = view(box('Choose a color', options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow'),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
-view(f'You chose {choice}.')
-```
-
-### Options - Labels from tuples
-
-`options=` can also be specified as a sequence of `(value, label)` tuples.
+`options=` can also be specified as a sequence of `(value, text)` tuples.
 
 
 ```py
@@ -907,11 +918,11 @@ view(f'You chose {choice}.')
 ```
 
 
-Here, `(value, label)` is a shorthand notation for `option(value, label)`.
+Here, `(value, text)` is a shorthand notation for `option(value, text)`.
 
-### Options - Labels from dictionary
+### Options - From dictionary
 
-`options=` can also be specified as a `dict` of `value: label` entries.
+`options=` can also be specified as a `dict` of `value: text` entries.
 
 
 ```py
@@ -931,11 +942,30 @@ The above example shows the most concise way to specify options having labels di
 
 Set `selected=True` to pre-select an option.
 
+Another way to pre-select an option is to set `value=` on the box, as shown in the next example.
+
 
 ```py
 choice = view(box('Choose a color', options=[
     option('green', 'Green'),
     option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Options - Value
+
+Set `value=` on the box to pre-select an option having that value.
+
+Another way to pre-select an option is to set `selected=True` on the option, as shown in the previous example.
+
+
+```py
+choice = view(box('Choose a color', value='yellow', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
     option('orange', 'Orange'),
     option('red', 'Red'),
 ]))
@@ -965,6 +995,21 @@ Set `selected=True` to pre-select an option.
 choice = view(box('Choose a color', mode='radio', options=[
     option('green', 'Green'),
     option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Radio-buttons - Value
+
+Set `value=` to pre-select an option having that value.
+
+
+```py
+choice = view(box('Choose a color', mode='radio', value='yellow', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
     option('orange', 'Orange'),
     option('red', 'Red'),
 ]))
@@ -1016,16 +1061,32 @@ choice = view(box(['green', 'yellow', 'orange', 'red']))
 view(f'You chose {choice}.')
 ```
 
-### Buttons - Primary Buttons
+### Buttons - Selected
 
-Options marked as `selected` are shown in alternate colors.
+Options marked as `selected` are shown in alternate colors, also called *primary* buttons.
 
 This is useful when you want to emphasize certain actions over others.
 
 
 ```py
-choice = view(box('Updates are available for your system.', mode='button', options=[
+choice = view(box('Updates are available.', mode='button', options=[
     option('now', 'Update now', selected=True),
+    option('tomorrow', 'Remind me tomorrow'),
+    option('never', 'Never update'),
+]))
+view(f'You chose to update {choice}.')
+```
+
+### Buttons - Value
+
+Set `value=` to pre-select an option having that value.
+
+This is useful when you want to emphasize certain actions over others.
+
+
+```py
+choice = view(box('Updates are available.', mode='button', value='now', options=[
+    option('now', 'Update now'),
     option('tomorrow', 'Remind me tomorrow'),
     option('never', 'Never update'),
 ]))
@@ -1123,6 +1184,21 @@ choice = view(box('Choose a color', mode='menu', options=[
 view(f'You chose {choice}.')
 ```
 
+### Dropdown - Value
+
+Set `value=` to pre-select an option having that value.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', value='yellow', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
 ### Dropdown - Grouped
 
 Options can have sub-options. This is useful for grouping options into categories.
@@ -1175,6 +1251,21 @@ choices = view(box('Choose some colors', mode='check', multiple=True, options=[
 view(f'You chose {choices}.')
 ```
 
+### Checklist - Value
+
+Set `value=` to pre-select an option having that value.
+
+
+```py
+choices = view(box('Choose some colors', mode='check', multiple=True, value=['yellow', 'red'], options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choices}.')
+```
+
 ### Multi-select Dropdown - Basic
 
 Set `mode='menu'` with `multiple=True` to show a multi-select dropdown menu.
@@ -1200,6 +1291,21 @@ choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
     option('yellow', 'Yellow', selected=True),
     option('orange', 'Orange'),
     option('red', 'Red', selected=True),
+]))
+view(f'You chose {choices}.')
+```
+
+### Multi-select Dropdown - Value
+
+Set `value=` to pre-select an option having that value.
+
+
+```py
+choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yellow', 'red'], options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
 ]))
 view(f'You chose {choices}.')
 ```
