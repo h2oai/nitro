@@ -578,9 +578,11 @@ const ButtonsContainer = styled.div`
 `
 const XButtons = make(({ context, input }: InputProps) => {
   const
+    { value } = input,
+    selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
-        { text, index, row, options } = input,
+        { text, value, index, row, options } = input,
         horizontal = row !== false,
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
@@ -592,7 +594,7 @@ const XButtons = make(({ context, input }: InputProps) => {
           const
             text = c.text,
             onClick = () => capture(c.value),
-            button = c.selected
+            button = c.selected || selection.has(c.value)
               ? c.options
                 ? c.value === ''
                   ? <PrimaryButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(c.options, capture)} />
@@ -861,7 +863,6 @@ const XZoneItem = ({ stackable, children }: { stackable: Stackable, children: JS
     {children}
   </ZoneItemContainer>
 )
-
 
 const flexStyles: Dict<S> = {
   start: 'flex-start',
