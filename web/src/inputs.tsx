@@ -402,27 +402,38 @@ class XCheckList extends React.Component<InputProps, {}> {
 }
 
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
-class XDropdown extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, placeholder, error, required, options } = this.props.input,
-      hasGroups = options.some(c => c.options?.length ? true : false),
-      items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
-      selectedItem = options.find(c => c.selected),
-      selectedKey = selectedItem ? selectedItem.value : undefined
+const XDropdown = make(({ context, input }: InputProps) => {
+  const
+    { index } = input,
+    selected = selectedOf(input)
 
-    return (
-      <Dropdown
-        label={text}
-        placeholder={placeholder}
-        options={items}
-        selectedKey={selectedKey}
-        errorMessage={error}
-        required={required ? true : false}
-      />
-    )
-  }
-}
+  if (selected) context.capture(index, selected.value)
+
+  const
+    onChange = (_?: React.FormEvent<HTMLElement>, option?: IDropdownOption) => {
+      if (option) context.capture(index, option.key)
+    },
+    render = () => {
+      const
+        { text, placeholder, error, required, options } = input,
+        hasGroups = options.some(c => c.options?.length ? true : false),
+        items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
+        selectedKey = selected ? selected.value : undefined
+
+      return (
+        <Dropdown
+          label={text}
+          placeholder={placeholder}
+          options={items}
+          selectedKey={selectedKey}
+          errorMessage={error}
+          required={required ? true : false}
+          onChange={onChange}
+        />
+      )
+    }
+  return { render }
+})
 
 class XMultiSelectDropdown extends React.Component<InputProps, {}> {
   render() {
@@ -792,7 +803,6 @@ const applyBoxStyles = (css: React.CSSProperties, { width, height, margin, paddi
 
 const ZoneItemContainer = styled.div`
   box-sizing: border-box;
-  overflow: auto;
 `
 
 const XZoneItem = ({ stackable, children }: { stackable: Stackable, children: JSX.Element }) => (
@@ -815,7 +825,6 @@ const toFlexStyle = (s: S): S => flexStyles[s] ?? s
 const ZoneContainer = styled.div`
   display: flex;
   box-sizing: border-box;
-  overflow: auto;
 `
 
 const XZone = ({ context, widgets, stack }: { context: Context, widgets: Widget[], stack: Stacking & Stackable }) => {
