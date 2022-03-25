@@ -627,54 +627,52 @@ const toGroupedDropdownOptions = (options: Option[]): IDropdownOption[] => {
   return items
 }
 
-const createAutocompleter = (options: Option[]) => {
+
+
+const XTagPicker = make(({ context, input }: InputProps) => {
   const
-    items: ITag[] = options.map(c => ({ key: c.value, name: String(c.text) })),
+    { index, options } = input,
+    selectedOptions = selectedsOf(input),
+    selectedKeys = selectedOptions.map(o => String(o.value)),
+    tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),
+    selectedTags = tags.filter(tag => selectedKeys.includes(tag.key as S)),
+    capture = (tags: ITag[]) => context.capture(index, tags.map(tag => tag.key)),
     listContainsTagList = (tag: ITag, tagList?: ITag[]) => (!tagList || !tagList.length || tagList.length === 0)
       ? false
       : tagList.some(compareTag => compareTag.key === tag.key),
     suggest = (filterText: string, tagList?: ITag[]): ITag[] =>
       filterText
-        ? items.filter(
-          tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0 && !listContainsTagList(tag, tagList),
-        )
+        ? tags.filter(tag => tag.name.toLowerCase().includes(filterText.toLowerCase()) && !listContainsTagList(tag, tagList))
         : [],
-    resolve = (item: ITag) => item.name
-
-  return { resolve, suggest }
-}
-
-
-type TagPickerState = {
-  autocompleter: ReturnType<typeof createAutocompleter>
-}
-
-class XTagPicker extends React.Component<InputProps, TagPickerState> {
-  constructor(props: InputProps) {
-    super(props)
-    const { options } = props.input
-    this.state = {
-      autocompleter: createAutocompleter(options)
+    resolve = (item: ITag) => item.name,
+    whenEmpty = () => tags,
+    onChange = (tags?: ITag[]) => {
+      if (tags) capture(tags)
+    },
+    render = () => {
+      const
+        { text } = input
+      return (
+        <WithLabel label={text}>
+          <TagPicker
+            pickerSuggestionsProps={{
+              suggestionsHeaderText: 'Suggestions',
+              noResultsFoundText: 'No matches found',
+            }}
+            onResolveSuggestions={suggest}
+            getTextFromItem={resolve}
+            onEmptyResolveSuggestions={whenEmpty}
+            defaultSelectedItems={selectedTags}
+            onChange={onChange}
+          />
+        </WithLabel>
+      )
     }
-  }
-  render() {
-    const
-      { text } = this.props.input,
-      { autocompleter } = this.state
-    return (
-      <WithLabel label={text}>
-        <TagPicker
-          onResolveSuggestions={autocompleter.suggest}
-          getTextFromItem={autocompleter.resolve}
-          pickerSuggestionsProps={{
-            suggestionsHeaderText: 'Suggested options',
-            noResultsFoundText: 'No options found',
-          }}
-        />
-      </WithLabel>
-    )
-  }
-}
+
+  capture(selectedTags)
+
+  return { render }
+})
 
 const swatchCellSize = 25
 const XSwatchPicker = make(({ context, input }: InputProps) => {
@@ -714,7 +712,7 @@ const selectedOf = ({ value, options }: Input): Option | undefined => value
   : options.find(c => c.selected)
 
 const selectedsOf = ({ value, options }: Input): Option[] => Array.isArray(value)
-  ? options.filter(c => value.indexOf(c.value) >= 0)
+  ? options.filter(c => value.includes(c.value))
   : options.filter(c => c.selected)
 
 const XChoiceGroup = make(({ context, input }: InputProps) => {
