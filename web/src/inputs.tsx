@@ -11,7 +11,6 @@ import { make } from './ui';
 const newCaptureContext = (send: Send, data: Array<V | V[]>) => {
   const capture = <T extends V | V[]>(index: any, value: T) => {
     if (index >= 0) data[index] = value
-    return value
   }
   const submit = () => send({ t: MsgType.Input, d: data })
   return { capture, submit }
@@ -48,9 +47,8 @@ const WithLabel = ({ label, children }: { label?: S, children: JSX.Element }) =>
 )
 
 const XTextField = make(({ context, input }: InputProps) => {
-  const { index, value } = input
-  context.capture(index, (value as any) ?? '')
   const
+    { index, text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = input,
     onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
       v = v ?? (target as HTMLInputElement).value ?? value ?? ''
       // TODO live?
@@ -58,7 +56,6 @@ const XTextField = make(({ context, input }: InputProps) => {
     },
     render = () => {
       const
-        { text, placeholder, icon, value, mask, prefix, suffix, error, lines, required, password } = input,
         field: Partial<ITextFieldProps> = {
           label: text,
           defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
@@ -67,7 +64,6 @@ const XTextField = make(({ context, input }: InputProps) => {
           required: required === true,
           onChange,
         }
-
       return password === true
         ? <TextField {...field} type='password' canRevealPassword revealPasswordAriaLabel='Show password' />
         : mask
@@ -77,6 +73,7 @@ const XTextField = make(({ context, input }: InputProps) => {
             : <TextField {...field} iconProps={icon ? { iconName: icon } : undefined} prefix={prefix} suffix={suffix} />
     }
 
+  context.capture(index, (value as any) ?? '')
   return { render }
 })
 
@@ -84,7 +81,8 @@ const XTextField = make(({ context, input }: InputProps) => {
 const XSpinButton = make(({ context, input }: InputProps) => {
   const
     { index, min, max, step, value } = input,
-    defaultValue = context.capture(index, getDefaultValue(value, min, max, step) ?? 0),
+
+    defaultValue = getDefaultValue(value, min, max, step) ?? 0,
     onChange = (event: React.SyntheticEvent<HTMLElement>, value?: string): void => {
       let v = isS(value) ? parseFloat(value) : defaultValue
       if (isNaN(v)) v = defaultValue
@@ -108,22 +106,25 @@ const XSpinButton = make(({ context, input }: InputProps) => {
         />
       )
     }
+
+  context.capture(index, defaultValue)
+
   return { render }
 })
 
 const XSlider = make(({ context, input }: InputProps) => {
   const
-    { index, min, max, step, value } = input,
+    { index, text, value, min, max, step } = input,
+    originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
     ranged = isPair(value) && isN(value[0]) && isN(value[1]),
-    defaultValue = context.capture(index, ranged ? value : getDefaultValue(value, min, max, step) ?? 0),
+    defaultValue = ranged ? 0 : getDefaultValue(value, min, max, step),
+    defaultValueMin = ranged ? getDefaultValue(value[0], min, max, step) : 0,
+    defaultValueMax = ranged ? getDefaultValue(value[1], min, max, step) : 0,
     onChange = (v: U, range?: [U, U]) => {
       context.capture(index, range ? range : v)
     },
     render = () => {
       const
-        { text, value, min, max, step } = input,
-        originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
-        ranged = isPair(value) && isN(value[0]) && isN(value[1]),
         props: Partial<ISliderProps> = {
           label: text,
           min: unum(min),
@@ -138,33 +139,40 @@ const XSlider = make(({ context, input }: InputProps) => {
         ? (
           <Slider
             {...props}
-            defaultLowerValue={getDefaultValue(value[0], min, max, step)}
-            defaultValue={getDefaultValue(value[1], min, max, step)}
+            defaultLowerValue={defaultValueMin}
+            defaultValue={defaultValueMax}
           />
         ) : (
           <Slider
             {...props}
-            defaultValue={getDefaultValue(value, min, max, step)}
+            defaultValue={defaultValue}
           />
         )
-
-
     }
+
+  if (ranged) {
+    if (defaultValueMin !== undefined && defaultValueMax !== undefined) {
+      context.capture(index, [defaultValueMin, defaultValueMax])
+    }
+  } else {
+    if (defaultValue !== undefined) {
+      context.capture(index, defaultValue)
+    }
+  }
+
   return { render }
 })
 
 const XRating = make(({ context, input }: InputProps) => {
   const
-    { index, min, value } = input,
+    { index, text, min, max, value } = input,
     allowZeroStars = isN(min) && min <= 0,
-    defaultRating = context.capture(index, unum(value) ?? (allowZeroStars ? 0 : 1)),
+    defaultRating = unum(value) ?? (allowZeroStars ? 0 : 1),
     onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {
       if (rating === undefined) return
       context.capture(index, rating)
     },
     render = () => {
-      const
-        { text, max } = input
       return (
         <WithLabel label={text}>
           <Rating
@@ -176,6 +184,9 @@ const XRating = make(({ context, input }: InputProps) => {
         </WithLabel>
       )
     }
+
+  context.capture(index, defaultRating)
+
   return { render }
 })
 
@@ -237,9 +248,6 @@ const XTimePicker = make(({ context, input }: InputProps) => {
       if (checked !== undefined) clock.pm = checked
       capture()
     },
-    init = () => {
-      capture()
-    },
     render = () => {
       return (
         <WithLabel label={text}>
@@ -289,17 +297,19 @@ const XTimePicker = make(({ context, input }: InputProps) => {
         </WithLabel>
       )
     }
-  return { init, render }
+
+  capture()
+
+  return { render }
 })
 
 const dateToString = (d: Date) => d.toISOString().substring(0, 10)
 
 const XDatePicker = make(({ context, input }: InputProps) => {
-  console.log('in date picker')
   const
     { index, value } = input,
     defaultDate = udate(value) ?? new Date(),
-    defaultValue = context.capture(index, dateToString(defaultDate)),
+    defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date | null) => {
       console.log('in select', d)
       context.capture(index, dateToString(d ?? defaultDate))
@@ -327,6 +337,9 @@ const XDatePicker = make(({ context, input }: InputProps) => {
         />
       )
     }
+
+  context.capture(index, defaultValue)
+
   return { render }
 })
 
@@ -334,7 +347,7 @@ const XCalendar = make(({ context, input }: InputProps) => {
   const
     { index, value } = input,
     defaultDate = udate(value) ?? new Date(),
-    defaultValue = context.capture(index, dateToString(defaultDate)),
+    defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date) => {
       context.capture(index, dateToString(d ?? new Date()))
     },
@@ -367,6 +380,9 @@ const XCalendar = make(({ context, input }: InputProps) => {
         </WithLabel>
       )
     }
+
+  context.capture(index, defaultValue)
+
   return { render }
 })
 
@@ -391,16 +407,18 @@ const XColorPicker = make(({ context, input }: InputProps) => {
         </WithLabel>
       )
     }
+
   if (defaultColor) capture(defaultColor)
+
   return { render }
 })
 
 const CheckboxContainer = styled.div`
-    margin: 0.5rem 0;
-  `
+  margin: 0.5rem 0;
+`
 const XCheckList = make(({ context, input }: InputProps) => {
   const
-    { index } = input,
+    { index, text, options } = input,
     selecteds = selectedsOf(input),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.capture(index, Array.from(selection)),
@@ -414,7 +432,6 @@ const XCheckList = make(({ context, input }: InputProps) => {
     },
     render = () => {
       const
-        { text, options } = input,
         checkboxes = options.map(c => (
           <CheckboxContainer key={c.value}>
             <Checkbox
@@ -429,29 +446,24 @@ const XCheckList = make(({ context, input }: InputProps) => {
         <WithLabel label={text}><div>{checkboxes}</div></WithLabel>
       )
     }
+
   capture()
+
   return { render }
 })
 
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
 const XDropdown = make(({ context, input }: InputProps) => {
   const
-    { index } = input,
-    selected = selectedOf(input)
-
-  if (selected) context.capture(index, selected.value)
-
-  const
+    { index, text, placeholder, error, required, options } = input,
+    selected = selectedOf(input),
+    hasGroups = options.some(c => c.options?.length ? true : false),
+    items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
+    selectedKey = selected ? selected.value : undefined,
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IDropdownOption) => {
       if (option) context.capture(index, option.key)
     },
     render = () => {
-      const
-        { text, placeholder, error, required, options } = input,
-        hasGroups = options.some(c => c.options?.length ? true : false),
-        items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
-        selectedKey = selected ? selected.value : undefined
-
       return (
         <Dropdown
           label={text}
@@ -464,19 +476,20 @@ const XDropdown = make(({ context, input }: InputProps) => {
         />
       )
     }
+
+  if (selected) context.capture(index, selected.value)
+
   return { render }
 })
 
 const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
   const
-    { index } = input,
+    { index, text, placeholder, error, required, options } = input,
     selecteds = selectedsOf(input),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
-    capture = () => context.capture(index, Array.from(selection))
-
-  capture()
-
-  const
+    items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
+    selectedKeys = selecteds.map(c => String(c.value)),
+    capture = () => context.capture(index, Array.from(selection)),
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IDropdownOption) => {
       if (option) {
         const key = String(option.key)
@@ -489,13 +502,7 @@ const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
       }
     },
     render = () => {
-      const
-        { text, placeholder, error, required, options } = input,
-        items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
-        selectedKeys = selecteds.map(c => String(c.value))
-
       return (
-
         <Dropdown
           multiSelect
           label={text}
@@ -509,13 +516,15 @@ const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
       )
     }
 
+  capture()
+
   return { render }
 })
 
 
 const XComboBox = make(({ context, input }: InputProps) => {
   const
-    { index, value, options } = input,
+    { index, value, text, placeholder, required, error, options } = input,
     items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
     selected = selectedOf(input),
     selectedKey = selected ? String(selected.value) : undefined,
@@ -526,8 +535,6 @@ const XComboBox = make(({ context, input }: InputProps) => {
       if (v) context.capture(index, v)
     },
     render = () => {
-      const
-        { text, placeholder, required, error } = input
       return (
         <ComboBox
           label={text}
@@ -634,11 +641,9 @@ const toGroupedDropdownOptions = (options: Option[]): IDropdownOption[] => {
   return items
 }
 
-
-
 const XTagPicker = make(({ context, input }: InputProps) => {
   const
-    { index, options } = input,
+    { index, text, options } = input,
     selectedOptions = selectedsOf(input),
     selectedKeys = selectedOptions.map(o => String(o.value)),
     tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),
@@ -657,8 +662,6 @@ const XTagPicker = make(({ context, input }: InputProps) => {
       if (tags) capture(tags)
     },
     render = () => {
-      const
-        { text } = input
       return (
         <WithLabel label={text}>
           <TagPicker
@@ -684,20 +687,17 @@ const XTagPicker = make(({ context, input }: InputProps) => {
 const swatchCellSize = 25
 const XSwatchPicker = make(({ context, input }: InputProps) => {
   const
-    { index } = input,
-    selected = selectedOf(input)
-
-  if (selected) context.capture(index, selected.value)
-
-  const
+    { index, text, options } = input,
+    selected = selectedOf(input),
+    cells: IColorCellProps[] = options.map(c => ({
+      id: String(c.value),
+      label: String(c.text),
+      color: String(c.value),
+    })),
     onChange = (_e: React.FormEvent<HTMLElement>, _id?: S, color?: S) => {
       if (color) context.capture(index, color)
     },
     render = () => {
-      const
-        { text, options } = input,
-        cells: IColorCellProps[] = options.map(c => ({ id: String(c.value), label: String(c.text), color: String(c.value) }))
-
       return (
         <WithLabel label={text}>
           <SwatchColorPicker
@@ -711,6 +711,9 @@ const XSwatchPicker = make(({ context, input }: InputProps) => {
         </WithLabel>
       )
     }
+
+  if (selected) context.capture(index, selected.value)
+
   return { render }
 })
 
@@ -724,25 +727,18 @@ const selectedsOf = ({ value, options }: Input): Option[] => Array.isArray(value
 
 const XChoiceGroup = make(({ context, input }: InputProps) => {
   const
-    { index } = input,
-    selected = selectedOf(input)
-
-  if (selected) context.capture(index, selected.value)
-
-  const
+    { index, text, placeholder, required, options } = input,
+    selected = selectedOf(input),
+    items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
+      key: String(value),
+      text: String(text),
+      iconProps: iconName ? { iconName } : undefined,
+    })),
+    selectedKey = selected ? selected.value : undefined,
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IChoiceGroupOption) => {
       if (option) context.capture(index, option?.key)
     },
     render = () => {
-      const
-        { text, placeholder, required, options } = input,
-        items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
-          key: String(value),
-          text: String(text),
-          iconProps: iconName ? { iconName } : undefined,
-        })),
-        selectedKey = selected ? selected.value : undefined
-
       return (
         <ChoiceGroup
           label={text}
@@ -754,6 +750,9 @@ const XChoiceGroup = make(({ context, input }: InputProps) => {
         />
       )
     }
+
+  if (selected) context.capture(index, selected.value)
+
   return { render }
 })
 
@@ -907,7 +906,6 @@ const XZone = ({ context, widgets, stack }: { context: Context, widgets: Widget[
 }
 
 const gap5: IStackTokens = { childrenGap: 5 }
-
 
 const widgetsHaveActions = (widgets: Widget[]): B => { // recursive
   for (const w of widgets) {
