@@ -385,21 +385,40 @@ class XColorPicker extends React.Component<InputProps, {}> {
 const CheckboxContainer = styled.div`
     margin: 0.5rem 0;
   `
-class XCheckList extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, options } = this.props.input,
-      checkboxes = options.map(c => (
-        <CheckboxContainer key={c.value}>
-          <Checkbox label={c.text} checked={c.selected ? true : false} />
-        </CheckboxContainer>
-      ))
+const XCheckList = make(({ context, input }: InputProps) => {
+  const
+    { index } = input,
+    selecteds = selectedsOf(input),
+    selection = new Set<S>(selecteds.map(s => String(s.value))),
+    capture = () => context.capture(index, Array.from(selection)),
+    onChecked = (value?: V, checked?: B) => {
+      if (checked) {
+        selection.add(String(value))
+      } else {
+        selection.delete(String(value))
+      }
+      capture()
+    },
+    render = () => {
+      const
+        { text, options } = input,
+        checkboxes = options.map(c => (
+          <CheckboxContainer key={c.value}>
+            <Checkbox
+              label={c.text}
+              defaultChecked={c.selected ? true : false}
+              onChange={(_, checked) => onChecked(c.value, checked)}
+            />
+          </CheckboxContainer>
+        ))
 
-    return (
-      <WithLabel label={text}><div>{checkboxes}</div></WithLabel>
-    )
-  }
-}
+      return (
+        <WithLabel label={text}><div>{checkboxes}</div></WithLabel>
+      )
+    }
+  capture()
+  return { render }
+})
 
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
 const XDropdown = make(({ context, input }: InputProps) => {
