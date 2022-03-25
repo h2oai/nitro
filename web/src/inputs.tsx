@@ -1,4 +1,4 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, FocusTrapZone, IButtonProps, IButtonStyles, IChoiceGroupOption, IColorCellProps, ICommandBarItemProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, SelectableOptionMenuItemType, setVirtualParent, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, FocusTrapZone, IButtonProps, IButtonStyles, IChoiceGroupOption, IColorCellProps, IComboBox, IComboBoxOption, ICommandBarItemProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, SelectableOptionMenuItemType, setVirtualParent, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
 import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
@@ -500,45 +500,66 @@ const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
 })
 
 
-class XComboBox extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, placeholder, options } = this.props.input,
-      items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
-      selectedItem = options.find(c => c.selected),
-      selectedKey = selectedItem ? selectedItem.value : undefined
+const XComboBox = make(({ context, input }: InputProps) => {
+  const
+    { index, value } = input,
+    initialValue = value ? String(value) : undefined,
+    onChange = (_: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: N, value?: S) => {
+      const v = option ? option.text : value
+      if (v) context.capture(index, v)
+    },
+    render = () => {
+      const
+        { text, placeholder, options, required, error } = input,
+        items: IComboBoxOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
+        selectedItem = options.find(c => c.selected),
+        selectedKey = selectedItem ? selectedItem.value : undefined
+      return (
+        <ComboBox
+          label={text}
+          text={initialValue}
+          placeholder={placeholder}
+          options={items}
+          defaultSelectedKey={selectedKey}
+          required={required}
+          errorMessage={error}
+          onChange={onChange}
+          allowFreeform
+          autoComplete='on'
+        />
+      )
+    }
+  if (initialValue) context.capture(index, initialValue)
+  return { render }
+})
 
-    return (
-      <ComboBox
-        allowFreeform
-        label={text}
-        placeholder={placeholder}
-        options={items}
-        selectedKey={selectedKey}
-      />
-    )
-  }
-}
+const XMultiSelectComboBox = make(({ context, input }: InputProps) => {
+  const
+    onChange = (_: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: N, value?: S) => {
+    },
+    render = () => {
+      const
+        { text, placeholder, options, required, error } = input,
+        items: IComboBoxOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
+        selectedKeys = options.filter(c => c.selected).map(c => String(c.value))
 
-class XMultiSelectComboBox extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, placeholder, options } = this.props.input,
-      items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
-      selectedKeys = options.filter(c => c.selected).map(c => String(c.value))
-
-    return (
-      <ComboBox
-        allowFreeform
-        multiSelect
-        label={text}
-        placeholder={placeholder}
-        options={items}
-        selectedKey={selectedKeys}
-      />
-    )
-  }
-}
+      return (
+        <ComboBox
+          multiSelect
+          label={text}
+          placeholder={placeholder}
+          options={items}
+          defaultSelectedKey={selectedKeys}
+          required={required}
+          errorMessage={error}
+          onChange={onChange}
+          allowFreeform
+          autoComplete='on'
+        />
+      )
+    }
+  return { render }
+})
 
 const toContextualMenuItem = ({ value, text, caption, icon, options }: Option, capture: (v: V) => void): IContextualMenuItem => {
   return text
