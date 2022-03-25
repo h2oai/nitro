@@ -173,6 +173,7 @@ pre {
 const getIndentation = (rx: RegExp, lines: S[]): U => {
   const indents: U[] = []
   for (const line of lines) {
+    if (line.trim().length === 0) continue // don't count empty lines
     const m = line.match(rx)
     if (!m) return 0
     indents.push(m[0].length)
@@ -181,8 +182,8 @@ const getIndentation = (rx: RegExp, lines: S[]): U => {
 }
 const getSpaceIndentation = (lines: S[]): U => getIndentation(/^ +/, lines)
 const getTabIndentation = (lines: S[]): U => getIndentation(/^\t+/, lines)
-const dedent = (s: S): S => {
-  let lines = s.split(/\r?\n/)
+const dedent = (block: S): S => {
+  let lines = block.split(/\r?\n/)
   const n = lines.length
   if (n > 0) {
     lines = lines.slice(
@@ -192,8 +193,9 @@ const dedent = (s: S): S => {
   }
   const indent = getSpaceIndentation(lines) || getTabIndentation(lines)
   return indent === 0
-    ? s
-    : lines.map(line => line.substring(indent)).join('\n')
+    ? block
+    // don't dedent empty lines
+    : lines.map(s => s.length > indent ? s.substring(indent) : s).join('\n')
 }
 export const
   highlight = (html: S) => html
