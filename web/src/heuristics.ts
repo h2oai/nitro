@@ -7,10 +7,10 @@ const determineMode = (input: Input): InputMode => {
   const { options, editable, multiple } = input
 
   if (options.length) {
+    if (editable) {
+      return 'menu'
+    }
     if (multiple) {
-      if (editable) {
-        return 'menu'
-      }
       const hasShortLabels = options.some(({ text }) => text && (text.length <= 50))
       if (hasShortLabels && options.length > 7) {
         return 'menu'
@@ -19,7 +19,7 @@ const determineMode = (input: Input): InputMode => {
     }
 
     const hasGroups = options.some(c => c.options?.length ? true : false)
-    if (editable || hasGroups) {
+    if (hasGroups) {
       return 'menu'
     }
     if (options.length <= 3) {

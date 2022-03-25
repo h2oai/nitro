@@ -502,8 +502,10 @@ const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
 
 const XComboBox = make(({ context, input }: InputProps) => {
   const
-    { index, value } = input,
+    { index, value, options } = input,
+    items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
     selected = selectedOf(input),
+    selectedKey = selected ? String(selected.value) : undefined,
     // Double-test because value may not be an available option.
     initialValue = selected ? String(selected.value) : value ? String(value) : undefined,
     onChange = (_: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: N, value?: S) => {
@@ -512,10 +514,7 @@ const XComboBox = make(({ context, input }: InputProps) => {
     },
     render = () => {
       const
-        { text, placeholder, options, required, error } = input,
-        items: IComboBoxOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
-        selectedItem = options.find(c => c.selected),
-        selectedKey = selectedItem ? selectedItem.value : undefined
+        { text, placeholder, required, error } = input
       return (
         <ComboBox
           label={text}
@@ -532,34 +531,6 @@ const XComboBox = make(({ context, input }: InputProps) => {
       )
     }
   if (initialValue) context.capture(index, initialValue)
-  return { render }
-})
-
-const XMultiSelectComboBox = make(({ context, input }: InputProps) => {
-  const
-    onChange = (_: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: N, value?: S) => {
-    },
-    render = () => {
-      const
-        { text, placeholder, options, required, error } = input,
-        items: IComboBoxOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
-        selectedKeys = options.filter(c => c.selected).map(c => String(c.value))
-
-      return (
-        <ComboBox
-          multiSelect
-          label={text}
-          placeholder={placeholder}
-          options={items}
-          defaultSelectedKey={selectedKeys}
-          required={required}
-          errorMessage={error}
-          onChange={onChange}
-          allowFreeform
-          autoComplete='on'
-        />
-      )
-    }
   return { render }
 })
 
@@ -964,9 +935,7 @@ const XInput = ({ context, input }: InputProps) => { // recursive
       return <XCalendar context={context} input={input} />
     case 'menu':
       return editable
-        ? multiple
-          ? <XMultiSelectComboBox context={context} input={input} />
-          : <XComboBox context={context} input={input} />
+        ? <XComboBox context={context} input={input} />
         : multiple
           ? <XMultiSelectDropdown context={context} input={input} />
           : <XDropdown context={context} input={input} />

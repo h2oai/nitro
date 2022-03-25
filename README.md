@@ -856,7 +856,7 @@ tags = view(box('Choose some tags', mode='tag', options=[
 view(f'You chose {tags}.')
 ```
 
-### Menu - Editable
+### Menu - Editable Dropdown
 
 Set `editable=True` to allow arbitrary input in addition to the presented options.
 
@@ -868,18 +868,6 @@ choice = view(box('Choose a color', editable=True, options=[
     'yellow', 'orange', 'red', 'black'
 ]))
 view(f'You chose {choice}.')
-```
-
-### Menu - Multi-select and editable
-
-`multiple=True` and `editable=True` can be combined.
-
-
-```py
-choices = view(box('Choose some colors', multiple=True, editable=True, options=[
-    'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choices}.')
 ```
 
 ### Menu - Required

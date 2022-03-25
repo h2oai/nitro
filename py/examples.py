@@ -631,7 +631,7 @@ def menu_tag(view: View):
     view(f'You chose {tags}.')
 
 
-# ## Editable
+# ## Editable Dropdown
 # Set `editable=True` to allow arbitrary input in addition to the presented options.
 #
 # `mode=menu` is implied if `editable=True`.
@@ -640,15 +640,6 @@ def menu_editable(view: View):
         'yellow', 'orange', 'red', 'black'
     ]))
     view(f'You chose {choice}.')
-
-
-# ## Multi-select and editable
-# `multiple=True` and `editable=True` can be combined.
-def menu_multiple_editable(view: View):
-    choices = view(box('Choose some colors', multiple=True, editable=True, options=[
-        'yellow', 'orange', 'red', 'black'
-    ]))
-    view(f'You chose {choices}.')
 
 
 # ## Required
