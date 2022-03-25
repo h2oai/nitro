@@ -534,7 +534,7 @@ def spinbox_decimal_step(view: View):
 # This behavior can be controlled using `mode=`, explained in later examples.
 #
 # The example below has 4 options, hence radio-buttons are shown.
-def menu_basic(view: View):
+def picker_basic(view: View):
     choice = view(box('Choose a color', options=[
         'green', 'yellow', 'orange', 'red'
     ]))
@@ -547,7 +547,7 @@ def menu_basic(view: View):
 # Radio-buttons are shown for 4-7 options.
 #
 # Set `mode='radio'` to display buttons regardless of the number of options.
-def menu_radio(view: View):
+def picker_radio(view: View):
     choice = view(box('Choose a color', options=[
         'green', 'yellow', 'orange', 'red'
     ]))
@@ -558,7 +558,7 @@ def menu_radio(view: View):
 # Buttons are shown for up to 3 options.
 #
 # Set `mode='button'` to display buttons regardless of the number of options.
-def menu_buttons(view: View):
+def picker_buttons(view: View):
     choice = view(box('Choose a color', options=[
         'yellow', 'orange', 'red'
     ]))
@@ -569,7 +569,7 @@ def menu_buttons(view: View):
 # A dropdown is shown for more than 7 options.
 #
 # Set `mode='menu'` to display a dropdown menu regardless of the number of options.
-def menu_dropdown(view: View):
+def picker_dropdown(view: View):
     choice = view(box('Choose a color', options=[
         'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
     ]))
@@ -582,7 +582,7 @@ def menu_dropdown(view: View):
 # By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
 #
 # Set `mode='check'` to display a checklist regardless of the number of options.
-def menu_checklist(view: View):
+def picker_checklist(view: View):
     choices = view(box('Choose some colors', multiple=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
@@ -595,7 +595,7 @@ def menu_checklist(view: View):
 # By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
 #
 # Set `mode='menu'` to display a dropdown menu regardless of the number of options.
-def menu_multiple_dropdown(view: View):
+def picker_multiple_dropdown(view: View):
     choices = view(box('Choose some colors', multiple=True, options=[
         'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
     ]))
@@ -606,7 +606,7 @@ def menu_multiple_dropdown(view: View):
 # Set `editable=True` to allow arbitrary input in addition to the presented options.
 #
 # `mode=menu` is implied if `editable=True`.
-def menu_editable(view: View):
+def picker_editable(view: View):
     choice = view(box('Choose a color', editable=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
@@ -615,7 +615,7 @@ def menu_editable(view: View):
 
 # ## Required
 # Set `required=True` to indicate that input is required.
-def menu_dropdown_required(view: View):
+def picker_dropdown_required(view: View):
     choice = view(box('Choose a color', mode='menu', required=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
@@ -624,7 +624,7 @@ def menu_dropdown_required(view: View):
 
 # ## Error
 # Set `error=` to show an error message below the box.
-def menu_dropdown_error(view: View):
+def picker_dropdown_error(view: View):
     choice = view(box('Choose a color', mode='menu', error='Invalid input', options=[
         'yellow', 'orange', 'red', 'black'
     ]))
@@ -744,24 +744,24 @@ def radio_basic(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Selected
-# Set `selected=True` to pre-select an option.
-def radio_selected(view: View):
-    choice = view(box('Choose a color', mode='radio', options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow', selected=True),
-        option('orange', 'Orange'),
-        option('red', 'Red'),
-    ]))
-    view(f'You chose {choice}.')
-
-
 # ## Value
 # Set `value=` to pre-select an option having that value.
 def radio_value(view: View):
     choice = view(box('Choose a color', mode='radio', value='yellow', options=[
         option('green', 'Green'),
         option('yellow', 'Yellow'),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Selected
+# Set `selected=True` to pre-select an option.
+def radio_selected(view: View):
+    choice = view(box('Choose a color', mode='radio', options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
         option('orange', 'Orange'),
         option('red', 'Red'),
     ]))
@@ -895,25 +895,24 @@ def dropdown_basic(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Selected
-# Set `selected=True` to pre-select an option.
-def dropdown_selected(view: View):
-    choice = view(box('Choose a color', mode='menu', options=[
+# ## Value
+# Set `value=` to pre-select an option having that value.
+def dropdown_value(view: View):
+    choice = view(box('Choose a color', mode='menu', value='yellow', options=[
         option('green', 'Green'),
-        option('yellow', 'Yellow', selected=True),
+        option('yellow', 'Yellow'),
         option('orange', 'Orange'),
         option('red', 'Red'),
     ]))
     view(f'You chose {choice}.')
 
 
-# ## Value
-# Set `value=` to pre-select an option having that value.
-#
-def dropdown_value(view: View):
-    choice = view(box('Choose a color', mode='menu', value='yellow', options=[
+# ## Selected
+# Set `selected=True` to pre-select an option.
+def dropdown_selected(view: View):
+    choice = view(box('Choose a color', mode='menu', options=[
         option('green', 'Green'),
-        option('yellow', 'Yellow'),
+        option('yellow', 'Yellow', selected=True),
         option('orange', 'Orange'),
         option('red', 'Red'),
     ]))
@@ -953,6 +952,18 @@ def checklist_basic(view: View):
     view(f'You chose {choices}.')
 
 
+# ## Value
+# Set `value=` to pre-select an option having that value.
+def checklist_value(view: View):
+    choices = view(box('Choose some colors', mode='check', multiple=True, value=['yellow', 'red'], options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow'),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choices}.')
+
+
 # ## Selected
 # Set `selected=True` to pre-select one or more options.
 def checklist_selected(view: View):
@@ -965,19 +976,6 @@ def checklist_selected(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Value
-# Set `value=` to pre-select an option having that value.
-#
-def checklist_value(view: View):
-    choices = view(box('Choose some colors', mode='check', multiple=True, value=['yellow', 'red'], options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow'),
-        option('orange', 'Orange'),
-        option('red', 'Red'),
-    ]))
-    view(f'You chose {choices}.')
-
-
 # # Multi-select Dropdown
 
 # ## Basic
@@ -986,7 +984,19 @@ def checklist_value(view: View):
 # `mode=` can be elided when there are more than 7 options.
 def multi_dropdown_basic(view: View):
     choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-        'yellow', 'orange', 'red', 'black'
+        'green', 'yellow', 'orange', 'red'
+    ]))
+    view(f'You chose {choices}.')
+
+
+# ## Value
+# Set `value=` to pre-select an option having that value.
+def multi_dropdown_value(view: View):
+    choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yellow', 'red'], options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow'),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
     ]))
     view(f'You chose {choices}.')
 
@@ -1003,26 +1013,37 @@ def multi_dropdown_selected(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Value
-# Set `value=` to pre-select an option having that value.
-#
-def multi_dropdown_value(view: View):
-    choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yellow', 'red'], options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow'),
-        option('orange', 'Orange'),
-        option('red', 'Red'),
-    ]))
-    view(f'You chose {choices}.')
-
-
 # # Tag Picker
 
 # ## Basic
 # Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
 def tag_picker_basic(view: View):
     tags = view(box('Choose some tags', mode='tag', options=[
-        'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+        'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'
+    ]))
+    view(f'You chose {tags}.')
+
+
+# ## Value
+# Set `value=` to pre-select an option having that value.
+def tag_picker_value(view: View):
+    tags = view(box('Choose some tags', mode='tag', value=['yellow', 'red'], options=[
+        'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'
+    ]))
+    view(f'You chose {tags}.')
+
+
+# ## Selected
+# Set `selected=True` to pre-select one or more options.
+def tag_picker_selected(view: View):
+    tags = view(box('Choose some tags', mode='tag', options=[
+        option('violet', 'Violet'),
+        option('indigo', 'Indigo'),
+        option('blue', 'Blue'),
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red', selected=True),
     ]))
     view(f'You chose {tags}.')
 

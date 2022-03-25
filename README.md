@@ -986,21 +986,6 @@ choice = view(box('Choose a color', mode='radio', options=[
 view(f'You chose {choice}.')
 ```
 
-### Radio-buttons - Selected
-
-Set `selected=True` to pre-select an option.
-
-
-```py
-choice = view(box('Choose a color', mode='radio', options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
-view(f'You chose {choice}.')
-```
-
 ### Radio-buttons - Value
 
 Set `value=` to pre-select an option having that value.
@@ -1010,6 +995,21 @@ Set `value=` to pre-select an option having that value.
 choice = view(box('Choose a color', mode='radio', value='yellow', options=[
     option('green', 'Green'),
     option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Radio-buttons - Selected
+
+Set `selected=True` to pre-select an option.
+
+
+```py
+choice = view(box('Choose a color', mode='radio', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
     option('orange', 'Orange'),
     option('red', 'Red'),
 ]))
@@ -1169,21 +1169,6 @@ choice = view(box('Choose a color', mode='menu', options=[
 view(f'You chose {choice}.')
 ```
 
-### Dropdown - Selected
-
-Set `selected=True` to pre-select an option.
-
-
-```py
-choice = view(box('Choose a color', mode='menu', options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
-view(f'You chose {choice}.')
-```
-
 ### Dropdown - Value
 
 Set `value=` to pre-select an option having that value.
@@ -1193,6 +1178,21 @@ Set `value=` to pre-select an option having that value.
 choice = view(box('Choose a color', mode='menu', value='yellow', options=[
     option('green', 'Green'),
     option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Dropdown - Selected
+
+Set `selected=True` to pre-select an option.
+
+
+```py
+choice = view(box('Choose a color', mode='menu', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
     option('orange', 'Orange'),
     option('red', 'Red'),
 ]))
@@ -1236,21 +1236,6 @@ choices = view(box('Choose some colors', mode='check', multiple=True, options=[
 view(f'You chose {choices}.')
 ```
 
-### Checklist - Selected
-
-Set `selected=True` to pre-select one or more options.
-
-
-```py
-choices = view(box('Choose some colors', mode='check', multiple=True, options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
-]))
-view(f'You chose {choices}.')
-```
-
 ### Checklist - Value
 
 Set `value=` to pre-select an option having that value.
@@ -1266,6 +1251,21 @@ choices = view(box('Choose some colors', mode='check', multiple=True, value=['ye
 view(f'You chose {choices}.')
 ```
 
+### Checklist - Selected
+
+Set `selected=True` to pre-select one or more options.
+
+
+```py
+choices = view(box('Choose some colors', mode='check', multiple=True, options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
+]))
+view(f'You chose {choices}.')
+```
+
 ### Multi-select Dropdown - Basic
 
 Set `mode='menu'` with `multiple=True` to show a multi-select dropdown menu.
@@ -1275,22 +1275,7 @@ Set `mode='menu'` with `multiple=True` to show a multi-select dropdown menu.
 
 ```py
 choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-    'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choices}.')
-```
-
-### Multi-select Dropdown - Selected
-
-Set `selected=True` to pre-select one or more options.
-
-
-```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
+    'green', 'yellow', 'orange', 'red'
 ]))
 view(f'You chose {choices}.')
 ```
@@ -1310,6 +1295,21 @@ choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yel
 view(f'You chose {choices}.')
 ```
 
+### Multi-select Dropdown - Selected
+
+Set `selected=True` to pre-select one or more options.
+
+
+```py
+choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
+]))
+view(f'You chose {choices}.')
+```
+
 ### Tag Picker - Basic
 
 Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
@@ -1317,7 +1317,37 @@ Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
 
 ```py
 tags = view(box('Choose some tags', mode='tag', options=[
-    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
+    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {tags}.')
+```
+
+### Tag Picker - Value
+
+Set `value=` to pre-select an option having that value.
+
+
+```py
+tags = view(box('Choose some tags', mode='tag', value=['yellow', 'red'], options=[
+    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {tags}.')
+```
+
+### Tag Picker - Selected
+
+Set `selected=True` to pre-select one or more options.
+
+
+```py
+tags = view(box('Choose some tags', mode='tag', options=[
+    option('violet', 'Violet'),
+    option('indigo', 'Indigo'),
+    option('blue', 'Blue'),
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
 ]))
 view(f'You chose {tags}.')
 ```
