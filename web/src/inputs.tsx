@@ -1,10 +1,10 @@
-import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, FocusTrapZone, IButtonProps, IButtonStyles, IChoiceGroupOption, IColorCellProps, IComboBox, IComboBoxOption, ICommandBarItemProps, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, IStyle, ITag, ITextFieldProps, Label, MaskedTextField, optionProperties, Position, PrimaryButton, Rating, SelectableOptionMenuItemType, setVirtualParent, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
-import { RocketIcon, GlobalNavButtonIcon, GlobalNavButtonActiveIcon } from '@fluentui/react-icons-mdl2';
+import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, CompoundButton, ContextualMenu, ContextualMenuItemType, DatePicker, DateRangeType, DefaultButton, Dropdown, DropdownMenuItemType, IButtonStyles, IChoiceGroupOption, IColor, IColorCellProps, IComboBox, IComboBoxOption, IContextualMenuItem, IContextualMenuProps, IDropdownOption, ISliderProps, ISpinButtonStyles, IStackItemStyles, IStackTokens, ITag, ITextFieldProps, Label, MaskedTextField, Position, PrimaryButton, Rating, Slider, SpinButton, Stack, SwatchColorPicker, TagPicker, TextField, Toggle } from '@fluentui/react';
+import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
-import { B, box, Dict, gensym, I, isN, isO, isPair, isS, isV, N, on, Pair, S, U, V, xid } from './core';
-import { markdown, Markdown } from './markdown';
-import { Input, Widget, MsgType, Option, WidgetT, InputMode, Conf, Stacking, Stackable } from './protocol';
+import { B, box, Dict, gensym, isN, isPair, isS, N, S, U, V, xid } from './core';
+import { Markdown } from './markdown';
+import { Conf, Input, MsgType, Option, Stackable, Stacking, Widget, WidgetT } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -370,17 +370,28 @@ const XCalendar = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-class XColorPicker extends React.Component<InputProps, {}> {
-  render() {
-    const
-      { text, value } = this.props.input
-    return (
-      <WithLabel label={text}>
-        <ColorPicker color={isS(value) ? value : '#ff0000'} />
-      </WithLabel>
-    )
-  }
-}
+
+const XColorPicker = make(({ context, input }: InputProps) => {
+  const
+    { index, text, value } = input,
+    onChange = (_: React.SyntheticEvent<HTMLElement>, { str }: IColor) => {
+      context.capture(index, str)
+    },
+    render = () => {
+      return (
+        <WithLabel label={text}>
+          <ColorPicker
+            color={isS(value) ? value : '#00ced1'}
+            alphaType='alpha'
+            onChange={onChange}
+            showPreview
+          />
+        </WithLabel>
+      )
+    }
+  if (value) context.capture(index, value)
+  return { render }
+})
 
 const CheckboxContainer = styled.div`
     margin: 0.5rem 0;
