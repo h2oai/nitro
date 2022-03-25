@@ -808,16 +808,16 @@ view(f'You chose {choice}.')
 
 ### Menu - Multi-select
 
-Set `multiple=True` to allow choosing more than one option,
+Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 
 By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
 
 
 ```py
-choice = view(box('Choose a color', multiple=True, options=[
+choices = view(box('Choose some colors', multiple=True, options=[
     'yellow', 'orange', 'red', 'black'
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
 ### Menu - Checkboxes
@@ -826,10 +826,10 @@ Set `mode='check'` to force checkboxes regardless of the number of options,
 
 
 ```py
-choice = view(box('Choose a color', mode='check', multiple=True, options=[
+choices = view(box('Choose some colors', mode='check', multiple=True, options=[
     'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
 ### Menu - Multi-select Dropdown
@@ -838,10 +838,10 @@ Set `mode='menu'` to force a multi-select dropdown menu regardless of the number
 
 
 ```py
-choice = view(box('Choose a color', mode='menu', multiple=True, options=[
+choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
     'yellow', 'orange', 'red', 'black'
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
 ### Menu - Tag Picker
@@ -876,10 +876,10 @@ view(f'You chose {choice}.')
 
 
 ```py
-choice = view(box('Choose a color', multiple=True, editable=True, options=[
+choices = view(box('Choose some colors', multiple=True, editable=True, options=[
     'yellow', 'orange', 'red', 'black'
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
 ### Menu - Required
@@ -1046,37 +1046,37 @@ Multiple options can be pre-selected if the box supports multiple selections (`m
 
 
 ```py
-choice = view(box('Choose a color', multiple=True, options=[
+choices = view(box('Choose some colors', multiple=True, options=[
     option('green', 'Green'),
     option('yellow', 'Yellow', selected=True),
     option('orange', 'Orange'),
     option('red', 'Red', selected=True),
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
 ### Options - Multiple Selected (Checkboxes)
 
 ```py
-choice = view(box('Choose a color', mode='check', multiple=True, options=[
+choices = view(box('Choose some colors', mode='check', multiple=True, options=[
     option('green', 'Green'),
     option('yellow', 'Yellow', selected=True),
     option('orange', 'Orange'),
     option('red', 'Red', selected=True),
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
 ### Options - Multiple Selected (Dropdown)
 
 ```py
-choice = view(box('Choose a color', mode='menu', multiple=True, options=[
+choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
     option('green', 'Green'),
     option('yellow', 'Yellow', selected=True),
     option('orange', 'Orange'),
     option('red', 'Red', selected=True),
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
 ### Options - Icons

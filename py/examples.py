@@ -594,32 +594,32 @@ def menu_radio_buttons(view: View):
 
 
 # ## Multi-select
-# Set `multiple=True` to allow choosing more than one option,
+# Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 #
 # By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
 def menu_multiple(view: View):
-    choice = view(box('Choose a color', multiple=True, options=[
+    choices = view(box('Choose some colors', multiple=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose {choices}.')
 
 
 # ## Checkboxes
 # Set `mode='check'` to force checkboxes regardless of the number of options,
 def menu_check(view: View):
-    choice = view(box('Choose a color', mode='check', multiple=True, options=[
+    choices = view(box('Choose some colors', mode='check', multiple=True, options=[
         'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose {choices}.')
 
 
 # ## Multi-select Dropdown
 # Set `mode='menu'` to force a multi-select dropdown menu regardless of the number of options.
 def menu_dropdown_multiple(view: View):
-    choice = view(box('Choose a color', mode='menu', multiple=True, options=[
+    choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose {choices}.')
 
 
 # ## Tag Picker
@@ -645,10 +645,10 @@ def menu_editable(view: View):
 # ## Multi-select and editable
 # `multiple=True` and `editable=True` can be combined.
 def menu_multiple_editable(view: View):
-    choice = view(box('Choose a color', multiple=True, editable=True, options=[
+    choices = view(box('Choose some colors', multiple=True, editable=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose {choices}.')
 
 
 # ## Required
@@ -784,35 +784,35 @@ def options_selected_radio(view: View):
 # ## Multiple Selected
 # Multiple options can be pre-selected if the box supports multiple selections (`multiple=True`).
 def options_selected_multiple(view: View):
-    choice = view(box('Choose a color', multiple=True, options=[
+    choices = view(box('Choose some colors', multiple=True, options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),
         option('orange', 'Orange'),
         option('red', 'Red', selected=True),
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose {choices}.')
 
 
 # ## Multiple Selected (Checkboxes)
 def options_selected_multiple_check(view: View):
-    choice = view(box('Choose a color', mode='check', multiple=True, options=[
+    choices = view(box('Choose some colors', mode='check', multiple=True, options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),
         option('orange', 'Orange'),
         option('red', 'Red', selected=True),
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose {choices}.')
 
 
 # ## Multiple Selected (Dropdown)
 def options_selected_multiple_menu(view: View):
-    choice = view(box('Choose a color', mode='menu', multiple=True, options=[
+    choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),
         option('orange', 'Orange'),
         option('red', 'Red', selected=True),
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose {choices}.')
 
 
 # ## Icons
