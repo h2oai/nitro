@@ -1083,12 +1083,28 @@ def color_value(view: View):
     view(f'You chose {color}.')
 
 
-# ## Palette
-# Set `options=` to restrict colors to a pre-defined palette.
+# # Color Palette
+
+# ## Basic
+# Set `options=` with `mode='color'` to show a color palette.
 #
 # The option's `value` must be a valid color in one of the formats described in the previous example.
-def color_palette(view: View):
+def palette_basic(view: View):
     color = view(box('Choose a color', mode='color', options=[
+        option('#ff0000', 'Red'),
+        option('#00ff00', 'Green'),
+        option('#0000ff', 'Blue'),
+        option('#ffff00', 'Yellow'),
+        option('#00ffff', 'Cyan'),
+        option('#ff00ff', 'Magenta'),
+    ]))
+    view(f'You chose {color}.')
+
+
+# ## Value
+# Set `selected=True` to pre-select a color in the palette.
+def palette_value(view: View):
+    color = view(box('Choose a color', mode='color', value='#0000ff', options=[
         option('#ff0000', 'Red'),
         option('#00ff00', 'Green'),
         option('#0000ff', 'Blue'),
@@ -1101,7 +1117,7 @@ def color_palette(view: View):
 
 # ## Selected
 # Set `selected=True` to pre-select a color in the palette.
-def color_palette_selected(view: View):
+def palette_selected(view: View):
     color = view(box('Choose a color', mode='color', options=[
         option('#ff0000', 'Red'),
         option('#00ff00', 'Green'),
