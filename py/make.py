@@ -275,8 +275,12 @@ def write_readme(groups: List[Group]):
         for e in g.examples:
             p(f'### {g.title} - {e.title}')
             write_example(p, e)
-    readme = Path('README.template.md').read_text(). \
-        replace('EXAMPLES', str(p))
+
+    readme = (docs_dir / 'index.md').read_text()
+    readme = readme.replace('assets/', 'docs/assets/')
+    readme += '\n\n## Guide\n\n'
+    readme += str(p)
+
     (Path('..') / 'README.md').write_text(readme)
 
 

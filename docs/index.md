@@ -1,17 +1,69 @@
-# Welcome to MkDocs
+# H2O Nitro
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
 
-## Commands
+![Nitro](assets/banner.png)
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## Philosophy
 
-## Project layout
+Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`:
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+```py
+def main():
+    name = input('What is your name?')
+    feel = input(f'How do you feel today, {name}?')
+    print(f'What a coincidence, {name}, I feel {feel}, too!')
+```
+
+Output:
+
+```
+> What is your name?
+> Boaty McBoatface
+> How do you feel today, Boaty McBoatface?
+> intrigued
+> What a coincidence, Boaty McBoatface, I feel intrigued, too!
+```
+
+Nitro brings that same level of simplicity to authoring web applications:
+
+```py
+from h2o_nitro import View, box
+
+def main(view: View):
+    name = view(box('What is your name?'))
+    feel = view(box(f'How do you feel today, {name}?'))
+    view(f'What a coincidence, {name}, I feel {feel}, too!')
+```
+
+## Features
+
+- **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
+- **Code.** Laser-focused on keeping application code simple, concise, and clear.
+    - **Simplicity.** Page flow follows code flow.
+    - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
+    - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
+- **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
+  layout.
+- **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
+- **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
+  Can be integrated into your existing applications.
+- **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, and progressively improve
+  presentation layout and aesthetics over time without affecting initial implementation simplicity, or sacrificing
+  control.
+- **Unix philosophy.** Tries to do one thing and do it well: display interactive web content. Bring your own web
+  app/server of choice and follow their recommendations for hosting, deployment, security, monitoring, metrics and data
+  management.
+
+## Differences from H<sub>2</sub>O Wave
+
+**TL;DR:** Use [Wave](https://wave.h2o.ai/) for building visualization-heavy analytical dashboards. For everything else,
+use Nitro.
+
+- **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of [Wave](https://wave.h2o.ai/)
+  with a different, simpler API, designed for integration with existing web frameworks.
+- **Content Management.** Wave is capable of storing and broadcasting content and data, making it simple to build
+  dashboards without having to deal with data management. Nitro has no such features.
+- **API.** Wave's API is *dashboard-oriented*, and has several features that make it easy to develop and deploy
+  real-time analytics and dashboards easily. Nitro's API is *page-flow-oriented*, and makes it radically simple to
+  author sophisticated workflows and wizards without dealing with callback functions and request handlers.
