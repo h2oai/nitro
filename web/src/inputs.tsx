@@ -80,23 +80,19 @@ const XTextField = make(({ context, input }: InputProps) => {
 
 const XSpinButton = make(({ context, input }: InputProps) => {
   const
-    { index, min, max, step, value } = input,
-
-    defaultValue = getDefaultValue(value, min, max, step) ?? 0,
-    onChange = (event: React.SyntheticEvent<HTMLElement>, value?: string): void => {
-      let v = isS(value) ? parseFloat(value) : defaultValue
-      if (isNaN(v)) v = defaultValue
-      context.capture(index, v)
+    { index, text, value, min, max, step, precision, placeholder } = input,
+    defaultValue = getDefaultValue(value, min, max, step),
+    onChange = (_: React.SyntheticEvent<HTMLElement>, value?: string): void => {
+      let v = isS(value) ? parseFloat(value) : NaN
+      if (!isNaN(v)) context.capture(index, v)
     },
     render = () => {
-      const
-        { text, value, min, max, step, precision } = input
-
       return (
         <SpinButton
           label={text}
+          placeholder={placeholder}
           labelPosition={Position.top}
-          defaultValue={isS(value) ? value : isN(value) ? String(value) : undefined}
+          defaultValue={defaultValue != undefined ? String(defaultValue) : undefined}
           min={unum(min)}
           max={unum(max)}
           step={step}
@@ -107,14 +103,14 @@ const XSpinButton = make(({ context, input }: InputProps) => {
       )
     }
 
-  context.capture(index, defaultValue)
+  context.capture(index, defaultValue ?? 0)
 
   return { render }
 })
 
 const XSlider = make(({ context, input }: InputProps) => {
   const
-    { index, text, value, min, max, step } = input,
+    { index, text, value, placeholder, min, max, step } = input,
     originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
     ranged = isPair(value) && isN(value[0]) && isN(value[1]),
     defaultValue = ranged ? 0 : getDefaultValue(value, min, max, step),
@@ -127,6 +123,7 @@ const XSlider = make(({ context, input }: InputProps) => {
       const
         props: Partial<ISliderProps> = {
           label: text,
+          placeholder,
           min: unum(min),
           max: unum(max),
           step,
@@ -165,7 +162,7 @@ const XSlider = make(({ context, input }: InputProps) => {
 
 const XRating = make(({ context, input }: InputProps) => {
   const
-    { index, text, min, max, value } = input,
+    { index, text, placeholder, min, max, value } = input,
     allowZeroStars = isN(min) && min <= 0,
     defaultRating = unum(value) ?? (allowZeroStars ? 0 : 1),
     onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {
@@ -180,6 +177,7 @@ const XRating = make(({ context, input }: InputProps) => {
             allowZeroStars={allowZeroStars}
             max={unum(max)}
             onChange={onChange}
+            placeholder={placeholder}
           />
         </WithLabel>
       )
