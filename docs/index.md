@@ -30,6 +30,7 @@ Nitro brings that same level of simplicity to authoring web applications:
 ```py
 from h2o_nitro import View, box
 
+
 def main(view: View):
     name = view(box('What is your name?'))
     feel = view(box(f'How do you feel today, {name}?'))
@@ -41,18 +42,20 @@ def main(view: View):
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
 - **Code.** Laser-focused on keeping application code simple, concise, and clear.
     - **Simplicity.** Page flow follows code flow.
-    - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
-    - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
+    - **Conciseness.** Lowest number of lines of code for expressing solutions to a given problem. Less code = less
+      bugs.
+    - **Clarity.** Write apps without jumping through callbacks, request handlers, or event handlers.
 - **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
   layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
-- **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
-  Can be integrated into your existing applications.
-- **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, and progressively improve
-  presentation layout and aesthetics over time without affecting initial implementation simplicity, or sacrificing
-  control.
+- **Library.** Nitro is a library, not a server. Integrates with [Django](https://www.djangoproject.com/)
+  , [Flask](https://flask.palletsprojects.com/), [Starlette](https://www.starlette.io/)
+  , [Tornado](https://www.tornadoweb.org/), [Uvicorn](https://www.uvicorn.org/) and other popular frameworks. Can be
+  integrated into your existing applications.
+- **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, then progressively improve
+  presentation and aesthetics over time without affecting initial implementation simplicity, or sacrificing control.
 - **Unix philosophy.** Tries to do one thing and do it well: display interactive web content. Bring your own web
-  app/server of choice and follow their recommendations for hosting, deployment, security, monitoring, metrics and data
+  app/server of choice and follow its recommendations for hosting, deployment, security, monitoring, metrics and data
   management.
 
 ## Differences from H<sub>2</sub>O Wave

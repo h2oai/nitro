@@ -30,6 +30,7 @@ Nitro brings that same level of simplicity to authoring web applications:
 ```py
 from h2o_nitro import View, box
 
+
 def main(view: View):
     name = view(box('What is your name?'))
     feel = view(box(f'How do you feel today, {name}?'))
@@ -41,18 +42,20 @@ def main(view: View):
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
 - **Code.** Laser-focused on keeping application code simple, concise, and clear.
     - **Simplicity.** Page flow follows code flow.
-    - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
-    - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
+    - **Conciseness.** Lowest number of lines of code for expressing solutions to a given problem. Less code = less
+      bugs.
+    - **Clarity.** Write apps without jumping through callbacks, request handlers, or event handlers.
 - **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
   layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
-- **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
-  Can be integrated into your existing applications.
-- **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, and progressively improve
-  presentation layout and aesthetics over time without affecting initial implementation simplicity, or sacrificing
-  control.
+- **Library.** Nitro is a library, not a server. Integrates with [Django](https://www.djangoproject.com/)
+  , [Flask](https://flask.palletsprojects.com/), [Starlette](https://www.starlette.io/)
+  , [Tornado](https://www.tornadoweb.org/), [Uvicorn](https://www.uvicorn.org/) and other popular frameworks. Can be
+  integrated into your existing applications.
+- **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, then progressively improve
+  presentation and aesthetics over time without affecting initial implementation simplicity, or sacrificing control.
 - **Unix philosophy.** Tries to do one thing and do it well: display interactive web content. Bring your own web
-  app/server of choice and follow their recommendations for hosting, deployment, security, monitoring, metrics and data
+  app/server of choice and follow its recommendations for hosting, deployment, security, monitoring, metrics and data
   management.
 
 ## Differences from H<sub>2</sub>O Wave
@@ -84,17 +87,17 @@ view('Hello World!')
 Here, `view()` is comparable to Python's built-in `print()` function,
 and prints its arguments to the web page.
 
-### Basics - Formatting
+### Basics - Formatting content
 
 Strings passed to `view()` are interpreted as
-[Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+[Markdown](https://github.github.com/gfm/)
 
 
 ```py
 view('_Less_ `code` means _less_ **bugs**.')
 ```
 
-### Basics - Display multiline content
+### Basics - Show multiline content
 
 Triple-quote strings to pass multiple lines of markdown.
 
@@ -108,12 +111,9 @@ The King said, very gravely:
 ''')
 ```
 
+### Basics - Show items at once
 
-Any leading whitespace on each line is automatically ignored.
-
-### Basics - Display items in parallel
-
-Pass multiple items to `view()` to lay them out top to bottom.
+Pass multiple arguments to `view()` to lay them out top to bottom.
 
 
 ```py
@@ -124,9 +124,11 @@ view(
 )
 ```
 
-### Basics - Display items in sequence
+### Basics - Show items one at a time
 
-Call `view()` multiple times to present a sequence of items, one at a time.
+Call `view()` multiple times to show items one at a time.
+
+The following example steps through three different pages.
 
 
 ```py
@@ -135,29 +137,31 @@ view('And go on till you come to the end,')
 view('Then stop.')
 ```
 
-### Basics - Accept user input
+### Basics - Get user input
 
-Call `box()` to create an input field.
+Call `box()` to create a *box* (an input field) and pass it to `view()`.
 
-The `view()` function returns user inputs when it contains one or more input fields.
+When a view contains a box, the `view()` function returns its input value.
 
 `box()` creates a textbox by default, but can also create other kinds of input fields, like checkboxes,
-dropdowns, spinboxes, etc.
+dropdowns, spinboxes, buttons, calendars, etc.
 
 
 ```py
 # Display a textbox and assign the entered value to a variable.
-x = view(box('What is your name?', value='Boaty McBoatface'))
+name = view(box('What is your name?', value='Boaty McBoatface'))
 # Print the entered value.
-view(f'Hello, {x}!')
+view(f'Hello, {name}!')
 ```
 
 
 Here, `view()` behaves similar to Python's built-in `input()` function.
 
-### Basics - Accept inputs in sequence
+### Basics - Get inputs one at a time
 
-Call `view()` multiple times to accept a sequence of inputs, one at a time.
+Call `view()` multiple times to prompt for a sequence of inputs, one at a time.
+
+The following example steps through three different pages.
 
 
 ```py
@@ -169,11 +173,11 @@ last_name = view(box('Last name', value='McBoatface'))
 view(f'Hello, {first_name} {last_name}!')
 ```
 
-### Basics - Accept inputs in parallel
+### Basics - Get inputs at once
 
-Pass multiple items to `view()` to show them together.
+Pass multiple boxes to `view()` to prompt for inputs at once.
 
-The `view()` function returns multiple values if it contains multiple input fields.
+When a view contains multiple boxes, the `view()` function returns multiple values, in order.
 
 
 ```py
@@ -188,22 +192,25 @@ view(f'Hello, {first_name} {last_name}!')
 
 ### Basics - Putting it all together
 
-`view()` and `box()` can be chained together to form sophisticated workflows and wizards.
+Views can be chained together to create sophisticated workflows and wizards.
 
-Note how the example below combines `view()` with conditionals and loops, while keeping the code
+The example below shows a simple online ordering system.
+
+Observe how it combines `view()` with conditionals and loops, while keeping the code
 simple, concise, and clear.
 
-Building a similar multi-page interactive app with a plain web framework can be
-a fairly complex endeavor, weaving together requests and replies with logic spread across
-multiple functions or callbacks, but Nitro makes all this delightfully simple!
+Notably, if you have built web applications before, notice the absence of callbacks, event handlers,
+web request handlers, routing, etc.
 
 
 ```py
+# Our menu.
 menu = dict(
     Donut=['Plain', 'Glazed', 'Chocolate'],
     Coffee=['Dark-roast', 'Medium-roast', 'Decaf'],
 )
 
+# Prompt for items.
 items = view(box(
     'What would you like to order today?',
     options=list(menu.keys()),  # Menu item names.
@@ -214,9 +221,10 @@ if len(items) == 0:  # Nothing selected.
     view(f'Nothing to order? Goodbye!')
     return
 
-summary = ['### Order summary:']  # The order summary, which we'll display later.
+# The order summary, which we'll display later.
+summary = ['### Order summary:']
 
-# Pick flavors for each item.
+# Prompt for counts and flavors.
 for item in items:
     count = view(box(f'How many orders of {item} would you like?', value=3))
     for i in range(count):
@@ -232,9 +240,14 @@ summary.append('\nThank you for your order!')
 view('\n'.join(summary))
 ```
 
+
+Building a similar multi-page interactive app with a regular web framework can be
+a fairly complex endeavor, weaving together requests and replies with logic spread across
+multiple functions , but Nitro makes all this delightfully simple!
+
 ### Markdown - Basics
 
-Strings passed to `view()` are interpreted as Github Flavored Markdown (GFM).
+Strings passed to `view()` are interpreted as [Github Flavored Markdown](https://github.github.com/gfm/) (GFM).
 
 
 ```py
@@ -246,7 +259,8 @@ view('''
 ##### Heading 5 
 ###### Small print
 
-This is a paragraph, with **bold**, *italics* (or _italics_), ***important***, `code`
+This is a paragraph, with **bold**, *italics* 
+(or _italics_), ***important***, `code`
 and ~~strikethrough~~ formatting.
 
 Here's a [hyperlink](https://example.com) to https://example.com.
@@ -274,9 +288,33 @@ Here is a footnote[^1] and another one[^another].
 ''')
 ```
 
+
+Any uniform indentation is automatically ignored.
+
+### Markdown - Links as inputs
+
+Local links in markdown content behave just like any other input.
+
+Clicking on a local link returns the name of the link.
+
+
+```py
+choice = view('''
+Pick a fruit (or:
+- [Apples](#apples)
+- [Bananas](#bananas)
+- [Cherries](#cherries)
+''')
+view(f'You clicked on {choice}.')
+```
+
 ### Markdown - Syntax highlighting
 
-Code blocks in Markdown support syntax highlighting.
+Code blocks in Markdown support syntax highlighting for 180+ languages using [highlight.js](https://highlightjs.org/).
+
+To enable syntax highlighting, suffix the language to the opening triple-backticks.
+
+[See list of supported languages](https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md).
 
 
 ```py
@@ -295,21 +333,6 @@ def markdown_syntax_highlighting(view: View):
     }
     ```
     ''')
-```
-
-### Markdown - Links as inputs
-
-Local links in markdown content behave just like any other input.
-Clicking on a local link returns the name of the link.
-
-
-```py
-choice = view('''
-- [Apples](#apples)
-- [Bananas](#bananas)
-- [Cherries](#cherries)
-''')
-view(f'You clicked on {choice}.')
 ```
 
 ### Layout - Rows
@@ -500,6 +523,7 @@ view(f'Your phone number is {phone}.')
 
 
 To construct the input mask:
+
 - Use `a` to indicate a letter.
 - Use `9` to indicate a number.
 - Use `*` to indicate a letter or number.
@@ -642,6 +666,7 @@ view(f'Your speed is {speed} km/h')
 Set `precision=` to specify how many decimal places the value should be rounded to.
 
 The default is calculated based on the precision of step:
+
 - if step = 1, precision = 0
 - if step = 0.42, precision = 2
 - if step = 0.0042, precision = 4
@@ -724,6 +749,15 @@ checklists, dropdowns, color pickers, and so on.
 
 Set `options=` to create a picker.
 
+
+```py
+choice = view(box('Choose a color', options=[
+    'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {choice}.')
+```
+
+
 There are several ways to create options. These are explained in the next section. The simplest way is to supply a
 sequence (tuple, set or list) of strings.
 
@@ -731,31 +765,7 @@ By default, this shows buttons for up to 3 options, radio buttons for up to 7 op
 or a dropdown menu for more than 7 options.
 This behavior can be controlled using `mode=`, explained in later examples.
 
-The example below has 4 options, hence radio buttons are shown.
-
-
-```py
-choice = view(box('Choose a color', options=[
-    'green', 'yellow', 'orange', 'red'
-]))
-view(f'You chose {choice}.')
-```
-
-
-
-### Pickers - Radio Buttons
-
-Radio buttons is shown for 4-7 options.
-
-Set `mode='radio'` to display radio buttons regardless of the number of options.
-
-
-```py
-choice = view(box('Choose a color', options=[
-    'green', 'yellow', 'orange', 'red'
-]))
-view(f'You chose {choice}.')
-```
+The example above has 4 options, hence radio buttons are shown.
 
 ### Pickers - Buttons
 
@@ -771,9 +781,23 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
+### Pickers - Radio Buttons
+
+Radio buttons is shown for 4-7 options.
+
+Set `mode='radio'` to display radio buttons regardless of the number of options.
+
+
+```py
+choice = view(box('Choose a color', options=[
+    'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {choice}.')
+```
+
 ### Pickers - Dropdown
 
-A dropdown is shown for more than 7 options.
+A dropdown menu is shown for more than 7 options.
 
 Set `mode='menu'` to display a dropdown menu regardless of the number of options.
 
@@ -803,15 +827,13 @@ view(f'You chose {choices}.')
 
 ### Pickers - Checklist
 
-Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
-
-By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
+A checklist is shown for up to 7 options when `multiple=True`.
 
 Set `mode='check'` to display a checklist regardless of the number of options.
 
 
 ```py
-choices = view(box('Choose some colors', multiple=True, options=[
+choices = view(box('Choose some colors', mode='check', multiple=True, options=[
     'yellow', 'orange', 'red', 'black'
 ]))
 view(f'You chose {choices}.')
@@ -844,15 +866,16 @@ view(f'You chose {choice}.')
 ### Options - Basic
 
 An `option` represents one of several choices to be presented to the user.
-It's used by all pickers: buttons, dropdowns, checklists, color pickers, and so on.
+It's used by all kinds of pickers: buttons, dropdowns, checklists, color pickers, and so on.
 
 An option has a `value` and `text`, created using `option(value, text)`.
+
 - The `value` is the value returned when the user picks that option. It is not user-visible.
-- The `text` is user-visible, and is typically used as a label for the option.
+- The `text` is typically used as a label for the option.
 
 If `text` is not provided, then the `value` is also used as the `text`.
 
-There are other, more concise ways to specify options, explained later.
+There are other, more concise ways to specify options, explained in later examples.
 
 
 ```py
@@ -867,8 +890,7 @@ view(f'You chose {choice}.')
 
 ### Options - From sequence
 
-If `options` is a sequence (tuple, set or list), the elements of the sequence are used
-as both values and labels.
+If `options` is a sequence (tuple, set or list), the elements of the sequence are used as options.
 
 
 ```py
@@ -925,7 +947,7 @@ view(f'You chose {choice}.')
 ```
 
 
-The above example shows the most concise way to specify options having labels different from their values.
+This is the most concise way to pass options where labels differ from values.
 
 ### Options - Selected
 
@@ -977,16 +999,46 @@ view(f'You chose {choice}.')
 
 ### Buttons - Shorthand
 
-Most often, it doesn't make sense to show a text prompt for a set of buttons.
-In such cases, `box(text=None, options=[a, b, c])` can be shortened to `box([a, b, c])`.
+Most often, it doesn't make sense to show a text prompt above a set of buttons.
 
-In other words, `box()` can accept options instead of text as its first argument,
-and `mode='button'` is implied.
+In such cases, `box(text=None, mode='button', options=X)` can be shortened to `box(X)`.
+
+In other words, `box()` can accept options instead of text as its first argument.
+`mode='button'` is implied.
 
 
 ```py
 choice = view(box(['green', 'yellow', 'orange', 'red']))
 view(f'You chose {choice}.')
+```
+
+
+This works when `options` is a sequence (tuple, set, list) or dictionary too. The following forms are equivalent:
+
+
+```py
+choice = view(box([
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+
+# Shorter
+choice = view(box([
+    ('green', 'Green'),
+    ('yellow', 'Yellow'),
+    ('orange', 'Orange'),
+    ('red', 'Red'),
+]))
+
+# Shortest
+choice = view(box(dict(
+    green='Green',
+    yellow='Yellow',
+    orange='Orange',
+    red='Red',
+)))
 ```
 
 ### Buttons - Selected
@@ -997,89 +1049,120 @@ This is useful when you want to emphasize certain actions over others.
 
 
 ```py
-choice = view(box('Updates are available.', mode='button', options=[
-    option('now', 'Update now', selected=True),
-    option('tomorrow', 'Remind me tomorrow'),
-    option('never', 'Never update'),
-]))
+choice = view(
+    'Updates are available!',
+    box([
+        option('now', 'Update now', selected=True),
+        option('tomorrow', 'Remind me tomorrow'),
+        option('never', 'Never update'),
+    ])
+)
 view(f'You chose to update {choice}.')
 ```
 
 ### Buttons - Value
 
-Set `value=` to pre-select an option having that value.
-
-This is useful when you want to emphasize certain actions over others.
+Alternatively, Set `value=` to mark a button as *primary*.
 
 
 ```py
-choice = view(box('Updates are available.', mode='button', value='now', options=[
-    option('now', 'Update now'),
-    option('tomorrow', 'Remind me tomorrow'),
-    option('never', 'Never update'),
-]))
+choice = view(
+    'Updates are available!',
+    box(dict(
+        now='Update now',
+        tomorrow='Remind me tomorrow',
+        never='Never update',
+    ), value='now')
+)
 view(f'You chose to update {choice}.')
+```
+
+### Buttons - Values
+
+If `value=` is set to a sequence, all buttons with those values are marked as *primary*.
+
+
+```py
+choice = view(
+    'Sign me up!',
+    box(dict(
+        basic='Basic Plan ($9.99/month)',
+        pro='Pro Plan ($14.99/month)',
+        none='Not interested',
+    ), value=['basic', 'pro'])
+)
+view(f'You chose {choice}.')
 ```
 
 ### Buttons - Split Buttons
 
-Options can have sub-options. Sub-options are shown as split buttons.
+Sub-options inside options are shown as split buttons.
 
 
 ```py
-choice = view(box('Send fresh donuts every day?', mode='button', options=[
-    option('yes', 'Yes!', selected=True),
-    option('no', 'No', options=[
-        option('later', 'Remind me later', icon='ChatBot'),
-        option('never', "Don't ask me again", icon='MuteChat'),
-    ]),
-]))
+choice = view(
+    'Send fresh donuts every day?',
+    box([
+        option('yes', 'Yes!', selected=True),
+        option('no', 'No', options=[
+            option('later', 'Remind me later', icon='ChatBot'),
+            option('never', "Don't ask me again", icon='MuteChat'),
+        ]),
+    ])
+)
 view(f'You chose {choice}.')
 ```
 
 ### Buttons - Primary Split Buttons
 
-Sub-options work on selected options, too, and are shown in alternate colors.
+Sub-options work for primary buttons, too.
 
 
 ```py
-choice = view(box('Send fresh donuts every day?', mode='button', options=[
-    option('yes', 'Yes!', selected=True, options=[
-        option('later', 'Remind me later', icon='ChatBot'),
-        option('never', "Don't ask me again", icon='MuteChat'),
-    ]),
-    option('no', 'No'),
-]))
+choice = view(
+    'Send fresh donuts every day?',
+    box([
+        option('yes', 'Yes!', selected=True, options=[
+            option('later', 'Remind me later', icon='ChatBot'),
+            option('never', "Don't ask me again", icon='MuteChat'),
+        ]),
+        option('no', 'No'),
+    ])
+)
 view(f'You chose {choice}.')
 ```
 
 ### Buttons - Caption
 
-Set `caption=` to describe options.
-
-Captions are shown only if `mode='button'`.
+Set `caption=` to describe buttons.
 
 
 ```py
-choice = view(box('Send fresh donuts every day?', options=[
-    option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
-    option('no', 'Not now', caption='I will decide later'),
-]))
+choice = view(
+    'Send fresh donuts every day?',
+    box([
+        option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+        option('no', 'Not now', caption='I will decide later'),
+    ])
+)
 view(f'You chose {choice}.')
 ```
 
 ### Buttons - Layout
 
-By default, buttons are shown row-wise. Set `row=False` to lay them out column-wise.
+By default, buttons are laid out row-wise. Set `row=False` to lay them column-wise.
 
 
 ```py
-choice = view(box('Choose a color', mode='button', row=False, options=[
-    option('auto', 'Automatic', selected=True),
-    option('yellow', 'Yellow'),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
+choice = view(
+    'Choose a color:',
+    box([
+        option('auto', 'Automatic', selected=True),
+        option('yellow', 'Yellow'),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ], row=False)
+)
 view(f'You chose {choice}.')
 ```
 
@@ -1233,39 +1316,48 @@ Set `mode='menu'` with `multiple=True` to show a dropdown menu that allows multi
 
 
 ```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-    'green', 'yellow', 'orange', 'red'
-]))
+choices = view(box(
+    'Choose some colors',
+    mode='menu',
+    multiple=True,
+    options=['green', 'yellow', 'orange', 'red']
+))
 view(f'You chose {choices}.')
 ```
 
 ### Dropdown List - Value
 
-Set `value=` to pre-select an option having that value.
+Set `value=` to pre-select options having those values.
 
 
 ```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yellow', 'red'], options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow'),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
+choices = view(box(
+    'Choose some colors',
+    mode='menu',
+    multiple=True,
+    value=['yellow', 'red'],
+    options=['green', 'yellow', 'orange', 'red']
+))
 view(f'You chose {choices}.')
 ```
 
 ### Dropdown List - Selected
 
-Set `selected=True` to pre-select one or more options.
+Alternatively, set `selected=True` to pre-select one or more options.
 
 
 ```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
-]))
+choices = view(box(
+    'Choose some colors',
+    mode='menu',
+    multiple=True,
+    options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red', selected=True),
+    ]
+))
 view(f'You chose {choices}.')
 ```
 
@@ -1277,39 +1369,48 @@ Set `mode='check'` to show a checklist
 
 
 ```py
-choices = view(box('Choose some colors', mode='check', multiple=True, options=[
-    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
-]))
+choices = view(box(
+    'Choose some colors',
+    mode='check',
+    multiple=True,
+    options=['green', 'yellow', 'orange', 'red']
+))
 view(f'You chose {choices}.')
 ```
 
 ### Checklist - Value
 
-Set `value=` to pre-select an option having that value.
+Set `value=` to pre-select options having those values.
 
 
 ```py
-choices = view(box('Choose some colors', mode='check', multiple=True, value=['yellow', 'red'], options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow'),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
+choices = view(box(
+    'Choose some colors',
+    mode='check',
+    multiple=True,
+    value=['yellow', 'red'],
+    options=['green', 'yellow', 'orange', 'red']
+))
 view(f'You chose {choices}.')
 ```
 
 ### Checklist - Selected
 
-Set `selected=True` to pre-select one or more options.
+Alternatively, set `selected=True` to pre-select one or more options.
 
 
 ```py
-choices = view(box('Choose some colors', mode='check', multiple=True, options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
-]))
+choices = view(box(
+    'Choose some colors',
+    mode='check',
+    multiple=True,
+    options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red', selected=True),
+    ]
+))
 view(f'You chose {choices}.')
 ```
 
@@ -1319,21 +1420,26 @@ Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
 
 
 ```py
-tags = view(box('Choose some tags', mode='tag', options=[
-    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'
-]))
+tags = view(box(
+    'Choose some tags',
+    mode='tag',
+    options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
+))
 view(f'You chose {tags}.')
 ```
 
 ### Tag Picker - Value
 
-Set `value=` to pre-select an option having that value.
+Set `value=` to pre-select options having those values.
 
 
 ```py
-tags = view(box('Choose some tags', mode='tag', value=['yellow', 'red'], options=[
-    'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'
-]))
+tags = view(box(
+    'Choose some tags',
+    mode='tag',
+    value=['yellow', 'red'],
+    options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
+))
 view(f'You chose {tags}.')
 ```
 
@@ -1375,6 +1481,7 @@ view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
 Set `value=` to pre-select a color.
 
 A color value can be:
+
 - `#RRGGBB` e.g. `#ff0033`
 - `#RRGGBBAA` e.g. `#ff003388`
 - `#RGB` e.g. `#f03` (same as `#ff0033`)
@@ -1400,8 +1507,7 @@ Set `options=` with `mode='color'` to show a color palette.
 
 The option's `value` must be a valid color in one of the formats described in the previous example.
 
-The Color Palette differs from the Color Picker in that the Color Palette returns the `value` of the chosen option,
-and not a `(r, g, b, a)` tuple.
+Unlike the Color Picker, the Color Palette returns the `value` of the chosen option, and not a `(r,g,b,a)` tuple.
 
 
 ```py
@@ -1435,7 +1541,7 @@ view(f'You chose {color}.')
 
 ### Color Palette - Selected
 
-Set `selected=True` to pre-select a color in the palette.
+Alternatively, set `selected=True` to pre-select a color in the palette.
 
 
 ```py
@@ -1509,6 +1615,7 @@ view(f'Your speed is {speed} km/h')
 Set `precision=` to specify how many decimal places the value should be rounded to.
 
 The default is calculated based on the precision of step:
+
 - if step = 1, precision = 0
 - if step = 0.42, precision = 2
 - if step = 0.0042, precision = 4
@@ -1741,7 +1848,7 @@ view(f'Alarm set for {time}.')
 
 ### Time Picker - 24-hour clock
 
-Exclude AM/PM from the `value` to accept input in military time.
+Exclude `AM` or `PM` from the `value` to accept input in military time.
 
 
 ```py
@@ -1802,6 +1909,9 @@ view(f'You picked {date}.')
 ### Date Picker - Value
 
 Set `value=` to pre-select a date.
+
+Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
 
 
 ```py
@@ -1930,6 +2040,9 @@ view(f'You picked {week}.')
 
 Set `value=` to pre-select a week.
 
+Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
+
 
 ```py
 week = view(box('Pick a week', mode='week', value='2021-10-10'))
@@ -1991,6 +2104,9 @@ view(f'You picked {month}.')
 ### Month Picker - Value
 
 Set `value=` to pre-select a month.
+
+Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
 
 
 ```py
