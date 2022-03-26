@@ -41,7 +41,7 @@ setup(
     ],
     include_package_data=True,
     classifiers=[
-        'License :: OSI Approved :: Apache Software License',
+        'License :: OSI Approved :: BSD License',
         'Development Status :: 2 - Pre-Alpha',
         "Environment :: Web Environment",
         "Intended Audience :: Developers",

@@ -3,7 +3,7 @@ site_description: The quickest way to build web apps in Python
 site_author: Prithvi Prabhu
 repo_name: h2oai/nitro
 repo_url: https://github.com/h2oai/nitro
-copyright: Copyright &copy; 2022 H2O.ai, Inc. Licensed under the Apache License 2.0.
+copyright: "Copyright &copy; 2022 <a href='https://h2o.ai'>H2O.ai, Inc</a>. Licensed under <a href='https://opensource.org/licenses/BSD-3-Clause'>BSD 3-Clause</a>."
 theme:
   name: material
   icon:
@@ -31,7 +31,7 @@ extra:
     provider: mike
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/h2oai
+      link: https://github.com/h2oai/nitro
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/h2o-nitro/
     - icon: fontawesome/brands/twitter
