@@ -1,4 +1,4 @@
-# H<sub>2</sub>O Nitro
+# H2O Nitro
 
 Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
 
@@ -40,9 +40,9 @@ def main(view: View):
 
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
 - **Code.** Laser-focused on keeping application code simple, concise, and clear.
-  - **Simplicity.** Page flow follows code flow.
-  - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
-  - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
+    - **Simplicity.** Page flow follows code flow.
+    - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
+    - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
 - **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
 - **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
@@ -58,7 +58,7 @@ def main(view: View):
 
 **TL;DR:** Use [Wave](https://wave.h2o.ai/) for building visualization-heavy analytical dashboards. For everything else, use Nitro.
 
-- **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of [Wave](https://wave.h2o.ai/) 
+- **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of [Wave](https://wave.h2o.ai/)
   with a different, simpler API, designed for integration with existing web frameworks.
 - **Content Management.** Wave is capable of storing and broadcasting content and data, making it simple to build
   dashboards without having to deal with data management. Nitro has no such features.
@@ -66,7 +66,8 @@ def main(view: View):
   real-time analytics and dashboards easily. Nitro's API is *page-flow-oriented*, and makes it radically simple to
   author sophisticated workflows and wizards without dealing with callback functions and request handlers.
 
-## Examples
+
+## Guide
 
 ### Basics - Hello World!
 
@@ -231,7 +232,7 @@ view('\n'.join(summary))
 
 ### Markdown - Syntax
 
-Markdown blocks support GFM (Github Flavored Markdown).
+Strings passed to `view()` are interpreted as Github Flavored Markdown (GFM).
 
 
 ```py

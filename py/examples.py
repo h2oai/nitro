@@ -94,12 +94,12 @@ def accept_multiple_inputs(view: View):
 # ## Putting it all together
 # `view()` and `box()` can be chained together to form sophisticated workflows and wizards.
 #
-# Building such a multi-page interactive app with plain web frameworks can be
-# a fairly complex endeavor, weaving together requests and replies with logic spread across
-# multiple functions or callbacks, but Nitro makes all this delightfully simple!
-#
 # Note how the example below combines `view()` with conditionals and loops, while keeping the code
 # simple, concise, and clear.
+
+# Building a similar multi-page interactive app with a plain web framework can be
+# a fairly complex endeavor, weaving together requests and replies with logic spread across
+# multiple functions or callbacks, but Nitro makes all this delightfully simple!
 def dunk_your_donuts(view: View):
     menu = dict(
         Donut=['Plain', 'Glazed', 'Chocolate'],
@@ -137,7 +137,7 @@ def dunk_your_donuts(view: View):
 # # Markdown
 
 # ## Syntax
-# Markdown blocks support GFM (Github Flavored Markdown).
+# Strings passed to `view()` are interpreted as Github Flavored Markdown (GFM).
 def markdown_basic(view: View):
     view('''
     # Heading 1
