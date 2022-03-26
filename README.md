@@ -2,7 +2,7 @@
 
 Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
 
-![Nitro](assets/gh-readme-banner.png)
+![Nitro](docs/assets/banner.png)
 
 ## Philosophy
 
@@ -43,7 +43,8 @@ def main(view: View):
     - **Simplicity.** Page flow follows code flow.
     - **Conciseness.** Lowest lines of code for expressing solutions to a given problem. Less code = less bugs.
     - **Clarity.** Entire apps can be written without jumping through callbacks, request handlers, or event handlers.
-- **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for layout.
+- **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
+  layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
 - **Library.** Nitro is a library, not a server. Integrates with Flask, Tornado, Django, Uvicorn and other frameworks.
   Can be integrated into your existing applications.
@@ -56,7 +57,8 @@ def main(view: View):
 
 ## Differences from H<sub>2</sub>O Wave
 
-**TL;DR:** Use [Wave](https://wave.h2o.ai/) for building visualization-heavy analytical dashboards. For everything else, use Nitro.
+**TL;DR:** Use [Wave](https://wave.h2o.ai/) for building visualization-heavy analytical dashboards. For everything else,
+use Nitro.
 
 - **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of [Wave](https://wave.h2o.ai/)
   with a different, simpler API, designed for integration with existing web frameworks.
@@ -188,12 +190,12 @@ view(f'Hello, {first_name} {last_name}!')
 
 `view()` and `box()` can be chained together to form sophisticated workflows and wizards.
 
-Building such a multi-page interactive app with plain web frameworks can be
-a fairly complex endeavor, weaving together requests and replies with logic spread across
-multiple functions or callbacks, but Nitro makes all this delightfully simple!
-
 Note how the example below combines `view()` with conditionals and loops, while keeping the code
 simple, concise, and clear.
+
+Building a similar multi-page interactive app with a plain web framework can be
+a fairly complex endeavor, weaving together requests and replies with logic spread across
+multiple functions or callbacks, but Nitro makes all this delightfully simple!
 
 
 ```py
@@ -230,7 +232,7 @@ summary.append('\nThank you for your order!')
 view('\n'.join(summary))
 ```
 
-### Markdown - Syntax
+### Markdown - Basics
 
 Strings passed to `view()` are interpreted as Github Flavored Markdown (GFM).
 
