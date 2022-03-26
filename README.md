@@ -70,11 +70,10 @@ def main(view: View):
 
 ### Basics - Hello World!
 
-The simplest possible app looks like this:
+Call `view()` to show something on a page.
 
 
 ```py
-# Print a message.
 view('Hello World!')
 ```
 
@@ -84,7 +83,8 @@ and prints its arguments to the web page.
 
 ### Basics - Formatting
 
-Strings passed to `view()` are interpreted as [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+Strings passed to `view()` are interpreted as
+[Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
 
 ```py
@@ -106,7 +106,7 @@ The King said, very gravely:
 ```
 
 
-Any leading whitespace on each line are automatically ignored.
+Any leading whitespace on each line is automatically ignored.
 
 ### Basics - Display items in parallel
 
@@ -575,7 +575,7 @@ view(f'**Bio:** {bio}')
 Note that `lines=` only controls the initial height of the textbox, and
 multi-line textboxes can be resized by the user.
 
-### Numeric Textbox - Basic
+### Spinbox - Basic
 
 Call `box()` with `mode='number'` to show a box with increment/decrement buttons
 (also called a *spinbox*).
@@ -586,7 +586,7 @@ speed = view(box('Speed (km/h)', mode='number'))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Numeric Textbox - Value
+### Spinbox - Value
 
 Set `value=` to a numeric value to prefill the box with the value.
 
@@ -602,7 +602,7 @@ view(f'Your speed is {speed} km/h')
 In other words, calling `box()` with a numeric `value` has the same effect
 as setting `mode='number'`, and is the preferred usage.
 
-### Numeric Textbox - Min
+### Spinbox - Min
 
 Set `min=` to specify a minimum value.
 
@@ -612,7 +612,7 @@ speed = view(box('Speed (km/h)', min=10))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Numeric Textbox - Max
+### Spinbox - Max
 
 Set `max=` to specify a maximum value.
 
@@ -622,7 +622,7 @@ speed = view(box('Speed (km/h)', max=100))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Numeric Textbox - Step
+### Spinbox - Step
 
 Set `step=` to specify how much to increment or decrement by.
 
@@ -634,7 +634,7 @@ speed = view(box('Speed (km/h)', step=5))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Numeric Textbox - Precision
+### Spinbox - Precision
 
 Set `precision=` to specify how many decimal places the value should be rounded to.
 
@@ -649,7 +649,7 @@ speed = view(box('Speed (m/s)', value=0.6, min=-2, max=2, step=0.2, precision=2)
 view(f'Your speed is {speed} m/s')
 ```
 
-### Numeric Textbox - Min, Max, Step, Precision
+### Spinbox - Min, Max, Step, Precision
 
 `min=`, `max=`, `step=` and `precision=` can be combined.
 
@@ -659,7 +659,7 @@ speed = view(box('Speed (km/h)', min=10, max=100, step=5))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Numeric Textbox - Range
+### Spinbox - Range
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
@@ -671,7 +671,7 @@ speed = view(box('Speed (km/h)', range=(10, 100)))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Numeric Textbox - Range with step
+### Spinbox - Range with step
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 
@@ -683,7 +683,7 @@ speed = view(box('Speed (km/h)', range=(10, 100, 5)))
 view(f'Your speed is {speed} km/h')
 ```
 
-### Numeric Textbox - Range with precision
+### Spinbox - Range with precision
 
 Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
 `min=`, `max=`, `step` and `precision` individually.
@@ -694,7 +694,7 @@ speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2, 2)))
 view(f'Your speed is {speed} m/s')
 ```
 
-### Numeric Textbox - Zero-crossing range
+### Spinbox - Zero-crossing range
 
 Ranges can cross zero.
 
@@ -704,7 +704,7 @@ speed = view(box('Speed (m/s)', value=-3, range=(-5, 5)))
 view(f'Your speed is {speed} m/s')
 ```
 
-### Numeric Textbox - Fractional steps
+### Spinbox - Fractional steps
 
 Steps can be fractional.
 
@@ -724,11 +724,11 @@ Set `options=` to create a picker.
 There are several ways to create options. These are explained in the next section. The simplest way is to supply a
 sequence (tuple, set or list) of strings.
 
-By default, this shows buttons for up to 3 options, radio-buttons for up to 7 options,
+By default, this shows buttons for up to 3 options, radio buttons for up to 7 options,
 or a dropdown menu for more than 7 options.
 This behavior can be controlled using `mode=`, explained in later examples.
 
-The example below has 4 options, hence radio-buttons are shown.
+The example below has 4 options, hence radio buttons are shown.
 
 
 ```py
@@ -740,11 +740,11 @@ view(f'You chose {choice}.')
 
 
 
-### Pickers - Radio-buttons
+### Pickers - Radio Buttons
 
-Radio-buttons are shown for 4-7 options.
+Radio buttons is shown for 4-7 options.
 
-Set `mode='radio'` to display buttons regardless of the number of options.
+Set `mode='radio'` to display radio buttons regardless of the number of options.
 
 
 ```py
@@ -782,23 +782,7 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
-### Pickers - Checklist
-
-Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
-
-By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
-
-Set `mode='check'` to display a checklist regardless of the number of options.
-
-
-```py
-choices = view(box('Choose some colors', multiple=True, options=[
-    'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choices}.')
-```
-
-### Pickers - Multi-select Dropdown
+### Pickers - Dropdown List
 
 Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 
@@ -814,18 +798,20 @@ choices = view(box('Choose some colors', multiple=True, options=[
 view(f'You chose {choices}.')
 ```
 
-### Pickers - Editable Dropdown
+### Pickers - Checklist
 
-Set `editable=True` to allow arbitrary input in addition to the presented options.
+Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 
-`mode=menu` is implied if `editable=True`.
+By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
+
+Set `mode='check'` to display a checklist regardless of the number of options.
 
 
 ```py
-choice = view(box('Choose a color', editable=True, options=[
+choices = view(box('Choose some colors', multiple=True, options=[
     'yellow', 'orange', 'red', 'black'
 ]))
-view(f'You chose {choice}.')
+view(f'You chose {choices}.')
 ```
 
 ### Pickers - Required
@@ -972,67 +958,6 @@ choice = view(box('Choose a color', value='yellow', options=[
 view(f'You chose {choice}.')
 ```
 
-### Radio-buttons - Basic
-
-Set `mode='radio'` to show radio-buttons.
-
-`mode=` can be elided when there are 4-7 options.
-
-
-```py
-choice = view(box('Choose a color', mode='radio', options=[
-    'blue', 'green', 'yellow', 'orange', 'red', 'black'
-]))
-view(f'You chose {choice}.')
-```
-
-### Radio-buttons - Value
-
-Set `value=` to pre-select an option having that value.
-
-
-```py
-choice = view(box('Choose a color', mode='radio', value='yellow', options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow'),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
-view(f'You chose {choice}.')
-```
-
-### Radio-buttons - Selected
-
-Set `selected=True` to pre-select an option.
-
-
-```py
-choice = view(box('Choose a color', mode='radio', options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
-view(f'You chose {choice}.')
-```
-
-### Radio-buttons - Icons
-
-Set `icon=` to show graphical options.
-
-
-```py
-choice = view(box('Choose a chart type', mode='radio', options=[
-    option('area', 'Area', icon='AreaChart', selected=True),
-    option('bar', 'Bar', icon='BarChartHorizontal'),
-    option('column', 'Column', icon='BarChartVertical'),
-    option('line', 'Line', icon='LineChart'),
-    option('scatter', 'Scatter', icon='ScatterChart'),
-    option('donut', 'Donut', icon='DonutChart'),
-]))
-view(f'You chose {choice}.')
-```
-
 ### Buttons - Basic
 
 Set `mode='button'` to show buttons.
@@ -1155,6 +1080,67 @@ choice = view(box('Choose a color', mode='button', row=False, options=[
 view(f'You chose {choice}.')
 ```
 
+### Radio Buttons - Basic
+
+Set `mode='radio'` to show radio buttons.
+
+`mode=` can be elided when there are 4-7 options.
+
+
+```py
+choice = view(box('Choose a color', mode='radio', options=[
+    'blue', 'green', 'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Radio Buttons - Value
+
+Set `value=` to pre-select an option having that value.
+
+
+```py
+choice = view(box('Choose a color', mode='radio', value='yellow', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Radio Buttons - Selected
+
+Set `selected=True` to pre-select an option.
+
+
+```py
+choice = view(box('Choose a color', mode='radio', options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choice}.')
+```
+
+### Radio Buttons - Icons
+
+Set `icon=` to show graphical options.
+
+
+```py
+choice = view(box('Choose a chart type', mode='radio', options=[
+    option('area', 'Area', icon='AreaChart', selected=True),
+    option('bar', 'Bar', icon='BarChartHorizontal'),
+    option('column', 'Column', icon='BarChartVertical'),
+    option('line', 'Line', icon='LineChart'),
+    option('scatter', 'Scatter', icon='ScatterChart'),
+    option('donut', 'Donut', icon='DonutChart'),
+]))
+view(f'You chose {choice}.')
+```
+
 ### Dropdown - Basic
 
 Set `mode='menu'` to show a dropdown menu.
@@ -1222,6 +1208,64 @@ choice = view(box('Choose a color', options=[
 view(f'You chose {choice}.')
 ```
 
+### Dropdown - Editable
+
+Set `editable=True` to allow arbitrary input in addition to the presented options.
+
+`mode=menu` is implied if `editable=True`.
+
+
+```py
+choice = view(box('Choose a color', editable=True, options=[
+    'yellow', 'orange', 'red', 'black'
+]))
+view(f'You chose {choice}.')
+```
+
+### Dropdown List - Basic
+
+Set `mode='menu'` with `multiple=True` to show a dropdown menu that allows multiple options to be selected.
+
+`mode=` can be elided when there are more than 7 options.
+
+
+```py
+choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
+    'green', 'yellow', 'orange', 'red'
+]))
+view(f'You chose {choices}.')
+```
+
+### Dropdown List - Value
+
+Set `value=` to pre-select an option having that value.
+
+
+```py
+choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yellow', 'red'], options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow'),
+    option('orange', 'Orange'),
+    option('red', 'Red'),
+]))
+view(f'You chose {choices}.')
+```
+
+### Dropdown List - Selected
+
+Set `selected=True` to pre-select one or more options.
+
+
+```py
+choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
+]))
+view(f'You chose {choices}.')
+```
+
 ### Checklist - Basic
 
 Set `mode='check'` to show a checklist
@@ -1258,50 +1302,6 @@ Set `selected=True` to pre-select one or more options.
 
 ```py
 choices = view(box('Choose some colors', mode='check', multiple=True, options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
-]))
-view(f'You chose {choices}.')
-```
-
-### Multi-select Dropdown - Basic
-
-Set `mode='menu'` with `multiple=True` to show a multi-select dropdown menu.
-
-`mode=` can be elided when there are more than 7 options.
-
-
-```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-    'green', 'yellow', 'orange', 'red'
-]))
-view(f'You chose {choices}.')
-```
-
-### Multi-select Dropdown - Value
-
-Set `value=` to pre-select an option having that value.
-
-
-```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yellow', 'red'], options=[
-    option('green', 'Green'),
-    option('yellow', 'Yellow'),
-    option('orange', 'Orange'),
-    option('red', 'Red'),
-]))
-view(f'You chose {choices}.')
-```
-
-### Multi-select Dropdown - Selected
-
-Set `selected=True` to pre-select one or more options.
-
-
-```py
-choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
     option('green', 'Green'),
     option('yellow', 'Yellow', selected=True),
     option('orange', 'Orange'),
@@ -1397,6 +1397,9 @@ Set `options=` with `mode='color'` to show a color palette.
 
 The option's `value` must be a valid color in one of the formats described in the previous example.
 
+The Color Palette differs from the Color Picker in that the Color Palette returns the `value` of the chosen option,
+and not a `(r, g, b, a)` tuple.
+
 
 ```py
 color = view(box('Choose a color', mode='color', options=[
@@ -1412,7 +1415,7 @@ view(f'You chose {color}.')
 
 ### Color Palette - Value
 
-Set `selected=True` to pre-select a color in the palette.
+Set `value=` to pre-select an option having that color value.
 
 
 ```py
@@ -2042,7 +2045,7 @@ By default, five stars are displayed.
 
 
 ```py
-stars = view(box('Rating', mode='rating'))
+stars = view(box('Rate your experience', mode='rating'))
 view(f'Your rating was {stars} stars.')
 ```
 
@@ -2052,27 +2055,27 @@ Set `value=` to specify a default value.
 
 
 ```py
-stars = view(box('Rating with value', mode='rating', value=3))
+stars = view(box('Rate your experience', mode='rating', value=3))
 view(f'Your rating was {stars} stars.')
 ```
 
 ### Rating - Min
 
-Set `min=` to specify a minimum value.
+Set `min=0` to allow zero stars.
 
 
 ```py
-stars = view(box('Rating with zero allowed', mode='rating', min=0))
+stars = view(box('Rate your experience', mode='rating', min=0))
 view(f'Your rating was {stars} stars.')
 ```
 
 ### Rating - Max
 
-Set `max=` to specify a maximum value.
+Set `max=` to increase the number of stars displayed.
 
 
 ```py
-stars = view(box('Rating with max', mode='rating', value=3, max=10))
+stars = view(box('Rate your experience', mode='rating', value=3, max=10))
 view(f'Your rating was {stars} stars.')
 ```
 
@@ -2082,7 +2085,7 @@ view(f'Your rating was {stars} stars.')
 
 
 ```py
-stars = view(box('Rating with range', mode='rating', value=3, min=0, max=10))
+stars = view(box('Rate your experience', mode='rating', value=3, min=0, max=10))
 view(f'Your rating was {stars} stars.')
 ```
 
@@ -2094,6 +2097,6 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 
 
 ```py
-stars = view(box('Rating with range', mode='rating', value=3, range=(0, 10)))
+stars = view(box('Rate your experience', mode='rating', value=3, range=(0, 10)))
 view(f'Your rating was {stars} stars.')
 ```

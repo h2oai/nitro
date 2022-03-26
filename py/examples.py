@@ -4,9 +4,8 @@ from h2o_nitro import View, box, row, col, option
 # # Basics
 
 # ## Hello World!
-# The simplest possible app looks like this:
+# Call `view()` to show something on a page.
 def hello_world(view: View):
-    # Print a message.
     view('Hello World!')
 
 
@@ -14,7 +13,8 @@ def hello_world(view: View):
 # and prints its arguments to the web page.
 
 # ## Formatting
-# Strings passed to `view()` are interpreted as [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+# Strings passed to `view()` are interpreted as
+# [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 def format_content(view: View):
     view('_Less_ `code` means _less_ **bugs**.')
 
@@ -30,7 +30,7 @@ def format_multiline_content(view: View):
     ''')
 
 
-# Any leading whitespace on each line are automatically ignored.
+# Any leading whitespace on each line is automatically ignored.
 
 # ## Display items in parallel
 # Pass multiple items to `view()` to lay them out top to bottom.
@@ -414,7 +414,7 @@ def textarea(view: View):
 # Note that `lines=` only controls the initial height of the textbox, and
 # multi-line textboxes can be resized by the user.
 
-# # Numeric Textbox
+# # Spinbox
 
 # ## Basic
 # Call `box()` with `mode='number'` to show a box with increment/decrement buttons
@@ -529,11 +529,11 @@ def spinbox_decimal_step(view: View):
 # There are several ways to create options. These are explained in the next section. The simplest way is to supply a
 # sequence (tuple, set or list) of strings.
 #
-# By default, this shows buttons for up to 3 options, radio-buttons for up to 7 options,
+# By default, this shows buttons for up to 3 options, radio buttons for up to 7 options,
 # or a dropdown menu for more than 7 options.
 # This behavior can be controlled using `mode=`, explained in later examples.
 #
-# The example below has 4 options, hence radio-buttons are shown.
+# The example below has 4 options, hence radio buttons are shown.
 def picker_basic(view: View):
     choice = view(box('Choose a color', options=[
         'green', 'yellow', 'orange', 'red'
@@ -543,10 +543,10 @@ def picker_basic(view: View):
 
 #
 
-# ## Radio-buttons
-# Radio-buttons are shown for 4-7 options.
+# ## Radio Buttons
+# Radio buttons is shown for 4-7 options.
 #
-# Set `mode='radio'` to display buttons regardless of the number of options.
+# Set `mode='radio'` to display radio buttons regardless of the number of options.
 def picker_radio(view: View):
     choice = view(box('Choose a color', options=[
         'green', 'yellow', 'orange', 'red'
@@ -576,20 +576,7 @@ def picker_dropdown(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Checklist
-# Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
-#
-# By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
-#
-# Set `mode='check'` to display a checklist regardless of the number of options.
-def picker_checklist(view: View):
-    choices = view(box('Choose some colors', multiple=True, options=[
-        'yellow', 'orange', 'red', 'black'
-    ]))
-    view(f'You chose {choices}.')
-
-
-# ## Multi-select Dropdown
+# ## Dropdown List
 # Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 #
 # By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
@@ -602,15 +589,17 @@ def picker_multiple_dropdown(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Editable Dropdown
-# Set `editable=True` to allow arbitrary input in addition to the presented options.
+# ## Checklist
+# Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 #
-# `mode=menu` is implied if `editable=True`.
-def picker_editable(view: View):
-    choice = view(box('Choose a color', editable=True, options=[
+# By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
+#
+# Set `mode='check'` to display a checklist regardless of the number of options.
+def picker_checklist(view: View):
+    choices = view(box('Choose some colors', multiple=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
-    view(f'You chose {choice}.')
+    view(f'You chose {choices}.')
 
 
 # ## Required
@@ -731,57 +720,6 @@ def options_value(view: View):
     view(f'You chose {choice}.')
 
 
-# # Radio-buttons
-
-# ## Basic
-# Set `mode='radio'` to show radio-buttons.
-#
-# `mode=` can be elided when there are 4-7 options.
-def radio_basic(view: View):
-    choice = view(box('Choose a color', mode='radio', options=[
-        'blue', 'green', 'yellow', 'orange', 'red', 'black'
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## Value
-# Set `value=` to pre-select an option having that value.
-def radio_value(view: View):
-    choice = view(box('Choose a color', mode='radio', value='yellow', options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow'),
-        option('orange', 'Orange'),
-        option('red', 'Red'),
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## Selected
-# Set `selected=True` to pre-select an option.
-def radio_selected(view: View):
-    choice = view(box('Choose a color', mode='radio', options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow', selected=True),
-        option('orange', 'Orange'),
-        option('red', 'Red'),
-    ]))
-    view(f'You chose {choice}.')
-
-
-# ## Icons
-# Set `icon=` to show graphical options.
-def radio_icon(view: View):
-    choice = view(box('Choose a chart type', mode='radio', options=[
-        option('area', 'Area', icon='AreaChart', selected=True),
-        option('bar', 'Bar', icon='BarChartHorizontal'),
-        option('column', 'Column', icon='BarChartVertical'),
-        option('line', 'Line', icon='LineChart'),
-        option('scatter', 'Scatter', icon='ScatterChart'),
-        option('donut', 'Donut', icon='DonutChart'),
-    ]))
-    view(f'You chose {choice}.')
-
-
 # # Buttons
 
 # ## Basic
@@ -882,8 +820,59 @@ def buttons_layout(view: View):
     view(f'You chose {choice}.')
 
 
-# # Dropdown
+# # Radio Buttons
+
+# ## Basic
+# Set `mode='radio'` to show radio buttons.
 #
+# `mode=` can be elided when there are 4-7 options.
+def radio_basic(view: View):
+    choice = view(box('Choose a color', mode='radio', options=[
+        'blue', 'green', 'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Value
+# Set `value=` to pre-select an option having that value.
+def radio_value(view: View):
+    choice = view(box('Choose a color', mode='radio', value='yellow', options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow'),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Selected
+# Set `selected=True` to pre-select an option.
+def radio_selected(view: View):
+    choice = view(box('Choose a color', mode='radio', options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# ## Icons
+# Set `icon=` to show graphical options.
+def radio_icon(view: View):
+    choice = view(box('Choose a chart type', mode='radio', options=[
+        option('area', 'Area', icon='AreaChart', selected=True),
+        option('bar', 'Bar', icon='BarChartHorizontal'),
+        option('column', 'Column', icon='BarChartVertical'),
+        option('line', 'Line', icon='LineChart'),
+        option('scatter', 'Scatter', icon='ScatterChart'),
+        option('donut', 'Donut', icon='DonutChart'),
+    ]))
+    view(f'You chose {choice}.')
+
+
+# # Dropdown
+
 # ## Basic
 # Set `mode='menu'` to show a dropdown menu.
 #
@@ -939,6 +928,54 @@ def dropdown_grouped(view: View):
     view(f'You chose {choice}.')
 
 
+# ## Editable
+# Set `editable=True` to allow arbitrary input in addition to the presented options.
+#
+# `mode=menu` is implied if `editable=True`.
+def dropdown_editable(view: View):
+    choice = view(box('Choose a color', editable=True, options=[
+        'yellow', 'orange', 'red', 'black'
+    ]))
+    view(f'You chose {choice}.')
+
+
+# # Dropdown List
+
+# ## Basic
+# Set `mode='menu'` with `multiple=True` to show a dropdown menu that allows multiple options to be selected.
+#
+# `mode=` can be elided when there are more than 7 options.
+def multi_dropdown_basic(view: View):
+    choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
+        'green', 'yellow', 'orange', 'red'
+    ]))
+    view(f'You chose {choices}.')
+
+
+# ## Value
+# Set `value=` to pre-select an option having that value.
+def multi_dropdown_value(view: View):
+    choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yellow', 'red'], options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow'),
+        option('orange', 'Orange'),
+        option('red', 'Red'),
+    ]))
+    view(f'You chose {choices}.')
+
+
+# ## Selected
+# Set `selected=True` to pre-select one or more options.
+def multi_dropdown_selected(view: View):
+    choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red', selected=True),
+    ]))
+    view(f'You chose {choices}.')
+
+
 # # Checklist
 
 # ## Basic
@@ -968,43 +1005,6 @@ def checklist_value(view: View):
 # Set `selected=True` to pre-select one or more options.
 def checklist_selected(view: View):
     choices = view(box('Choose some colors', mode='check', multiple=True, options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow', selected=True),
-        option('orange', 'Orange'),
-        option('red', 'Red', selected=True),
-    ]))
-    view(f'You chose {choices}.')
-
-
-# # Multi-select Dropdown
-
-# ## Basic
-# Set `mode='menu'` with `multiple=True` to show a multi-select dropdown menu.
-#
-# `mode=` can be elided when there are more than 7 options.
-def multi_dropdown_basic(view: View):
-    choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
-        'green', 'yellow', 'orange', 'red'
-    ]))
-    view(f'You chose {choices}.')
-
-
-# ## Value
-# Set `value=` to pre-select an option having that value.
-def multi_dropdown_value(view: View):
-    choices = view(box('Choose some colors', mode='menu', multiple=True, value=['yellow', 'red'], options=[
-        option('green', 'Green'),
-        option('yellow', 'Yellow'),
-        option('orange', 'Orange'),
-        option('red', 'Red'),
-    ]))
-    view(f'You chose {choices}.')
-
-
-# ## Selected
-# Set `selected=True` to pre-select one or more options.
-def multi_dropdown_selected(view: View):
-    choices = view(box('Choose some colors', mode='menu', multiple=True, options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),
         option('orange', 'Orange'),
@@ -1089,6 +1089,9 @@ def color_value(view: View):
 # Set `options=` with `mode='color'` to show a color palette.
 #
 # The option's `value` must be a valid color in one of the formats described in the previous example.
+#
+# The Color Palette differs from the Color Picker in that the Color Palette returns the `value` of the chosen option,
+# and not a `(r, g, b, a)` tuple.
 def palette_basic(view: View):
     color = view(box('Choose a color', mode='color', options=[
         option('#ff0000', 'Red'),
@@ -1102,7 +1105,7 @@ def palette_basic(view: View):
 
 
 # ## Value
-# Set `selected=True` to pre-select a color in the palette.
+# Set `value=` to pre-select an option having that color value.
 def palette_value(view: View):
     color = view(box('Choose a color', mode='color', value='#0000ff', options=[
         option('#ff0000', 'Red'),
@@ -1574,35 +1577,35 @@ def month_range(view: View):
 #
 # By default, five stars are displayed.
 def rating_basic(view: View):
-    stars = view(box('Rating', mode='rating'))
+    stars = view(box('Rate your experience', mode='rating'))
     view(f'Your rating was {stars} stars.')
 
 
 # ## Value
 # Set `value=` to specify a default value.
 def rating_value(view: View):
-    stars = view(box('Rating with value', mode='rating', value=3))
+    stars = view(box('Rate your experience', mode='rating', value=3))
     view(f'Your rating was {stars} stars.')
 
 
 # ## Min
-# Set `min=` to specify a minimum value.
+# Set `min=0` to allow zero stars.
 def rating_min(view: View):
-    stars = view(box('Rating with zero allowed', mode='rating', min=0))
+    stars = view(box('Rate your experience', mode='rating', min=0))
     view(f'Your rating was {stars} stars.')
 
 
 # ## Max
-# Set `max=` to specify a maximum value.
+# Set `max=` to increase the number of stars displayed.
 def rating_max(view: View):
-    stars = view(box('Rating with max', mode='rating', value=3, max=10))
+    stars = view(box('Rate your experience', mode='rating', value=3, max=10))
     view(f'Your rating was {stars} stars.')
 
 
 # ## Min and max
 # `min=` and `max=` can be combined.
 def rating_min_max(view: View):
-    stars = view(box('Rating with range', mode='rating', value=3, min=0, max=10))
+    stars = view(box('Rate your experience', mode='rating', value=3, min=0, max=10))
     view(f'Your rating was {stars} stars.')
 
 
@@ -1611,5 +1614,5 @@ def rating_min_max(view: View):
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.
 def rating_range(view: View):
-    stars = view(box('Rating with range', mode='rating', value=3, range=(0, 10)))
+    stars = view(box('Rate your experience', mode='rating', value=3, range=(0, 10)))
     view(f'Your rating was {stars} stars.')
