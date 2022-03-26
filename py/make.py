@@ -222,19 +222,19 @@ docs_dir = Path('..') / 'docs'
 
 
 def write_docs_examples(groups: List[Group]):
-    examples_dir = docs_dir / 'examples'
     for g in groups:
-        group_dir = examples_dir / g.name
-        shutil.rmtree(group_dir, ignore_errors=True)
-        group_dir.mkdir(parents=True)
+        p = Printer()
+        p(f'# {g.title}')
+        p()
+        p(g.description)
         for e in g.examples:
-            p = Printer()
-            p(f'# {e.title}')
+            p()
+            p(f'## {e.title}')
             write_example(p, e)
-            (group_dir / f'{e.name}.md').write_text(str(p))
+        (docs_dir / f'{g.name}.md').write_text(str(p))
 
 
-yaml_separator = '# Examples (generated)'
+yaml_separator = '# Generated'
 
 
 def write_docs_yaml(groups: List[Group]):
@@ -247,14 +247,10 @@ def write_docs_yaml(groups: List[Group]):
     p.indent()
     p(yaml_separator)
 
-    p('- Examples:')
+    p('- Guide:')
     p.indent()
     for g in groups:
-        p(f"- '{g.title}':")
-        p.indent()
-        for e in g.examples:
-            p(f"- 'examples/{g.name}/{e.name}.md'")
-        p.dedent()
+        p(f"- '{g.name}.md'")
 
     yaml_path.write_text(str(p))
 

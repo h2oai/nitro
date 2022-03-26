@@ -36,5 +36,5 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
 nav:
-  - Home: 'index.md'
-  # Examples (generated)
+  - 'index.md'
+  # Generated
