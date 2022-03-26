@@ -255,6 +255,20 @@ def write_docs_yaml(groups: List[Group]):
     yaml_path.write_text(str(p))
 
 
+gi_separator = '# Generated Docs'
+
+
+def write_gitignore(groups: List[Group]):
+    p = Printer()
+    gi_path = Path('..') / '.gitignore'
+    gi = gi_path.read_text().split(gi_separator)[0].strip()
+    p(gi)
+    p(gi_separator)
+    for g in groups:
+        p(f'/docs/{g.name}.md')
+    gi_path.write_text(str(p))
+
+
 def write_readme(groups: List[Group]):
     p = Printer()
     for g in groups:
@@ -290,6 +304,9 @@ def main():
 
     print('Updating mkdocs.yml...')
     write_docs_yaml(groups)
+
+    print('Updating .gitignore...')
+    write_gitignore(groups)
 
     print('Done!')
 
