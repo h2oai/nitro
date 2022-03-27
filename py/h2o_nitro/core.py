@@ -144,11 +144,14 @@ Value = Union[
     Tuple[V, V],
     List[V],
 ]
+
+Length = Union[str, int]
+
 Sizing = Union[
-    str,
-    Tuple[str],
-    Tuple[str, str],
-    Tuple[str, str, str],
+    Length,
+    Tuple[Length],
+    Tuple[Length, Length],
+    Tuple[Length, Length, Length],
 ]
 
 
@@ -180,7 +183,7 @@ class Box:
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
-            gap: Optional[str] = None,
+            gap: Optional[Length] = None,
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
@@ -317,7 +320,7 @@ class Zone:
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
-            gap: Optional[str] = None,
+            gap: Optional[Length] = None,
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
@@ -367,7 +370,7 @@ def row(
         tile: Optional[str] = None,
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
-        gap: Optional[str] = None,
+        gap: Optional[Length] = None,
         align: Optional[str] = None,
         width: Optional[Sizing] = None,
         height: Optional[Sizing] = None,
@@ -400,7 +403,7 @@ def col(
         tile: Optional[str] = None,
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
-        gap: Optional[str] = None,
+        gap: Optional[Length] = None,
         align: Optional[str] = None,
         width: Optional[Sizing] = None,
         height: Optional[Sizing] = None,
@@ -550,7 +553,7 @@ class View:
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
-            gap: Optional[str] = None,
+            gap: Optional[Length] = None,
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
@@ -586,7 +589,7 @@ class View:
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
-            gap: Optional[str] = None,
+            gap: Optional[Length] = None,
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
@@ -625,7 +628,7 @@ class View:
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
-            gap: Optional[str] = None,
+            gap: Optional[Length] = None,
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
