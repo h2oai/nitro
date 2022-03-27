@@ -177,8 +177,8 @@ class Box:
             editable: Optional[bool] = None,
             options: Optional[Options] = None,
             row: Optional[bool] = None,
-            justify: Optional[str] = None,
-            align: Optional[str] = None,
+            tile: Optional[str] = None,
+            cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
             width: Optional[Sizing] = None,
@@ -219,8 +219,8 @@ class Box:
         self.editable = editable
         self.options = opts
         self.row = row
-        self.justify = justify
-        self.align = align
+        self.tile = tile
+        self.cross_tile = cross_tile
         self.wrap = wrap
         self.gap = gap
         self.width = width
@@ -254,8 +254,8 @@ class Box:
             editable=self.editable,
             options=_dump(self.options),
             row=self.row,
-            justify=self.justify,
-            align=self.align,
+            tile=self.tile,
+            cross_tile=self.cross_tile,
             wrap=self.wrap,
             gap=self.gap,
             width=self.width,
@@ -269,7 +269,7 @@ class Box:
 box = Box
 
 
-class ZoneJustify(Enum):
+class ZoneTile(Enum):
     Normal = 'normal'
     Stretch = 'stretch'
     Center = 'center'
@@ -304,8 +304,8 @@ class Zone:
             self,
             *items: Item,
             row: Optional[bool] = None,
-            justify: Optional[str] = None,
-            align: Optional[str] = None,
+            tile: Optional[str] = None,
+            cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
             width: Optional[Sizing] = None,
@@ -318,8 +318,8 @@ class Zone:
     ):
         self.items = items
         self.row = row
-        self.justify = justify
-        self.align = align
+        self.tile = tile
+        self.cross_tile = cross_tile
         self.wrap = wrap
         self.gap = gap
         self.width = width
@@ -335,8 +335,8 @@ class Zone:
             t=_WidgetT.Stack,
             items=_dump(self.items),
             row=self.row,
-            justify=self.justify,
-            align=self.align,
+            tile=self.tile,
+            cross_tile=self.cross_tile,
             wrap=self.wrap,
             gap=self.gap,
             width=self.width,
@@ -351,8 +351,8 @@ class Zone:
 
 def row(
         *items: Item,
-        justify: Optional[str] = None,
-        align: Optional[str] = None,
+        tile: Optional[str] = None,
+        cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
         gap: Optional[str] = None,
         width: Optional[Sizing] = None,
@@ -366,8 +366,8 @@ def row(
     return Zone(
         *items,
         row=True,
-        justify=justify,
-        align=align,
+        tile=tile,
+        cross_tile=cross_tile,
         wrap=wrap,
         gap=gap,
         width=width,
@@ -382,8 +382,8 @@ def row(
 
 def col(
         *items: Item,
-        justify: Optional[str] = None,
-        align: Optional[str] = None,
+        tile: Optional[str] = None,
+        cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
         gap: Optional[str] = None,
         width: Optional[Sizing] = None,
@@ -396,8 +396,8 @@ def col(
 ) -> Zone:
     return Zone(
         *items,
-        justify=justify,
-        align=align,
+        tile=tile,
+        cross_tile=cross_tile,
         wrap=wrap,
         gap=gap,
         width=width,
@@ -530,8 +530,8 @@ class View:
             self,
             *items: Item,
             row: Optional[bool] = None,
-            justify: Optional[str] = None,
-            align: Optional[str] = None,
+            tile: Optional[str] = None,
+            cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
             width: Optional[Sizing] = None,
@@ -546,8 +546,8 @@ class View:
         s = Zone(
             *items,
             row=row,
-            justify=justify,
-            align=align,
+            tile=tile,
+            cross_tile=cross_tile,
             wrap=wrap,
             gap=gap,
             width=width,
@@ -564,8 +564,8 @@ class View:
             self,
             *items: Item,
             row: Optional[bool] = None,
-            justify: Optional[str] = None,
-            align: Optional[str] = None,
+            tile: Optional[str] = None,
+            cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
             width: Optional[Sizing] = None,
@@ -580,8 +580,8 @@ class View:
         s = Zone(
             *items,
             row=row,
-            justify=justify,
-            align=align,
+            tile=tile,
+            cross_tile=cross_tile,
             wrap=wrap,
             gap=gap,
             width=width,
@@ -601,8 +601,8 @@ class View:
             self,
             *items: Item,
             row: Optional[bool] = None,
-            justify: Optional[str] = None,
-            align: Optional[str] = None,
+            tile: Optional[str] = None,
+            cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
             width: Optional[Sizing] = None,
@@ -617,8 +617,8 @@ class View:
         self.show(
             *items,
             row=row,
-            justify=justify,
-            align=align,
+            tile=tile,
+            cross_tile=cross_tile,
             wrap=wrap,
             gap=gap,
             width=width,

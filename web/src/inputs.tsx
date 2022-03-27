@@ -860,9 +860,9 @@ const XZoneItem = ({ stackable, children }: { stackable: Stackable, children: JS
 const flexStyles: Dict<S> = {
   start: 'flex-start',
   end: 'flex-end',
-  between: 'flex-between',
-  around: 'flex-around',
-  evenly: 'flex-evenly',
+  between: 'space-between',
+  around: 'space-around',
+  evenly: 'space-evenly',
 }
 
 const toFlexStyle = (s: S): S => flexStyles[s] ?? s
@@ -882,13 +882,13 @@ const XZone = ({ context, widgets, stack }: { context: Context, widgets: Widget[
           : <div>Unknown widget</div>
       return <XZoneItem key={xid()} stackable={widget}>{child}</XZoneItem>
     }),
-    { row, justify, align, wrap, gap } = stack,
+    { row, tile, cross_tile, wrap, gap } = stack,
     css: React.CSSProperties = {
       flexDirection: row ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       gap: gap ?? 5,
-      justifyItems: justify ? toFlexStyle(justify) : undefined,
-      alignItems: align ? toFlexStyle(align) : undefined,
+      justifyContent: tile ? toFlexStyle(tile) : undefined,
+      alignItems: cross_tile ? toFlexStyle(cross_tile) : undefined,
       alignContent: wrap ? toFlexStyle(wrap) : undefined,
     }
 

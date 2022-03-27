@@ -75,8 +75,8 @@ export type InputMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 
 
 export type Stacking = {
   row?: B
-  justify?: S
-  align?: S
+  tile?: S
+  cross_tile?: S
   wrap?: S
   gap?: S
 }
