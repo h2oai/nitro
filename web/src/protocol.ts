@@ -1,3 +1,4 @@
+import React from "react"
 import { S, N, B, U, V, Pair, Triple, I } from "./core"
 
 export enum MsgType {
@@ -60,6 +61,7 @@ export enum WidgetT {
 }
 
 export type Stackable = {
+  align?: S
   width?: S | [S] | Pair<S> | Triple<S>
   height?: S | [S] | Pair<S> | Triple<S>
   margin?: S

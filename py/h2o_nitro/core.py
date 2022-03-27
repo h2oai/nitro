@@ -181,6 +181,7 @@ class Box:
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
+            align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
             grow: Optional[int] = None,
@@ -223,6 +224,7 @@ class Box:
         self.cross_tile = cross_tile
         self.wrap = wrap
         self.gap = gap
+        self.align = align
         self.width = width
         self.height = height
         self.grow = grow
@@ -258,6 +260,7 @@ class Box:
             cross_tile=self.cross_tile,
             wrap=self.wrap,
             gap=self.gap,
+            align=self.align,
             width=self.width,
             height=self.height,
             grow=self.grow,
@@ -280,7 +283,7 @@ class ZoneTile(Enum):
     Evenly = 'evenly'
 
 
-class ZoneAlign(Enum):
+class ZoneCrossTile(Enum):
     Normal = 'normal'
     Stretch = 'stretch'
     Center = 'center'
@@ -299,6 +302,13 @@ class ZoneWrap(Enum):
     Evenly = 'evenly'
 
 
+class BoxAlign(Enum):
+    Left = 'left'
+    Right = 'right'
+    Center = 'center'
+    Justify = 'justify'
+
+
 class Zone:
     def __init__(
             self,
@@ -308,6 +318,7 @@ class Zone:
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
+            align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
             margin: Optional[str] = None,
@@ -322,6 +333,7 @@ class Zone:
         self.cross_tile = cross_tile
         self.wrap = wrap
         self.gap = gap
+        self.align = align
         self.width = width
         self.height = height
         self.margin = margin
@@ -339,6 +351,7 @@ class Zone:
             cross_tile=self.cross_tile,
             wrap=self.wrap,
             gap=self.gap,
+            align=self.align,
             width=self.width,
             height=self.height,
             margin=self.margin,
@@ -355,6 +368,7 @@ def row(
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
         gap: Optional[str] = None,
+        align: Optional[str] = None,
         width: Optional[Sizing] = None,
         height: Optional[Sizing] = None,
         margin: Optional[str] = None,
@@ -370,6 +384,7 @@ def row(
         cross_tile=cross_tile,
         wrap=wrap,
         gap=gap,
+        align=align,
         width=width,
         height=height,
         margin=margin,
@@ -386,6 +401,7 @@ def col(
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
         gap: Optional[str] = None,
+        align: Optional[str] = None,
         width: Optional[Sizing] = None,
         height: Optional[Sizing] = None,
         margin: Optional[str] = None,
@@ -400,6 +416,7 @@ def col(
         cross_tile=cross_tile,
         wrap=wrap,
         gap=gap,
+        align=align,
         width=width,
         height=height,
         margin=margin,
@@ -534,6 +551,7 @@ class View:
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
+            align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
             margin: Optional[str] = None,
@@ -550,6 +568,7 @@ class View:
             cross_tile=cross_tile,
             wrap=wrap,
             gap=gap,
+            align=align,
             width=width,
             height=height,
             margin=margin,
@@ -568,6 +587,7 @@ class View:
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
+            align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
             margin: Optional[str] = None,
@@ -584,6 +604,7 @@ class View:
             cross_tile=cross_tile,
             wrap=wrap,
             gap=gap,
+            align=align,
             width=width,
             height=height,
             margin=margin,
@@ -605,6 +626,7 @@ class View:
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[str] = None,
+            align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
             margin: Optional[str] = None,
@@ -621,6 +643,7 @@ class View:
             cross_tile=cross_tile,
             wrap=wrap,
             gap=gap,
+            align=align,
             width=width,
             height=height,
             margin=margin,

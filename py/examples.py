@@ -194,10 +194,12 @@ def markdown_basic(view: View):
 # Clicking on a local link returns the name of the link.
 def markdown_links(view: View):
     choice = view('''
-    Pick a fruit (or:
-    - [Apples](#apples)
-    - [Bananas](#bananas)
-    - [Cherries](#cherries)
+    Pick a flavor:
+    - [Vanilla](#vanilla)
+    - [Strawberry](#strawberry)
+    - [Chocolate](#chocolate)
+
+    Or, [surprise me](#surprise-me)!
     ''')
     view(f'You clicked on {choice}.')
 
@@ -270,6 +272,25 @@ def display_col(view: View):
                 '(3, 3)',
             ),
         ),
+    )
+
+
+# ## Text Alignment
+# Set `align=` to `left`, `right`, `center` or `justify` to align text.
+
+def text_align(view: View):
+    text = '''
+    "Begin at the beginning," the King said, very gravely,
+    "and go on till you come to the end: then stop."
+    '''
+    view(
+        row(
+            box(text, mode='md', align='left'),
+            box(text, mode='md', align='center'),
+            box(text, mode='md', align='justify'),
+            box(text, mode='md', align='right'),
+            gap=20,
+        )
     )
 
 

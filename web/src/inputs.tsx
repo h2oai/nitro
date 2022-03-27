@@ -779,7 +779,10 @@ const XMarkdown = make(({ context, input }: InputProps) => {
   return { init: update, update, render }
 })
 
-const applyBoxStyles = (css: React.CSSProperties, { width, height, margin, padding, grow, shrink, basis }: Stackable) => {
+const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, grow, shrink, basis }: Stackable) => {
+
+  if (align) css.textAlign = align as any
+
   if (width) {
     if (Array.isArray(width)) {
       switch (width.length) {
@@ -842,6 +845,10 @@ const applyBoxStyles = (css: React.CSSProperties, { width, height, margin, paddi
   if (padding) css.padding = padding
   if (grow) css.flexGrow = grow
   if (shrink) css.flexShrink = shrink
+
+  // Default flex-basis to 0 to get more predictable grow/shrink behavior
+  // css.flexBasis = basis ?? '0'
+
   if (basis) css.flexBasis = basis
 
   return css
