@@ -194,7 +194,7 @@ class Box:
             border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[Sizing] = None,
+            basis: Optional[Length] = None,
     ):
         if isinstance(text, (tuple, set, list, dict, OrderedDict)):
             if options is not None:
@@ -346,7 +346,7 @@ class Zone:
             border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[Sizing] = None,
+            basis: Optional[Length] = None,
     ):
         self.items = items
         self.row = row
@@ -405,7 +405,7 @@ def row(
         border: Optional[str] = None,
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
-        basis: Optional[Sizing] = None,
+        basis: Optional[Length] = None,
 ) -> Zone:
     return Zone(
         *items,
@@ -444,7 +444,7 @@ def col(
         border: Optional[str] = None,
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
-        basis: Optional[Sizing] = None,
+        basis: Optional[Length] = None,
 ) -> Zone:
     return Zone(
         *items,
@@ -600,7 +600,7 @@ class View:
             border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[Sizing] = None,
+            basis: Optional[Length] = None,
             position: Optional[int] = None,
     ):
         s = Zone(
@@ -642,7 +642,7 @@ class View:
             border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[Sizing] = None,
+            basis: Optional[Length] = None,
             position: Optional[int] = None,
     ):
         s = Zone(
@@ -687,7 +687,7 @@ class View:
             border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[Sizing] = None,
+            basis: Optional[Length] = None,
             position: Optional[int] = None,
     ):
         self.show(
