@@ -860,7 +860,11 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
     }
   }
 
-  if (border) css.border = `1px solid ${border}`
+  if (border) {
+    css.borderWidth = 1
+    css.borderStyle = 'solid'
+    css.borderColor = border
+  }
 
   if ((border || background) && padding === undefined) {
     css.padding = 10
