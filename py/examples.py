@@ -333,7 +333,7 @@ def layout_gap(view: View):
 
 
 # ## Margin
-# Set `margin=` to control the margin around each item.
+# Set `margin=` to add a margin around each item.
 #
 # Top, right, bottom, left margins can be controlled independently, and are specified
 # as `'top right bottom left'` strings.
@@ -346,25 +346,19 @@ def layout_margin(view: View):
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
     do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     '''
-    view(col(
-        # Uniform 30px margin
-        box(text, mode='md', margin='30px', background='#1d3557'),
-
-        # Same as '30px'
-        box(text, mode='md', margin=30, background='#1d3557'),
-
-        # 20px top and bottom, 40 px left and right.
-        box(text, mode='md', margin='20px 40px', background='#1d3557'),
-
-        # 20px top, 40 px right and left, 30px bottom.
-        box(text, mode='md', margin='20px 40px 30px', background='#1d3557'),
-
-        # 20px top, 40 px right and left, 30px bottom, 50px left.
-        box(text, mode='md', margin='20px 40px 30px 50px', background='#1d3557'),
-
-        background='#e63946',
-        padding=0,
-    ))
+    boxes = [
+        # Uniform 20px margin
+        box(text, mode='md', margin='20px', background='#eee'),
+        # Same as '20px'
+        box(text, mode='md', margin=20, background='#eee'),
+        # 0px top and bottom, 100px right and left margin
+        box(text, mode='md', margin='0px 100px', background='#eee'),
+        # 0px top, 100px right and left, 30px bottom margin
+        box(text, mode='md', margin='0px 100px 30px', background='#eee'),
+        # 0px top, 100px right, 30px bottom, 200px left margin
+        box(text, mode='md', margin='0px 100px 30px 200px', background='#eee'),
+    ]
+    view(col(*[row(b, border='#000', padding=0) for b in boxes]))
 
 
 # ## Padding
@@ -381,25 +375,20 @@ def layout_padding(view: View):
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
     do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     '''
-    view(col(
-        # Uniform 30px padding
-        box(text, mode='md', padding='30px', background='#1d3557'),
-
-        # Same as '30px'
-        box(text, mode='md', padding=30, background='#1d3557'),
-
-        # 20px top and bottom, 40 px left and right.
-        box(text, mode='md', padding='20px 40px', background='#1d3557'),
-
-        # 20px top, 40 px right and left, 30px bottom.
-        box(text, mode='md', padding='20px 40px 30px', background='#1d3557'),
-
-        # 20px top, 40 px right and left, 30px bottom, 50px left.
-        box(text, mode='md', padding='20px 40px 30px 50px', background='#1d3557'),
-
-        background='#e63946',
-        padding=0,
-    ))
+    view(
+        col(
+            # Uniform 20px padding
+            box(text, mode='md', padding='20px', background='#eee'),
+            # Same as '20px'
+            box(text, mode='md', padding=20, background='#eee'),
+            # 0px top and bottom, 100px right and left padding
+            box(text, mode='md', padding='0px 100px', background='#eee'),
+            # 0px top, 100px right and left, 30px bottom padding
+            box(text, mode='md', padding='0px 100px 30px', background='#eee'),
+            # 0px top, 100px right, 30px bottom, 200px left padding
+            box(text, mode='md', padding='0px 100px 30px 200px', background='#eee'),
+        )
+    )
 
 
 # ## Background Color
