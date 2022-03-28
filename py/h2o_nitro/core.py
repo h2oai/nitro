@@ -187,9 +187,14 @@ class Box:
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
+            margin: Optional[Sizing] = None,
+            padding: Optional[Sizing] = None,
+            color: Optional[str] = None,
+            background: Optional[str] = None,
+            border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[str] = None,
+            basis: Optional[Sizing] = None,
     ):
         if isinstance(text, (tuple, set, list, dict, OrderedDict)):
             if options is not None:
@@ -230,6 +235,11 @@ class Box:
         self.align = align
         self.width = width
         self.height = height
+        self.margin = margin
+        self.padding = padding
+        self.color = color
+        self.background = background
+        self.border = border
         self.grow = grow
         self.shrink = shrink
         self.basis = basis
@@ -266,6 +276,11 @@ class Box:
             align=self.align,
             width=self.width,
             height=self.height,
+            margin=self.margin,
+            padding=self.padding,
+            color=self.color,
+            background=self.background,
+            border=self.border,
             grow=self.grow,
             shrink=self.shrink,
             basis=self.basis,
@@ -324,11 +339,14 @@ class Zone:
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
-            margin: Optional[str] = None,
-            padding: Optional[str] = None,
+            margin: Optional[Sizing] = None,
+            padding: Optional[Sizing] = None,
+            color: Optional[str] = None,
+            background: Optional[str] = None,
+            border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[str] = None,
+            basis: Optional[Sizing] = None,
     ):
         self.items = items
         self.row = row
@@ -341,6 +359,9 @@ class Zone:
         self.height = height
         self.margin = margin
         self.padding = padding
+        self.color = color
+        self.background = background
+        self.border = border
         self.grow = grow
         self.shrink = shrink
         self.basis = basis
@@ -359,6 +380,9 @@ class Zone:
             height=self.height,
             margin=self.margin,
             padding=self.padding,
+            color=self.color,
+            background=self.background,
+            border=self.border,
             grow=self.grow,
             shrink=self.shrink,
             basis=self.basis,
@@ -374,11 +398,14 @@ def row(
         align: Optional[str] = None,
         width: Optional[Sizing] = None,
         height: Optional[Sizing] = None,
-        margin: Optional[str] = None,
-        padding: Optional[str] = None,
+        margin: Optional[Sizing] = None,
+        padding: Optional[Sizing] = None,
+        color: Optional[str] = None,
+        background: Optional[str] = None,
+        border: Optional[str] = None,
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
-        basis: Optional[str] = None,
+        basis: Optional[Sizing] = None,
 ) -> Zone:
     return Zone(
         *items,
@@ -392,6 +419,9 @@ def row(
         height=height,
         margin=margin,
         padding=padding,
+        color=color,
+        background=background,
+        border=border,
         grow=grow,
         shrink=shrink,
         basis=basis,
@@ -407,11 +437,14 @@ def col(
         align: Optional[str] = None,
         width: Optional[Sizing] = None,
         height: Optional[Sizing] = None,
-        margin: Optional[str] = None,
-        padding: Optional[str] = None,
+        margin: Optional[Sizing] = None,
+        padding: Optional[Sizing] = None,
+        color: Optional[str] = None,
+        background: Optional[str] = None,
+        border: Optional[str] = None,
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
-        basis: Optional[str] = None,
+        basis: Optional[Sizing] = None,
 ) -> Zone:
     return Zone(
         *items,
@@ -424,6 +457,9 @@ def col(
         height=height,
         margin=margin,
         padding=padding,
+        color=color,
+        background=background,
+        border=border,
         grow=grow,
         shrink=shrink,
         basis=basis,
@@ -557,11 +593,14 @@ class View:
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
-            margin: Optional[str] = None,
-            padding: Optional[str] = None,
+            margin: Optional[Sizing] = None,
+            padding: Optional[Sizing] = None,
+            color: Optional[str] = None,
+            background: Optional[str] = None,
+            border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[str] = None,
+            basis: Optional[Sizing] = None,
             position: Optional[int] = None,
     ):
         s = Zone(
@@ -576,6 +615,9 @@ class View:
             height=height,
             margin=margin,
             padding=padding,
+            color=color,
+            background=background,
+            border=border,
             grow=grow,
             shrink=shrink,
             basis=basis,
@@ -593,11 +635,14 @@ class View:
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
-            margin: Optional[str] = None,
-            padding: Optional[str] = None,
+            margin: Optional[Sizing] = None,
+            padding: Optional[Sizing] = None,
+            color: Optional[str] = None,
+            background: Optional[str] = None,
+            border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[str] = None,
+            basis: Optional[Sizing] = None,
             position: Optional[int] = None,
     ):
         s = Zone(
@@ -612,6 +657,9 @@ class View:
             height=height,
             margin=margin,
             padding=padding,
+            color=color,
+            background=background,
+            border=border,
             grow=grow,
             shrink=shrink,
             basis=basis,
@@ -632,11 +680,14 @@ class View:
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
-            margin: Optional[str] = None,
-            padding: Optional[str] = None,
+            margin: Optional[Sizing] = None,
+            padding: Optional[Sizing] = None,
+            color: Optional[str] = None,
+            background: Optional[str] = None,
+            border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
-            basis: Optional[str] = None,
+            basis: Optional[Sizing] = None,
             position: Optional[int] = None,
     ):
         self.show(
@@ -651,6 +702,9 @@ class View:
             height=height,
             margin=margin,
             padding=padding,
+            color=color,
+            background=background,
+            border=border,
             grow=grow,
             shrink=shrink,
             basis=basis,

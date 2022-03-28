@@ -61,14 +61,17 @@ export enum WidgetT {
 }
 
 export type Stackable = {
-  align?: S
-  width?: S | [S] | Pair<S> | Triple<S>
-  height?: S | [S] | Pair<S> | Triple<S>
-  margin?: S
-  padding?: S
-  grow?: U
-  shrink?: U
-  basis?: S
+  align?: S // CSS text-align
+  width?: S | [S] | Pair<S> | Triple<S> // CSS width / [min] / [min, max] / [min, max, initial]
+  height?: S | [S] | Pair<S> | Triple<S> // CSS height / [min] / [min, max] / [min, max, initial]
+  margin?: S // CSS margin
+  padding?: S // CSS padding
+  border?: S // CSS border 1px solid ~
+  color?: S  // CSS color
+  background?: S // CSS background
+  grow?: U // CSS flex-grow
+  shrink?: U // CSS flex-shrink
+  basis?: S // CSS flex-basis
 }
 
 export type Widget = Stackable & (Stack | Input)
