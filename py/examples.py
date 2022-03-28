@@ -239,51 +239,6 @@ def layout_basic(view: View):
     )
 
 
-# ## Sizing
-# Nitro provides extensive control over how items are sized and spaced, using `width`, `height`, `margin`, `padding`,
-# and `gap`.
-#
-# These parameters can be specified as either integers or strings.
-#
-# - Integers are interpreted as pixels, e.g. `42` and `'42px'` have the same effect.
-# - Strings must be a number followed by one of the units listed below (e.g. `'42px'`, `'42in'`, `'42mm'`, etc.
-#   - Absolute units:
-#     - `px`: One pixel (1/96th of an inch).
-#     - `cm`: One centimeter.
-#     - `mm`: One millimeter.
-#     - `in`: One inch (96px).
-#     - `pc`: One pica (12pt or 1/6th of an inch).
-#     - `pt`: One point (1/72nd of an inch).
-#   - Relative units:
-#     - `%`: A percentage of the container's size.
-#     - `vh`: 1% of the viewport height.
-#     - `vw`: 1% of the viewport width.
-#     - `vmin`: The smaller of `vw` and `vh`.
-#     - `vmax`: The larger of `vw` and `vh`.
-#     - `ex`: The x-height of the font of the element.
-#     - `em`: The font size of the element.
-#     - `rem`: The font size of the page.
-
-def layout_size(view: View):
-    view(
-        box(width=200),  # 200px
-        box(width='50%'),  # 50% of available width
-        box(width='250px'),
-        box(width='3in'),
-    )
-
-
-# ## Gap
-# Set `gap=` to control the spacing between items. The default gap is `10` or `'10px'`.
-def layout_gap(view: View):
-    view(
-        box('Top'),
-        box('Middle'),
-        box('Bottom'),
-        gap=25,
-    )
-
-
 # ## Rows
 # Use `row()` to lay out multiple items horizontally, left to right.
 #
@@ -332,6 +287,121 @@ def layout_col(view: View):
     )
 
 
+# ## Sizing
+# Nitro provides extensive control over how items are sized and spaced, using `width`, `height`, `margin`, `padding`,
+# and `gap`.
+#
+# These parameters can be specified as either integers or strings.
+#
+# - Integers are interpreted as pixels, e.g. `42` and `'42px'` have the same effect.
+# - Strings must be a number followed by one of the units listed below (e.g. `'42px'`, `'42in'`, `'42mm'`, etc.
+#   - Absolute units:
+#     - `px`: One pixel (1/96th of an inch).
+#     - `cm`: One centimeter.
+#     - `mm`: One millimeter.
+#     - `in`: One inch (96px).
+#     - `pc`: One pica (12pt or 1/6th of an inch).
+#     - `pt`: One point (1/72nd of an inch).
+#   - Relative units:
+#     - `%`: A percentage of the container's size.
+#     - `vh`: 1% of the viewport height.
+#     - `vw`: 1% of the viewport width.
+#     - `vmin`: The smaller of `vw` and `vh`.
+#     - `vmax`: The larger of `vw` and `vh`.
+#     - `ex`: The x-height of the font of the element.
+#     - `em`: The font size of the element.
+#     - `rem`: The font size of the page.
+
+def layout_size(view: View):
+    view(
+        box(width=200),  # 200px
+        box(width='50%'),  # 50% of available width
+        box(width='250px'),
+        box(width='3in'),
+    )
+
+
+# ## Gap
+# Set `gap=` to control the spacing between items. The default gap is `10` or `'10px'`.
+def layout_gap(view: View):
+    view(
+        box('Top'),
+        box('Middle'),
+        box('Bottom'),
+        gap=25,
+    )
+
+
+# ## Margin
+# Set `margin=` to control the margin around each item.
+#
+# Top, right, bottom, left margins can be controlled independently, and are specified
+# as `'top right bottom left'` strings.
+#
+# - `'x'` is shorthand for `'x x x x'`.
+# - `'x y'` is shorthand for `'x y x y'`.
+# - `'x y z'` is shorthand for `'x y z y'`.
+def layout_margin(view: View):
+    text = '''
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    '''
+    view(col(
+        # Uniform 30px margin
+        box(text, mode='md', margin='30px', background='#1d3557'),
+
+        # Same as '30px'
+        box(text, mode='md', margin=30, background='#1d3557'),
+
+        # 20px top and bottom, 40 px left and right.
+        box(text, mode='md', margin='20px 40px', background='#1d3557'),
+
+        # 20px top, 40 px right and left, 30px bottom.
+        box(text, mode='md', margin='20px 40px 30px', background='#1d3557'),
+
+        # 20px top, 40 px right and left, 30px bottom, 50px left.
+        box(text, mode='md', margin='20px 40px 30px 50px', background='#1d3557'),
+
+        background='#e63946',
+        padding=0,
+    ))
+
+
+# ## Padding
+# Set `padding=` to control the padding (inset) inside each item.
+#
+# Top, right, bottom, left paddings can be controlled independently, and are specified
+# as `'top right bottom left'` strings.
+#
+# - `'x'` is shorthand for `'x x x x'`.
+# - `'x y'` is shorthand for `'x y x y'`.
+# - `'x y z'` is shorthand for `'x y z y'`.
+def layout_padding(view: View):
+    text = '''
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    '''
+    view(col(
+        # Uniform 30px padding
+        box(text, mode='md', padding='30px', background='#1d3557'),
+
+        # Same as '30px'
+        box(text, mode='md', padding=30, background='#1d3557'),
+
+        # 20px top and bottom, 40 px left and right.
+        box(text, mode='md', padding='20px 40px', background='#1d3557'),
+
+        # 20px top, 40 px right and left, 30px bottom.
+        box(text, mode='md', padding='20px 40px 30px', background='#1d3557'),
+
+        # 20px top, 40 px right and left, 30px bottom, 50px left.
+        box(text, mode='md', padding='20px 40px 30px 50px', background='#1d3557'),
+
+        background='#e63946',
+        padding=0,
+    ))
+
+
 # ## Background Color
 # Set `background=` to apply a background color.
 #
@@ -339,8 +409,8 @@ def layout_col(view: View):
 # A `10px` padding is automatically applied if not specified.
 def layout_background(view: View):
     text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     '''
     view(
         box(text, mode='md', background='#e63946'),
@@ -352,28 +422,32 @@ def layout_background(view: View):
 
 
 # ## Text Color
+# Set `color=` to change the text color.
 def layout_color(view: View):
     text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     '''
     view(
-        box(text, mode='md', color='#'),
-        box(text, mode='md', color='#'),
-        box(text, mode='md', color='#'),
+        box(text, mode='md', color='#e63946'),
+        box(text, mode='md', color='#457b9d'),
+        box(text, mode='md', color='#1d3557'),
     )
 
 
 # ## Border Color
+# Set `border=` to add a border.
+#
+# A `10px` padding is automatically applied if not specified.
 def layout_border(view: View):
     text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     '''
     view(
-        box(text, mode='md', border='#ae2012'),
-        box(text, mode='md', border='#'),
-        box(text, mode='md', border='#'),
+        box(text, mode='md', border='#e63946'),
+        box(text, mode='md', border='#457b9d'),
+        box(text, mode='md', border='#1d3557'),
     )
 
 
