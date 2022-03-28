@@ -229,59 +229,161 @@ def markdown_syntax_highlighting(view: View):
 
 # # Layout
 
+# ## Basics
+# By default each item passed to `view()` are laid out one below the other, with a 10px gap.
+def layout_basic(view: View):
+    view(
+        box('Top'),
+        box('Middle'),
+        box('Bottom'),
+    )
+
+
+# ## Sizing
+# Nitro provides extensive control over how items are sized and spaced, using `width`, `height`, `margin`, `padding`,
+# and `gap`.
+#
+# These parameters can be specified as either integers or strings.
+#
+# - Integers are interpreted as pixels, e.g. `42` and `'42px'` have the same effect.
+# - Strings must be a number followed by one of the units listed below (e.g. `'42px'`, `'42in'`, `'42mm'`, etc.
+#   - Absolute units:
+#     - `px`: One pixel (1/96th of an inch).
+#     - `cm`: One centimeter.
+#     - `mm`: One millimeter.
+#     - `in`: One inch (96px).
+#     - `pc`: One pica (12pt or 1/6th of an inch).
+#     - `pt`: One point (1/72nd of an inch).
+#   - Relative units:
+#     - `%`: A percentage of the container's size.
+#     - `vh`: 1% of the viewport height.
+#     - `vw`: 1% of the viewport width.
+#     - `vmin`: The smaller of `vw` and `vh`.
+#     - `vmax`: The larger of `vw` and `vh`.
+#     - `ex`: The x-height of the font of the element.
+#     - `em`: The font size of the element.
+#     - `rem`: The font size of the page.
+
+def layout_size(view: View):
+    view(
+        box(width=200),  # 200px
+        box(width='50%'),  # 50% of available width
+        box(width='250px'),
+        box(width='3in'),
+    )
+
+
+# ## Gap
+# Set `gap=` to control the spacing between items. The default gap is `10` or `'10px'`.
+def layout_gap(view: View):
+    view(
+        box('Top'),
+        box('Middle'),
+        box('Bottom'),
+        gap=25,
+    )
+
+
 # ## Rows
-# Use `row()` to lay out multiple items along a row, left to right.
-def display_row(view: View):
+# Use `row()` to lay out multiple items horizontally, left to right.
+#
+# By default, items take up equal amounts of space, with a `10px` gap between the items.
+def layout_row(view: View):
     view(row(
-        'Begin at the beginning,',
-        'and go on till you come to the end,',
-        'then stop.',
+        box('Left'),
+        box('Center'),
+        box('Right'),
     ))
 
 
 # Setting `row=True` produces the same result as wrapping items with `row()`.
-def display_row_alt(view: View):
+def layout_row_alt(view: View):
     view(
-        'Begin at the beginning,',
-        'and go on till you come to the end,',
-        'then stop.',
+        box('Left'),
+        box('Center'),
+        box('Right'),
         row=True,
     )
 
 
 # ## Columns
-# Use `col()` to lay out multiple items along a column, top to bottom.
+# Use `col()` to lay out multiple items vertically, top to bottom.
 #
 # The example shows one row split into three columns containing three rows each.
-def display_col(view: View):
+def layout_col(view: View):
     view(
         row(
             col(
-                '(1, 1)',
-                '(1, 2)',
-                '(1, 3)',
+                box('North-west'),
+                box('West'),
+                box('South-west'),
             ),
             col(
-                '(2, 1)',
-                '(2, 2)',
-                '(2, 3)',
+                box('North'),
+                box('Center'),
+                box('South'),
             ),
             col(
-                '(3, 1)',
-                '(3, 2)',
-                '(3, 3)',
+                box('North-east'),
+                box('East'),
+                box('South-east'),
             ),
         ),
+    )
+
+
+# ## Background Color
+# Set `background=` to apply a background color.
+#
+# The text color is automatically changed to a contrasting color if not specified.
+# A `10px` padding is automatically applied if not specified.
+def layout_background(view: View):
+    text = '''
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    '''
+    view(
+        box(text, mode='md', background='#e63946'),
+        box(text, mode='md', background='#f1faee'),
+        box(text, mode='md', background='#a8dadc'),
+        box(text, mode='md', background='#457b9d'),
+        box(text, mode='md', background='#1d3557'),
+    )
+
+
+# ## Text Color
+def layout_color(view: View):
+    text = '''
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    '''
+    view(
+        box(text, mode='md', color='#'),
+        box(text, mode='md', color='#'),
+        box(text, mode='md', color='#'),
+    )
+
+
+# ## Border Color
+def layout_border(view: View):
+    text = '''
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    '''
+    view(
+        box(text, mode='md', border='#ae2012'),
+        box(text, mode='md', border='#'),
+        box(text, mode='md', border='#'),
     )
 
 
 # ## Text Alignment
 # Set `align=` to `left`, `right`, `center` or `justify` to align text.
 
-def text_align(view: View):
+def layout_align(view: View):
     text = '''
-    "Begin at the beginning," the King said, very gravely,
-    "and go on till you come to the end: then stop."
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     '''
     view(
         row(
