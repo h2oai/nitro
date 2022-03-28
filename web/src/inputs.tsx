@@ -779,7 +779,7 @@ const XMarkdown = make(({ context, input }: InputProps) => {
   return { init: update, update, render }
 })
 
-const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, grow, shrink, basis }: Stackable) => {
+const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, grow, shrink, basis }: Stackable, isRow: B) => {
 
   if (align) css.textAlign = align as any
 
@@ -841,15 +841,19 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
       css.height = height
     }
   }
+
   if (margin) css.margin = margin
   if (padding) css.padding = padding
+
+  if (basis) css.flexBasis = basis
   if (grow) css.flexGrow = grow
   if (shrink) css.flexShrink = shrink
 
-  // Default flex-basis to 0 to get more predictable grow/shrink behavior
-  // css.flexBasis = basis ?? '0'
-
-  if (basis) css.flexBasis = basis
+  if (isRow && width === undefined && grow === undefined && shrink === undefined && basis === undefined) {
+    css.flexGrow = '1'
+    // Default flex-basis to 0 to get more predictable grow/shrink behavior
+    css.flexBasis = '0'
+  }
 
   return css
 }
@@ -858,8 +862,8 @@ const ZoneItemContainer = styled.div`
   box-sizing: border-box;
 `
 
-const XZoneItem = ({ stackable, children }: { stackable: Stackable, children: JSX.Element }) => (
-  <ZoneItemContainer style={applyBoxStyles({}, stackable)}>
+const XZoneItem = ({ stackable, isRow, children }: { stackable: Stackable, isRow: B, children: JSX.Element }) => (
+  <ZoneItemContainer style={applyBoxStyles({}, stackable, isRow)}>
     {children}
   </ZoneItemContainer>
 )
@@ -881,26 +885,27 @@ const ZoneContainer = styled.div`
 
 const XZone = ({ context, widgets, stack }: { context: Context, widgets: Widget[], stack: Stacking & Stackable }) => {
   const
+    { row, tile, cross_tile, wrap, gap } = stack,
+    isRow = row ? true : false,
     children = widgets.map(widget => {
       const child = (widget.t === WidgetT.Stack)
         ? <XZone context={context} widgets={widget.items} stack={widget} />
         : (widget.t === WidgetT.Input)
           ? <XInput key={widget.xid} context={context} input={widget} />
           : <div>Unknown widget</div>
-      return <XZoneItem key={xid()} stackable={widget}>{child}</XZoneItem>
+      return <XZoneItem key={xid()} stackable={widget} isRow={isRow}>{child}</XZoneItem>
     }),
-    { row, tile, cross_tile, wrap, gap } = stack,
     css: React.CSSProperties = {
-      flexDirection: row ? 'row' : 'column',
+      flexDirection: isRow ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
-      gap: gap ?? 5,
+      gap: gap ?? 10,
       justifyContent: tile ? toFlexStyle(tile) : undefined,
       alignItems: cross_tile ? toFlexStyle(cross_tile) : undefined,
       alignContent: wrap ? toFlexStyle(wrap) : undefined,
     }
 
   return (
-    <ZoneContainer style={applyBoxStyles(css, stack)}>
+    <ZoneContainer style={applyBoxStyles(css, stack, isRow)}>
       {children}
     </ZoneContainer>
   )
