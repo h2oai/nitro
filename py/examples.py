@@ -440,9 +440,8 @@ def layout_border(view: View):
     )
 
 
-# ## Text Alignment
+# ## Align Text
 # Set `align=` to `left`, `right`, `center` or `justify` to align text.
-
 def layout_align(view: View):
     text = '''
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
@@ -458,6 +457,109 @@ def layout_align(view: View):
         )
     )
 
+
+# ## Tile
+# Set `tile=` to control how items inside a view, row, or column are tiled along the main axis.
+#
+# - The main axis for a row is horizontal, starting at the left, and ending at the right.
+# - The main axis for a column is vertical, starting at the top, and ending at the bottom
+#
+# `tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+def layout_tile(view: View):
+    boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=100) for i in range(3)]
+    row_style = dict(background='#eee')
+    view(
+        # Pack items from the start.
+        row(*boxes, tile='start', **row_style),
+
+        # Pack items around the center.
+        row(*boxes, tile='center', **row_style),
+
+        # Pack items towards the end.
+        row(*boxes, tile='end', **row_style),
+
+        # Distribute items evenly.
+        # The first item is flush with the start,
+        # the last is flush with the end.
+        row(*boxes, tile='between', **row_style),
+
+        # Distribute items evenly.
+        # Items have a half-size space on either side.
+        row(*boxes, tile='around', **row_style),
+
+        # Distribute items evenly.
+        # Items have equal space around them.
+        row(*boxes, tile='evenly', **row_style),
+
+        # Default alignment.
+        row(*boxes, tile='normal', **row_style),
+    )
+
+
+# ## Cross-tile
+# Set `cross_tile=` to control how items inside a view, row, or column are tiled along the cross axis.
+#
+# - The cross axis for a row is vertical. starting at the top, and ending at the bottom
+# - The cross axis for a column is horizontal, starting at the left, and ending at the right.
+#
+# `cross_tile=` can be set to `start`, `center`, `end`, `stretch`, or `normal`.
+def layout_cross_tile(view: View):
+    boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=100) for i in range(3)]
+    col_style = dict(height=100, background='#eee')
+    view(
+        # Pack items from the start.
+        col(row(*boxes, cross_tile='start'), **col_style),
+
+        # Pack items around the center.
+        col(row(*boxes, cross_tile='center'), **col_style),
+
+        # Pack items towards the end.
+        col(row(*boxes, cross_tile='end'), **col_style),
+
+        # Stretch items to fit.
+        col(row(*boxes, cross_tile='stretch'), **col_style),
+
+        # Default alignment.
+        col(row(*boxes, cross_tile='normal'), **col_style),
+    )
+
+
+# ## Wrap
+# Set `wrap=` to control how items are wrapped inside a view, row, or column.
+#
+# `wrap=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+def layout_wrap(view: View):
+    boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=150, height=50) for i in range(9)]
+    row_style = dict(height=300, background='#eee')
+    view(
+        # Pack items from the start.
+        row(*boxes, wrap='start', **row_style),
+
+        # Pack items around the center.
+        row(*boxes, wrap='center', **row_style),
+
+        # Pack items towards the end.
+        row(*boxes, wrap='end', **row_style),
+
+        # Distribute items evenly.
+        # The first item is flush with the start,
+        # the last is flush with the end.
+        row(*boxes, wrap='between', **row_style),
+
+        # Distribute items evenly.
+        # Items have a half-size space on either side.
+        row(*boxes, wrap='around', **row_style),
+
+        # Distribute items evenly.
+        # Items have equal space around them.
+        row(*boxes, wrap='evenly', **row_style),
+
+        # Default alignment.
+        row(*boxes, wrap='normal', **row_style),
+    )
+
+
+# # Forms
 
 # ## Form, vertical
 # Text/markdown and inputs created with `box()` are laid out the same way.
