@@ -82,7 +82,6 @@ p, ul, ol {
   font-size: 1.2rem;
   line-height: 1.75rem;
   margin: 0.5rem 0;
-  color: #242424;
 }
 strong {
   font-weight: 600;
