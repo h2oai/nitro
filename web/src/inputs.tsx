@@ -786,7 +786,7 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
 
   if (align) css.textAlign = align as any
 
-  if (width) {
+  if (width !== undefined) {
     if (Array.isArray(width)) {
       switch (width.length) {
         case 1:
@@ -815,7 +815,7 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
       css.width = width
     }
   }
-  if (height) {
+  if (height !== undefined) {
     if (Array.isArray(height)) {
       switch (height.length) {
         case 1:
@@ -845,8 +845,8 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
     }
   }
 
-  if (margin) css.margin = margin
-  if (padding) css.padding = padding
+  if (margin !== undefined) css.margin = margin
+  if (padding !== undefined) css.padding = padding
 
   if (background) css.background = background
   if (color) {
@@ -862,13 +862,13 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
 
   if (border) css.border = `1px solid ${border}`
 
-  if ((border || background) && !padding) {
+  if ((border || background) && padding === undefined) {
     css.padding = 10
   }
 
-  if (basis) css.flexBasis = basis
-  if (grow) css.flexGrow = grow
-  if (shrink) css.flexShrink = shrink
+  if (basis !== undefined) css.flexBasis = basis
+  if (grow !== undefined) css.flexGrow = grow
+  if (shrink !== undefined) css.flexShrink = shrink
 
   if (isRow && width === undefined && grow === undefined && shrink === undefined && basis === undefined) {
     css.flexGrow = '1'
