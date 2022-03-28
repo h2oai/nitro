@@ -779,7 +779,10 @@ const XMarkdown = make(({ context, input }: InputProps) => {
   return { init: update, update, render }
 })
 
-const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, grow, shrink, basis }: Stackable, isRow: B) => {
+// http://www.w3.org/TR/AERT#color-contrast
+const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
+
+const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, color, background, border, grow, shrink, basis }: Stackable, isRow: B) => {
 
   if (align) css.textAlign = align as any
 
@@ -844,6 +847,24 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
 
   if (margin) css.margin = margin
   if (padding) css.padding = padding
+
+  if (background) css.background = background
+  if (color) {
+    css.color = color
+  } else {
+    if (background) {
+      const bg = cssColor(background)
+      if (bg) {
+        css.color = isBright(bg) ? '#000' : '#fff' // XXX use theme colors
+      }
+    }
+  }
+
+  if (border) css.border = `1px solid ${border}`
+
+  if ((border || background) && !padding) {
+    css.padding = 10
+  }
 
   if (basis) css.flexBasis = basis
   if (grow) css.flexGrow = grow
