@@ -913,12 +913,20 @@ const XZone = ({ context, widgets, stack }: { context: Context, widgets: Widget[
     { row, tile, cross_tile, wrap, gap } = stack,
     isRow = row ? true : false,
     children = widgets.map(widget => {
-      const child = (widget.t === WidgetT.Stack)
-        ? <XZone context={context} widgets={widget.items} stack={widget} />
-        : (widget.t === WidgetT.Input)
-          ? <XInput key={widget.xid} context={context} input={widget} />
-          : <div>Unknown widget</div>
-      return <XZoneItem key={xid()} stackable={widget} isRow={isRow}>{child}</XZoneItem>
+      switch (widget.t) {
+        case WidgetT.Stack:
+          return (
+            <XZone key={xid()} context={context} widgets={widget.items} stack={widget} />
+          )
+        case WidgetT.Input:
+          return (
+            <XZoneItem key={xid()} stackable={widget} isRow={isRow}>
+              <XInput key={widget.xid} context={context} input={widget} />
+            </XZoneItem>
+          )
+        default:
+          return <div>Unknown widget</div>
+      }
     }),
     css: React.CSSProperties = {
       flexDirection: isRow ? 'row' : 'column',
