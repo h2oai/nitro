@@ -11,7 +11,7 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install --editable .
 
 purge: ## Purge previous build
-	rm -rf build dist h2o_wave.egg-info
+	rm -rf build dist h2o_nitro.egg-info
 
 clean: purge ## Clean everything
 	rm -rf venv
