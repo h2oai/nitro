@@ -874,7 +874,7 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
   if (grow !== undefined) css.flexGrow = grow
   if (shrink !== undefined) css.flexShrink = shrink
 
-  if (isRow && width === undefined && grow === undefined && shrink === undefined && basis === undefined) {
+  if (isRow && width === undefined && height === undefined && grow === undefined && shrink === undefined && basis === undefined) {
     css.flexGrow = '1'
     // Default flex-basis to 0 to get more predictable grow/shrink behavior
     css.flexBasis = '0'
