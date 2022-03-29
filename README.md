@@ -1,4 +1,4 @@
-# H2O Nitro
+# Nitro
 
 Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
 
@@ -45,7 +45,7 @@ def main(view: View):
     - **Conciseness.** Lowest number of lines of code for expressing solutions to a given problem. Less code = less
       bugs.
     - **Clarity.** Write apps without jumping through callbacks, request handlers, or event handlers.
-- **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
+- **Minimal API.** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
   layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
 - **Library.** Nitro is a library, not a server. Integrates with [Django](https://www.djangoproject.com/)
@@ -300,10 +300,12 @@ Clicking on a local link returns the name of the link.
 
 ```py
 choice = view('''
-Pick a fruit (or:
-- [Apples](#apples)
-- [Bananas](#bananas)
-- [Cherries](#cherries)
+Pick a flavor:
+- [Vanilla](#vanilla)
+- [Strawberry](#strawberry)
+- [Chocolate](#chocolate)
+
+Or, [surprise me](#surprise-me)!
 ''')
 view(f'You clicked on {choice}.')
 ```
@@ -335,16 +337,31 @@ def markdown_syntax_highlighting(view: View):
     ''')
 ```
 
+### Layout - Basics
+
+By default each item passed to `view()` are laid out one below the other, with a 10px gap.
+
+
+```py
+view(
+    box('Top'),
+    box('Middle'),
+    box('Bottom'),
+)
+```
+
 ### Layout - Rows
 
-Use `row()` to lay out multiple items along a row, left to right.
+Use `row()` to lay out multiple items horizontally, left to right.
+
+By default, items take up equal amounts of space, with a `10px` gap between the items.
 
 
 ```py
 view(row(
-    'Begin at the beginning,',
-    'and go on till you come to the end,',
-    'then stop.',
+    box('Left'),
+    box('Center'),
+    box('Right'),
 ))
 ```
 
@@ -354,16 +371,16 @@ Setting `row=True` produces the same result as wrapping items with `row()`.
 
 ```py
 view(
-    'Begin at the beginning,',
-    'and go on till you come to the end,',
-    'then stop.',
+    box('Left'),
+    box('Center'),
+    box('Right'),
     row=True,
 )
 ```
 
 ### Layout - Columns
 
-Use `col()` to lay out multiple items along a column, top to bottom.
+Use `col()` to lay out multiple items vertically, top to bottom.
 
 The example shows one row split into three columns containing three rows each.
 
@@ -372,61 +389,434 @@ The example shows one row split into three columns containing three rows each.
 view(
     row(
         col(
-            '(1, 1)',
-            '(1, 2)',
-            '(1, 3)',
+            box('North-west'),
+            box('West'),
+            box('South-west'),
         ),
         col(
-            '(2, 1)',
-            '(2, 2)',
-            '(2, 3)',
+            box('North'),
+            box('Center'),
+            box('South'),
         ),
         col(
-            '(3, 1)',
-            '(3, 2)',
-            '(3, 3)',
+            box('North-east'),
+            box('East'),
+            box('South-east'),
         ),
     ),
 )
 ```
 
-### Layout - Form, vertical
+### Layout - Sizing
 
-Text/markdown and inputs created with `box()` are laid out the same way.
+Nitro provides extensive control over how items are sized and spaced, using `width`, `height`, `margin`, `padding`,
+and `gap`.
 
-By default, items are laid out top to bottom.
+These parameters can be specified as either integers or strings.
+
+- Integers are interpreted as pixels, e.g. `42` and `'42px'` have the same effect.
+- Strings must be a number followed by one of the units listed below (e.g. `'42px'`, `'42in'`, `'42mm'`, etc.
+- Absolute units:
+- `px`: One pixel (1/96th of an inch).
+- `cm`: One centimeter.
+- `mm`: One millimeter.
+- `in`: One inch (96px).
+- `pc`: One pica (12pt or 1/6th of an inch).
+- `pt`: One point (1/72nd of an inch).
+- Relative units:
+- `%`: A percentage of the container's size.
+- `vh`: 1% of the viewport height.
+- `vw`: 1% of the viewport width.
+- `vmin`: The smaller of `vw` and `vh`.
+- `vmax`: The larger of `vw` and `vh`.
+- `ex`: The x-height of the font of the element.
+- `em`: The font size of the element.
+- `rem`: The font size of the page.
 
 
 ```py
 view(
-    box('Username', placeholder='someone@company.com'),
-    box('Password', password=True),
-    box(['Login']),
+    box(width=200),  # 200px
+    box(width='50%'),  # 50% of available width
+    box(width='250px'),
+    box(width='3in'),
 )
 ```
 
-### Layout - Form, horizontal
+### Layout - Gap
 
-Wrap items with `row()` to lay them out left to right.
+Set `gap=` to control the spacing between items. The default gap is `10` or `'10px'`.
 
 
 ```py
 view(
-    row(
-        box('Username', placeholder='someone@company.com'),
-        box('Password', password=True),
-        box(['Login']),
+    box('Top'),
+    box('Middle'),
+    box('Bottom'),
+    gap=25,
+)
+```
+
+### Layout - Margin
+
+Set `margin=` to add a margin around each item.
+
+Top, right, bottom, left margins can be controlled independently, and are specified
+as `'top right bottom left'` strings.
+
+- `'x'` is shorthand for `'x x x x'`.
+- `'x y'` is shorthand for `'x y x y'`.
+- `'x y z'` is shorthand for `'x y z y'`.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+boxes = [
+    # Uniform 20px margin
+    box(text, mode='md', margin='20px', background='#eee'),
+    # Same as '20px'
+    box(text, mode='md', margin=20, background='#eee'),
+    # 0px top and bottom, 100px right and left margin
+    box(text, mode='md', margin='0px 100px', background='#eee'),
+    # 0px top, 100px right and left, 30px bottom margin
+    box(text, mode='md', margin='0px 100px 30px', background='#eee'),
+    # 0px top, 100px right, 30px bottom, 200px left margin
+    box(text, mode='md', margin='0px 100px 30px 200px', background='#eee'),
+]
+view(col(*[row(b, border='#000', padding=0) for b in boxes]))
+```
+
+### Layout - Padding
+
+Set `padding=` to control the padding (inset) inside each item.
+
+Top, right, bottom, left paddings can be controlled independently, and are specified
+as `'top right bottom left'` strings.
+
+- `'x'` is shorthand for `'x x x x'`.
+- `'x y'` is shorthand for `'x y x y'`.
+- `'x y z'` is shorthand for `'x y z y'`.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+view(
+    col(
+        # Uniform 20px padding
+        box(text, mode='md', padding='20px', background='#eee'),
+        # Same as '20px'
+        box(text, mode='md', padding=20, background='#eee'),
+        # 0px top and bottom, 100px right and left padding
+        box(text, mode='md', padding='0px 100px', background='#eee'),
+        # 0px top, 100px right and left, 30px bottom padding
+        box(text, mode='md', padding='0px 100px 30px', background='#eee'),
+        # 0px top, 100px right, 30px bottom, 200px left padding
+        box(text, mode='md', padding='0px 100px 30px 200px', background='#eee'),
     )
 )
 ```
 
-### Layout - Form, combined
+### Layout - Background Color
 
-Use `row()` and `col()` to mix and match how items are laid out.
+Set `background=` to apply a background color.
+
+The text color is automatically changed to a contrasting color if not specified.
+A `10px` padding is automatically applied if not specified.
 
 
 ```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
 view(
+    box(text, mode='md', background='#e63946'),
+    box(text, mode='md', background='#f1faee'),
+    box(text, mode='md', background='#a8dadc'),
+    box(text, mode='md', background='#457b9d'),
+    box(text, mode='md', background='#1d3557'),
+)
+```
+
+### Layout - Text Color
+
+Set `color=` to change the text color.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+view(
+    box(text, mode='md', color='#e63946'),
+    box(text, mode='md', color='#457b9d'),
+    box(text, mode='md', color='#1d3557'),
+)
+```
+
+### Layout - Border Color
+
+Set `border=` to add a border.
+
+A `10px` padding is automatically applied if not specified.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+view(
+    box(text, mode='md', border='#e63946'),
+    box(text, mode='md', border='#457b9d'),
+    box(text, mode='md', border='#1d3557'),
+)
+```
+
+### Layout - Align Text
+
+Set `align=` to `left`, `right`, `center` or `justify` to align text.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+view(
+    row(
+        box(text, mode='md', align='left'),
+        box(text, mode='md', align='center'),
+        box(text, mode='md', align='justify'),
+        box(text, mode='md', align='right'),
+        gap=20,
+    )
+)
+```
+
+### Layout - Tile
+
+Set `tile=` to control how items inside a view, row, or column are tiled along the main axis.
+
+- The main axis for a row is horizontal, starting at the left, and ending at the right.
+- The main axis for a column is vertical, starting at the top, and ending at the bottom
+
+`tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+
+
+```py
+boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=100) for i in range(3)]
+row_style = dict(background='#eee')
+view(
+    # Pack items from the start.
+    row(*boxes, tile='start', **row_style),
+
+    # Pack items around the center.
+    row(*boxes, tile='center', **row_style),
+
+    # Pack items towards the end.
+    row(*boxes, tile='end', **row_style),
+
+    # Distribute items evenly.
+    # The first item is flush with the start,
+    # the last is flush with the end.
+    row(*boxes, tile='between', **row_style),
+
+    # Distribute items evenly.
+    # Items have a half-size space on either side.
+    row(*boxes, tile='around', **row_style),
+
+    # Distribute items evenly.
+    # Items have equal space around them.
+    row(*boxes, tile='evenly', **row_style),
+
+    # Default alignment.
+    row(*boxes, tile='normal', **row_style),
+)
+```
+
+### Layout - Cross-tile
+
+Set `cross_tile=` to control how items inside a view, row, or column are tiled along the cross axis.
+
+- The cross axis for a row is vertical. starting at the top, and ending at the bottom
+- The cross axis for a column is horizontal, starting at the left, and ending at the right.
+
+`cross_tile=` can be set to `start`, `center`, `end`, `stretch`, or `normal`.
+
+
+```py
+boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=100) for i in range(3)]
+col_style = dict(height=100, background='#eee')
+view(
+    # Pack items from the start.
+    col(row(*boxes, cross_tile='start'), **col_style),
+
+    # Pack items around the center.
+    col(row(*boxes, cross_tile='center'), **col_style),
+
+    # Pack items towards the end.
+    col(row(*boxes, cross_tile='end'), **col_style),
+
+    # Stretch items to fit.
+    col(row(*boxes, cross_tile='stretch'), **col_style),
+
+    # Default alignment.
+    col(row(*boxes, cross_tile='normal'), **col_style),
+)
+```
+
+### Layout - Wrap
+
+Set `wrap=` to control how items are wrapped inside a view, row, or column.
+
+`wrap=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+
+
+```py
+boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=150, height=50) for i in range(9)]
+row_style = dict(height=300, background='#eee')
+view(
+    # Pack items from the start.
+    row(*boxes, wrap='start', **row_style),
+
+    # Pack items around the center.
+    row(*boxes, wrap='center', **row_style),
+
+    # Pack items towards the end.
+    row(*boxes, wrap='end', **row_style),
+
+    # Distribute items evenly.
+    # The first item is flush with the start,
+    # the last is flush with the end.
+    row(*boxes, wrap='between', **row_style),
+
+    # Distribute items evenly.
+    # Items have a half-size space on either side.
+    row(*boxes, wrap='around', **row_style),
+
+    # Distribute items evenly.
+    # Items have equal space around them.
+    row(*boxes, wrap='evenly', **row_style),
+
+    # Default alignment.
+    row(*boxes, wrap='normal', **row_style),
+)
+```
+
+### Layout - Grow and Shrink
+
+Set `grow=` or `shrink=` to specify what amount of the available space the item should take up
+inside a view, row, or column.
+
+Setting `grow=` expands the item. Setting `shrink=` contracts the item. Both are proportions.
+
+By default, items are grown or shrunk based on their initial size. To resize them on a different basis,
+set `basis=` to the value you want.
+
+- `basis=0` means "distribute available space assuming that the initial size is zero".
+- `basis='20px'` means "distribute available space assuming that the initial size is 20px".
+- The default behavior (if `basis=` is not set) is to assume that the initial size is the size of the item's content.
+
+
+```py
+box_style = dict(mode='md', background='#666')
+row_style = dict(background='#eee')
+view(
+    '1:?:?',
+    row(
+        # Take up all available space.
+        box('a', grow=1, **box_style),
+        box('b', width=50, **box_style),
+        box('c', width=50, **box_style),
+        **row_style,
+    ),
+    '1:1:?',
+    row(
+        # Take up one part of available space = 1 / (1 + 1).
+        box('a', grow=1, **box_style),
+        # Take up one part of available space = 1 / (1 + 1).
+        box('b', grow=1, **box_style),
+        box('c', width=50, **box_style),
+        **row_style,
+    ),
+    '2:1:?',
+    row(
+        # Take up two parts of available space = 2 / (2 + 1).
+        box('a', grow=2, **box_style),
+        # Take up one part of available space = 1 / (2 + 1).
+        box('b', grow=1, **box_style),
+        box('c', width=50, **box_style),
+        **row_style,
+    ),
+    '1:2:3:?',
+    row(
+        # Take up one part of available space = 1 / (1 + 2 + 3).
+        box('a', grow=1, **box_style),
+        # Take up two parts of available space = 2 / (1 + 2 + 3).
+        box('b', grow=2, **box_style),
+        # Take up three parts of available space = 3 / (1 + 2 + 3).
+        box('c', grow=3, **box_style),
+        box('d', width=50, **box_style),
+        **row_style,
+    ),
+    '1:1:1:1',
+    row(
+        # Divide available space equally.
+        box('a', grow=1, **box_style),
+        box('b', grow=1, **box_style),
+        box('c', grow=1, **box_style),
+        box('d', grow=1, **box_style),
+        **row_style,
+    ),
+)
+```
+
+### Forms - Basic
+
+To create a form, simply lay out all the inputs you need inside a view, then destructure the return value in order.
+
+
+```py
+username, password, action = view(
+    box('Username', value='someone@company.com'),
+    box('Password', value='pa55w0rd', password=True),
+    box(['Login']),
+)
+view(f'You entered `{username}`/`{password}` and then clicked on {action}.')
+```
+
+### Forms - Horizontal
+
+Wrap items with `row()` to lay them out left to right.
+There is no change to the way the return values are destructured.
+
+
+```py
+username, password, action = view(
+    row(
+        box('Username', value='someone@company.com'),
+        box('Password', value='pa55w0rd', password=True),
+        box(['Login']),
+    )
+)
+view(f'You entered `{username}`/`{password}` and then clicked on {action}.')
+```
+
+### Forms - Combined
+
+Use `row()` and `col()` to mix and match how items are laid out. Destructure the return values in the same order.
+
+
+```py
+first, last, addr1, addr2, city, state, zip, action = view(
     row(box('First name'), box('Last name')),
     box('Address line 1'),
     box('Address line 2'),
@@ -436,16 +826,23 @@ view(
         option('no', 'Not now'),
     ])
 )
+view(f'''
+You provided:
+
+Address: {first} {last}, {addr1}, {addr2}, {city} {state} {zip}
+
+Sign up: {action}
+''')
 ```
 
-### Layout - Form, improved
+### Forms - Improved
 
 Specify additional layout parameters like `width=`, `grow=`, etc. to get more control over
 how items are laid out.
 
 
 ```py
-view(
+first, last, addr1, addr2, city, state, zip, action = view(
     row(box('First name'), box('M.I.', width='10%'), box('Last name')),
     box('Address line 1'),
     box('Address line 2'),
@@ -455,6 +852,13 @@ view(
         option('no', 'Not now', caption="I'll decide later"),
     ])
 )
+view(f'''
+You provided:
+
+Address: {first} {last}, {addr1}, {addr2}, {city} {state} {zip}
+
+Sign up: {action}
+''')
 ```
 
 ### Textbox - Basic
@@ -1414,148 +1818,6 @@ choices = view(box(
 view(f'You chose {choices}.')
 ```
 
-### Tag Picker - Basic
-
-Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
-
-
-```py
-tags = view(box(
-    'Choose some tags',
-    mode='tag',
-    options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
-))
-view(f'You chose {tags}.')
-```
-
-### Tag Picker - Value
-
-Set `value=` to pre-select options having those values.
-
-
-```py
-tags = view(box(
-    'Choose some tags',
-    mode='tag',
-    value=['yellow', 'red'],
-    options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
-))
-view(f'You chose {tags}.')
-```
-
-### Tag Picker - Selected
-
-Set `selected=True` to pre-select one or more options.
-
-
-```py
-tags = view(box('Choose some tags', mode='tag', options=[
-    option('violet', 'Violet'),
-    option('indigo', 'Indigo'),
-    option('blue', 'Blue'),
-    option('green', 'Green'),
-    option('yellow', 'Yellow', selected=True),
-    option('orange', 'Orange'),
-    option('red', 'Red', selected=True),
-]))
-view(f'You chose {tags}.')
-```
-
-### Color Picker - Basic
-
-Set `mode='color'` to show a color picker.
-
-The return value is a `(r, g, b, a)` tuple,
-where `r`, `g`, `b` are integers between 0-255,
-and `a` is an integer between 0-100%.
-
-
-```py
-color = view(box('Choose a color', mode='color'))
-r, g, b, a = color
-view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
-```
-
-### Color Picker - Value
-
-Set `value=` to pre-select a color.
-
-A color value can be:
-
-- `#RRGGBB` e.g. `#ff0033`
-- `#RRGGBBAA` e.g. `#ff003388`
-- `#RGB` e.g. `#f03` (same as `#ff0033`)
-- `#RGBA` e.g. `#f038` (same as `#ff003388`)
-- `rgb(R,G,B)` e.g. `rgb(255, 0, 127)` or `rgb(100%, 0%, 50%)`
-- `rgba(R,G,B,A)` e.g. `rgb(255, 0, 127, 0.5)` or `rgb(100%, 0%, 50%, 50%)`
-- `hsl(H,S,L)` e.g. `hsl(348, 100%, 50%)`
-- `hsl(H,S,L,A)` e.g. `hsl(348, 100%, 50%, 0.5)` or `hsl(348, 100%, 50%, 50%)`
-- A [named color](https://drafts.csswg.org/css-color-3/#svg-color) e.g. `red`, `green`, `blue`, etc.
-- `transparent` (same as `rgba(0,0,0,0)`)
-
-The return value, as in the previous example, is a `(r, g, b, a)` tuple.
-
-
-```py
-color = view(box('Choose a color', mode='color', value='#a241e8'))
-view(f'You chose {color}.')
-```
-
-### Color Palette - Basic
-
-Set `options=` with `mode='color'` to show a color palette.
-
-The option's `value` must be a valid color in one of the formats described in the previous example.
-
-Unlike the Color Picker, the Color Palette returns the `value` of the chosen option, and not a `(r,g,b,a)` tuple.
-
-
-```py
-color = view(box('Choose a color', mode='color', options=[
-    option('#ff0000', 'Red'),
-    option('#00ff00', 'Green'),
-    option('#0000ff', 'Blue'),
-    option('#ffff00', 'Yellow'),
-    option('#00ffff', 'Cyan'),
-    option('#ff00ff', 'Magenta'),
-]))
-view(f'You chose {color}.')
-```
-
-### Color Palette - Value
-
-Set `value=` to pre-select an option having that color value.
-
-
-```py
-color = view(box('Choose a color', mode='color', value='#0000ff', options=[
-    option('#ff0000', 'Red'),
-    option('#00ff00', 'Green'),
-    option('#0000ff', 'Blue'),
-    option('#ffff00', 'Yellow'),
-    option('#00ffff', 'Cyan'),
-    option('#ff00ff', 'Magenta'),
-]))
-view(f'You chose {color}.')
-```
-
-### Color Palette - Selected
-
-Alternatively, set `selected=True` to pre-select a color in the palette.
-
-
-```py
-color = view(box('Choose a color', mode='color', options=[
-    option('#ff0000', 'Red'),
-    option('#00ff00', 'Green'),
-    option('#0000ff', 'Blue', selected=True),
-    option('#ffff00', 'Yellow'),
-    option('#00ffff', 'Cyan'),
-    option('#ff00ff', 'Magenta'),
-]))
-view(f'You chose {color}.')
-```
-
 ### Slider - Basic
 
 Set `mode='range'` to show a slider.
@@ -2154,6 +2416,148 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 ```py
 month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
 view(f'You picked {month}.')
+```
+
+### Tag Picker - Basic
+
+Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
+
+
+```py
+tags = view(box(
+    'Choose some tags',
+    mode='tag',
+    options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
+))
+view(f'You chose {tags}.')
+```
+
+### Tag Picker - Value
+
+Set `value=` to pre-select options having those values.
+
+
+```py
+tags = view(box(
+    'Choose some tags',
+    mode='tag',
+    value=['yellow', 'red'],
+    options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
+))
+view(f'You chose {tags}.')
+```
+
+### Tag Picker - Selected
+
+Set `selected=True` to pre-select one or more options.
+
+
+```py
+tags = view(box('Choose some tags', mode='tag', options=[
+    option('violet', 'Violet'),
+    option('indigo', 'Indigo'),
+    option('blue', 'Blue'),
+    option('green', 'Green'),
+    option('yellow', 'Yellow', selected=True),
+    option('orange', 'Orange'),
+    option('red', 'Red', selected=True),
+]))
+view(f'You chose {tags}.')
+```
+
+### Color Picker - Basic
+
+Set `mode='color'` to show a color picker.
+
+The return value is a `(r, g, b, a)` tuple,
+where `r`, `g`, `b` are integers between 0-255,
+and `a` is an integer between 0-100%.
+
+
+```py
+color = view(box('Choose a color', mode='color'))
+r, g, b, a = color
+view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
+```
+
+### Color Picker - Value
+
+Set `value=` to pre-select a color.
+
+A color value can be:
+
+- `#RRGGBB` e.g. `#ff0033`
+- `#RRGGBBAA` e.g. `#ff003388`
+- `#RGB` e.g. `#f03` (same as `#ff0033`)
+- `#RGBA` e.g. `#f038` (same as `#ff003388`)
+- `rgb(R,G,B)` e.g. `rgb(255, 0, 127)` or `rgb(100%, 0%, 50%)`
+- `rgba(R,G,B,A)` e.g. `rgb(255, 0, 127, 0.5)` or `rgb(100%, 0%, 50%, 50%)`
+- `hsl(H,S,L)` e.g. `hsl(348, 100%, 50%)`
+- `hsl(H,S,L,A)` e.g. `hsl(348, 100%, 50%, 0.5)` or `hsl(348, 100%, 50%, 50%)`
+- A [named color](https://drafts.csswg.org/css-color-3/#svg-color) e.g. `red`, `green`, `blue`, etc.
+- `transparent` (same as `rgba(0,0,0,0)`)
+
+The return value, as in the previous example, is a `(r, g, b, a)` tuple.
+
+
+```py
+color = view(box('Choose a color', mode='color', value='#a241e8'))
+view(f'You chose {color}.')
+```
+
+### Color Palette - Basic
+
+Set `options=` with `mode='color'` to show a color palette.
+
+The option's `value` must be a valid color in one of the formats described in the previous example.
+
+Unlike the Color Picker, the Color Palette returns the `value` of the chosen option, and not a `(r,g,b,a)` tuple.
+
+
+```py
+color = view(box('Choose a color', mode='color', options=[
+    option('#ff0000', 'Red'),
+    option('#00ff00', 'Green'),
+    option('#0000ff', 'Blue'),
+    option('#ffff00', 'Yellow'),
+    option('#00ffff', 'Cyan'),
+    option('#ff00ff', 'Magenta'),
+]))
+view(f'You chose {color}.')
+```
+
+### Color Palette - Value
+
+Set `value=` to pre-select an option having that color value.
+
+
+```py
+color = view(box('Choose a color', mode='color', value='#0000ff', options=[
+    option('#ff0000', 'Red'),
+    option('#00ff00', 'Green'),
+    option('#0000ff', 'Blue'),
+    option('#ffff00', 'Yellow'),
+    option('#00ffff', 'Cyan'),
+    option('#ff00ff', 'Magenta'),
+]))
+view(f'You chose {color}.')
+```
+
+### Color Palette - Selected
+
+Alternatively, set `selected=True` to pre-select a color in the palette.
+
+
+```py
+color = view(box('Choose a color', mode='color', options=[
+    option('#ff0000', 'Red'),
+    option('#00ff00', 'Green'),
+    option('#0000ff', 'Blue', selected=True),
+    option('#ffff00', 'Yellow'),
+    option('#00ffff', 'Cyan'),
+    option('#ff00ff', 'Magenta'),
+]))
+view(f'You chose {color}.')
 ```
 
 ### Rating - Basic

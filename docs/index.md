@@ -1,4 +1,4 @@
-# H2O Nitro
+# Nitro
 
 Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
 
@@ -45,7 +45,7 @@ def main(view: View):
     - **Conciseness.** Lowest number of lines of code for expressing solutions to a given problem. Less code = less
       bugs.
     - **Clarity.** Write apps without jumping through callbacks, request handlers, or event handlers.
-- **Minimal API** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
+- **Minimal API.** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
   layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
 - **Library.** Nitro is a library, not a server. Integrates with [Django](https://www.djangoproject.com/)
