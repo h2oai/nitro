@@ -626,34 +626,35 @@ def layout_grow_shrink(view: View):
 
 # # Forms
 
-# ## Form, vertical
-# Text/markdown and inputs created with `box()` are laid out the same way.
-#
-# By default, items are laid out top to bottom.
+# ## Basic
+# To create a form, simply lay out all the inputs you need inside a view, then destructure the return value in order.
 def form_basic(view: View):
-    view(
-        box('Username', placeholder='someone@company.com'),
-        box('Password', password=True),
+    username, password, action = view(
+        box('Username', value='someone@company.com'),
+        box('Password', value='pa55w0rd', password=True),
         box(['Login']),
     )
+    view(f'You entered `{username}`/`{password}` and then clicked on {action}.')
 
 
-# ## Form, horizontal
+# ## Horizontal
 # Wrap items with `row()` to lay them out left to right.
+# There is no change to the way the return values are destructured.
 def form_horizontal(view: View):
-    view(
+    username, password, action = view(
         row(
-            box('Username', placeholder='someone@company.com'),
-            box('Password', password=True),
+            box('Username', value='someone@company.com'),
+            box('Password', value='pa55w0rd', password=True),
             box(['Login']),
         )
     )
+    view(f'You entered `{username}`/`{password}` and then clicked on {action}.')
 
 
-# ## Form, combined
-# Use `row()` and `col()` to mix and match how items are laid out.
+# ## Combined
+# Use `row()` and `col()` to mix and match how items are laid out. Destructure the return values in the same order.
 def form_combo(view: View):
-    view(
+    first, last, addr1, addr2, city, state, zip, action = view(
         row(box('First name'), box('Last name')),
         box('Address line 1'),
         box('Address line 2'),
@@ -663,13 +664,20 @@ def form_combo(view: View):
             option('no', 'Not now'),
         ])
     )
+    view(f'''
+    You provided:
+    
+    Address: {first} {last}, {addr1}, {addr2}, {city} {state} {zip}
+    
+    Sign up: {action}
+    ''')
 
 
-# ## Form, improved
+# ## Improved
 # Specify additional layout parameters like `width=`, `grow=`, etc. to get more control over
 # how items are laid out.
 def form_improved(view: View):
-    view(
+    first, last, addr1, addr2, city, state, zip, action = view(
         row(box('First name'), box('M.I.', width='10%'), box('Last name')),
         box('Address line 1'),
         box('Address line 2'),
@@ -679,6 +687,13 @@ def form_improved(view: View):
             option('no', 'Not now', caption="I'll decide later"),
         ])
     )
+    view(f'''
+    You provided:
+
+    Address: {first} {last}, {addr1}, {addr2}, {city} {state} {zip}
+
+    Sign up: {action}
+    ''')
 
 
 # # Textbox
