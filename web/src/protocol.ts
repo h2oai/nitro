@@ -53,15 +53,9 @@ export type Conf = {
   nav?: Option[]
 }
 
-export enum BoxT {
-  Box = 1,
-  Option,
-}
-
 export type BoxMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
 
 export type Box = {
-  t: BoxT.Box
   xid: S
   index: I // -1 = don't capture
   text?: S
@@ -106,7 +100,6 @@ export type Box = {
 }
 
 export type Option = {
-  t: BoxT.Option
   value: V
   text?: S
   icon?: S

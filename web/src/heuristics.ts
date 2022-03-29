@@ -1,6 +1,6 @@
 import { Incr, isN, isO, isPair, isS, isV, words, xid } from './core';
 import { markdown } from './markdown';
-import { Box, BoxMode, BoxT, Option } from './protocol';
+import { Box, BoxMode, Option } from './protocol';
 
 const determineMode = (box: Box): BoxMode => {
   const { options, editable, multiple } = box
@@ -91,11 +91,11 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
     const c: Option[] = []
     for (const v of x) {
       if (isV(v)) { // value
-        c.push({ t: BoxT.Option, text: String(v), value: v })
+        c.push({ text: String(v), value: v })
       } else if (isPair(v)) { // [value, text]
         const [value, text] = v
         if (isS(text) && isV(value)) {
-          c.push({ t: BoxT.Option, text, value })
+          c.push({ text, value })
         } else {
           console.warn('Invalid choice pair. Want [string, value], got ', v)
         }
@@ -108,13 +108,13 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
     return c
   }
   if (isS(x)) { // 'value1 value2 value3...'
-    return words(x).map((value): Option => ({ t: BoxT.Option, text: value, value }))
+    return words(x).map((value): Option => ({ text: value, value }))
   }
   if (isO(x)) { // { value1: text1, value2: text2, ... }
     const c: Option[] = []
     for (const value in x) {
       const text = x[value]
-      c.push({ t: BoxT.Option, text, value })
+      c.push({ text, value })
     }
     return c
   }
@@ -124,7 +124,7 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
 
 export const sanitizeBox = (box: Box): Box => {
   if (isS(box)) {
-    box = { t: BoxT.Box, xid: xid(), index: 0, mode: 'md', text: box, options: [] }
+    box = { xid: xid(), index: 0, mode: 'md', text: box, options: [] }
   }
   if (box.items) {
     box.items = box.items.map(w => sanitizeBox(w))

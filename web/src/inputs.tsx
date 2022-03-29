@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { B, Dict, gensym, isN, isPair, isS, N, S, signal, U, V, xid } from './core';
 import { Markdown } from './markdown';
-import { Box, BoxT, Conf, MsgType, Option } from './protocol';
+import { Box, Conf, MsgType, Option } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -569,8 +569,8 @@ const toContextualMenuItem = ({ value, text, caption, icon, options }: Option, c
 const toContextualMenuProps = (cs: Option[], capture: (v: V) => void): IContextualMenuProps => ({ items: cs.map(c => toContextualMenuItem(c, capture)) })
 
 const continueButton: Box = {
-  t: BoxT.Box, xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [
-    { t: BoxT.Option, value: 'continue', text: 'Continue', selected: true }
+  xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [
+    { value: 'continue', text: 'Continue', selected: true }
   ]
 }
 

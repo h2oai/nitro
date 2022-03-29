@@ -30,11 +30,6 @@ class _MsgType(IntEnum):
     Switch = 15
 
 
-class _WidgetT(IntEnum):
-    Box = 1
-    Option = 2
-
-
 _primitive = (bool, int, float, str)
 Primitive = Union[bool, int, float, str]
 
@@ -101,7 +96,6 @@ class Option:
 
     def dump(self) -> dict:
         d = dict(
-            t=_WidgetT.Option,
             value=self.value,
             text=self.text,
             icon=self.icon,
@@ -247,7 +241,6 @@ class Box:
 
     def dump(self) -> dict:
         return _clean(dict(
-            t=_WidgetT.Box,
             text=self.text,
             name=self.name,
             mode=self.mode,
