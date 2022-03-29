@@ -559,6 +559,71 @@ def layout_wrap(view: View):
     )
 
 
+# ## Grow and Shrink
+# Set `grow=` or `shrink=` to specify what amount of the available space the item should take up
+# inside a view, row, or column.
+#
+# Setting `grow=` expands the item. Setting `shrink=` contracts the item. Both are proportions.
+#
+# By default, items are grown or shrunk based on their initial size. To resize them on a different basis,
+# set `basis=` to the value you want.
+#
+# - `basis=0` means "distribute available space assuming that the initial size is zero".
+# - `basis='20px'` means "distribute available space assuming that the initial size is 20px".
+# - The default behavior (if `basis=` is not set) is to assume that the initial size is the size of the item's content.
+def layout_grow_shrink(view: View):
+    box_style = dict(mode='md', background='#666')
+    row_style = dict(background='#eee')
+    view(
+        '1:?:?',
+        row(
+            # Take up all available space.
+            box('a', grow=1, **box_style),
+            box('b', width=50, **box_style),
+            box('c', width=50, **box_style),
+            **row_style,
+        ),
+        '1:1:?',
+        row(
+            # Take up one part of available space = 1 / (1 + 1).
+            box('a', grow=1, **box_style),
+            # Take up one part of available space = 1 / (1 + 1).
+            box('b', grow=1, **box_style),
+            box('c', width=50, **box_style),
+            **row_style,
+        ),
+        '2:1:?',
+        row(
+            # Take up two parts of available space = 2 / (2 + 1).
+            box('a', grow=2, **box_style),
+            # Take up one part of available space = 1 / (2 + 1).
+            box('b', grow=1, **box_style),
+            box('c', width=50, **box_style),
+            **row_style,
+        ),
+        '1:2:3:?',
+        row(
+            # Take up one part of available space = 1 / (1 + 2 + 3).
+            box('a', grow=1, **box_style),
+            # Take up two parts of available space = 2 / (1 + 2 + 3).
+            box('b', grow=2, **box_style),
+            # Take up three parts of available space = 3 / (1 + 2 + 3).
+            box('c', grow=3, **box_style),
+            box('d', width=50, **box_style),
+            **row_style,
+        ),
+        '1:1:1:1',
+        row(
+            # Divide available space equally.
+            box('a', grow=1, **box_style),
+            box('b', grow=1, **box_style),
+            box('c', grow=1, **box_style),
+            box('d', grow=1, **box_style),
+            **row_style,
+        ),
+    )
+
+
 # # Forms
 
 # ## Form, vertical
@@ -1390,130 +1455,6 @@ def checklist_selected(view: View):
     view(f'You chose {choices}.')
 
 
-# # Tag Picker
-
-# ## Basic
-# Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
-def tag_picker_basic(view: View):
-    tags = view(box(
-        'Choose some tags',
-        mode='tag',
-        options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
-    ))
-    view(f'You chose {tags}.')
-
-
-# ## Value
-# Set `value=` to pre-select options having those values.
-def tag_picker_value(view: View):
-    tags = view(box(
-        'Choose some tags',
-        mode='tag',
-        value=['yellow', 'red'],
-        options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
-    ))
-    view(f'You chose {tags}.')
-
-
-# ## Selected
-# Set `selected=True` to pre-select one or more options.
-def tag_picker_selected(view: View):
-    tags = view(box('Choose some tags', mode='tag', options=[
-        option('violet', 'Violet'),
-        option('indigo', 'Indigo'),
-        option('blue', 'Blue'),
-        option('green', 'Green'),
-        option('yellow', 'Yellow', selected=True),
-        option('orange', 'Orange'),
-        option('red', 'Red', selected=True),
-    ]))
-    view(f'You chose {tags}.')
-
-
-# # Color Picker
-
-# ## Basic
-# Set `mode='color'` to show a color picker.
-#
-# The return value is a `(r, g, b, a)` tuple,
-# where `r`, `g`, `b` are integers between 0-255,
-# and `a` is an integer between 0-100%.
-def color_basic(view: View):
-    color = view(box('Choose a color', mode='color'))
-    r, g, b, a = color
-    view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
-
-
-# ## Value
-# Set `value=` to pre-select a color.
-#
-# A color value can be:
-#
-# - `#RRGGBB` e.g. `#ff0033`
-# - `#RRGGBBAA` e.g. `#ff003388`
-# - `#RGB` e.g. `#f03` (same as `#ff0033`)
-# - `#RGBA` e.g. `#f038` (same as `#ff003388`)
-# - `rgb(R,G,B)` e.g. `rgb(255, 0, 127)` or `rgb(100%, 0%, 50%)`
-# - `rgba(R,G,B,A)` e.g. `rgb(255, 0, 127, 0.5)` or `rgb(100%, 0%, 50%, 50%)`
-# - `hsl(H,S,L)` e.g. `hsl(348, 100%, 50%)`
-# - `hsl(H,S,L,A)` e.g. `hsl(348, 100%, 50%, 0.5)` or `hsl(348, 100%, 50%, 50%)`
-# - A [named color](https://drafts.csswg.org/css-color-3/#svg-color) e.g. `red`, `green`, `blue`, etc.
-# - `transparent` (same as `rgba(0,0,0,0)`)
-#
-# The return value, as in the previous example, is a `(r, g, b, a)` tuple.
-def color_value(view: View):
-    color = view(box('Choose a color', mode='color', value='#a241e8'))
-    view(f'You chose {color}.')
-
-
-# # Color Palette
-
-# ## Basic
-# Set `options=` with `mode='color'` to show a color palette.
-#
-# The option's `value` must be a valid color in one of the formats described in the previous example.
-#
-# Unlike the Color Picker, the Color Palette returns the `value` of the chosen option, and not a `(r,g,b,a)` tuple.
-def palette_basic(view: View):
-    color = view(box('Choose a color', mode='color', options=[
-        option('#ff0000', 'Red'),
-        option('#00ff00', 'Green'),
-        option('#0000ff', 'Blue'),
-        option('#ffff00', 'Yellow'),
-        option('#00ffff', 'Cyan'),
-        option('#ff00ff', 'Magenta'),
-    ]))
-    view(f'You chose {color}.')
-
-
-# ## Value
-# Set `value=` to pre-select an option having that color value.
-def palette_value(view: View):
-    color = view(box('Choose a color', mode='color', value='#0000ff', options=[
-        option('#ff0000', 'Red'),
-        option('#00ff00', 'Green'),
-        option('#0000ff', 'Blue'),
-        option('#ffff00', 'Yellow'),
-        option('#00ffff', 'Cyan'),
-        option('#ff00ff', 'Magenta'),
-    ]))
-    view(f'You chose {color}.')
-
-
-# ## Selected
-# Alternatively, set `selected=True` to pre-select a color in the palette.
-def palette_selected(view: View):
-    color = view(box('Choose a color', mode='color', options=[
-        option('#ff0000', 'Red'),
-        option('#00ff00', 'Green'),
-        option('#0000ff', 'Blue', selected=True),
-        option('#ffff00', 'Yellow'),
-        option('#00ffff', 'Cyan'),
-        option('#ff00ff', 'Magenta'),
-    ]))
-    view(f'You chose {color}.')
-
-
 # # Slider
 
 # ## Basic
@@ -1960,6 +1901,130 @@ def month_min_max(view: View):
 def month_range(view: View):
     month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {month}.')
+
+
+# # Tag Picker
+
+# ## Basic
+# Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
+def tag_picker_basic(view: View):
+    tags = view(box(
+        'Choose some tags',
+        mode='tag',
+        options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
+    ))
+    view(f'You chose {tags}.')
+
+
+# ## Value
+# Set `value=` to pre-select options having those values.
+def tag_picker_value(view: View):
+    tags = view(box(
+        'Choose some tags',
+        mode='tag',
+        value=['yellow', 'red'],
+        options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red']
+    ))
+    view(f'You chose {tags}.')
+
+
+# ## Selected
+# Set `selected=True` to pre-select one or more options.
+def tag_picker_selected(view: View):
+    tags = view(box('Choose some tags', mode='tag', options=[
+        option('violet', 'Violet'),
+        option('indigo', 'Indigo'),
+        option('blue', 'Blue'),
+        option('green', 'Green'),
+        option('yellow', 'Yellow', selected=True),
+        option('orange', 'Orange'),
+        option('red', 'Red', selected=True),
+    ]))
+    view(f'You chose {tags}.')
+
+
+# # Color Picker
+
+# ## Basic
+# Set `mode='color'` to show a color picker.
+#
+# The return value is a `(r, g, b, a)` tuple,
+# where `r`, `g`, `b` are integers between 0-255,
+# and `a` is an integer between 0-100%.
+def color_basic(view: View):
+    color = view(box('Choose a color', mode='color'))
+    r, g, b, a = color
+    view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
+
+
+# ## Value
+# Set `value=` to pre-select a color.
+#
+# A color value can be:
+#
+# - `#RRGGBB` e.g. `#ff0033`
+# - `#RRGGBBAA` e.g. `#ff003388`
+# - `#RGB` e.g. `#f03` (same as `#ff0033`)
+# - `#RGBA` e.g. `#f038` (same as `#ff003388`)
+# - `rgb(R,G,B)` e.g. `rgb(255, 0, 127)` or `rgb(100%, 0%, 50%)`
+# - `rgba(R,G,B,A)` e.g. `rgb(255, 0, 127, 0.5)` or `rgb(100%, 0%, 50%, 50%)`
+# - `hsl(H,S,L)` e.g. `hsl(348, 100%, 50%)`
+# - `hsl(H,S,L,A)` e.g. `hsl(348, 100%, 50%, 0.5)` or `hsl(348, 100%, 50%, 50%)`
+# - A [named color](https://drafts.csswg.org/css-color-3/#svg-color) e.g. `red`, `green`, `blue`, etc.
+# - `transparent` (same as `rgba(0,0,0,0)`)
+#
+# The return value, as in the previous example, is a `(r, g, b, a)` tuple.
+def color_value(view: View):
+    color = view(box('Choose a color', mode='color', value='#a241e8'))
+    view(f'You chose {color}.')
+
+
+# # Color Palette
+
+# ## Basic
+# Set `options=` with `mode='color'` to show a color palette.
+#
+# The option's `value` must be a valid color in one of the formats described in the previous example.
+#
+# Unlike the Color Picker, the Color Palette returns the `value` of the chosen option, and not a `(r,g,b,a)` tuple.
+def palette_basic(view: View):
+    color = view(box('Choose a color', mode='color', options=[
+        option('#ff0000', 'Red'),
+        option('#00ff00', 'Green'),
+        option('#0000ff', 'Blue'),
+        option('#ffff00', 'Yellow'),
+        option('#00ffff', 'Cyan'),
+        option('#ff00ff', 'Magenta'),
+    ]))
+    view(f'You chose {color}.')
+
+
+# ## Value
+# Set `value=` to pre-select an option having that color value.
+def palette_value(view: View):
+    color = view(box('Choose a color', mode='color', value='#0000ff', options=[
+        option('#ff0000', 'Red'),
+        option('#00ff00', 'Green'),
+        option('#0000ff', 'Blue'),
+        option('#ffff00', 'Yellow'),
+        option('#00ffff', 'Cyan'),
+        option('#ff00ff', 'Magenta'),
+    ]))
+    view(f'You chose {color}.')
+
+
+# ## Selected
+# Alternatively, set `selected=True` to pre-select a color in the palette.
+def palette_selected(view: View):
+    color = view(box('Choose a color', mode='color', options=[
+        option('#ff0000', 'Red'),
+        option('#00ff00', 'Green'),
+        option('#0000ff', 'Blue', selected=True),
+        option('#ffff00', 'Yellow'),
+        option('#00ffff', 'Cyan'),
+        option('#ff00ff', 'Magenta'),
+    ]))
+    view(f'You chose {color}.')
 
 
 # # Rating
