@@ -518,12 +518,12 @@ class View(ViewBase):
     def _write(self, t: _MsgType, s: Box, position: Optional[int]):
         self._send(_marshal(_clean(dict(t=t, d=s.dump(), p=position))))
 
-    def read(self):
-        return self._read(_MsgType.Input)
-
     def __call__(
             self,
             *items: Item,
+            read=True,
+            overwrite=True,
+            position: Optional[int] = None,
             row: Optional[bool] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
@@ -540,113 +540,28 @@ class View(ViewBase):
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
             basis: Optional[Length] = None,
-            position: Optional[int] = None,
     ):
-        self.show(
-            *items,
-            row=row,
-            tile=tile,
-            cross_tile=cross_tile,
-            wrap=wrap,
-            gap=gap,
-            align=align,
-            width=width,
-            height=height,
-            margin=margin,
-            padding=padding,
-            color=color,
-            background=background,
-            border=border,
-            grow=grow,
-            shrink=shrink,
-            basis=basis,
-            position=position,
-        )
-        return self.read()
+        if len(items):
+            b = Box(
+                items=items,
+                row=row,
+                tile=tile,
+                cross_tile=cross_tile,
+                wrap=wrap,
+                gap=gap,
+                align=align,
+                width=width,
+                height=height,
+                margin=margin,
+                padding=padding,
+                color=color,
+                background=background,
+                border=border,
+                grow=grow,
+                shrink=shrink,
+                basis=basis,
+            )
 
-    def show(
-            self,
-            *items: Item,
-            row: Optional[bool] = None,
-            tile: Optional[str] = None,
-            cross_tile: Optional[str] = None,
-            wrap: Optional[str] = None,
-            gap: Optional[Length] = None,
-            align: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            height: Optional[Sizing] = None,
-            margin: Optional[Sizing] = None,
-            padding: Optional[Sizing] = None,
-            color: Optional[str] = None,
-            background: Optional[str] = None,
-            border: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
-            position: Optional[int] = None,
-    ):
-        s = Box(
-            items=items,
-            row=row,
-            tile=tile,
-            cross_tile=cross_tile,
-            wrap=wrap,
-            gap=gap,
-            align=align,
-            width=width,
-            height=height,
-            margin=margin,
-            padding=padding,
-            color=color,
-            background=background,
-            border=border,
-            grow=grow,
-            shrink=shrink,
-            basis=basis,
-        )
-        self._write(_MsgType.Update, s, position)
-
-    def add(
-            self,
-            *items: Item,
-            row: Optional[bool] = None,
-            tile: Optional[str] = None,
-            cross_tile: Optional[str] = None,
-            wrap: Optional[str] = None,
-            gap: Optional[Length] = None,
-            align: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            height: Optional[Sizing] = None,
-            margin: Optional[Sizing] = None,
-            padding: Optional[Sizing] = None,
-            color: Optional[str] = None,
-            background: Optional[str] = None,
-            border: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
-            position: Optional[int] = None,
-    ):
-        s = Box(
-            items=items,
-            row=row,
-            tile=tile,
-            cross_tile=cross_tile,
-            wrap=wrap,
-            gap=gap,
-            align=align,
-            width=width,
-            height=height,
-            margin=margin,
-            padding=padding,
-            color=color,
-            background=background,
-            border=border,
-            grow=grow,
-            shrink=shrink,
-            basis=basis,
-        )
-        self._write(_MsgType.Insert, s, position)
-
-    def remove(self, position: int):
-        pass
+            self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
+        if read:
+            return self._read(_MsgType.Input)
