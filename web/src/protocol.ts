@@ -1,5 +1,4 @@
-import React from "react"
-import { S, N, B, U, V, Pair, Triple, I } from "./core"
+import { B, I, N, Pair, S, Triple, U, V } from "./core"
 
 export enum MsgType {
   Error = 1,
@@ -27,17 +26,17 @@ export type Msg = {
   d: any // XXX formalize
 } | {
   t: MsgType.Insert
-  d: Input
+  d: Box
   p?: I
 } | {
   t: MsgType.Update
-  d: Input
+  d: Box
   p?: I
 } | {
   t: MsgType.Remove
-  d: Input
+  d: Box
 } | {
-  t: MsgType.Input,
+  t: MsgType.Input, // XXX rename
   d: Array<V | V[] | null>
 } | {
   t: MsgType.Conf,
@@ -54,23 +53,23 @@ export type Conf = {
   nav?: Option[]
 }
 
-export enum WidgetT {
+export enum BoxT {
   Box = 1,
   Option,
 }
 
-export type InputMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+export type BoxMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
 
-export type Input = {
-  t: WidgetT.Box
+export type Box = {
+  t: BoxT.Box
   xid: S
   index: I // -1 = don't capture
   text?: S
   name?: S
-  mode?: InputMode
+  mode?: BoxMode
   value?: V | Pair<V>
   options: Option[]
-  items?: Input[]
+  items?: Box[]
   row?: B
   tile?: S
   cross_tile?: S
@@ -107,7 +106,7 @@ export type Input = {
 }
 
 export type Option = {
-  t: WidgetT.Option
+  t: BoxT.Option
   value: V
   text?: S
   icon?: S

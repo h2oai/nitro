@@ -1,10 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
 import { micromark, Options } from 'micromark';
-import { gfm, gfmHtml } from 'micromark-extension-gfm'
+import { gfm, gfmHtml } from 'micromark-extension-gfm';
+import styled from 'styled-components';
 import { B, S, U } from './core';
-import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
 
 const opts: Options = {
   allowDangerousHtml: false,

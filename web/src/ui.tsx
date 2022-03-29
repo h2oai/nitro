@@ -1,5 +1,5 @@
 import React from 'react';
-import { B, boxed, Dict, Disposable, on } from './core';
+import { B, Dict, Disposable, isSignal, on } from './core';
 
 
 interface Renderable {
@@ -33,7 +33,7 @@ export function make<TProps, TState extends Renderable>(ctor: (props: TProps) =>
       Object.keys(model).forEach(k => {
         if (reserved[k]) return
         const v = (model as any)[k]
-        if (boxed(v)) {
+        if (isSignal(v)) {
           initialState[k] = v()
           arrows.push(on(v, v => {
             const newState: Dict<any> = {}

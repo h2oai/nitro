@@ -2,9 +2,9 @@ import { Calendar, Checkbox, ChoiceGroup, ColorPicker, ComboBox, CommandBar, Com
 import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
-import { B, box, Dict, gensym, isN, isPair, isS, N, S, U, V, xid } from './core';
+import { B, Dict, gensym, isN, isPair, isS, N, S, signal, U, V, xid } from './core';
 import { Markdown } from './markdown';
-import { Conf, Input, MsgType, Option, WidgetT } from './protocol';
+import { Box, BoxT, Conf, MsgType, Option } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -18,7 +18,7 @@ const newCaptureContext = (send: Send, data: Array<V | V[]>) => {
 
 type Context = ReturnType<typeof newCaptureContext>
 
-type InputProps = { context: Context, input: Input }
+type InputProps = { context: Context, box: Box }
 
 const unum = (x: any): N | undefined => isN(x) ? x : undefined
 const ustr = (x: any): S | undefined => isS(x) ? x : undefined
@@ -46,9 +46,9 @@ const WithLabel = ({ label, children }: { label?: S, children: JSX.Element }) =>
     )
 )
 
-const XTextField = make(({ context, input }: InputProps) => {
+const XTextField = make(({ context, box }: InputProps) => {
   const
-    { index, text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = input,
+    { index, text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = box,
     onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
       v = v ?? (target as HTMLInputElement).value ?? value ?? ''
       // TODO live?
@@ -78,9 +78,9 @@ const XTextField = make(({ context, input }: InputProps) => {
 })
 
 
-const XSpinButton = make(({ context, input }: InputProps) => {
+const XSpinButton = make(({ context, box }: InputProps) => {
   const
-    { index, text, value, min, max, step, precision, placeholder } = input,
+    { index, text, value, min, max, step, precision, placeholder } = box,
     defaultValue = getDefaultValue(value, min, max, step),
     onChange = (_: React.SyntheticEvent<HTMLElement>, value?: string): void => {
       let v = isS(value) ? parseFloat(value) : NaN
@@ -108,9 +108,9 @@ const XSpinButton = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-const XSlider = make(({ context, input }: InputProps) => {
+const XSlider = make(({ context, box }: InputProps) => {
   const
-    { index, text, value, placeholder, min, max, step } = input,
+    { index, text, value, placeholder, min, max, step } = box,
     originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
     ranged = isPair(value) && isN(value[0]) && isN(value[1]),
     defaultValue = ranged ? 0 : getDefaultValue(value, min, max, step),
@@ -160,9 +160,9 @@ const XSlider = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-const XRating = make(({ context, input }: InputProps) => {
+const XRating = make(({ context, box }: InputProps) => {
   const
-    { index, text, placeholder, min, max, value } = input,
+    { index, text, placeholder, min, max, value } = box,
     allowZeroStars = isN(min) && min <= 0,
     defaultRating = unum(value) ?? (allowZeroStars ? 0 : 1),
     onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {
@@ -223,9 +223,9 @@ const
     return c24 ? s : s + (pm ? 'PM' : 'AM')
   }
 
-const XTimePicker = make(({ context, input }: InputProps) => {
+const XTimePicker = make(({ context, box }: InputProps) => {
   const
-    { index, text, value } = input,
+    { index, text, value } = box,
     clock = parseClock(String(value).toLowerCase()),
     capture = () => context.capture(index, clockToString(clock)),
     hide: IStackItemStyles = { root: { display: 'none' } },
@@ -303,9 +303,9 @@ const XTimePicker = make(({ context, input }: InputProps) => {
 
 const dateToString = (d: Date) => d.toISOString().substring(0, 10)
 
-const XDatePicker = make(({ context, input }: InputProps) => {
+const XDatePicker = make(({ context, box }: InputProps) => {
   const
-    { index, value } = input,
+    { index, value } = box,
     defaultDate = udate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date | null) => {
@@ -314,7 +314,7 @@ const XDatePicker = make(({ context, input }: InputProps) => {
     },
     render = () => {
       const
-        { text, placeholder, value, min, max, required } = input,
+        { text, placeholder, value, min, max, required } = box,
         date = udate(value),
         minDate = udate(min),
         maxDate = udate(max)
@@ -341,9 +341,9 @@ const XDatePicker = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-const XCalendar = make(({ context, input }: InputProps) => {
+const XCalendar = make(({ context, box }: InputProps) => {
   const
-    { index, value } = input,
+    { index, value } = box,
     defaultDate = udate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date) => {
@@ -352,7 +352,7 @@ const XCalendar = make(({ context, input }: InputProps) => {
     render = () => {
       // TODO format string; aria-label
       const
-        { text, mode, value, min, max } = input,
+        { text, mode, value, min, max } = box,
         date = udate(value),
         minDate = udate(min),
         maxDate = udate(max),
@@ -385,9 +385,9 @@ const XCalendar = make(({ context, input }: InputProps) => {
 })
 
 
-const XColorPicker = make(({ context, input }: InputProps) => {
+const XColorPicker = make(({ context, box }: InputProps) => {
   const
-    { index, text, value } = input,
+    { index, text, value } = box,
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
     colorToTuple = ({ r, g, b, a }: IRGB) => [r, g, b, a ?? 100],
@@ -414,10 +414,10 @@ const XColorPicker = make(({ context, input }: InputProps) => {
 const CheckboxContainer = styled.div`
   margin: 0.5rem 0;
 `
-const XCheckList = make(({ context, input }: InputProps) => {
+const XCheckList = make(({ context, box }: InputProps) => {
   const
-    { index, text, options } = input,
-    selecteds = selectedsOf(input),
+    { index, text, options } = box,
+    selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.capture(index, Array.from(selection)),
     onChecked = (value?: V, checked?: B) => {
@@ -451,10 +451,10 @@ const XCheckList = make(({ context, input }: InputProps) => {
 })
 
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
-const XDropdown = make(({ context, input }: InputProps) => {
+const XDropdown = make(({ context, box }: InputProps) => {
   const
-    { index, text, placeholder, error, required, options } = input,
-    selected = selectedOf(input),
+    { index, text, placeholder, error, required, options } = box,
+    selected = selectedOf(box),
     hasGroups = options.some(c => c.options?.length ? true : false),
     items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
     selectedKey = selected ? selected.value : undefined,
@@ -480,10 +480,10 @@ const XDropdown = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
+const XMultiSelectDropdown = make(({ context, box }: InputProps) => {
   const
-    { index, text, placeholder, error, required, options } = input,
-    selecteds = selectedsOf(input),
+    { index, text, placeholder, error, required, options } = box,
+    selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
     selectedKeys = selecteds.map(c => String(c.value)),
@@ -520,11 +520,11 @@ const XMultiSelectDropdown = make(({ context, input }: InputProps) => {
 })
 
 
-const XComboBox = make(({ context, input }: InputProps) => {
+const XComboBox = make(({ context, box }: InputProps) => {
   const
-    { index, value, text, placeholder, required, error, options } = input,
+    { index, value, text, placeholder, required, error, options } = box,
     items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
-    selected = selectedOf(input),
+    selected = selectedOf(box),
     selectedKey = selected ? String(selected.value) : undefined,
     // Double-test because value may not be an available option.
     initialValue = selected ? String(selected.value) : value ? String(value) : undefined,
@@ -568,16 +568,16 @@ const toContextualMenuItem = ({ value, text, caption, icon, options }: Option, c
 }
 const toContextualMenuProps = (cs: Option[], capture: (v: V) => void): IContextualMenuProps => ({ items: cs.map(c => toContextualMenuItem(c, capture)) })
 
-const continueAction: Option = { t: WidgetT.Option, value: 'continue', text: 'Continue', selected: true }
-const continueWidget: Input = { t: WidgetT.Box, xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [continueAction] }
+const continueAction: Option = { t: BoxT.Option, value: 'continue', text: 'Continue', selected: true }
+const continueWidget: Box = { t: BoxT.Box, xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [continueAction] }
 
-const XButtons = make(({ context, input }: InputProps) => {
+const XButtons = make(({ context, box }: InputProps) => {
   const
-    { value } = input,
+    { value } = box,
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
-        { text, value, index, row, options } = input,
+        { text, value, index, row, options } = box,
         horizontal = row !== false,
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
@@ -636,10 +636,10 @@ const toGroupedDropdownOptions = (options: Option[]): IDropdownOption[] => {
   return items
 }
 
-const XTagPicker = make(({ context, input }: InputProps) => {
+const XTagPicker = make(({ context, box }: InputProps) => {
   const
-    { index, text, options } = input,
-    selectedOptions = selectedsOf(input),
+    { index, text, options } = box,
+    selectedOptions = selectedsOf(box),
     selectedKeys = selectedOptions.map(o => String(o.value)),
     tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),
     selectedTags = tags.filter(tag => selectedKeys.includes(tag.key as S)),
@@ -680,10 +680,10 @@ const XTagPicker = make(({ context, input }: InputProps) => {
 })
 
 const swatchCellSize = 25
-const XSwatchPicker = make(({ context, input }: InputProps) => {
+const XSwatchPicker = make(({ context, box }: InputProps) => {
   const
-    { index, text, options } = input,
-    selected = selectedOf(input),
+    { index, text, options } = box,
+    selected = selectedOf(box),
     cells: IColorCellProps[] = options.map(c => ({
       id: String(c.value),
       label: String(c.text),
@@ -712,18 +712,18 @@ const XSwatchPicker = make(({ context, input }: InputProps) => {
   return { render }
 })
 
-const selectedOf = ({ value, options }: Input): Option | undefined => value
+const selectedOf = ({ value, options }: Box): Option | undefined => value
   ? options.find(c => c.value === value)
   : options.find(c => c.selected)
 
-const selectedsOf = ({ value, options }: Input): Option[] => Array.isArray(value)
+const selectedsOf = ({ value, options }: Box): Option[] => Array.isArray(value)
   ? options.filter(c => value.includes(c.value))
   : options.filter(c => c.selected)
 
-const XChoiceGroup = make(({ context, input }: InputProps) => {
+const XChoiceGroup = make(({ context, box }: InputProps) => {
   const
-    { index, text, placeholder, required, options } = input,
-    selected = selectedOf(input),
+    { index, text, placeholder, required, options } = box,
+    selected = selectedOf(box),
     items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
       key: String(value),
       text: String(text),
@@ -752,11 +752,11 @@ const XChoiceGroup = make(({ context, input }: InputProps) => {
 })
 
 
-const XMarkdown = make(({ context, input }: InputProps) => {
+const XMarkdown = make(({ context, box }: InputProps) => {
   const
     ref = React.createRef<HTMLDivElement>(),
     update = () => {
-      const { index } = input
+      const { index } = box
       if (index < 0) return
 
       const el = ref.current
@@ -774,7 +774,7 @@ const XMarkdown = make(({ context, input }: InputProps) => {
       })
     },
     render = () => {
-      return <Markdown ref={ref} dangerouslySetInnerHTML={{ __html: input.text ?? '' }} />
+      return <Markdown ref={ref} dangerouslySetInnerHTML={{ __html: box.text ?? '' }} />
     }
   return { init: update, update, render }
 })
@@ -782,7 +782,7 @@ const XMarkdown = make(({ context, input }: InputProps) => {
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
 
-const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, color, background, border, grow, shrink, basis }: Partial<Input>, isRow: B) => {
+const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, color, background, border, grow, shrink, basis }: Partial<Box>, isRow: B) => {
 
   if (align) css.textAlign = align as any
 
@@ -889,7 +889,7 @@ const ZoneItemContainer = styled.div`
   box-sizing: border-box;
 `
 
-const XZoneItem = ({ stackable, isRow, children }: { stackable: Input, isRow: B, children: JSX.Element }) => (
+const XZoneItem = ({ stackable, isRow, children }: { stackable: Box, isRow: B, children: JSX.Element }) => (
   <ZoneItemContainer style={applyBoxStyles({}, stackable, isRow)}>
     {children}
   </ZoneItemContainer>
@@ -910,7 +910,7 @@ const ZoneContainer = styled.div`
   box-sizing: border-box;
 `
 
-const XZone = ({ context, widgets, stack }: { context: Context, widgets: Input[], stack: Partial<Input> }) => {
+const XZone = ({ context, widgets, stack }: { context: Context, widgets: Box[], stack: Partial<Box> }) => {
   const
     { row, tile, cross_tile, wrap, gap } = stack,
     isRow = row ? true : false,
@@ -922,7 +922,7 @@ const XZone = ({ context, widgets, stack }: { context: Context, widgets: Input[]
       } else {
         return (
           <XZoneItem key={xid()} stackable={widget} isRow={isRow}>
-            <XInput key={widget.xid} context={context} input={widget} />
+            <XInput key={widget.xid} context={context} box={widget} />
           </XZoneItem>
         )
       }
@@ -945,7 +945,7 @@ const XZone = ({ context, widgets, stack }: { context: Context, widgets: Input[]
 
 const gap5: IStackTokens = { childrenGap: 5 }
 
-const widgetsHaveActions = (widgets: Input[]): B => { // recursive
+const widgetsHaveActions = (widgets: Box[]): B => { // recursive
   for (const w of widgets) {
     if (w.items) {
       if (widgetsHaveActions(w.items)) return true
@@ -958,45 +958,45 @@ const widgetsHaveActions = (widgets: Input[]): B => { // recursive
   return false
 }
 
-const XInput = ({ context, input }: InputProps) => { // recursive 
-  const { mode, options, editable, multiple } = input
+const XInput = ({ context, box }: InputProps) => { // recursive 
+  const { mode, options, editable, multiple } = box
   switch (mode) {
     case 'md':
-      return <XMarkdown context={context} input={input} />
+      return <XMarkdown context={context} box={box} />
     case 'button':
-      return <XButtons context={context} input={input} />
+      return <XButtons context={context} box={box} />
     case 'check':
-      return <XCheckList context={context} input={input} />
+      return <XCheckList context={context} box={box} />
     case 'color':
       return options.length
-        ? <XSwatchPicker context={context} input={input} />
-        : <XColorPicker context={context} input={input} />
+        ? <XSwatchPicker context={context} box={box} />
+        : <XColorPicker context={context} box={box} />
     case 'date':
-      return <XDatePicker context={context} input={input} />
+      return <XDatePicker context={context} box={box} />
     case 'day':
     case 'month':
     case 'week':
-      return <XCalendar context={context} input={input} />
+      return <XCalendar context={context} box={box} />
     case 'menu':
       return editable
-        ? <XComboBox context={context} input={input} />
+        ? <XComboBox context={context} box={box} />
         : multiple
-          ? <XMultiSelectDropdown context={context} input={input} />
-          : <XDropdown context={context} input={input} />
+          ? <XMultiSelectDropdown context={context} box={box} />
+          : <XDropdown context={context} box={box} />
     case 'number':
-      return <XSpinButton context={context} input={input} />
+      return <XSpinButton context={context} box={box} />
     case 'radio':
-      return <XChoiceGroup context={context} input={input} />
+      return <XChoiceGroup context={context} box={box} />
     case 'range':
-      return <XSlider context={context} input={input} />
+      return <XSlider context={context} box={box} />
     case 'rating':
-      return <XRating context={context} input={input} />
+      return <XRating context={context} box={box} />
     case 'tag':
-      return <XTagPicker context={context} input={input} />
+      return <XTagPicker context={context} box={box} />
     case 'text':
-      return <XTextField context={context} input={input} />
+      return <XTextField context={context} box={box} />
     case 'time':
-      return <XTimePicker context={context} input={input} />
+      return <XTimePicker context={context} box={box} />
     default:
       return <div>Unknown input</div>
   }
@@ -1029,7 +1029,7 @@ const XMenu = make(({ send, options }: { send: Send, options: Option[] }) => {
     },
     items = options.map(o => toContextualMenuItem(o, switchTo)),
     containerRef = React.createRef<HTMLDivElement>(),
-    showMenuB = box(false),
+    showMenuB = signal(false),
     showMenu = () => showMenuB(true),
     hideMenu = () => showMenuB(false),
     render = () => {
@@ -1103,11 +1103,11 @@ export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
   return { render }
 })
 
-export const XWidgets = (props: { send: Send, widgets: Input[] }) => {
+export const XWidgets = (props: { send: Send, widgets: Box[] }) => {
   const
     original = props.widgets,
     hasActions = widgetsHaveActions(original),
-    widgets: Input[] = hasActions ? original : [...original, continueWidget],
+    widgets: Box[] = hasActions ? original : [...original, continueWidget],
     context = newCaptureContext(props.send, [])
   return (
     <WidgetsContainer>

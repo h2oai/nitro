@@ -1,11 +1,11 @@
+import { createTheme, loadTheme, registerIcons } from '@fluentui/react';
+import { AreaChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, CalendarIcon, CancelIcon, ChatBotIcon, CheckMarkIcon, ChevronDownIcon, ChevronDownSmallIcon, ChevronRightIcon, ChevronUpSmallIcon, DocumentationIcon, DonutChartIcon, DownIcon, FavoriteStarFillIcon, FavoriteStarIcon, FilterIcon, HideIcon, LineChartIcon, MoreIcon, MuteChatIcon, RedEyeIcon, ScatterChartIcon, SendIcon, SkypeCheckIcon, TextDocumentIcon, UpIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './app';
-import { mergeStyles, loadTheme, createTheme, registerIcons } from '@fluentui/react';
-import reportWebVitals from './reportWebVitals';
-import { SendIcon, SkypeCheckIcon, RedEyeIcon, CheckMarkIcon, HideIcon, CalendarIcon, ChevronUpSmallIcon, ChevronDownSmallIcon, FavoriteStarIcon, FavoriteStarFillIcon, UpIcon, DownIcon, ChevronDownIcon, AreaChartIcon, DonutChartIcon, ScatterChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, LineChartIcon, ChatBotIcon, MuteChatIcon, CancelIcon, ChevronRightIcon, MoreIcon, TextDocumentIcon, DocumentationIcon, FilterIcon } from '@fluentui/react-icons-mdl2';
-import './index.css';
 import { newClient } from './client';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
 
 
 // https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/

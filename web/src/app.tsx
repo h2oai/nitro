@@ -1,13 +1,12 @@
 import React from 'react';
-import { box, defer, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
-import { AppContainer, Header, XWidgets } from './inputs';
-import { Input, Msg, MsgType, Conf, Option, WidgetT, InputMode } from './protocol';
+import styled from 'styled-components';
 import { Client } from './client';
+import { isN, newIncr, S, signal, U, xid } from './core';
+import { reIndex, sanitizeWidget } from './heuristics';
+import { AppContainer, Header, XWidgets } from './inputs';
+import { Box, Conf, Msg, MsgType } from './protocol';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { make } from './ui';
-import styled from 'styled-components';
-import { markdown } from './markdown';
-import { reIndex, sanitizeWidget } from './heuristics';
 
 enum AppStateT { Connecting, Disconnected, Invalid, Connected }
 
@@ -22,7 +21,7 @@ type AppState = {
 } | {
   t: AppStateT.Connected
   socket: Socket
-  widgets: Input[]
+  widgets: Box[]
   conf: Conf
 }
 
@@ -44,7 +43,7 @@ const Texture = styled.div`
 `
 export const App = make(({ client }: { client: Client }) => {
   const
-    stateB = box<AppState>({ t: AppStateT.Connecting }),
+    stateB = signal<AppState>({ t: AppStateT.Connecting }),
     onMessage = (socket: Socket, e: SocketEvent) => {
       switch (e.t) {
         case SocketEventT.Connect:

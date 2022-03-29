@@ -1,6 +1,6 @@
 import msgpack from '@ygoe/msgpack';
-import { S, U, defer } from "./core"
-import { Msg } from "./protocol"
+import { defer, S, U } from "./core";
+import { Msg } from "./protocol";
 
 export enum SocketEventT {
   Connect,

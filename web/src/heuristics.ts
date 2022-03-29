@@ -1,8 +1,8 @@
-import { isN, isO, isPair, isS, isV, newIncr, Incr, words, xid } from './core';
+import { Incr, isN, isO, isPair, isS, isV, words, xid } from './core';
 import { markdown } from './markdown';
-import { Input, InputMode, Option, WidgetT } from './protocol';
+import { Box, BoxMode, BoxT, Option } from './protocol';
 
-const determineMode = (input: Input): InputMode => {
+const determineMode = (input: Box): BoxMode => {
   // This function contains the heuristics for determining which widget to use.
   const { options, editable, multiple } = input
 
@@ -46,7 +46,7 @@ const determineMode = (input: Input): InputMode => {
   return 'text'
 }
 
-const sanitizeInput = (input: Input) => {
+const sanitizeInput = (input: Box) => {
   const { mode, options } = input
   input.options = sanitizeOptions(options)
   input.index = 0
@@ -62,7 +62,7 @@ const sanitizeInput = (input: Input) => {
   }
 }
 
-const sanitizeRange = (input: Input) => {
+const sanitizeRange = (input: Box) => {
   const { range } = input
   if (Array.isArray(range)) {
     switch (range.length) {
@@ -108,11 +108,11 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
     const c: Option[] = []
     for (const v of x) {
       if (isV(v)) { // value
-        c.push({ t: WidgetT.Option, text: String(v), value: v })
+        c.push({ t: BoxT.Option, text: String(v), value: v })
       } else if (isPair(v)) { // [value, text]
         const [value, text] = v
         if (isS(text) && isV(value)) {
-          c.push({ t: WidgetT.Option, text, value })
+          c.push({ t: BoxT.Option, text, value })
         } else {
           console.warn('Invalid choice pair. Want [string, value], got ', v)
         }
@@ -125,13 +125,13 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
     return c
   }
   if (isS(x)) { // 'value1 value2 value3...'
-    return words(x).map((value): Option => ({ t: WidgetT.Option, text: value, value }))
+    return words(x).map((value): Option => ({ t: BoxT.Option, text: value, value }))
   }
   if (isO(x)) { // { value1: text1, value2: text2, ... }
     const c: Option[] = []
     for (const value in x) {
       const text = x[value]
-      c.push({ t: WidgetT.Option, text, value })
+      c.push({ t: BoxT.Option, text, value })
     }
     return c
   }
@@ -139,9 +139,9 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
   return []
 }
 
-export const sanitizeWidget = (widget: Input): Input => {
+export const sanitizeWidget = (widget: Box): Box => {
   if (isS(widget)) {
-    widget = { t: WidgetT.Box, xid: xid(), index: 0, mode: 'md', text: widget, options: [] }
+    widget = { t: BoxT.Box, xid: xid(), index: 0, mode: 'md', text: widget, options: [] }
   }
   if (widget.items) {
     widget.items = widget.items.map(w => sanitizeWidget(w))
@@ -151,7 +151,7 @@ export const sanitizeWidget = (widget: Input): Input => {
   return widget
 }
 
-export const reIndex = (widgets: Input[], incr: Incr) => {
+export const reIndex = (widgets: Box[], incr: Incr) => {
   for (const w of widgets) {
     if (w.items) {
       reIndex(w.items, incr)
