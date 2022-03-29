@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { B, box, Dict, gensym, isN, isPair, isS, N, S, U, V, xid } from './core';
 import { Markdown } from './markdown';
-import { Conf, Input, MsgType, Option, Stackable, Stacking, Widget, WidgetT } from './protocol';
+import { Conf, Input, MsgType, Option, WidgetT } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
@@ -569,7 +569,7 @@ const toContextualMenuItem = ({ value, text, caption, icon, options }: Option, c
 const toContextualMenuProps = (cs: Option[], capture: (v: V) => void): IContextualMenuProps => ({ items: cs.map(c => toContextualMenuItem(c, capture)) })
 
 const continueAction: Option = { t: WidgetT.Option, value: 'continue', text: 'Continue', selected: true }
-const continueWidget: Widget = { t: WidgetT.Input, xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [continueAction] }
+const continueWidget: Input = { t: WidgetT.Box, xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [continueAction] }
 
 const XButtons = make(({ context, input }: InputProps) => {
   const
@@ -782,7 +782,7 @@ const XMarkdown = make(({ context, input }: InputProps) => {
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
 
-const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, color, background, border, grow, shrink, basis }: Stackable, isRow: B) => {
+const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, color, background, border, grow, shrink, basis }: Partial<Input>, isRow: B) => {
 
   if (align) css.textAlign = align as any
 
@@ -889,7 +889,7 @@ const ZoneItemContainer = styled.div`
   box-sizing: border-box;
 `
 
-const XZoneItem = ({ stackable, isRow, children }: { stackable: Stackable, isRow: B, children: JSX.Element }) => (
+const XZoneItem = ({ stackable, isRow, children }: { stackable: Input, isRow: B, children: JSX.Element }) => (
   <ZoneItemContainer style={applyBoxStyles({}, stackable, isRow)}>
     {children}
   </ZoneItemContainer>
@@ -910,24 +910,21 @@ const ZoneContainer = styled.div`
   box-sizing: border-box;
 `
 
-const XZone = ({ context, widgets, stack }: { context: Context, widgets: Widget[], stack: Stacking & Stackable }) => {
+const XZone = ({ context, widgets, stack }: { context: Context, widgets: Input[], stack: Partial<Input> }) => {
   const
     { row, tile, cross_tile, wrap, gap } = stack,
     isRow = row ? true : false,
     children = widgets.map(widget => {
-      switch (widget.t) {
-        case WidgetT.Stack:
-          return (
-            <XZone key={xid()} context={context} widgets={widget.items} stack={widget} />
-          )
-        case WidgetT.Input:
-          return (
-            <XZoneItem key={xid()} stackable={widget} isRow={isRow}>
-              <XInput key={widget.xid} context={context} input={widget} />
-            </XZoneItem>
-          )
-        default:
-          return <div>Unknown widget</div>
+      if (widget.items) {
+        return (
+          <XZone key={xid()} context={context} widgets={widget.items} stack={widget} />
+        )
+      } else {
+        return (
+          <XZoneItem key={xid()} stackable={widget} isRow={isRow}>
+            <XInput key={widget.xid} context={context} input={widget} />
+          </XZoneItem>
+        )
       }
     }),
     css: React.CSSProperties = {
@@ -948,19 +945,14 @@ const XZone = ({ context, widgets, stack }: { context: Context, widgets: Widget[
 
 const gap5: IStackTokens = { childrenGap: 5 }
 
-const widgetsHaveActions = (widgets: Widget[]): B => { // recursive
+const widgetsHaveActions = (widgets: Input[]): B => { // recursive
   for (const w of widgets) {
-    switch (w.t) {
-      case WidgetT.Stack:
-        if (widgetsHaveActions(w.items)) return true
-        break
-      case WidgetT.Input:
-        {
-          const { mode } = w
-          if (mode === 'button' && w.options.length) return true
-          if (mode === 'md' && w.index >= 0) return true
-        }
-        break
+    if (w.items) {
+      if (widgetsHaveActions(w.items)) return true
+    } else {
+      const { mode } = w
+      if (mode === 'button' && w.options.length) return true
+      if (mode === 'md' && w.index >= 0) return true
     }
   }
   return false
@@ -1111,11 +1103,11 @@ export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
   return { render }
 })
 
-export const XWidgets = (props: { send: Send, widgets: Widget[] }) => {
+export const XWidgets = (props: { send: Send, widgets: Input[] }) => {
   const
     original = props.widgets,
     hasActions = widgetsHaveActions(original),
-    widgets: Widget[] = hasActions ? original : [...original, continueWidget],
+    widgets: Input[] = hasActions ? original : [...original, continueWidget],
     context = newCaptureContext(props.send, [])
   return (
     <WidgetsContainer>

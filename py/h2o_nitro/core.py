@@ -31,9 +31,8 @@ class _MsgType(IntEnum):
 
 
 class _WidgetT(IntEnum):
-    Stack = 1
-    Input = 2
-    Option = 3
+    Box = 1
+    Option = 2
 
 
 _primitive = (bool, int, float, str)
@@ -130,7 +129,7 @@ Options = Union[
     Set[OptionPair],
 ]
 
-Item = Union[str, 'Zone', 'Box']
+Item = Union[str, 'Box']
 Items = Union[List[Item], Tuple[Item, ...]]
 Range = Union[
     Tuple[V, V],
@@ -161,8 +160,26 @@ class Box:
             text: Optional[Union[str, Options]] = None,
             name: Optional[str] = None,
             mode: Optional[str] = None,
-            icon: Optional[str] = None,
             value: Optional[Value] = None,
+            options: Optional[Options] = None,
+            items: Optional[Items] = None,
+            row: Optional[bool] = None,
+            tile: Optional[str] = None,
+            cross_tile: Optional[str] = None,
+            wrap: Optional[str] = None,
+            gap: Optional[Length] = None,
+            align: Optional[str] = None,
+            width: Optional[Sizing] = None,
+            height: Optional[Sizing] = None,
+            margin: Optional[Sizing] = None,
+            padding: Optional[Sizing] = None,
+            color: Optional[str] = None,
+            background: Optional[str] = None,
+            border: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[Length] = None,
+            icon: Optional[str] = None,
             min: Optional[V] = None,
             max: Optional[V] = None,
             step: Optional[N] = None,
@@ -178,23 +195,6 @@ class Box:
             required: Optional[bool] = None,
             password: Optional[bool] = None,
             editable: Optional[bool] = None,
-            options: Optional[Options] = None,
-            row: Optional[bool] = None,
-            tile: Optional[str] = None,
-            cross_tile: Optional[str] = None,
-            wrap: Optional[str] = None,
-            gap: Optional[Length] = None,
-            align: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            height: Optional[Sizing] = None,
-            margin: Optional[Sizing] = None,
-            padding: Optional[Sizing] = None,
-            color: Optional[str] = None,
-            background: Optional[str] = None,
-            border: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
     ):
         if isinstance(text, (tuple, set, list, dict, OrderedDict)):
             if options is not None:
@@ -209,145 +209,8 @@ class Box:
         self.text = label
         self.name = name
         self.mode = mode
-        self.icon = icon
         self.value = value
-        self.min = min
-        self.max = max
-        self.step = step
-        self.precision = precision
-        self.range = range
-        self.mask = mask
-        self.prefix = prefix
-        self.suffix = suffix
-        self.placeholder = placeholder
-        self.error = error
-        self.lines = lines
-        self.multiple = multiple
-        self.required = required
-        self.password = password
-        self.editable = editable
         self.options = opts
-        self.row = row
-        self.tile = tile
-        self.cross_tile = cross_tile
-        self.wrap = wrap
-        self.gap = gap
-        self.align = align
-        self.width = width
-        self.height = height
-        self.margin = margin
-        self.padding = padding
-        self.color = color
-        self.background = background
-        self.border = border
-        self.grow = grow
-        self.shrink = shrink
-        self.basis = basis
-
-    def dump(self) -> dict:
-        return _clean(dict(
-            t=_WidgetT.Input,
-            text=self.text,
-            name=self.name,
-            mode=self.mode,
-            icon=self.icon,
-            value=self.value,
-            min=self.min,
-            max=self.max,
-            step=self.step,
-            precision=self.precision,
-            range=self.range,
-            mask=self.mask,
-            prefix=self.prefix,
-            suffix=self.suffix,
-            placeholder=self.placeholder,
-            error=self.error,
-            lines=self.lines,
-            multiple=self.multiple,
-            required=self.required,
-            password=self.password,
-            editable=self.editable,
-            options=_dump(self.options),
-            row=self.row,
-            tile=self.tile,
-            cross_tile=self.cross_tile,
-            wrap=self.wrap,
-            gap=self.gap,
-            align=self.align,
-            width=self.width,
-            height=self.height,
-            margin=self.margin,
-            padding=self.padding,
-            color=self.color,
-            background=self.background,
-            border=self.border,
-            grow=self.grow,
-            shrink=self.shrink,
-            basis=self.basis,
-        ))
-
-
-box = Box
-
-
-class ZoneTile(Enum):
-    Normal = 'normal'
-    Stretch = 'stretch'
-    Center = 'center'
-    Start = 'start'
-    End = 'end'
-    Between = 'between'
-    Around = 'around'
-    Evenly = 'evenly'
-
-
-class ZoneCrossTile(Enum):
-    Normal = 'normal'
-    Stretch = 'stretch'
-    Center = 'center'
-    Start = 'start'
-    End = 'end'
-
-
-class ZoneWrap(Enum):
-    Normal = 'normal'
-    Stretch = 'stretch'
-    Center = 'center'
-    Start = 'start'
-    End = 'end'
-    Between = 'between'
-    Around = 'around'
-    Evenly = 'evenly'
-
-
-class BoxAlign(Enum):
-    Left = 'left'
-    Right = 'right'
-    Center = 'center'
-    Justify = 'justify'
-
-
-class Zone:
-    def __init__(
-            self,
-            *items: Item,
-            row: Optional[bool] = None,
-            tile: Optional[str] = None,
-            cross_tile: Optional[str] = None,
-            wrap: Optional[str] = None,
-            gap: Optional[Length] = None,
-            align: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            height: Optional[Sizing] = None,
-            margin: Optional[Sizing] = None,
-            padding: Optional[Sizing] = None,
-            color: Optional[str] = None,
-            background: Optional[str] = None,
-            border: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
-    ):
         self.items = items
         self.row = row
         self.tile = tile
@@ -365,10 +228,31 @@ class Zone:
         self.grow = grow
         self.shrink = shrink
         self.basis = basis
+        self.icon = icon
+        self.min = min
+        self.max = max
+        self.step = step
+        self.precision = precision
+        self.range = range
+        self.mask = mask
+        self.prefix = prefix
+        self.suffix = suffix
+        self.placeholder = placeholder
+        self.error = error
+        self.lines = lines
+        self.multiple = multiple
+        self.required = required
+        self.password = password
+        self.editable = editable
 
     def dump(self) -> dict:
         return _clean(dict(
-            t=_WidgetT.Stack,
+            t=_WidgetT.Box,
+            text=self.text,
+            name=self.name,
+            mode=self.mode,
+            value=self.value,
+            options=_dump(self.options),
             items=_dump(self.items),
             row=self.row,
             tile=self.tile,
@@ -386,7 +270,63 @@ class Zone:
             grow=self.grow,
             shrink=self.shrink,
             basis=self.basis,
+            icon=self.icon,
+            min=self.min,
+            max=self.max,
+            step=self.step,
+            precision=self.precision,
+            range=self.range,
+            mask=self.mask,
+            prefix=self.prefix,
+            suffix=self.suffix,
+            placeholder=self.placeholder,
+            error=self.error,
+            lines=self.lines,
+            multiple=self.multiple,
+            required=self.required,
+            password=self.password,
+            editable=self.editable,
         ))
+
+
+box = Box
+
+
+class BoxTile(Enum):
+    Normal = 'normal'
+    Stretch = 'stretch'
+    Center = 'center'
+    Start = 'start'
+    End = 'end'
+    Between = 'between'
+    Around = 'around'
+    Evenly = 'evenly'
+
+
+class BoxCrossTile(Enum):
+    Normal = 'normal'
+    Stretch = 'stretch'
+    Center = 'center'
+    Start = 'start'
+    End = 'end'
+
+
+class BoxWrap(Enum):
+    Normal = 'normal'
+    Stretch = 'stretch'
+    Center = 'center'
+    Start = 'start'
+    End = 'end'
+    Between = 'between'
+    Around = 'around'
+    Evenly = 'evenly'
+
+
+class BoxAlign(Enum):
+    Left = 'left'
+    Right = 'right'
+    Center = 'center'
+    Justify = 'justify'
 
 
 def row(
@@ -406,9 +346,9 @@ def row(
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
         basis: Optional[Length] = None,
-) -> Zone:
-    return Zone(
-        *items,
+) -> Box:
+    return Box(
+        items=items,
         row=True,
         tile=tile,
         cross_tile=cross_tile,
@@ -445,9 +385,9 @@ def col(
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
         basis: Optional[Length] = None,
-) -> Zone:
-    return Zone(
-        *items,
+) -> Box:
+    return Box(
+        items=items,
         tile=tile,
         cross_tile=cross_tile,
         wrap=wrap,
@@ -573,7 +513,7 @@ class View:
             raise ProtocolError(f'unknown message type {t}')
         raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
 
-    def _write(self, t: _MsgType, s: Zone, position: Optional[int]):
+    def _write(self, t: _MsgType, s: Box, position: Optional[int]):
         msg = dict(t=t, d=s.dump())
         if position is not None:
             msg['p'] = position
@@ -603,8 +543,8 @@ class View:
             basis: Optional[Length] = None,
             position: Optional[int] = None,
     ):
-        s = Zone(
-            *items,
+        s = Box(
+            items=items,
             row=row,
             tile=tile,
             cross_tile=cross_tile,
@@ -645,8 +585,8 @@ class View:
             basis: Optional[Length] = None,
             position: Optional[int] = None,
     ):
-        s = Zone(
-            *items,
+        s = Box(
+            items=items,
             row=row,
             tile=tile,
             cross_tile=cross_tile,

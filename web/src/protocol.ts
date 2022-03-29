@@ -55,12 +55,27 @@ export type Conf = {
 }
 
 export enum WidgetT {
-  Stack = 1,
-  Input,
+  Box = 1,
   Option,
 }
 
-export type Stackable = {
+export type InputMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+
+export type Input = {
+  t: WidgetT.Box
+  xid: S
+  index: I // -1 = don't capture
+  text?: S
+  name?: S
+  mode?: InputMode
+  value?: V | Pair<V>
+  options: Option[]
+  items?: Input[]
+  row?: B
+  tile?: S
+  cross_tile?: S
+  wrap?: S
+  gap?: S
   align?: S // CSS text-align
   width?: S | [S] | Pair<S> | Triple<S> // CSS width / [min] / [min, max] / [min, max, initial]
   height?: S | [S] | Pair<S> | Triple<S> // CSS height / [min] / [min, max] / [min, max, initial]
@@ -72,34 +87,7 @@ export type Stackable = {
   grow?: U // CSS flex-grow
   shrink?: U // CSS flex-shrink
   basis?: S // CSS flex-basis
-}
-
-export type Widget = Stackable & (Stack | Input)
-
-export type InputMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
-
-export type Stacking = {
-  row?: B
-  tile?: S
-  cross_tile?: S
-  wrap?: S
-  gap?: S
-}
-
-export type Stack = Stacking & {
-  t: WidgetT.Stack
-  items: Widget[]
-}
-
-export type Input = Stacking & {
-  t: WidgetT.Input
-  xid: S
-  index: I // -1 = don't capture
-  text?: S
-  name?: S
-  mode?: InputMode
   icon?: S
-  value?: V | Pair<V>
   min?: V
   max?: V
   step?: N
@@ -116,7 +104,6 @@ export type Input = Stacking & {
   required?: B
   password?: B
   editable?: B
-  options: Option[]
 }
 
 export type Option = {

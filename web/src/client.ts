@@ -1,10 +1,10 @@
 import { S } from './core'
-import { Conf, Input, Widget } from './protocol'
+import { Conf, Input } from './protocol'
 import { connect, Socket, SocketEvent } from './socket'
 
 
 export const newClient = (endpoint: S) => {
-  const widgets: Widget[] = []
+  const widgets: Input[] = []
   const conf: Conf = {
     title: 'H2O Nitro',
     caption: 'v0.1.0', // XXX show actual version

@@ -1,7 +1,7 @@
 import React from 'react';
 import { box, defer, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
 import { AppContainer, Header, XWidgets } from './inputs';
-import { Input, Msg, MsgType, Conf, Widget, Option, WidgetT, InputMode } from './protocol';
+import { Input, Msg, MsgType, Conf, Option, WidgetT, InputMode } from './protocol';
 import { Client } from './client';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { make } from './ui';
@@ -22,7 +22,7 @@ type AppState = {
 } | {
   t: AppStateT.Connected
   socket: Socket
-  widgets: Widget[]
+  widgets: Input[]
   conf: Conf
 }
 

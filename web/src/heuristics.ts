@@ -1,6 +1,6 @@
 import { isN, isO, isPair, isS, isV, newIncr, Incr, words, xid } from './core';
 import { markdown } from './markdown';
-import { Input, InputMode, Option, Widget, WidgetT } from './protocol';
+import { Input, InputMode, Option, WidgetT } from './protocol';
 
 const determineMode = (input: Input): InputMode => {
   // This function contains the heuristics for determining which widget to use.
@@ -139,32 +139,26 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
   return []
 }
 
-export const sanitizeWidget = (widget: Widget): Widget => {
+export const sanitizeWidget = (widget: Input): Input => {
   if (isS(widget)) {
-    widget = { t: WidgetT.Input, xid: xid(), index: 0, mode: 'md', text: widget, options: [] }
+    widget = { t: WidgetT.Box, xid: xid(), index: 0, mode: 'md', text: widget, options: [] }
   }
-  switch (widget.t) {
-    case WidgetT.Stack:
-      widget.items = widget.items.map(w => sanitizeWidget(w))
-      break
-    case WidgetT.Input:
-      sanitizeInput(widget)
-      break
+  if (widget.items) {
+    widget.items = widget.items.map(w => sanitizeWidget(w))
+  } else {
+    sanitizeInput(widget)
   }
   return widget
 }
 
-export const reIndex = (widgets: Widget[], incr: Incr) => {
+export const reIndex = (widgets: Input[], incr: Incr) => {
   for (const w of widgets) {
-    switch (w.t) {
-      case WidgetT.Stack:
-        reIndex(w.items, incr)
-        break
-      case WidgetT.Input:
-        if (w.index >= 0) {
-          w.index = incr()
-        }
-        break
+    if (w.items) {
+      reIndex(w.items, incr)
+    } else {
+      if (w.index >= 0) {
+        w.index = incr()
+      }
     }
   }
 }
