@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Sequence, List, Dict, Union, Callable, Set
+from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable, Awaitable
 from collections import OrderedDict
 import msgpack
 from enum import Enum, IntEnum
@@ -73,7 +73,9 @@ def _clean(d: dict) -> dict:
 N = Union[int, float]
 V = Union[N, str]
 
-Delegate = Callable[['View'], None]
+SyncDelegate = Callable[['View'], None]
+AsyncDelegate = Callable[['View'], Awaitable[None]]
+Delegate = Union[SyncDelegate, AsyncDelegate]
 
 
 class Option:
@@ -285,26 +287,7 @@ class Box:
 box = Box
 
 
-class BoxTile(Enum):
-    Normal = 'normal'
-    Stretch = 'stretch'
-    Center = 'center'
-    Start = 'start'
-    End = 'end'
-    Between = 'between'
-    Around = 'around'
-    Evenly = 'evenly'
-
-
-class BoxCrossTile(Enum):
-    Normal = 'normal'
-    Stretch = 'stretch'
-    Center = 'center'
-    Start = 'start'
-    End = 'end'
-
-
-class BoxWrap(Enum):
+class BoxArrange(Enum):
     Normal = 'normal'
     Stretch = 'stretch'
     Center = 'center'
@@ -407,7 +390,33 @@ def _collect_delegates(d: Dict[str, Delegate], options: Sequence[Option]):
             _collect_delegates(d, opt.options)
 
 
-class View:
+def _interpret(msg, expected: int):
+    if isinstance(msg, dict):
+        t = msg.get('t')
+        if t == _MsgType.Error:
+            code = msg.get('c')
+            raise RemoteError(f'code {code}')
+        if t == _MsgType.Switch:
+            raise ContextSwitchError(msg.get('d'))
+        if (expected > -1) and t != expected:
+            raise ProtocolError(f'unexpected message: want {expected}, got {t}')
+        if t == _MsgType.Input:
+            d = msg.get('d')
+            n = len(d)
+            if n == 0:
+                return
+            elif n == 1:
+                return d[0]
+            else:
+                return tuple(d)
+        if t == _MsgType.Join:
+            d = msg.get('d')
+            return d
+        raise ProtocolError(f'unknown message type {t}')
+    raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
+
+
+class ViewBase:
     def __init__(
             self,
             delegate: Delegate,
@@ -415,21 +424,31 @@ class View:
             caption: str = 'v0.1.0',  # XXX show actual version
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            context: any = None,
             send: Optional[Callable] = None,
             recv: Optional[Callable] = None,
-            context: any = None,
     ):
         self._delegate = delegate
         self._title = title
         self._caption = caption
         self._menu = menu or []
         self._nav = nav or []
+        self.context = context or {}
+        self._send = send
+        self._recv = recv
+
         self._delegates: Dict[str, Delegate] = dict()
         _collect_delegates(self._delegates, self._menu)
         _collect_delegates(self._delegates, self._nav)
-        self._send = send
-        self._recv = recv
-        self.context = context
+
+    def _join(self, msg):
+        # XXX handle join msg
+        return _marshal(dict(t=_MsgType.Conf, d=dict(
+            title=self._title,
+            caption=self._caption,
+            menu=_dump(self._menu),
+            nav=_dump(self._nav),
+        )))
 
     def __getitem__(self, key):
         return self.context.get(key)
@@ -443,77 +462,107 @@ class View:
             raise ProtocolError('Attempt to call unknown delegate')
         return d
 
-    def delegate(self, key: Optional[str] = None):
-        if key is None:
-            self._delegate(self)
-            return
 
-        self._delegate_for(key)(self)
+class AsyncView(ViewBase):
+    def __init__(
+            self,
+            delegate: AsyncDelegate,
+            title: str = None,
+            caption: str = None,
+            menu: Optional[Sequence[Option]] = None,
+            nav: Optional[Sequence[Option]] = None,
+            context: any = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
+
+    ):
+        super().__init__(delegate, title, caption, context, menu, nav, send, recv)
+
+    async def serve(self, send: Callable, recv: Callable, context: any = None):
+        await AsyncView(self._delegate, self._title, self._caption, self._menu, self._nav, context, send, recv)._run()
+
+    async def _run(self):
+        pass
+
+
+class View(ViewBase):
+    def __init__(
+            self,
+            delegate: SyncDelegate,
+            title: str = None,
+            caption: str = None,
+            menu: Optional[Sequence[Option]] = None,
+            nav: Optional[Sequence[Option]] = None,
+            context: any = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
+    ):
+        super().__init__(delegate, title, caption, context, menu, nav, send, recv)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
-        View(
-            self._delegate,
-            title=self._title,
-            caption=self._caption,
-            menu=self._menu,
-            nav=self._nav,
-            send=send,
-            recv=recv,
-            context=context or {},
-        )._run()
+        View(self._delegate, self._title, self._caption, self._menu, self._nav, context, send, recv)._run()
 
     def _run(self):
-        self._read(_MsgType.Join)  # XXX handle join
-        self._send(_marshal(dict(
-            t=_MsgType.Conf,
-            d=dict(
-                title=self._title,
-                caption=self._caption,
-                menu=_dump(self._menu),
-                nav=_dump(self._nav),
-            ),
-        )))
+        self._send(self._join(self._read(_MsgType.Join)))
+
         target = None
         while True:
             try:
-                self.delegate(target)
+                (self._delegate_for(target) if target else self._delegate)(self)
             except ContextSwitchError as e:
                 target = e.target
 
     def _read(self, expected: int):
-        msg = _unmarshal(self._recv())
-        if isinstance(msg, dict):
-            t = msg.get('t')
-            if t == _MsgType.Error:
-                code = msg.get('c')
-                raise RemoteError(f'code {code}')
-            if t == _MsgType.Switch:
-                raise ContextSwitchError(msg.get('d'))
-            if (expected > -1) and t != expected:
-                raise ProtocolError(f'unexpected message: want {expected}, got {t}')
-            if t == _MsgType.Input:
-                d = msg.get('d')
-                n = len(d)
-                if n == 0:
-                    return
-                elif n == 1:
-                    return d[0]
-                else:
-                    return tuple(d)
-            if t == _MsgType.Join:
-                d = msg.get('d')
-                return d
-            raise ProtocolError(f'unknown message type {t}')
-        raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
+        return _interpret(_unmarshal(self._recv()), expected)
 
     def _write(self, t: _MsgType, s: Box, position: Optional[int]):
-        msg = dict(t=t, d=s.dump())
-        if position is not None:
-            msg['p'] = position
-        self._send(_marshal(msg))
+        self._send(_marshal(_clean(dict(t=t, d=s.dump(), p=position))))
 
     def read(self):
         return self._read(_MsgType.Input)
+
+    def __call__(
+            self,
+            *items: Item,
+            row: Optional[bool] = None,
+            tile: Optional[str] = None,
+            cross_tile: Optional[str] = None,
+            wrap: Optional[str] = None,
+            gap: Optional[Length] = None,
+            align: Optional[str] = None,
+            width: Optional[Sizing] = None,
+            height: Optional[Sizing] = None,
+            margin: Optional[Sizing] = None,
+            padding: Optional[Sizing] = None,
+            color: Optional[str] = None,
+            background: Optional[str] = None,
+            border: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[Length] = None,
+            position: Optional[int] = None,
+    ):
+        self.show(
+            *items,
+            row=row,
+            tile=tile,
+            cross_tile=cross_tile,
+            wrap=wrap,
+            gap=gap,
+            align=align,
+            width=width,
+            height=height,
+            margin=margin,
+            padding=padding,
+            color=color,
+            background=background,
+            border=border,
+            grow=grow,
+            shrink=shrink,
+            basis=basis,
+            position=position,
+        )
+        return self.read()
 
     def show(
             self,
@@ -601,46 +650,3 @@ class View:
 
     def remove(self, position: int):
         pass
-
-    def __call__(
-            self,
-            *items: Item,
-            row: Optional[bool] = None,
-            tile: Optional[str] = None,
-            cross_tile: Optional[str] = None,
-            wrap: Optional[str] = None,
-            gap: Optional[Length] = None,
-            align: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            height: Optional[Sizing] = None,
-            margin: Optional[Sizing] = None,
-            padding: Optional[Sizing] = None,
-            color: Optional[str] = None,
-            background: Optional[str] = None,
-            border: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
-            position: Optional[int] = None,
-    ):
-        self.show(
-            *items,
-            row=row,
-            tile=tile,
-            cross_tile=cross_tile,
-            wrap=wrap,
-            gap=gap,
-            align=align,
-            width=width,
-            height=height,
-            margin=margin,
-            padding=padding,
-            color=color,
-            background=background,
-            border=border,
-            grow=grow,
-            shrink=shrink,
-            basis=basis,
-            position=position,
-        )
-        return self.read()
