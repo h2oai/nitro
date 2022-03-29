@@ -2,9 +2,8 @@ import { Incr, isN, isO, isPair, isS, isV, words, xid } from './core';
 import { markdown } from './markdown';
 import { Box, BoxMode, BoxT, Option } from './protocol';
 
-const determineMode = (input: Box): BoxMode => {
-  // This function contains the heuristics for determining which widget to use.
-  const { options, editable, multiple } = input
+const determineMode = (box: Box): BoxMode => {
+  const { options, editable, multiple } = box
 
   if (options.length) {
     if (editable) {
@@ -31,7 +30,7 @@ const determineMode = (input: Box): BoxMode => {
     return 'menu'
   }
 
-  const { value, min, max, step, precision } = input
+  const { value, min, max, step, precision } = box
 
   if (isPair(value)) {
     const [a, b] = value
@@ -46,32 +45,16 @@ const determineMode = (input: Box): BoxMode => {
   return 'text'
 }
 
-const sanitizeInput = (input: Box) => {
-  const { mode, options } = input
-  input.options = sanitizeOptions(options)
-  input.index = 0
-  sanitizeRange(input)
-  if (!mode) input.mode = determineMode(input)
-
-  if (input.mode === 'md') {
-    const [md, hasLinks] = markdown(input.text ?? '')
-    input.text = md
-    if (!hasLinks) {
-      input.index = -1 // don't capture
-    }
-  }
-}
-
-const sanitizeRange = (input: Box) => {
-  const { range } = input
+const sanitizeRange = (box: Box) => {
+  const { range } = box
   if (Array.isArray(range)) {
     switch (range.length) {
       case 2:
         {
           const [x, y] = range
           if ((isN(x) && isN(y)) || (isS(x) && isS(y))) {
-            input.min = x
-            input.max = y
+            box.min = x
+            box.max = y
           }
         }
         break
@@ -80,9 +63,9 @@ const sanitizeRange = (input: Box) => {
           const [x, y, z] = range
           // TODO string x, y?
           if (isN(x) && isN(y) && isN(z)) {
-            input.min = x
-            input.max = y
-            input.step = z
+            box.min = x
+            box.max = y
+            box.step = z
           }
         }
         break
@@ -91,10 +74,10 @@ const sanitizeRange = (input: Box) => {
           const [x, y, z, p] = range
           // TODO string x, y?
           if (isN(x) && isN(y) && isN(z) && isN(p)) {
-            input.min = x
-            input.max = y
-            input.step = z
-            input.precision = p
+            box.min = x
+            box.max = y
+            box.step = z
+            box.precision = p
           }
         }
         break
@@ -139,25 +122,37 @@ const sanitizeOptions = (x: any): Option[] => { // recursive
   return []
 }
 
-export const sanitizeWidget = (widget: Box): Box => {
-  if (isS(widget)) {
-    widget = { t: BoxT.Box, xid: xid(), index: 0, mode: 'md', text: widget, options: [] }
+export const sanitizeBox = (box: Box): Box => {
+  if (isS(box)) {
+    box = { t: BoxT.Box, xid: xid(), index: 0, mode: 'md', text: box, options: [] }
   }
-  if (widget.items) {
-    widget.items = widget.items.map(w => sanitizeWidget(w))
+  if (box.items) {
+    box.items = box.items.map(w => sanitizeBox(w))
   } else {
-    sanitizeInput(widget)
+    const { mode, options } = box
+    box.options = sanitizeOptions(options)
+    box.index = 0
+    sanitizeRange(box)
+    if (!mode) box.mode = determineMode(box)
+
+    if (box.mode === 'md') {
+      const [md, hasLinks] = markdown(box.text ?? '')
+      box.text = md
+      if (!hasLinks) {
+        box.index = -1 // don't capture
+      }
+    }
   }
-  return widget
+  return box
 }
 
-export const reIndex = (widgets: Box[], incr: Incr) => {
-  for (const w of widgets) {
-    if (w.items) {
-      reIndex(w.items, incr)
+export const reIndex = (boxes: Box[], incr: Incr) => {
+  for (const box of boxes) {
+    if (box.items) {
+      reIndex(box.items, incr)
     } else {
-      if (w.index >= 0) {
-        w.index = incr()
+      if (box.index >= 0) {
+        box.index = incr()
       }
     }
   }

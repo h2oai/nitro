@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Client } from './client';
 import { isN, newIncr, S, signal, U, xid } from './core';
-import { reIndex, sanitizeWidget } from './heuristics';
-import { AppContainer, Header, XWidgets } from './inputs';
+import { reIndex, sanitizeBox } from './heuristics';
+import { AppContainer, Header, XBoxes } from './inputs';
 import { Box, Conf, Msg, MsgType } from './protocol';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { make } from './ui';
@@ -21,7 +21,7 @@ type AppState = {
 } | {
   t: AppStateT.Connected
   socket: Socket
-  widgets: Box[]
+  boxes: Box[]
   conf: Conf
 }
 
@@ -59,17 +59,17 @@ export const App = make(({ client }: { client: Client }) => {
                 break
               case MsgType.Update:
                 {
-                  const { d: widget, p: position } = msg
-                  widget.xid = xid()
-                  const { conf, widgets } = client
-                  if (isN(position) && position >= 0 && position < widgets.length) {
-                    widgets[position] = widget
+                  const { d: box, p: position } = msg
+                  box.xid = xid()
+                  const { conf, boxes } = client
+                  if (isN(position) && position >= 0 && position < boxes.length) {
+                    boxes[position] = box
                   } else {
-                    widgets.length = 0
-                    widgets.push(sanitizeWidget(widget))
+                    boxes.length = 0
+                    boxes.push(sanitizeBox(box))
                   }
-                  reIndex(widgets, newIncr())
-                  stateB({ t: AppStateT.Connected, socket, conf, widgets })
+                  reIndex(boxes, newIncr())
+                  stateB({ t: AppStateT.Connected, socket, conf, boxes })
                 }
                 break
               case MsgType.Conf:
@@ -78,8 +78,8 @@ export const App = make(({ client }: { client: Client }) => {
                   client.conf = conf
                   const state = stateB()
                   if (state.t === AppStateT.Connected) {
-                    const { conf, widgets } = client
-                    stateB({ t: AppStateT.Connected, socket, conf, widgets })
+                    const { conf, boxes } = client
+                    stateB({ t: AppStateT.Connected, socket, conf, boxes })
                   }
                 }
                 break
@@ -115,7 +115,7 @@ export const App = make(({ client }: { client: Client }) => {
               <Texture />
               <AppContainer>
                 <Header send={state.socket.send} conf={state.conf} />
-                <XWidgets send={state.socket.send} widgets={state.widgets} />
+                <XBoxes send={state.socket.send} boxes={state.boxes} />
               </AppContainer>
             </div>
           )

@@ -4,7 +4,7 @@ import { connect, Socket, SocketEvent } from './socket'
 
 
 export const newClient = (endpoint: S) => {
-  const widgets: Box[] = []
+  const boxes: Box[] = []
   const conf: Conf = {
     title: 'H2O Nitro',
     caption: 'v0.1.0', // XXX show actual version
@@ -19,7 +19,7 @@ export const newClient = (endpoint: S) => {
   }
   return {
     conf,
-    widgets,
+    boxes,
     socket,
   }
 }
