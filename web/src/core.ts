@@ -169,6 +169,9 @@ export const isS = (x: any): x is string => typeof x === 'string'
 export const isV = (x: any): x is S | N => isS(x) || isN(x)
 export const isO = (x: any) => x && (typeof x === 'object')
 export const isPair = (x: any): x is any[] => Array.isArray(x) && x.length === 2
+export const anyN = (...xs: any[]) => xs.some(isN)
+export const anyS = (...xs: any[]) => xs.some(isS)
+export const anyD = (...xs: any[]) => xs.some(x => x !== undefined)
 export const defer = (seconds: U, f: TimerHandler) => window.setTimeout(f, seconds * 1000)
 export const words = (x: S) => x.trim().split(/\s+/g)
 export const newIncr = (start = 0) => {

@@ -1,4 +1,4 @@
-import { Incr, isN, isO, isPair, isS, isV, words, xid } from './core';
+import { anyD, anyN, Incr, isN, isO, isPair, isS, isV, words, xid } from './core';
 import { markdown } from './markdown';
 import { Box, BoxMode, Option } from './protocol';
 
@@ -39,10 +39,16 @@ const determineMode = (box: Box): BoxMode => {
     }
   }
 
-  if (isN(value) || isN(min) || isN(max) || isN(step) || isN(precision)) {
+  if (anyN(value, min, max, step, precision)) {
     return 'number'
   }
-  return 'text'
+
+  const { mask, prefix, suffix, placeholder, error, lines, required, password, icon } = box
+  if (anyD(value, mask, prefix, suffix, placeholder, error, lines, required, password, icon)) {
+    return 'text'
+  }
+
+  return 'md'
 }
 
 const sanitizeRange = (box: Box) => {
