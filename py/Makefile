@@ -2,6 +2,7 @@ all: build ## Build everything
 
 .PHONY: build
 build: purge ## Build wheel
+	cp -r ../web/build h2o_nitro/www
 	./venv/bin/python3 setup.py bdist_wheel
 
 setup: ## Install dependencies
@@ -11,7 +12,7 @@ setup: ## Install dependencies
 	./venv/bin/python -m pip install --editable .
 
 purge: ## Purge previous build
-	rm -rf build dist h2o_nitro.egg-info
+	rm -rf build dist h2o_nitro/www h2o_nitro.egg-info
 
 clean: purge ## Clean everything
 	rm -rf venv
