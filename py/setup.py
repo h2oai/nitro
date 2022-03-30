@@ -37,7 +37,8 @@ setup(
     packages=get_packages("h2o_nitro"),
     python_requires=">=3.6",
     install_requires=[
-        "msgpack>=1.0.3",
+        "click==8.0.4",
+        "msgpack==1.0.3",
     ],
     include_package_data=True,
     classifiers=[
@@ -65,5 +66,8 @@ setup(
         "Source": "https://github.com/h2oai/nitro",
         "Issues": "https://github.com/h2oai/nitro/issues",
         "Changelog": "https://github.com/h2oai/nitro/blob/master/CHANGELOG.md",
+    },
+    entry_points={
+        'console_scripts': ["nitro = h2o_nitro.cli:main"]
     },
 )
