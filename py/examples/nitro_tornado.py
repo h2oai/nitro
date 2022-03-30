@@ -1,6 +1,6 @@
 # ------------ Nitro ------------
 
-from h2o_nitro import AsyncView as View, box
+from h2o_nitro import AsyncView as View, box, web_directory
 
 
 async def main(view: View):
@@ -21,7 +21,7 @@ import tornado.queues
 
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("../../web/build/index.html")
+        self.render(f'{web_directory}/index.html')
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -48,7 +48,7 @@ app = tornado.web.Application(
         (r"/", RootHandler),
         (r"/nitro", WebSocketHandler),
     ],
-    static_path='web/build/static',
+    static_path=f'{web_directory}/static',
 )
 
 if __name__ == "__main__":

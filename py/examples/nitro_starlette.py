@@ -1,6 +1,6 @@
 # ------------ Nitro ------------
 
-from h2o_nitro import AsyncView as View, box
+from h2o_nitro import AsyncView as View, box, web_directory
 
 
 async def main(view: View):
@@ -19,13 +19,13 @@ from starlette.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 
 app = Starlette(debug=True, routes=[
-    Mount('/static', app=StaticFiles(directory='web/build/static')),
+    Mount('/static', app=StaticFiles(directory=f'{web_directory}/static')),
 ])
 
 
 @app.route('/')
-async def index_page(request):
-    return FileResponse('web/build/index.html')
+async def home_page(request):
+    return FileResponse(f'{web_directory}/index.html')
 
 
 @app.websocket_route('/nitro')

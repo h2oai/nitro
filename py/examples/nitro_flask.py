@@ -1,6 +1,6 @@
 # ------------ Nitro ------------
 
-from h2o_nitro import View, box
+from h2o_nitro import View, box, web_directory
 
 
 def main(view: View):
@@ -14,9 +14,14 @@ nitro = View(main, title='Hello Nitro!', caption='v1.0')
 # ------------ Flask ------------
 
 import simple_websocket
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 
-app = Flask(__name__, static_folder='../../web/build', static_url_path='')
+app = Flask(__name__, static_folder=web_directory, static_url_path='')
+
+
+@app.route('/')
+def home_page():
+    return send_from_directory(web_directory, 'index.html')
 
 
 @app.route('/nitro', websocket=True)
