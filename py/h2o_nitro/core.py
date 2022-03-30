@@ -1,4 +1,4 @@
-from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable, Awaitable
+from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable
 from collections import OrderedDict
 import msgpack
 from enum import Enum, IntEnum
@@ -40,8 +40,13 @@ class RemoteError(Exception):
 
 class ContextSwitchError(Exception):
     def __init__(self, target: str):
-        super().__init__('User switched context')
+        super().__init__('Context switched')
         self.target = target
+
+
+class InterruptError(Exception):
+    def __init__(self):
+        super().__init__('Interrupted')
 
 
 class ProtocolError(Exception):
@@ -73,15 +78,11 @@ def _clean(d: dict) -> dict:
 N = Union[int, float]
 V = Union[N, str]
 
-SyncDelegate = Callable[['View'], None]
-AsyncDelegate = Callable[['View'], Awaitable[None]]
-Delegate = Union[SyncDelegate, AsyncDelegate]
-
 
 class Option:
     def __init__(
             self,
-            value: Union[V, Delegate],
+            value: Union[V, Callable],
             text: Optional[str] = None,
             icon: Optional[str] = None,
             caption: Optional[str] = None,
@@ -382,7 +383,7 @@ def col(
     )
 
 
-def _collect_delegates(d: Dict[str, Delegate], options: Sequence[Option]):
+def _collect_delegates(d: Dict[str, Callable], options: Sequence[Option]):
     for opt in options:
         if opt.delegate:
             d[opt.value] = opt.delegate
@@ -416,10 +417,10 @@ def _interpret(msg, expected: int):
     raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
 
 
-class ViewBase:
+class _View:
     def __init__(
             self,
-            delegate: Delegate,
+            delegate: Callable,
             title: str = 'H2O Nitro',
             caption: str = 'v0.1.0',  # XXX show actual version
             menu: Optional[Sequence[Option]] = None,
@@ -437,7 +438,7 @@ class ViewBase:
         self._send = send
         self._recv = recv
 
-        self._delegates: Dict[str, Delegate] = dict()
+        self._delegates: Dict[str, Callable] = dict()
         _collect_delegates(self._delegates, self._menu)
         _collect_delegates(self._delegates, self._nav)
 
@@ -463,32 +464,10 @@ class ViewBase:
         return d
 
 
-class AsyncView(ViewBase):
+class View(_View):
     def __init__(
             self,
-            delegate: AsyncDelegate,
-            title: str = None,
-            caption: str = None,
-            menu: Optional[Sequence[Option]] = None,
-            nav: Optional[Sequence[Option]] = None,
-            context: any = None,
-            send: Optional[Callable] = None,
-            recv: Optional[Callable] = None,
-
-    ):
-        super().__init__(delegate, title, caption, context, menu, nav, send, recv)
-
-    async def serve(self, send: Callable, recv: Callable, context: any = None):
-        await AsyncView(self._delegate, self._title, self._caption, self._menu, self._nav, context, send, recv)._run()
-
-    async def _run(self):
-        pass
-
-
-class View(ViewBase):
-    def __init__(
-            self,
-            delegate: SyncDelegate,
+            delegate: Callable,
             title: str = None,
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
@@ -511,9 +490,14 @@ class View(ViewBase):
                 (self._delegate_for(target) if target else self._delegate)(self)
             except ContextSwitchError as e:
                 target = e.target
+            except InterruptError:
+                return
 
     def _read(self, expected: int):
-        return _interpret(_unmarshal(self._recv()), expected)
+        m = self._recv()
+        if m:
+            return _interpret(_unmarshal(m), expected)
+        raise InterruptError()
 
     def _write(self, t: _MsgType, s: Box, position: Optional[int]):
         self._send(_marshal(_clean(dict(t=t, d=s.dump(), p=position))))
@@ -565,3 +549,91 @@ class View(ViewBase):
             self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
         if read:
             return self._read(_MsgType.Input)
+
+
+class AsyncView(_View):
+    def __init__(
+            self,
+            delegate: Callable,
+            title: str = None,
+            caption: str = None,
+            menu: Optional[Sequence[Option]] = None,
+            nav: Optional[Sequence[Option]] = None,
+            context: any = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
+
+    ):
+        super().__init__(delegate, title, caption, context, menu, nav, send, recv)
+
+    async def serve(self, send: Callable, recv: Callable, context: any = None):
+        await AsyncView(self._delegate, self._title, self._caption, self._menu, self._nav, context, send, recv)._run()
+
+    async def _run(self):
+        await self._send(self._join(await self._read(_MsgType.Join)))
+
+        target = None
+        while True:
+            try:
+                await (self._delegate_for(target) if target else self._delegate)(self)
+            except ContextSwitchError as e:
+                target = e.target
+            except InterruptError:
+                return
+
+    async def _read(self, expected: int):
+        m = await self._recv()
+        if m:
+            return _interpret(_unmarshal(m), expected)
+        raise InterruptError()
+
+    async def _write(self, t: _MsgType, b: Box, position: Optional[int]):
+        await self._send(_marshal(_clean(dict(t=t, d=b.dump(), p=position))))
+
+    async def __call__(
+            self,
+            *items: Item,
+            read=True,
+            overwrite=True,
+            position: Optional[int] = None,
+            row: Optional[bool] = None,
+            tile: Optional[str] = None,
+            cross_tile: Optional[str] = None,
+            wrap: Optional[str] = None,
+            gap: Optional[Length] = None,
+            align: Optional[str] = None,
+            width: Optional[Sizing] = None,
+            height: Optional[Sizing] = None,
+            margin: Optional[Sizing] = None,
+            padding: Optional[Sizing] = None,
+            color: Optional[str] = None,
+            background: Optional[str] = None,
+            border: Optional[str] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[Length] = None,
+    ):
+        if len(items):
+            b = Box(
+                items=items,
+                row=row,
+                tile=tile,
+                cross_tile=cross_tile,
+                wrap=wrap,
+                gap=gap,
+                align=align,
+                width=width,
+                height=height,
+                margin=margin,
+                padding=padding,
+                color=color,
+                background=background,
+                border=border,
+                grow=grow,
+                shrink=shrink,
+                basis=basis,
+            )
+
+            await self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
+        if read:
+            return await self._read(_MsgType.Input)
