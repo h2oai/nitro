@@ -269,6 +269,10 @@ def write_gitignore(groups: List[Group]):
     gi_path.write_text(str(p))
 
 
+def decr_headings(s: str):
+    return re.sub(r'^#', '##', s, flags=re.MULTILINE)
+
+
 def write_readme(groups: List[Group]):
     p = Printer()
     for g in groups:
@@ -278,6 +282,9 @@ def write_readme(groups: List[Group]):
 
     readme = (docs_dir / 'index.md').read_text()
     readme = readme.replace('assets/', 'docs/assets/')
+
+    readme += decr_headings((docs_dir / 'install.md').read_text())
+
     readme += '\n\n## Guide\n\n'
     readme += str(p)
 
