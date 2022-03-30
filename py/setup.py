@@ -29,7 +29,7 @@ setup(
     name="h2o_nitro",
     version=get_version("h2o_nitro"),
     url="https://nitro.h2o.ai/",
-    description="",
+    description="The quickest way to build web apps. No front-end experience required.",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     author="Prithvi Prabhu",
@@ -63,6 +63,7 @@ setup(
     ],
     project_urls={
         "Source": "https://github.com/h2oai/nitro",
+        "Issues": "https://github.com/h2oai/nitro/issues",
         "Changelog": "https://github.com/h2oai/nitro/blob/master/CHANGELOG.md",
     },
 )
