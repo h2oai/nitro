@@ -1,5 +1,6 @@
 setuptools
 wheel
+twine
 flake8==4.0.1
 Flask==2.0.3
 msgpack==1.0.3

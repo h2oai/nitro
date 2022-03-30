@@ -14,6 +14,9 @@ setup: ## Install dependencies
 purge: ## Purge previous build
 	rm -rf build dist h2o_nitro/www h2o_nitro.egg-info
 
+publish: ## Publish wheel
+	./venv/bin/python -m twine upload dist/*
+
 clean: purge ## Clean everything
 	rm -rf venv
 
