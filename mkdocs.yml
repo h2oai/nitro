@@ -15,14 +15,12 @@ theme:
     - navigation.top
   palette:
     - scheme: default
-      primary: red
-      accent: red
+      primary: black
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
     - scheme: slate
-      primary: red
-      accent: red
+      primary: black
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
