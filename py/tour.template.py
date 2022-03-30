@@ -1,6 +1,6 @@
-from h2o_nitro import View, box, option, row, col, ContextSwitchError
+from h2o_nitro import web_directory, View, box, option, row, col, ContextSwitchError
 import simple_websocket
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 
 # EXAMPLES
 
@@ -41,7 +41,12 @@ nitro = View(
     ],
 )
 
-app = Flask(__name__, static_folder='../../web/build', static_url_path='')
+app = Flask(__name__, static_folder=web_directory, static_url_path='')
+
+
+@app.route('/')
+def home_page():
+    return send_from_directory(web_directory, 'index.html')
 
 
 @app.route('/nitro', websocket=True)
