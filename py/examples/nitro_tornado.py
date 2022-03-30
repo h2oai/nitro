@@ -1,65 +1,54 @@
+# ------------ Nitro ------------
+
+from h2o_nitro import AsyncView as View, box
+
+
+async def main(view: View):
+    name = await view(box('What is your name?', value='Boaty McBoatface'))
+    feel = await view(box(f'How do you feel today, {name}?', value='intrigued'))
+    await view(f'What a coincidence, {name}, I feel {feel}, too!')
+
+
+nitro = View(main, title='Hello Nitro!', caption='v1.0')
+
+# ------------ Tornado ------------
+
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
 import tornado.queues
 
-# --- Nitro ---
 
-from h2o_nitro import View, box
-
-
-def main(view: View):
-    name = view(box('What is your name?', value='Boaty McBoatface'))
-    feel = view(box(f'How do you feel today, {name}?', value='intrigued'))
-    view(f'What a coincidence, {name}, I feel {feel}, too!')
-
-
-nitro = View(main, title='Hello Nitro!', caption='v1.0')
-
-
-# --- Tornado ---
-class AsyncView:
-    def __init__(self, send, recv):
-        self._send = send
-        self._recv = recv
-
-    async def serve(self):
-        while True:
-            msg = await self._recv()
-            if msg is None:
-                break
-            await self._send(f'echo: {msg}')
-
-
-class MainHandler(tornado.web.RequestHandler):
+class RootHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("index.html")
+        self.render("../../web/build/index.html")
 
 
-class NitroSocket(tornado.websocket.WebSocketHandler):
+class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.queue = tornado.queues.Queue()
-        self.view = None
 
     async def open(self):
-        self.view = AsyncView(self.write_message, self.queue.get)
-        tornado.ioloop.IOLoop.current().add_callback(self.view.serve)
+        async def send(message):  # Simple wrapper to always send binary messages.
+            await self.write_message(message, binary=True)
+
+        # Start listening to queued messages.
+        tornado.ioloop.IOLoop.current().add_callback(nitro.serve, send, self.queue.get)
 
     async def on_message(self, message):
-        await self.queue.put(message)
+        await self.queue.put(message)  # Push to queue.
 
     def on_close(self):
-        self.queue.put(None)
+        self.queue.put(None)  # Quit listening.
 
 
 app = tornado.web.Application(
     [
-        (r"/", MainHandler),
-        (r"/nitro", NitroSocket),
+        (r"/", RootHandler),
+        (r"/nitro", WebSocketHandler),
     ],
-    static_path='static',
-    debug=True,
+    static_path='web/build/static',
 )
 
 if __name__ == "__main__":
