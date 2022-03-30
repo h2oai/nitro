@@ -30,10 +30,9 @@ Nitro brings that same level of simplicity to authoring web applications:
 ```py
 from h2o_nitro import View, box
 
-
 def main(view: View):
-    name = view(box('What is your name?'))
-    feel = view(box(f'How do you feel today, {name}?'))
+    name = view(box('What is your name?', value='Boaty McBoatface'))
+    feel = view(box(f'How do you feel today, {name}?', value='intrigued'))
     view(f'What a coincidence, {name}, I feel {feel}, too!')
 ```
 
@@ -552,9 +551,9 @@ By default each item passed to `view()` are laid out one below the other, with a
 
 ```py
 view(
-    box('Top'),
-    box('Middle'),
-    box('Bottom'),
+    box(value='Top'),
+    box(value='Middle'),
+    box(value='Bottom'),
 )
 ```
 
@@ -567,9 +566,9 @@ By default, items take up equal amounts of space, with a `10px` gap between the 
 
 ```py
 view(row(
-    box('Left'),
-    box('Center'),
-    box('Right'),
+    box(value='Left'),
+    box(value='Center'),
+    box(value='Right'),
 ))
 ```
 
@@ -579,9 +578,9 @@ Setting `row=True` produces the same result as wrapping items with `row()`.
 
 ```py
 view(
-    box('Left'),
-    box('Center'),
-    box('Right'),
+    box(value='Left'),
+    box(value='Center'),
+    box(value='Right'),
     row=True,
 )
 ```
@@ -597,21 +596,100 @@ The example shows one row split into three columns containing three rows each.
 view(
     row(
         col(
-            box('North-west'),
-            box('West'),
-            box('South-west'),
+            box(value='North-west'),
+            box(value='West'),
+            box(value='South-west'),
         ),
         col(
-            box('North'),
-            box('Center'),
-            box('South'),
+            box(value='North'),
+            box(value='Center'),
+            box(value='South'),
         ),
         col(
-            box('North-east'),
-            box('East'),
-            box('South-east'),
+            box(value='North-east'),
+            box(value='East'),
+            box(value='South-east'),
         ),
     ),
+)
+```
+
+### Layout - Background Color
+
+Set `background=` to apply a background color.
+
+The text color is automatically changed to a contrasting color if not specified.
+A `10px` padding is automatically applied if not specified.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+view(
+    box(text, background='#e63946'),
+    box(text, background='#f1faee'),
+    box(text, background='#a8dadc'),
+    box(text, background='#457b9d'),
+    box(text, background='#1d3557'),
+)
+```
+
+### Layout - Text Color
+
+Set `color=` to change the text color.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+view(
+    box(text, color='#e63946'),
+    box(text, color='#457b9d'),
+    box(text, color='#1d3557'),
+)
+```
+
+### Layout - Border Color
+
+Set `border=` to add a border.
+
+A `10px` padding is automatically applied if not specified.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
+do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+view(
+    box(text, border='#e63946'),
+    box(text, border='#457b9d'),
+    box(text, border='#1d3557'),
+)
+```
+
+### Layout - Align Text
+
+Set `align=` to `left`, `right`, `center` or `justify` to align text.
+
+
+```py
+text = '''
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+'''
+view(
+    row(
+        box(text, align='left'),
+        box(text, align='center'),
+        box(text, align='justify'),
+        box(text, align='right'),
+        gap=20,
+    )
 )
 ```
 
@@ -643,11 +721,14 @@ These parameters can be specified as either integers or strings.
 
 
 ```py
+text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
 view(
-    box(width=200),  # 200px
-    box(width='50%'),  # 50% of available width
-    box(width='250px'),
-    box(width='3in'),
+    box(text, width=200, background='#eee'),  # interpreted as '200px'
+    box(text, width='250px', background='#eee'),
+    box(text, width='3in', background='#eee'),
+    box(text, width='50%', background='#eee'),
+    box(text, height='1in', background='#eee'),
+    box(text, width='250px', height='100px', background='#eee'),
 )
 ```
 
@@ -658,9 +739,9 @@ Set `gap=` to control the spacing between items. The default gap is `10` or `'10
 
 ```py
 view(
-    box('Top'),
-    box('Middle'),
-    box('Bottom'),
+    box(value='Top'),
+    box(value='Middle'),
+    box(value='Bottom'),
     gap=25,
 )
 ```
@@ -684,15 +765,15 @@ do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 '''
 boxes = [
     # Uniform 20px margin
-    box(text, mode='md', margin='20px', background='#eee'),
+    box(text, margin='20px', background='#eee'),
     # Same as '20px'
-    box(text, mode='md', margin=20, background='#eee'),
+    box(text, margin=20, background='#eee'),
     # 0px top and bottom, 100px right and left margin
-    box(text, mode='md', margin='0px 100px', background='#eee'),
+    box(text, margin='0px 100px', background='#eee'),
     # 0px top, 100px right and left, 30px bottom margin
-    box(text, mode='md', margin='0px 100px 30px', background='#eee'),
+    box(text, margin='0px 100px 30px', background='#eee'),
     # 0px top, 100px right, 30px bottom, 200px left margin
-    box(text, mode='md', margin='0px 100px 30px 200px', background='#eee'),
+    box(text, margin='0px 100px 30px 200px', background='#eee'),
 ]
 view(col(*[row(b, border='#000', padding=0) for b in boxes]))
 ```
@@ -717,94 +798,15 @@ do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 view(
     col(
         # Uniform 20px padding
-        box(text, mode='md', padding='20px', background='#eee'),
+        box(text, padding='20px', background='#eee'),
         # Same as '20px'
-        box(text, mode='md', padding=20, background='#eee'),
+        box(text, padding=20, background='#eee'),
         # 0px top and bottom, 100px right and left padding
-        box(text, mode='md', padding='0px 100px', background='#eee'),
+        box(text, padding='0px 100px', background='#eee'),
         # 0px top, 100px right and left, 30px bottom padding
-        box(text, mode='md', padding='0px 100px 30px', background='#eee'),
+        box(text, padding='0px 100px 30px', background='#eee'),
         # 0px top, 100px right, 30px bottom, 200px left padding
-        box(text, mode='md', padding='0px 100px 30px 200px', background='#eee'),
-    )
-)
-```
-
-### Layout - Background Color
-
-Set `background=` to apply a background color.
-
-The text color is automatically changed to a contrasting color if not specified.
-A `10px` padding is automatically applied if not specified.
-
-
-```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
-view(
-    box(text, mode='md', background='#e63946'),
-    box(text, mode='md', background='#f1faee'),
-    box(text, mode='md', background='#a8dadc'),
-    box(text, mode='md', background='#457b9d'),
-    box(text, mode='md', background='#1d3557'),
-)
-```
-
-### Layout - Text Color
-
-Set `color=` to change the text color.
-
-
-```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
-view(
-    box(text, mode='md', color='#e63946'),
-    box(text, mode='md', color='#457b9d'),
-    box(text, mode='md', color='#1d3557'),
-)
-```
-
-### Layout - Border Color
-
-Set `border=` to add a border.
-
-A `10px` padding is automatically applied if not specified.
-
-
-```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
-view(
-    box(text, mode='md', border='#e63946'),
-    box(text, mode='md', border='#457b9d'),
-    box(text, mode='md', border='#1d3557'),
-)
-```
-
-### Layout - Align Text
-
-Set `align=` to `left`, `right`, `center` or `justify` to align text.
-
-
-```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
-view(
-    row(
-        box(text, mode='md', align='left'),
-        box(text, mode='md', align='center'),
-        box(text, mode='md', align='justify'),
-        box(text, mode='md', align='right'),
-        gap=20,
+        box(text, padding='0px 100px 30px 200px', background='#eee'),
     )
 )
 ```
@@ -820,7 +822,7 @@ Set `tile=` to control how items inside a view, row, or column are tiled along t
 
 
 ```py
-boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=100) for i in range(3)]
+boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
 row_style = dict(background='#eee')
 view(
     # Pack items from the start.
@@ -861,7 +863,7 @@ Set `cross_tile=` to control how items inside a view, row, or column are tiled a
 
 
 ```py
-boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=100) for i in range(3)]
+boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
 col_style = dict(height=100, background='#eee')
 view(
     # Pack items from the start.
@@ -889,7 +891,7 @@ Set `wrap=` to control how items are wrapped inside a view, row, or column.
 
 
 ```py
-boxes = [box(text=f'{i + 1}', mode='md', background='#666', width=150, height=50) for i in range(9)]
+boxes = [box(text=f'{i + 1}', background='#666', width=150, height=50) for i in range(9)]
 row_style = dict(height=300, background='#eee')
 view(
     # Pack items from the start.
@@ -935,7 +937,7 @@ set `basis=` to the value you want.
 
 
 ```py
-box_style = dict(mode='md', background='#666')
+box_style = dict(background='#666')
 row_style = dict(background='#eee')
 view(
     '1:?:?',
@@ -1025,10 +1027,10 @@ Use `row()` and `col()` to mix and match how items are laid out. Destructure the
 
 ```py
 first, last, addr1, addr2, city, state, zip, action = view(
-    row(box('First name'), box('Last name')),
-    box('Address line 1'),
-    box('Address line 2'),
-    row(box('City'), box('State'), box('Zip')),
+    row(box('First name', value=''), box('Last name', value='')),
+    box('Address line 1', value=''),
+    box('Address line 2', value=''),
+    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
     box([
         option('yes', 'Sign me up!', selected=True),
         option('no', 'Not now'),
@@ -1050,11 +1052,11 @@ how items are laid out.
 
 
 ```py
-first, last, addr1, addr2, city, state, zip, action = view(
-    row(box('First name'), box('M.I.', width='10%'), box('Last name')),
-    box('Address line 1'),
-    box('Address line 2'),
-    row(box('City', grow=5), box('State', width='20%'), box('Zip', grow=1)),
+first, middle, last, addr1, addr2, city, state, zip, action = view(
+    row(box('First name', value=''), box('M.I.', value='', width='10%'), box('Last name', value='')),
+    box('Address line 1', value=''),
+    box('Address line 2', value=''),
+    row(box('City', value='', grow=5), box('State', value='', width='20%'), box('Zip', value='', grow=1)),
     box([
         option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
         option('no', 'Not now', caption="I'll decide later"),
@@ -1063,7 +1065,7 @@ first, last, addr1, addr2, city, state, zip, action = view(
 view(f'''
 You provided:
 
-Address: {first} {last}, {addr1}, {addr2}, {city} {state} {zip}
+Address: {first} {middle} {last}, {addr1}, {addr2}, {city} {state} {zip}
 
 Sign up: {action}
 ''')
@@ -1071,13 +1073,26 @@ Sign up: {action}
 
 ### Textbox - Basic
 
-`box()` without any arguments creates a textbox.
+Call `box()` with `mode='text'` to show a textbox.
+
 The return value is the text entered into the box.
 
 
 ```py
-x = view(box())
+x = view(box(mode='text'))
 view(f'You entered {x}.')
+```
+
+### Textbox - Value
+
+Set `value=` to prefill the box with a value.
+
+`mode='text'` can be elided if `value=` is set.
+
+
+```py
+speed = view(box(value='60 km/h'))
+view(f'Your speed is {speed} km/h.')
 ```
 
 ### Textbox - Label
@@ -1086,17 +1101,7 @@ Any text passed to `box()` is used as a label.
 
 
 ```py
-speed = view(box('Speed'))
-view(f'Your speed is {speed} km/h.')
-```
-
-### Textbox - Value
-
-Use `value=` to prefill the box with a value.
-
-
-```py
-speed = view(box('Speed (km/h)', value='60'))
+speed = view(box('Speed', value='60'))
 view(f'Your speed is {speed} km/h.')
 ```
 
@@ -1216,7 +1221,7 @@ multi-line textboxes can be resized by the user.
 
 ### Spinbox - Basic
 
-Call `box()` with `mode='number'` to show a box with increment/decrement buttons
+Call `box()` with `mode='number'` to show a box with increment/decrement buttons.
 (also called a *spinbox*).
 
 
@@ -1613,10 +1618,9 @@ view(f'You chose {choice}.')
 
 Most often, it doesn't make sense to show a text prompt above a set of buttons.
 
-In such cases, `box(text=None, mode='button', options=X)` can be shortened to `box(X)`.
+In such cases, `box(mode='button', options=X)` can be shortened to `box(X)`.
 
-In other words, `box()` can accept options instead of text as its first argument.
-`mode='button'` is implied.
+In other words, if the first argument to `box()` is a sequence of options, then `mode='button'` is implied.
 
 
 ```py
