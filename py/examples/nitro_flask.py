@@ -1,7 +1,4 @@
-import simple_websocket
-from flask import Flask, request
-
-# --- Nitro ---
+# ------------ Nitro ------------
 
 from h2o_nitro import View, box
 
@@ -14,7 +11,10 @@ def main(view: View):
 
 nitro = View(main, title='Hello Nitro!', caption='v1.0')
 
-# --- Flask ---
+# ------------ Flask ------------
+
+import simple_websocket
+from flask import Flask, request
 
 app = Flask(__name__, static_folder='../../web/build', static_url_path='')
 
