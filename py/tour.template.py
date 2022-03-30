@@ -1,4 +1,4 @@
-from h2o_nitro import web_directory, View, box, option, row, col, ContextSwitchError
+from h2o_nitro import web_directory, View, box, option, row, col, ContextSwitchError, __version__ as version
 import simple_websocket
 from flask import Flask, request, send_from_directory
 
@@ -31,7 +31,7 @@ def main(view: View):
 nitro = View(
     main,
     title='Nitro',
-    caption='v0.1',
+    caption=f'v{version}',
     menu=[
         option(main, 'Contents', icon='Documentation'),
         # MENU
