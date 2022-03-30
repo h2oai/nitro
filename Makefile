@@ -15,6 +15,7 @@ docs: # Build docs
 
 publish-docs: docs ## Publish docs
 	aws s3 sync site s3://nitro.h2o.ai --delete
+	aws cloudfront create-invalidation --distribution-id ${AWS_CLOUDFRONT_ID} --paths "/*"
 
 clean-docs:
 	rm -rf tools/docs/venv
