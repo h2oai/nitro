@@ -1,5 +1,3 @@
-# ------------ Nitro ------------
-
 from h2o_nitro import View, box, web_directory
 
 
@@ -11,7 +9,7 @@ def main(view: View):
 
 nitro = View(main, title='Hello Nitro!', caption='v1.0')
 
-# ------------ Flask ------------
+# ------------ How to integrate with Flask ------------
 
 import simple_websocket
 from flask import Flask, request, send_from_directory

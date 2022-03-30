@@ -1,5 +1,3 @@
-# ------------ Nitro ------------
-
 from h2o_nitro import AsyncView as View, box, web_directory
 
 
@@ -11,7 +9,8 @@ async def main(view: View):
 
 nitro = View(main, title='Hello Nitro!', caption='v1.0')
 
-# ------------ Starlette ------------
+# ------------ How to integrate with Starlette ------------
+
 import uvicorn
 from starlette.applications import Starlette
 from starlette.routing import Mount
