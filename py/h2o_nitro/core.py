@@ -1,7 +1,10 @@
+from pathlib import Path
 from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable
 from collections import OrderedDict
 import msgpack
 from enum import Enum, IntEnum
+
+web_directory = Path(__file__).parent / 'www'
 
 __xid = 0
 
