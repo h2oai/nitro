@@ -48,6 +48,7 @@ markdown_extensions:
   - pymdownx.superfences
 nav:
   - Introduction: 'index.md'
+  - 'install.md'
   # Generated
   - Guide:
     - 'basics.md'
