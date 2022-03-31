@@ -122,10 +122,10 @@ def list(kind: str):
 
 
 @main.command()
-def tour():
-    """Launch an interactive tour of all examples.
+def docs():
+    """Launch Nitro's interactive documentation.
     """
-    tour_file_path = str(module_dir / 'tour' / 'tour.py')
+    tour_file_path = str(module_dir / 'docs' / 'docs.py')
     proc = subprocess.Popen([sys.executable, tour_file_path], stdout=subprocess.PIPE)
     for line in io.TextIOWrapper(proc.stdout, encoding='utf-8'):
         print(line)
