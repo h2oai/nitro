@@ -11,12 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import io
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 import click
 
-templates_dir = Path(__file__).parent / 'templates'
+module_dir = Path(__file__).parent
+templates_dir = module_dir / 'templates'
 samples_dir = templates_dir / 'samples'
 frameworks_dir = templates_dir / 'frameworks'
 
@@ -116,6 +119,16 @@ def list(kind: str):
         click.echo('Available frameworks:')
         click.echo(_list_dir_names(frameworks_dir))
         return
+
+
+@main.command()
+def tour():
+    """Launch an interactive tour of all examples.
+    """
+    tour_file_path = str(module_dir / 'tour' / 'tour.py')
+    proc = subprocess.Popen([sys.executable, tour_file_path], stdout=subprocess.PIPE)
+    for line in io.TextIOWrapper(proc.stdout, encoding='utf-8'):
+        print(line)
 
 
 if __name__ == '__main__':
