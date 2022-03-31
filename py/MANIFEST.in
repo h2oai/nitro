@@ -1,1 +1,2 @@
 recursive-include h2o_nitro/www *
+recursive-include h2o_nitro/templates *
