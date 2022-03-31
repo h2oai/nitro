@@ -1,11 +1,10 @@
-import { ComboBox, IComboBox, IComboBoxOption } from '@fluentui/react';
+import { ComboBox as FComboBox, IComboBox, IComboBoxOption } from '@fluentui/react';
 import React from 'react';
 import { N, S } from './core';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
 
-
-export const XComboBox = make(({ context, box }: BoxProps) => {
+export const ComboBox = make(({ context, box }: BoxProps) => {
   const
     { index, value, text, placeholder, required, error, options } = box,
     items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
@@ -19,7 +18,7 @@ export const XComboBox = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <ComboBox
+        <FComboBox
           label={text}
           text={initialValue}
           placeholder={placeholder}

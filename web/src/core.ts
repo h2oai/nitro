@@ -169,16 +169,16 @@ export const isS = (x: any): x is string => typeof x === 'string'
 export const isV = (x: any): x is S | N => isS(x) || isN(x)
 export const isO = (x: any) => x && (typeof x === 'object')
 export const isPair = (x: any): x is any[] => Array.isArray(x) && x.length === 2
+export const toN = (x: any): N | undefined => isN(x) ? x : undefined
+export const toS = (x: any): S | undefined => isS(x) ? x : undefined
+export const toDate = (x: any): Date | undefined => isS(x) ? new Date(x) : undefined
 export const anyN = (...xs: any[]) => xs.some(isN)
 export const anyS = (...xs: any[]) => xs.some(isS)
 export const anyD = (...xs: any[]) => xs.some(x => x !== undefined)
 export const defer = (seconds: U, f: TimerHandler) => window.setTimeout(f, seconds * 1000)
 export const words = (x: S) => x.trim().split(/\s+/g)
-export const unum = (x: any): N | undefined => isN(x) ? x : undefined
-export const ustr = (x: any): S | undefined => isS(x) ? x : undefined
-export const udate = (x: any): Date | undefined => isS(x) ? new Date(x) : undefined
 export const snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase())
-export const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefined => {
+export const valueFromRange = (value: any, min: any, max: any, step: any): N | undefined => {
   if (isN(value)) return value
   if (isN(min)) return Math.max(0, min)
   if (isN(max)) return Math.min(0, max)

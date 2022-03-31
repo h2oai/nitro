@@ -1,13 +1,13 @@
-import { DatePicker } from '@fluentui/react';
+import { DatePicker as FDatePicker } from '@fluentui/react';
 import React from 'react';
-import { dateToString, udate } from './core';
+import { dateToString, toDate } from './core';
 import { BoxProps, make } from './ui';
 
 
-export const XDatePicker = make(({ context, box }: BoxProps) => {
+export const DatePicker = make(({ context, box }: BoxProps) => {
   const
     { index, value } = box,
-    defaultDate = udate(value) ?? new Date(),
+    defaultDate = toDate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date | null) => {
       console.log('in select', d)
@@ -16,14 +16,14 @@ export const XDatePicker = make(({ context, box }: BoxProps) => {
     render = () => {
       const
         { text, placeholder, value, min, max, required } = box,
-        date = udate(value),
-        minDate = udate(min),
-        maxDate = udate(max)
+        date = toDate(value),
+        minDate = toDate(min),
+        maxDate = toDate(max)
 
       // TODO firstDayOfWeek, firstWeekOfYear customization
       // TODO pass strings for localization
       return (
-        <DatePicker
+        <FDatePicker
           label={text}
           value={date}
           minDate={minDate}

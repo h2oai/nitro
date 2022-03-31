@@ -1,10 +1,10 @@
-import { ColorPicker, cssColor, IColor, IRGB } from '@fluentui/react';
+import { ColorPicker as FColorPicker, cssColor, IColor, IRGB } from '@fluentui/react';
 import React from 'react';
 import { Labeled } from './label';
 import { BoxProps, make } from './ui';
 
 
-export const XColorPicker = make(({ context, box }: BoxProps) => {
+export const ColorPicker = make(({ context, box }: BoxProps) => {
   const
     { index, text, value } = box,
     colorValue = value ? String(value) : '#000',
@@ -15,7 +15,7 @@ export const XColorPicker = make(({ context, box }: BoxProps) => {
     render = () => {
       return (
         <Labeled label={text}>
-          <ColorPicker
+          <FColorPicker
             color={colorValue}
             alphaType='alpha'
             onChange={onChange}

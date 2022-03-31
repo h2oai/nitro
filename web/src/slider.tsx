@@ -1,17 +1,16 @@
-import { ISliderProps, Slider } from '@fluentui/react';
+import { ISliderProps, Slider as FSlider } from '@fluentui/react';
 import React from 'react';
-import { getDefaultValue, isN, isPair, U, unum } from './core';
+import { valueFromRange, isN, isPair, U, toN } from './core';
 import { BoxProps, make } from './ui';
 
-
-export const XSlider = make(({ context, box }: BoxProps) => {
+export const Slider = make(({ context, box }: BoxProps) => {
   const
     { index, text, value, placeholder, min, max, step } = box,
     originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
     ranged = isPair(value) && isN(value[0]) && isN(value[1]),
-    defaultValue = ranged ? 0 : getDefaultValue(value, min, max, step),
-    defaultValueMin = ranged ? getDefaultValue(value[0], min, max, step) : 0,
-    defaultValueMax = ranged ? getDefaultValue(value[1], min, max, step) : 0,
+    defaultValue = ranged ? 0 : valueFromRange(value, min, max, step),
+    defaultValueMin = ranged ? valueFromRange(value[0], min, max, step) : 0,
+    defaultValueMax = ranged ? valueFromRange(value[1], min, max, step) : 0,
     onChange = (v: U, range?: [U, U]) => {
       context.capture(index, range ? range : v)
     },
@@ -20,8 +19,8 @@ export const XSlider = make(({ context, box }: BoxProps) => {
         props: Partial<ISliderProps> = {
           label: text,
           placeholder,
-          min: unum(min),
-          max: unum(max),
+          min: toN(min),
+          max: toN(max),
           step,
           originFromZero,
           ranged,
@@ -30,13 +29,13 @@ export const XSlider = make(({ context, box }: BoxProps) => {
 
       return ranged
         ? (
-          <Slider
+          <FSlider
             {...props}
             defaultLowerValue={defaultValueMin}
             defaultValue={defaultValueMax}
           />
         ) : (
-          <Slider
+          <FSlider
             {...props}
             defaultValue={defaultValue}
           />

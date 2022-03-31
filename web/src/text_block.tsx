@@ -2,7 +2,7 @@ import React from 'react';
 import { Markdown } from './markdown';
 import { BoxProps, make } from './ui';
 
-export const XTextBlock = make(({ context, box }: BoxProps) => {
+export const TextBlock = make(({ context, box }: BoxProps) => {
   const
     ref = React.createRef<HTMLDivElement>(),
     update = () => {

@@ -1,10 +1,10 @@
-import { Dropdown, IDropdownOption } from '@fluentui/react';
+import { Dropdown as FDropdown, IDropdownOption } from '@fluentui/react';
 import React from 'react';
 import { selectedOf, toDropdownOption, toGroupedDropdownOptions } from './options';
 import { BoxProps, make } from './ui';
 
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
-export const XDropdown = make(({ context, box }: BoxProps) => {
+export const Dropdown = make(({ context, box }: BoxProps) => {
   const
     { index, text, placeholder, error, required, options } = box,
     selected = selectedOf(box),
@@ -16,7 +16,7 @@ export const XDropdown = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Dropdown
+        <FDropdown
           label={text}
           placeholder={placeholder}
           options={items}

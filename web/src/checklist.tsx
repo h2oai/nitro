@@ -6,10 +6,10 @@ import { Labeled } from './label';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
-const CheckboxContainer = styled.div`
+const Container = styled.div`
   margin: 0.5rem 0;
 `
-export const XCheckList = make(({ context, box }: BoxProps) => {
+export const Checklist = make(({ context, box }: BoxProps) => {
   const
     { index, text, options } = box,
     selecteds = selectedsOf(box),
@@ -26,13 +26,13 @@ export const XCheckList = make(({ context, box }: BoxProps) => {
     render = () => {
       const
         checkboxes = options.map(c => (
-          <CheckboxContainer key={c.value}>
+          <Container key={c.value}>
             <Checkbox
               label={c.text}
               defaultChecked={selection.has(String(c.value))}
               onChange={(_, checked) => onChecked(c.value, checked)}
             />
-          </CheckboxContainer>
+          </Container>
         ))
 
       return (

@@ -1,62 +1,62 @@
 import React from 'react';
-import { XButtons } from './buttons';
-import { XCalendar } from './calendar';
-import { XCheckList } from './checklist';
-import { XChoiceGroup } from './choice_group';
-import { XColorPalette } from './color_palette';
-import { XColorPicker } from './color_picker';
-import { XComboBox } from './combobox';
-import { XDatePicker } from './date_picker';
-import { XDropdown } from './dropdown';
-import { XDroplist } from './droplist';
-import { XRating } from './rating';
-import { XSlider } from './slider';
-import { XSpinbox } from './spinbox';
-import { XTagPicker } from './tag_picker';
-import { XTextbox } from './textbox';
-import { XTextBlock } from './text_block';
-import { XTimePicker } from './time_picker';
+import { Buttons } from './buttons';
+import { Calendar } from './calendar';
+import { Checklist } from './checklist';
+import { ChoiceGroup } from './choice_group';
+import { ColorPalette } from './color_palette';
+import { ColorPicker } from './color_picker';
+import { ComboBox } from './combobox';
+import { DatePicker } from './date_picker';
+import { Dropdown } from './dropdown';
+import { Droplist } from './droplist';
+import { Rating } from './rating';
+import { Slider } from './slider';
+import { Spinbox } from './spinbox';
+import { TagPicker } from './tag_picker';
+import { Textbox } from './textbox';
+import { TextBlock } from './text_block';
+import { TimePicker } from './time_picker';
 import { BoxProps } from './ui';
 
 export const XBox = ({ context, box }: BoxProps) => { // recursive 
   const { mode, options, editable, multiple } = box
   switch (mode) {
     case 'md':
-      return <XTextBlock context={context} box={box} />
+      return <TextBlock context={context} box={box} />
     case 'button':
-      return <XButtons context={context} box={box} />
+      return <Buttons context={context} box={box} />
     case 'check':
-      return <XCheckList context={context} box={box} />
+      return <Checklist context={context} box={box} />
     case 'color':
       return options.length
-        ? <XColorPalette context={context} box={box} />
-        : <XColorPicker context={context} box={box} />
+        ? <ColorPalette context={context} box={box} />
+        : <ColorPicker context={context} box={box} />
     case 'date':
-      return <XDatePicker context={context} box={box} />
+      return <DatePicker context={context} box={box} />
     case 'day':
     case 'month':
     case 'week':
-      return <XCalendar context={context} box={box} />
+      return <Calendar context={context} box={box} />
     case 'menu':
       return editable
-        ? <XComboBox context={context} box={box} />
+        ? <ComboBox context={context} box={box} />
         : multiple
-          ? <XDroplist context={context} box={box} />
-          : <XDropdown context={context} box={box} />
+          ? <Droplist context={context} box={box} />
+          : <Dropdown context={context} box={box} />
     case 'number':
-      return <XSpinbox context={context} box={box} />
+      return <Spinbox context={context} box={box} />
     case 'radio':
-      return <XChoiceGroup context={context} box={box} />
+      return <ChoiceGroup context={context} box={box} />
     case 'range':
-      return <XSlider context={context} box={box} />
+      return <Slider context={context} box={box} />
     case 'rating':
-      return <XRating context={context} box={box} />
+      return <Rating context={context} box={box} />
     case 'tag':
-      return <XTagPicker context={context} box={box} />
+      return <TagPicker context={context} box={box} />
     case 'text':
-      return <XTextbox context={context} box={box} />
+      return <Textbox context={context} box={box} />
     case 'time':
-      return <XTimePicker context={context} box={box} />
+      return <TimePicker context={context} box={box} />
     default:
       return <div>Unknown item</div>
   }

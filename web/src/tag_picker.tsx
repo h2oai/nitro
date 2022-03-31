@@ -1,4 +1,4 @@
-import { ITag, TagPicker } from '@fluentui/react';
+import { ITag, TagPicker as FTagPicker } from '@fluentui/react';
 import React from 'react';
 import { S } from './core';
 import { Labeled } from './label';
@@ -6,7 +6,7 @@ import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
 
-export const XTagPicker = make(({ context, box }: BoxProps) => {
+export const TagPicker = make(({ context, box }: BoxProps) => {
   const
     { index, text, options } = box,
     selectedOptions = selectedsOf(box),
@@ -29,7 +29,7 @@ export const XTagPicker = make(({ context, box }: BoxProps) => {
     render = () => {
       return (
         <Labeled label={text}>
-          <TagPicker
+          <FTagPicker
             pickerSuggestionsProps={{
               suggestionsHeaderText: 'Suggestions',
               noResultsFoundText: 'No matches found',

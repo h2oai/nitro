@@ -125,31 +125,31 @@ const ZoneItemContainer = styled.div`
   box-sizing: border-box;
 `
 
-const XZoneItem = ({ stackable, isRow, children }: { stackable: Box, isRow: B, children: JSX.Element }) => (
+const ZoneItem = ({ stackable, isRow, children }: { stackable: Box, isRow: B, children: JSX.Element }) => (
   <ZoneItemContainer style={applyBoxStyles({}, stackable, isRow)}>
     {children}
   </ZoneItemContainer>
 )
 
-const ZoneContainer = styled.div`
+const Container = styled.div`
   display: flex;
   box-sizing: border-box;
 `
 
-export const XZone = ({ context, boxes, stack }: { context: Context, boxes: Box[], stack: Partial<Box> }) => {
+export const Zone = ({ context, boxes, stack }: { context: Context, boxes: Box[], stack: Partial<Box> }) => {
   const
     { row, tile, cross_tile, wrap, gap } = stack,
     isRow = row ? true : false,
     children = boxes.map(box => {
       if (box.items) {
         return (
-          <XZone key={xid()} context={context} boxes={box.items} stack={box} />
+          <Zone key={xid()} context={context} boxes={box.items} stack={box} />
         )
       } else {
         return (
-          <XZoneItem key={xid()} stackable={box} isRow={isRow}>
+          <ZoneItem key={xid()} stackable={box} isRow={isRow}>
             <XBox key={box.xid} context={context} box={box} />
-          </XZoneItem>
+          </ZoneItem>
         )
       }
     }),
@@ -163,8 +163,8 @@ export const XZone = ({ context, boxes, stack }: { context: Context, boxes: Box[
     }
 
   return (
-    <ZoneContainer style={applyBoxStyles(css, stack, isRow)}>
+    <Container style={applyBoxStyles(css, stack, isRow)}>
       {children}
-    </ZoneContainer>
+    </Container>
   )
 }

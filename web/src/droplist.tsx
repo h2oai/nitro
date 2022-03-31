@@ -4,7 +4,7 @@ import { S } from './core';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
-export const XDroplist = make(({ context, box }: BoxProps) => {
+export const Droplist = make(({ context, box }: BoxProps) => {
   const
     { index, text, placeholder, error, required, options } = box,
     selecteds = selectedsOf(box),

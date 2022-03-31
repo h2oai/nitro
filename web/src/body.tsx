@@ -4,13 +4,14 @@ import { B, xid } from './core';
 import { Box } from './protocol';
 import { Send } from './socket';
 import { newCaptureContext } from './ui';
-import { XZone } from './zone';
+import { Zone } from './zone';
 
 const continueButton: Box = {
   xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [
     { value: 'continue', text: 'Continue', selected: true }
   ]
 }
+
 const hasActions = (boxes: Box[]): B => { // recursive
   for (const box of boxes) {
     if (box.items) {
@@ -24,9 +25,10 @@ const hasActions = (boxes: Box[]): B => { // recursive
   return false
 }
 
-const BoxesContainer = styled.div`
+const Container = styled.div`
   padding: 1rem 2rem 2rem;
 `
+
 export const Body = (props: { send: Send, boxes: Box[] }) => {
   const
     original = props.boxes,
@@ -34,8 +36,8 @@ export const Body = (props: { send: Send, boxes: Box[] }) => {
     boxes: Box[] = canContinue ? original : [...original, continueButton],
     context = newCaptureContext(props.send, [])
   return (
-    <BoxesContainer>
-      <XZone context={context} boxes={boxes} stack={{}} />
-    </BoxesContainer>
+    <Container>
+      <Zone context={context} boxes={boxes} stack={{}} />
+    </Container>
   )
 }

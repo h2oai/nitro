@@ -29,7 +29,7 @@ const
     return c24 ? s : s + (pm ? 'PM' : 'AM')
   }
 
-export const XTimePicker = make(({ context, box }: BoxProps) => {
+export const TimePicker = make(({ context, box }: BoxProps) => {
   const
     { index, text, value } = box,
     clock = parseClock(String(value).toLowerCase()),

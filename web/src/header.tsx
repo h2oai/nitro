@@ -8,23 +8,6 @@ import { Conf, MsgType, Option } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 
-const HeaderContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 1rem 2rem;
-`
-const HeaderTitle = styled.div` 
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 1rem;
-  color: #555;
-  margin-left: 0.5rem;
-`
-const HeaderSubtitle = styled.div`
-  font-weight: 400;
-  color: #999;
-  margin-left: 0.5rem;
-`
 const MenuContainer = styled.div`
   cursor: pointer;
   width: 22px;
@@ -32,7 +15,8 @@ const MenuContainer = styled.div`
   display: flex;
   align-items: center;
 `
-const XMenu = make(({ send, options }: { send: Send, options: Option[] }) => {
+
+const Menu = make(({ send, options }: { send: Send, options: Option[] }) => {
   const
     hasMenu = options.length > 0,
     switchTo = (v: V) => {
@@ -66,36 +50,55 @@ const XMenu = make(({ send, options }: { send: Send, options: Option[] }) => {
     }
   return { render, showMenuB }
 })
-const NavBar = styled.div`
+
+const NavBarContainer = styled.div`
   display: flex;
   flex-grow: 1;
   justify-content: flex-end;
 `
 
-const XCommandBar = make(({ send, options }: { send: Send, options: Option[] }) => {
+const NavBar = make(({ send, options }: { send: Send, options: Option[] }) => {
   const
     switchTo = (v: V) => {
       send({ t: MsgType.Switch, d: v })
     },
     items = options.map(o => toContextualMenuItem(o, switchTo)),
     render = () => (
-      <CommandBar items={items} />
+      <NavBarContainer>
+        <CommandBar items={items} />
+      </NavBarContainer>
     )
   return { render }
 })
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+`
+const Title = styled.div` 
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1rem;
+  color: #555;
+  margin-left: 0.5rem;
+`
+const Subtitle = styled.div`
+  font-weight: 400;
+  color: #999;
+  margin-left: 0.5rem;
+`
 
 export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
   const
     render = () => {
       return (
-        <HeaderContainer>
-          <XMenu send={send} options={conf.menu ?? []} />
-          <HeaderTitle>{conf.title}</HeaderTitle>
-          <HeaderSubtitle>{conf.caption}</HeaderSubtitle>
-          <NavBar>
-            <XCommandBar send={send} options={conf.nav ?? []} />
-          </NavBar>
-        </HeaderContainer>
+        <Container>
+          <Menu send={send} options={conf.menu ?? []} />
+          <Title>{conf.title}</Title>
+          <Subtitle>{conf.caption}</Subtitle>
+          <NavBar send={send} options={conf.nav ?? []} />
+        </Container>
       )
     }
   return { render }

@@ -1,9 +1,9 @@
-import { ChoiceGroup, IChoiceGroupOption } from '@fluentui/react';
+import { ChoiceGroup as FChoiceGroup, IChoiceGroupOption } from '@fluentui/react';
 import React from 'react';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
 
-export const XChoiceGroup = make(({ context, box }: BoxProps) => {
+export const ChoiceGroup = make(({ context, box }: BoxProps) => {
   const
     { index, text, placeholder, required, options } = box,
     selected = selectedOf(box),
@@ -18,7 +18,7 @@ export const XChoiceGroup = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <ChoiceGroup
+        <FChoiceGroup
           label={text}
           placeholder={placeholder}
           options={items}
