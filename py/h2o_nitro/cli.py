@@ -16,6 +16,10 @@ import shutil
 from pathlib import Path
 import click
 
+templates_dir = Path(__file__).parent / 'templates'
+samples_dir = templates_dir / 'samples'
+frameworks_dir = templates_dir / 'frameworks'
+
 
 @click.group()
 def main():
@@ -24,18 +28,42 @@ def main():
 
 @main.command()
 @click.argument('name')
-@click.option('--template', default='basic', help='The app template to use.')
-@click.option('--framework', default='flask', help='The web framework to use. One of "flask", "tornado", "starlette".')
+@click.option(
+    '--template',
+    default='basic',
+    help='The app template to use. Run "nitro list templates" to list available templates',
+)
+@click.option(
+    '--framework',
+    default='flask',
+    help='The web framework to use. Run "nitro list frameworks" to list available frameworks.',
+)
 def init(name: str, template: str, framework: str):
     """Initialize a new app.
+
+    \b
+    Initialize a basic Flask app named "spaceship":
+    $ nitro init spaceship
+
+    \b
+    Initialize a to-do Flask app named "spaceship":
+    $ nitro init spaceship --template todo
+
+    \b
+    Initialize a basic Tornado app named "spaceship":
+    $ nitro init spaceship --framework tornado
+
+    \b
+    Initialize a to-do Starlette app named "spaceship":
+    $ nitro init spaceship --template todo --framework starlette
+
     """
-    templates_dir = Path(__file__).parent / 'templates'
-    samples_dir = templates_dir / 'samples' / template
-    if not samples_dir.is_dir():
+    sample_dir = samples_dir / template
+    if not sample_dir.is_dir():
         click.echo(f'Unknown template: {template}', err=True)
         return
 
-    framework_dir = templates_dir / 'frameworks' / framework
+    framework_dir = frameworks_dir / framework
     if not framework_dir.is_dir():
         click.echo(f'Unknown framework: {framework}', err=True)
         return
@@ -43,8 +71,8 @@ def init(name: str, template: str, framework: str):
     app_dir = Path(name)
     shutil.copytree(framework_dir, app_dir)
 
-    sync_sample = (samples_dir / 'sync.py').read_text()
-    async_sample = (samples_dir / 'async.py').read_text()
+    sync_sample = (sample_dir / 'sync.py').read_text()
+    async_sample = (sample_dir / 'async.py').read_text()
 
     app_file = app_dir / 'app.py'
     app_code = app_file.read_text()
