@@ -40,16 +40,20 @@ clean-docs: ## Clean docs
 serve-docs: # Launch docs in development mode
 	./tools/docs/venv/bin/mkdocs serve
 
+release: # Tag and release on Github
+	git tag v$(VERSION)
+	git push origin && git push origin --tags
+	gh release create v$(VERSION) \
+		py/dist/h2o_nitro-$(VERSION)-py3-none-any.whl \
+		--prerelease \
+		--notes "[Change Log](https://nitro.h2o.ai/change-log/)"
+
 publish-py: ## Publish wheel to PyPI
 	cd py && $(MAKE) publish
 
 publish-docs: docs ## Publish docs
 	aws s3 sync site s3://nitro.h2o.ai --delete
 	aws cloudfront create-invalidation --distribution-id ${AWS_CLOUDFRONT_ID} --paths "/*"
-
-tag: ## Tag version
-	git tag v$(VERSION)
-	git push origin && git push origin --tags
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
