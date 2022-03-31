@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Body } from './body';
 import { Client } from './client';
 import { isN, newIncr, S, signal, U, xid } from './core';
+import { Header } from './header';
 import { reIndex, sanitizeBox } from './heuristics';
-import { AppContainer, Header, XBoxes } from './inputs';
 import { Box, Conf, Msg, MsgType } from './protocol';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { make } from './ui';
@@ -40,6 +41,12 @@ const Texture = styled.div`
   background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
   repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
   repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0,0,0,.2) 2px, rgba(0,0,0,.2) 3px, transparent 3px, transparent 5px, rgba(0,0,0,.2) 5px);
+`
+
+const AppContainer = styled.div`
+  max-width: 720px;
+  background-color: #fff;
+  margin: 1rem auto 2rem;
 `
 export const App = make(({ client }: { client: Client }) => {
   const
@@ -115,7 +122,7 @@ export const App = make(({ client }: { client: Client }) => {
               <Texture />
               <AppContainer>
                 <Header send={state.socket.send} conf={state.conf} />
-                <XBoxes send={state.socket.send} boxes={state.boxes} />
+                <Body send={state.socket.send} boxes={state.boxes} />
               </AppContainer>
             </div>
           )

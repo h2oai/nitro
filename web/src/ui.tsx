@@ -1,6 +1,19 @@
 import React from 'react';
-import { B, Dict, Disposable, isSignal, on } from './core';
+import { B, Dict, Disposable, isSignal, on, V } from './core';
+import { Box, MsgType } from './protocol';
+import { Send } from './socket';
 
+export const newCaptureContext = (send: Send, data: Array<V | V[]>) => {
+  const capture = <T extends V | V[]>(index: any, value: T) => {
+    if (index >= 0) data[index] = value
+  }
+  const submit = () => send({ t: MsgType.Input, d: data })
+  return { capture, submit }
+}
+
+export type Context = ReturnType<typeof newCaptureContext>
+
+export type BoxProps = { context: Context, box: Box }
 
 interface Renderable {
   render(): JSX.Element

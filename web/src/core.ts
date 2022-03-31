@@ -174,6 +174,27 @@ export const anyS = (...xs: any[]) => xs.some(isS)
 export const anyD = (...xs: any[]) => xs.some(x => x !== undefined)
 export const defer = (seconds: U, f: TimerHandler) => window.setTimeout(f, seconds * 1000)
 export const words = (x: S) => x.trim().split(/\s+/g)
+export const unum = (x: any): N | undefined => isN(x) ? x : undefined
+export const ustr = (x: any): S | undefined => isS(x) ? x : undefined
+export const udate = (x: any): Date | undefined => isS(x) ? new Date(x) : undefined
+export const snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase())
+export const getDefaultValue = (value: any, min: any, max: any, step: any): N | undefined => {
+  if (isN(value)) return value
+  if (isN(min)) return Math.max(0, min)
+  if (isN(max)) return Math.min(0, max)
+  if (isN(step)) return 0
+  return undefined
+}
+export const leftPad = (c: S, n: U) => {
+  let pad = ''
+  for (let i = 0; i < n; i++) pad += c
+  return (s: S) => {
+    if (s.length >= n) return s
+    s = pad + s
+    return s.substring(s.length - n)
+  }
+}
+export const dateToString = (d: Date) => d.toISOString().substring(0, 10)
 export const newIncr = (start = 0) => {
   let i = start
   return () => i++
