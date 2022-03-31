@@ -49,7 +49,7 @@ markdown_extensions:
 nav:
   - Introduction: 'index.md'
   - 'install.md'
-  # Generated
+  # Begin generated
   - Guide:
     - 'basics.md'
     - 'markdown.md'
@@ -75,3 +75,6 @@ nav:
     - 'color-picker.md'
     - 'color-palette.md'
     - 'rating.md'
+    # End generated
+  - Meta:
+      - 'change-log.md'

@@ -236,23 +236,30 @@ def write_docs_examples(groups: List[Group]):
         (docs_dir / f'{g.name}.md').write_text(str(p))
 
 
-yaml_separator = '# Generated'
+yaml_separator_begin = '# Begin generated'
+yaml_separator_end = '# End generated'
 
 
 def write_docs_yaml(groups: List[Group]):
     p = Printer('  ')
 
     yaml_path = Path('..') / 'mkdocs.yml'
-    yaml = yaml_path.read_text().split(yaml_separator)[0].strip()
-    p(yaml)
+    yaml = yaml_path.read_text()
+    yaml_begin = yaml.split(yaml_separator_begin)[0].strip()
+    yaml_end = yaml.split(yaml_separator_end)[1].strip()
 
+    p(yaml_begin)
     p.indent()
-    p(yaml_separator)
+    p(yaml_separator_begin)
 
     p('- Guide:')
     p.indent()
     for g in groups:
         p(f"- '{g.name}.md'")
+
+    p(yaml_separator_end)
+    p.dedent()
+    p(yaml_end)
 
     yaml_path.write_text(str(p))
 
