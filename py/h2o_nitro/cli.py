@@ -86,5 +86,37 @@ def init(name: str, template: str, framework: str):
     click.echo(readme)
 
 
+def _to_numbered_list(items):
+    return '\n'.join([f'{i + 1}. {x}' for i, x in enumerate(items)])
+
+
+def _list_dir_names(p: Path):
+    return _to_numbered_list(sorted([d.name for d in p.iterdir()]))
+
+
+@main.command()
+@click.argument('kind')
+def list(kind: str):
+    """List available templates and frameworks.
+
+    \b
+    List all available templates
+    $ nitro list templates
+
+    \b
+    List all available frameworks
+    $ nitro list frameworks
+
+    """
+    if kind == 'templates':
+        click.echo('Available templates:')
+        click.echo(_list_dir_names(samples_dir))
+        return
+    if kind == 'frameworks':
+        click.echo('Available frameworks:')
+        click.echo(_list_dir_names(frameworks_dir))
+        return
+
+
 if __name__ == '__main__':
     main()
