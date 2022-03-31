@@ -41,24 +41,24 @@ def main():
     default='flask',
     help='The web framework to use. Run "nitro list frameworks" to list available frameworks.',
 )
-def init(name: str, template: str, framework: str):
+def create(name: str, template: str, framework: str):
     """Initialize a new app.
 
     \b
-    Initialize a basic Flask app named "spaceship":
-    $ nitro init spaceship
+    Initialize a basic Flask app named "my_app":
+    $ nitro create my_app
 
     \b
-    Initialize a to-do Flask app named "spaceship":
-    $ nitro init spaceship --template todo
+    Initialize a to-do Flask app named "my_app":
+    $ nitro create my_app --template todo
 
     \b
-    Initialize a basic Tornado app named "spaceship":
-    $ nitro init spaceship --framework tornado
+    Initialize a basic Tornado app named "my_app":
+    $ nitro create my_app --framework tornado
 
     \b
-    Initialize a to-do Starlette app named "spaceship":
-    $ nitro init spaceship --template todo --framework starlette
+    Initialize a to-do Starlette app named "my_app":
+    $ nitro create my_app --template todo --framework starlette
 
     """
     sample_dir = samples_dir / template
