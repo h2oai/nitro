@@ -40,6 +40,9 @@ setup(
         "click==8.0.4",
         "msgpack==1.0.3",
     ],
+    extras_require={
+        'flask': ['flask', 'simple-websocket']
+    },
     include_package_data=True,
     classifiers=[
         'License :: OSI Approved :: BSD License',
