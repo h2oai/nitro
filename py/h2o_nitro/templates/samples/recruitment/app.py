@@ -25,7 +25,7 @@ async def main(view: View):
         ''',
         box([
             option('full-time', 'Full time', caption="I'm a seasoned pro. To the galaxy and beyond!", selected=True),
-            option('internship', 'Internship', caption="I'm still learning and want to expore opportunities"),
+            option('internship', 'Internship', caption="I'm still learning and want to explore opportunities"),
         ])
     )
 
