@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import io
+import re
 import shutil
 import subprocess
 import sys
@@ -74,13 +75,13 @@ def create(name: str, template: str, framework: str):
     app_dir = Path(name)
     shutil.copytree(framework_dir, app_dir)
 
-    sync_sample = (sample_dir / 'sync.py').read_text()
-    async_sample = (sample_dir / 'async.py').read_text()
+    async_sample = (sample_dir / 'app.py').read_text()
+    sync_sample = re.sub('(async |await |AsyncView as)', '', async_sample)
 
     app_file = app_dir / 'app.py'
     app_code = app_file.read_text()
-    app_code.replace('# SAMPLE_SYNC', sync_sample)
-    app_code.replace('# SAMPLE_ASYNC', async_sample)
+    app_code = app_code.replace('# SAMPLE_ASYNC', async_sample)
+    app_code = app_code.replace('# SAMPLE_SYNC', sync_sample)
     app_file.write_text(app_code)
 
     readme_file = app_dir / 'README.md'
