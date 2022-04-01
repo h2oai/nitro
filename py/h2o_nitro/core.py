@@ -426,9 +426,9 @@ class _View:
             delegate: Callable,
             title: str = 'H2O Nitro',
             caption: str = 'v0.1.0',  # XXX show actual version
+            context: any = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
-            context: any = None,
             send: Optional[Callable] = None,
             recv: Optional[Callable] = None,
     ):
