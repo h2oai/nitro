@@ -89,7 +89,7 @@ use Nitro.
 Install with interactive tour and documentation:
 
 ```
-pip3 install h2o-nitro[flask]
+pip3 install "h2o-nitro[flask]"
 ```
 
 Or, for a minimal install:
