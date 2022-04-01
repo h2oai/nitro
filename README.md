@@ -234,14 +234,30 @@ view('And go on till you come to the end,')
 view('Then stop.')
 ```
 
+### Basics - Style text
+
+To style text, put it in a `box()`, and style the box.
+
+`view(text)` is in fact shorthand for `view(box(text))`.
+
+
+```py
+view(
+    box('Hello World!', color='red', border='red'),
+    box('Hello World!', color='white', background='red'),
+    box('Hello World!', width='50%', background='#eee'),
+)
+```
+
+
+In general, `box()` can be used to create all kinds of content, like text blocks, dropdowns,
+spinboxes, checklists, buttons, calendars, and so on.
+
 ### Basics - Get user input
 
-Call `box()` to create a *box* (an input field) and pass it to `view()`.
+Call `box()` with `value=` to create an input field and pass it to `view()`.
 
-When a view contains a box, the `view()` function returns its input value.
-
-`box()` creates a textbox by default, but can also create other kinds of input fields, like checkboxes,
-dropdowns, spinboxes, buttons, calendars, etc.
+When a view contains an input field, the `view()` function returns its input value.
 
 
 ```py
@@ -252,7 +268,7 @@ view(f'Hello, {name}!')
 ```
 
 
-Here, `view()` behaves similar to Python's built-in `input()` function.
+Here, `view(box())` behaves similar to Python's built-in `input()` function.
 
 ### Basics - Get inputs one at a time
 
@@ -345,6 +361,8 @@ multiple functions , but Nitro makes all this delightfully simple!
 ### Markdown - Basics
 
 Strings passed to `view()` are interpreted as [Github Flavored Markdown](https://github.github.com/gfm/) (GFM).
+
+`view(text)` is shorthand for `view(box(text))`.
 
 
 ```py
@@ -708,7 +726,7 @@ Set `tile=` to control how items inside a view, row, or column are tiled along t
 - The main axis for a row is horizontal, starting at the left, and ending at the right.
 - The main axis for a column is vertical, starting at the top, and ending at the bottom
 
-`tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+`tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, `stretch`, or `normal`.
 
 
 ```py
@@ -777,7 +795,7 @@ view(
 
 Set `wrap=` to control how items are wrapped inside a view, row, or column.
 
-`wrap=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+`wrap=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, `stretch`, or `normal`.
 
 
 ```py
@@ -1418,7 +1436,7 @@ view(f'You chose {choice}.')
 ```
 
 
-In other words, `'green yellow orange red'` is a shorthand notation for `['green', 'yellow', 'orange', 'red']`.
+In other words, `'green yellow orange red'` is shorthand for `['green', 'yellow', 'orange', 'red']`.
 
 ### Options - From tuples
 
@@ -1436,7 +1454,7 @@ view(f'You chose {choice}.')
 ```
 
 
-Here, `(value, text)` is a shorthand notation for `option(value, text)`.
+Here, `(value, text)` is shorthand for `option(value, text)`.
 
 ### Options - From dictionary
 
@@ -2026,7 +2044,7 @@ view(f'Your speed is {speed} km/h')
 
 ### Slider - Range with precision
 
-Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
+Setting `range=` to a `(min, max, step, precision)` tuple is shorthand setting
 `min=`, `max=`, `step` and `precision` individually.
 
 
@@ -2151,7 +2169,7 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ### Range Slider - Range with precision
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
-Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
+Setting `range=` to a `(min, max, step, precision)` tuple is shorthand for setting
 `min=`, `max=`, `step` and `precision` individually.
 
 

@@ -64,13 +64,26 @@ def sequence_views(view: View):
     view('Then stop.')
 
 
+# ## Style text
+# To style text, put it in a `box()`, and style the box.
+#
+# `view(text)` is in fact shorthand for `view(box(text))`.
+def style_text(view: View):
+    view(
+        box('Hello World!', color='red', border='red'),
+        box('Hello World!', color='white', background='red'),
+        box('Hello World!', width='50%', background='#eee'),
+    )
+
+
+# In general, `box()` can be used to create all kinds of content, like text blocks, dropdowns,
+# spinboxes, checklists, buttons, calendars, and so on.
+
 # ## Get user input
-# Call `box()` to create a *box* (an input field) and pass it to `view()`.
+# Call `box()` with `value=` to create an input field and pass it to `view()`.
 #
-# When a view contains a box, the `view()` function returns its input value.
+# When a view contains an input field, the `view()` function returns its input value.
 #
-# `box()` creates a textbox by default, but can also create other kinds of input fields, like checkboxes,
-# dropdowns, spinboxes, buttons, calendars, etc.
 def get_input(view: View):
     # Display a textbox and assign the entered value to a variable.
     name = view(box('What is your name?', value='Boaty McBoatface'))
@@ -78,7 +91,8 @@ def get_input(view: View):
     view(f'Hello, {name}!')
 
 
-# Here, `view()` behaves similar to Python's built-in `input()` function.
+# Here, `view(box())` behaves similar to Python's built-in `input()` function.
+#
 
 # ## Get inputs one at a time
 # Call `view()` multiple times to prompt for a sequence of inputs, one at a time.
@@ -162,6 +176,8 @@ def dunk_your_donuts(view: View):
 
 # ## Basics
 # Strings passed to `view()` are interpreted as [Github Flavored Markdown](https://github.github.com/gfm/) (GFM).
+#
+# `view(text)` is shorthand for `view(box(text))`.
 def markdown_basic(view: View):
     view('''
     # Heading 1
@@ -481,7 +497,7 @@ def layout_padding(view: View):
 # - The main axis for a row is horizontal, starting at the left, and ending at the right.
 # - The main axis for a column is vertical, starting at the top, and ending at the bottom
 #
-# `tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+# `tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, `stretch`, or `normal`.
 def layout_tile(view: View):
     boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
     row_style = dict(background='#eee')
@@ -544,7 +560,7 @@ def layout_cross_tile(view: View):
 # ## Wrap
 # Set `wrap=` to control how items are wrapped inside a view, row, or column.
 #
-# `wrap=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+# `wrap=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, `stretch`, or `normal`.
 def layout_wrap(view: View):
     boxes = [box(text=f'{i + 1}', background='#666', width=150, height=50) for i in range(9)]
     row_style = dict(height=300, background='#eee')
@@ -1066,7 +1082,7 @@ def options_string(view: View):
     view(f'You chose {choice}.')
 
 
-# In other words, `'green yellow orange red'` is a shorthand notation for `['green', 'yellow', 'orange', 'red']`.
+# In other words, `'green yellow orange red'` is shorthand for `['green', 'yellow', 'orange', 'red']`.
 
 # ## From tuples
 # `options=` can also be specified as a sequence of `(value, text)` tuples.
@@ -1080,7 +1096,7 @@ def options_tuples(view: View):
     view(f'You chose {choice}.')
 
 
-# Here, `(value, text)` is a shorthand notation for `option(value, text)`.
+# Here, `(value, text)` is shorthand for `option(value, text)`.
 
 # ## From dictionary
 # `options=` can also be specified as a `dict` of `value: text` entries.
@@ -1569,7 +1585,7 @@ def slider_range_alt_step(view: View):
 
 
 # ## Range with precision
-# Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
+# Setting `range=` to a `(min, max, step, precision)` tuple is shorthand setting
 # `min=`, `max=`, `step` and `precision` individually.
 def slider_range_alt_precision(view: View):
     speed = view(box('Speed (m/s)', mode='range', value=0.6, range=(-2, 2, 0.2, 2)))
@@ -1663,7 +1679,7 @@ def range_slider_range_alt_step(view: View):
 
 # ## Range with precision
 # Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
-# Setting `range=` to a `(min, max, step, precision)` tuple is a shorthand notation for setting
+# Setting `range=` to a `(min, max, step, precision)` tuple is shorthand for setting
 # `min=`, `max=`, `step` and `precision` individually.
 def range_slider_range_alt_precision(view: View):
     start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), range=(-2, 2, 0.2, 2)))
