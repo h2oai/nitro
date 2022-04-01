@@ -37,15 +37,16 @@ setup(
     packages=get_packages("h2o_nitro"),
     python_requires=">=3.6",
     install_requires=[
-        "click==8.0.4",
-        "msgpack==1.0.3",
+        "click",
+        "msgpack>=1.0",
     ],
     extras_require={
         'flask': ['flask', 'simple-websocket']
     },
     include_package_data=True,
+    license_files=('LICENSE',),
     classifiers=[
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approved :: Apache Software License',
         'Development Status :: 2 - Pre-Alpha',
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
@@ -56,7 +57,6 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
-        'Topic :: Database',
         "Topic :: Internet :: WWW/HTTP",
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Communications :: Chat',
@@ -66,9 +66,10 @@ setup(
         'Topic :: System :: Distributed Computing',
     ],
     project_urls={
+        "Documentation": "https://nitro.h2o.ai/",
         "Source": "https://github.com/h2oai/nitro",
         "Issues": "https://github.com/h2oai/nitro/issues",
-        "Changelog": "https://github.com/h2oai/nitro/blob/master/CHANGELOG.md",
+        "Changelog": "https://nitro.h2o.ai/change-log/",
     },
     entry_points={
         'console_scripts': ["nitro = h2o_nitro.cli:main"]
