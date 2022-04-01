@@ -708,7 +708,7 @@ Set `tile=` to control how items inside a view, row, or column are tiled along t
 - The main axis for a row is horizontal, starting at the left, and ending at the right.
 - The main axis for a column is vertical, starting at the top, and ending at the bottom
 
-`tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, 'stretch', or `normal`.
+`tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, `stretch`, or `normal`.
 
 
 ```py
