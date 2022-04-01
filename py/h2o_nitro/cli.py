@@ -50,16 +50,16 @@ def create(name: str, template: str, framework: str):
     $ nitro create my_app
 
     \b
-    Initialize a to-do Flask app named "my_app":
-    $ nitro create my_app --template todo
+    Initialize a Flask app named "my_app" based on the recruitment starter app:
+    $ nitro create my_app --template recruitment
 
     \b
     Initialize a basic Tornado app named "my_app":
     $ nitro create my_app --framework tornado
 
     \b
-    Initialize a to-do Starlette app named "my_app":
-    $ nitro create my_app --template todo --framework starlette
+    Initialize a Starlette app named "my_app" based on the recruitment starter app::
+    $ nitro create my_app --template recruitment --framework starlette
 
     """
     sample_dir = samples_dir / template
