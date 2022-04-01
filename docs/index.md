@@ -42,15 +42,20 @@ def main(view: View):
 
 H2O Nitro is pre-alpha software. API is subject to change.
 
+## Vision
+
+- **Write once, run anywhere.** Build apps for mobile (iOS, Android), desktop (Linux, OSX, Windows) and the web from one
+  codebase, using one language.
+- **Write less, do more.** Code is a liability. Less code ≈ less bugs.
+
 ## Features
 
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
-- **Code.** Laser-focused on keeping application code simple, concise, and clear.
+- **Less Code.** Laser-focused on keeping application code simple, concise, and clear.
     - **Simplicity.** Page flow follows code flow.
-    - **Conciseness.** Lowest number of lines of code for expressing solutions to a given problem. Less code = less
-      bugs.
+    - **Conciseness.** Lowest number of lines of code for expressing solutions to a given problem. bugs.
     - **Clarity.** Write apps without jumping through callbacks, request handlers, or event handlers.
-- **Minimal API.** Just three core functions: `view()`, `box()`, `option()`, and optionally `row()`/`column()` for
+- **Minimal API.** Only three functions: `view()`, `box()`, `option()`, and optionally `row()` and `column()` for
   layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
 - **Library.** Nitro is a library, not a server. Integrates with [Django](https://www.djangoproject.com/)
@@ -59,9 +64,10 @@ H2O Nitro is pre-alpha software. API is subject to change.
   integrated into your existing applications.
 - **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, then progressively improve
   presentation and aesthetics over time without affecting initial implementation simplicity, or sacrificing control.
-- **Unix philosophy.** Tries to do one thing and do it well: display interactive web content. Bring your own web
+- **Unix philosophy.** Tries to do one thing and do it well: display interactive user interfaces. Bring your own web
   app/server of choice and follow its recommendations for hosting, deployment, security, monitoring, metrics and data
   management.
+- **Extensively documented.** Run `nitro docs` to access interactive docs and 150+ live examples.
 
 ## Differences from H<sub>2</sub>O Wave
 
@@ -69,7 +75,8 @@ H2O Nitro is pre-alpha software. API is subject to change.
 use Nitro.
 
 - **Deployment.** Nitro is a library, not a server. It's a heavily stripped-down version of [Wave](https://wave.h2o.ai/)
-  with a different, simpler API, designed for integration with existing web frameworks.
+  with a different, simpler API, designed for integration with existing frameworks, and cross-compiling for mobile and
+  desktop apps.
 - **Content Management.** Wave is capable of storing and broadcasting content and data, making it simple to build
   dashboards without having to deal with data management. Nitro has no such features.
 - **API.** Wave's API is *dashboard-oriented*, and has several features that make it easy to develop and deploy
