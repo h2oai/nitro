@@ -88,13 +88,15 @@ Or, for a minimal install:
 pip3 install h2o-nitro
 ```
 
-### Tour / Docs
+### Live Docs
 
-Launch the interactive tour / documentation at http://localhost:4999/:
+Nitro ships with interactive documentation and live examples:
 
 ```
-nitro tour
+nitro docs
 ```
+
+Access docs at  [http://localhost:4999/](http://localhost:4999/).
 
 ### Create your first app
 
@@ -113,22 +115,46 @@ python3 -m venv venv
 ./venv/bin/python app.py
 ```
 
-Access your app at http://localhost:5000/.
+Access your app at [http://localhost:5000/](http://localhost:5000/).
 
-### Use Tornado or Starlette
+### Change starter app
 
-New apps created with `nitro create` use Flask by default.
+`nitro create` creates the simplest possible app by default, but you can start from other kinds of sample
+apps.
 
-To create a new app using Tornado, run:
+Create an app that lets you apply for space flight, with multiple workflows, a menu and navbar.
+
+```
+nitro create my_app --template recruitment
+```
+
+To see a list of all available starter app templates, run:
+
+```
+nitro list templates
+```
+
+### Change framework
+
+New apps created with `nitro create` use [Flask](https://flask.palletsprojects.com/) by default, but you can use other
+frameworks, too.
+
+Create an app using [Tornado](https://www.tornadoweb.org/):
 
 ```
 nitro create my_app --framework tornado
 ```
 
-To create a new app using Starlette, run:
+Create an app using [Starlette](https://www.starlette.io/):
 
 ```
 nitro create my_app --framework starlette
+```
+
+To see a list of all available frameworks, run:
+
+```
+nitro list frameworks
 ```
 
 
