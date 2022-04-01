@@ -1,9 +1,9 @@
 import { createTheme, loadTheme, registerIcons } from '@fluentui/react';
-import { AreaChartIcon, BarChartHorizontalIcon, BarChartVerticalIcon, CalendarIcon, CancelIcon, ChatBotIcon, CheckMarkIcon, ChevronDownIcon, ChevronDownSmallIcon, ChevronRightIcon, ChevronUpSmallIcon, DocumentationIcon, DonutChartIcon, DownIcon, FavoriteStarFillIcon, FavoriteStarIcon, FilterIcon, HideIcon, LineChartIcon, MoreIcon, MuteChatIcon, RedEyeIcon, ScatterChartIcon, SendIcon, SkypeCheckIcon, TextDocumentIcon, UpIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './app';
 import { newClient } from './client';
+import { icons } from './icons';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
@@ -15,39 +15,7 @@ const
   });
 
 loadTheme(purple)
-
-registerIcons({
-  icons: {
-    Send: <SendIcon />, // used by message-send button
-    SkypeCheck: <SkypeCheckIcon />, // not used directly, but Fluent throws warnings if not defined
-    RedEye: <RedEyeIcon />, // used by password text field
-    Hide: <HideIcon />, // used by password text field
-    Calendar: <CalendarIcon />, // used by password text field
-    ChevronUpSmall: <ChevronUpSmallIcon />, // used by spin button
-    ChevronDownSmall: <ChevronDownSmallIcon />, // used by spin button
-    ChevronRight: <ChevronRightIcon />, // used by contextual menu submenu
-    FavoriteStar: <FavoriteStarIcon />, // used by rating
-    FavoriteStarFill: <FavoriteStarFillIcon />, // used by rating
-    Up: <UpIcon />, // used by calendar
-    Down: <DownIcon />, // used by calendar
-    CheckMark: <CheckMarkIcon />, // used by checkbox
-    ChevronDown: <ChevronDownIcon />, // used by dropdown
-    Cancel: <CancelIcon />, // used by tag picker
-    More: <MoreIcon />, // used by command bar
-    // Used by examples
-    AreaChart: <AreaChartIcon />,
-    BarChartHorizontal: <BarChartHorizontalIcon />,
-    BarChartVertical: <BarChartVerticalIcon />,
-    LineChart: <LineChartIcon />,
-    ScatterChart: <ScatterChartIcon />,
-    DonutChart: <DonutChartIcon />,
-    ChatBot: <ChatBotIcon />,
-    MuteChat: <MuteChatIcon />,
-    Documentation: <DocumentationIcon />,
-    TextDocument: <TextDocumentIcon />,
-    Filter: <FilterIcon />,
-  },
-})
+registerIcons({ icons })
 
 const root = document.getElementById('nitro')
 const client = newClient(root?.getAttribute('data-endpoint') ?? '/nitro')
