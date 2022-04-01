@@ -18,7 +18,7 @@ from collections import OrderedDict
 import msgpack
 from enum import Enum, IntEnum
 
-web_directory = Path(__file__).parent / 'www'
+web_directory = str(Path(__file__).parent / 'www')
 
 __xid = 0
 
