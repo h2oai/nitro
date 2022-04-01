@@ -43,25 +43,35 @@ python3 -m venv venv
 
 Access your app at [http://localhost:5000/](http://localhost:5000/).
 
-## App Templates
+## Change starter app
 
-To see a list of all available templates, run:
+`nitro create` creates the simplest possible app by default, but you can start from other kinds of sample
+apps.
+
+Create an app that lets you apply for space flight, with multiple workflows, a menu and navbar.
+
+```
+nitro create my_app --template recruitment
+```
+
+To see a list of all available starter app templates, run:
 
 ```
 nitro list templates
 ```
 
-## Frameworks
+## Change framework
 
-New apps created with `nitro create` use [Flask](https://flask.palletsprojects.com/) by default.
+New apps created with `nitro create` use [Flask](https://flask.palletsprojects.com/) by default, but you can use other
+frameworks, too.
 
-To create a new app using [Tornado](https://www.tornadoweb.org/), run:
+Create an app using [Tornado](https://www.tornadoweb.org/):
 
 ```
 nitro create my_app --framework tornado
 ```
 
-To create a new app using [Starlette](https://www.starlette.io/), run:
+Create an app using [Starlette](https://www.starlette.io/):
 
 ```
 nitro create my_app --framework starlette
