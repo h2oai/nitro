@@ -17,6 +17,12 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.4.1
+
+Apr 01, 2022
+
+Nitro is open source. April Fools'. Not.
+
 ## v0.3.0
 
 Mar 31, 2022
