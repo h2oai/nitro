@@ -17,13 +17,21 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.3.0
+
+Mar 31, 2022
+
+- Added
+    - Add `recruitment` starter app template for use with `nitro create`.
+    - Bundle all Fluent icons with release.
+
 ## v0.2.0
 
 Mar 30, 2022
 
 - Added
     - Run `nitro create` to create a new app using Flask, Tornado or Starlette.
-    - Run `nitro tour` to launch the built-in interactive tour and documentation.
+    - Run `nitro docs` to launch the built-in interactive tour and documentation.
 - Changed
     - `box()` defaults to text blocks instead of textboxes.
 
