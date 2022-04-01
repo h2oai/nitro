@@ -56,11 +56,11 @@ async def main(view: View):
         Help us find you the best position that aligns with your goals.
         ''',
         box('I want to be a:', mode='radio', options=[
-            option('pilot', 'Pilot', icon='ChatBot'),
-            option('mission_spl', 'Mission Specialist', icon='ChatBot'),
-            option('flight_eng', 'Flight Engineer', icon='ChatBot'),
-            option('payload_spl', 'Payload Specialist', icon='ChatBot'),
-            option('dj', 'Resident DJ', icon='ChatBot'),
+            option('pilot', 'Pilot', icon='Airplane'),
+            option('mission_spl', 'Mission Specialist', icon='CalendarSettings'),
+            option('flight_eng', 'Flight Engineer', icon='Settings'),
+            option('payload_spl', 'Payload Specialist', icon='PlugDisconnected'),
+            option('dj', 'Resident DJ', icon='MusicInCollection'),
         ]),
         row(
             col(box('I have experience with:', mode='check', options=[
