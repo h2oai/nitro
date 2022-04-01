@@ -1896,7 +1896,6 @@ Set `mode='check'` to show a checklist
 choices = view(box(
     'Choose some colors',
     mode='check',
-    multiple=True,
     options=['green', 'yellow', 'orange', 'red']
 ))
 view(f'You chose {choices}.')
@@ -1911,7 +1910,6 @@ Set `value=` to pre-select options having those values.
 choices = view(box(
     'Choose some colors',
     mode='check',
-    multiple=True,
     value=['yellow', 'red'],
     options=['green', 'yellow', 'orange', 'red']
 ))
@@ -1927,7 +1925,6 @@ Alternatively, set `selected=True` to pre-select one or more options.
 choices = view(box(
     'Choose some colors',
     mode='check',
-    multiple=True,
     options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),

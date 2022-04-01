@@ -1469,7 +1469,6 @@ def checklist_basic(view: View):
     choices = view(box(
         'Choose some colors',
         mode='check',
-        multiple=True,
         options=['green', 'yellow', 'orange', 'red']
     ))
     view(f'You chose {choices}.')
@@ -1481,7 +1480,6 @@ def checklist_value(view: View):
     choices = view(box(
         'Choose some colors',
         mode='check',
-        multiple=True,
         value=['yellow', 'red'],
         options=['green', 'yellow', 'orange', 'red']
     ))
@@ -1494,7 +1492,6 @@ def checklist_selected(view: View):
     choices = view(box(
         'Choose some colors',
         mode='check',
-        multiple=True,
         options=[
             option('green', 'Green'),
             option('yellow', 'Yellow', selected=True),
