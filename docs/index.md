@@ -35,6 +35,9 @@ def main(view: View):
     feel = view(box(f'How do you feel today, {name}?', value='intrigued'))
     view(f'What a coincidence, {name}, I feel {feel}, too!')
 ```
+
+![Nitro](assets/images/app-basic.gif)
+
 ## Status
 
 H2O Nitro is pre-alpha software. API is subject to change.
