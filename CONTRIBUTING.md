@@ -14,7 +14,7 @@ cd nitro
 make setup
 ```
 
-Build everything:
+Build everything (front-end, wheel, docs):
 
 ```
 make
@@ -22,13 +22,13 @@ make
 
 ### Daily development
 
-Most of the time, you'll be editing the front-end sources in `web/` while running the Nitro tour `tour.py` in parallel.
-The `tour.py` file is generated from `examples.py`, which is what you'll be editing.
+Most of the time, you'll be editing the front-end sources in `web/` while running the Nitro interactive docs (`py/h2o_nitro/docs/docs.py`) in parallel.
+The `docs.py` file is generated from `py/examples.py`, which is what you'll be editing.
 
 1. Open `web/` in Visual Studio Code.
 2. Open `py/` in PyCharm.
-3. Auto-rebuild `tour.py` whenever `examples.py` is changed: `echo examples.py | entr make tour`.
-4. Run `tour.py` with auto-reload enabled: `FLASK_APP=tour.py FLASK_ENV=development flask run`.
+3. Auto-rebuild `docs.py` whenever `examples.py` is changed: `cd py && echo examples.py | entr make docs`.
+4. Run `docs.py` with auto-reload enabled: run `FLASK_APP=h2o_nitro/docs/docs.py FLASK_ENV=development flask run` inside the virtual environment in `py/`.
 5. Run the front-end with auto-reload enabled: `npm start`.
 
 The project's `README.md` and the guide pages under `docs/` are also generated from `examples.py`, so the above process
