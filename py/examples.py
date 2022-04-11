@@ -234,6 +234,40 @@ def markdown_links(view: View):
     view(f'You clicked on {choice}.')
 
 
+# ## Tables
+# Draw tables using `---` and `|`.
+#
+# - Use three or more hyphens (`---`) to create each column’s header.
+# - Use `|` to separate each column.
+# - Use `:---` to left-align text.
+# - Use `:---:` to center text.
+# - Use `---:` to right-align text.
+def markdown_table(view: View):
+    view('''
+    
+    ### Basic Tables
+    
+    | Flavor         | Super cheap! |
+    | -------------- | ------------ |
+    | Cinnamon Sugar | $1.99        |
+    | Powdered Sugar | $1.99        |
+    | Vanilla        | $2.99        |
+    | Chocolate      | $2.99        |
+    | Blueberry      | $2.99        |
+    
+    ### Column alignment
+    
+    | Flavor         | Super cheap! | Extras                |
+    | -------------: | :----------: | :-------------------- |
+    | Cinnamon Sugar | $1.99        | Sugar and spice.      |
+    | Powdered Sugar | $1.99        | Served warm.          |
+    | Vanilla        | $2.99        | With cookie crumbles. |
+    | Chocolate      | $2.99        | With sprinkles.       |
+    | Blueberry      | $2.99        | With real blueberry.  |
+    
+    ''')
+
+
 # ## Syntax highlighting
 # Code blocks in Markdown support syntax highlighting for 180+ languages using [highlight.js](https://highlightjs.org/).
 #
