@@ -268,6 +268,28 @@ def markdown_table(view: View):
     ''')
 
 
+# ## Tables from lists
+# It's often easier to construct tables from lists of things, as shown below.
+def show_table(view: View):
+    view(make_table([
+        ['Flavor', 'Super cheap!'],
+        ['Cinnamon Sugar', '$1.99'],
+        ['Powdered Sugar', '$1.99'],
+        ['Vanilla', '$2.99'],
+        ['Chocolate', '$2.99'],
+        ['Blueberry', '$2.99'],
+    ]))
+
+
+def make_table_row(row):
+    return f"| {' | '.join(row)} |"
+
+
+def make_table(rows):
+    rows = [rows[0], ['---'] * len(rows[0]), *rows[1:]]
+    return '\n'.join([make_table_row(row) for row in rows])
+
+
 # ## Syntax highlighting
 # Code blocks in Markdown support syntax highlighting for 180+ languages using [highlight.js](https://highlightjs.org/).
 #
