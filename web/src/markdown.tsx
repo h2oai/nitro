@@ -17,7 +17,7 @@ import 'highlight.js/styles/github.css';
 import { micromark, Options } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import styled from 'styled-components';
-import { B, S, U } from './core';
+import { B, Dict, S, U } from './core';
 
 const opts: Options = {
   allowDangerousHtml: false,
@@ -233,15 +233,28 @@ const dedent = (block: S): S => {
     // don't dedent empty lines
     : lines.map(s => s.length > indent ? s.substring(indent) : s).join('\n')
 }
+
+// Micromark encodes these chars inside <pre><code> blocks, which trips up highlight.js.
+const revertMicromarkEncodings = (s: S) => s.replace(/&(quot|amp|lt|gt);/g, (value) => micromarkReplacements[value])
+
+// Source: https://github.com/micromark/micromark/blob/main/packages/micromark-util-encode/index.js
+const micromarkReplacements: Dict<S> = {
+  '&quot;': '"',
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+}
+
 export const
   highlight = (html: S) => html
     .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
-      return hljs.highlight(code, { language }).value
+      return hljs.highlight(revertMicromarkEncodings(code), { language }).value
     }),
   isFootnoteLink = (s: S) => s.startsWith('user-content'), // gfm-footnote default
   markdown = (text: S): [S, B] => {
     let hasLinks = false
-    const md = highlight(micromark(dedent(text), opts))
+    const md = micromark(dedent(text), opts)
+    const hl = highlight(md)
       // Change <a href="#foo"> to <a data-jump="foo" href>
       // Exclude footnote references.
       // We need the links to be rendered as such, but not affect the address bar.
@@ -250,5 +263,5 @@ export const
         hasLinks = true
         return `data-jump="${ref}" href`
       })
-    return [md, hasLinks]
+    return [hl, hasLinks]
   }
