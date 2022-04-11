@@ -55,6 +55,15 @@ publish-docs: docs ## Publish docs
 	aws s3 sync site s3://nitro.h2o.ai --delete
 	aws cloudfront create-invalidation --distribution-id ${AWS_CLOUDFRONT_ID} --paths "/*"
 
+dev-web: # Launch front-end in development mode
+	cd web && npm start
+
+dev-py: # Launch backend in development mode
+	cd py && FLASK_APP=h2o_nitro/docs/docs.py FLASK_ENV=development ./venv/bin/flask run
+
+dev-docs: # Rebuild docs.py when examples.py is changed
+	cd py && echo examples.py | entr $(MAKE) docs
+
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
