@@ -151,6 +151,30 @@ pre {
   background-color: #eee;
 }
 
+table {
+  margin: 1rem 0;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-bottom: 2px solid #eee;
+  thead {
+    background-color: #333;
+  }
+  th {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  td {
+    padding: 0.25rem 0.75rem;
+  }
+  tr:nth-child(even) {
+    background-color: #eee;
+  }
+}
+
 /* Source: https://github.com/micromark/micromark-extension-gfm-footnote */
 
 /* Style the footnotes section. */
