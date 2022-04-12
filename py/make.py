@@ -51,7 +51,7 @@ def dedent(lines: List[str]) -> List[str]:
 
 
 def is_def(line: str) -> bool:
-    return line.lstrip().startswith('def ')
+    return line.startswith('def ')
 
 
 def remove_def_if_only_def(lines: List[str]) -> List[str]:
