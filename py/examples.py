@@ -303,6 +303,13 @@ def markdown_syntax_highlighting(view: View):
     def hello():
         print('Hello!')
     ```
+    
+    Ruby:
+    ```rb
+    def hello
+        puts "Hello!"
+    end
+    ```
 
     Javascript:
     ```js
