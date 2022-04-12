@@ -14,11 +14,11 @@
 
 import React from 'react';
 import { B, Dict, Disposable, isSignal, on, V } from './core';
-import { Box, MsgType } from './protocol';
+import { Box, Input, MsgType } from './protocol';
 import { Send } from './socket';
 
-export const newCaptureContext = (send: Send, data: Array<V | V[]>) => {
-  const capture = <T extends V | V[]>(index: any, value: T) => {
+export const newCaptureContext = (send: Send, data: Array<Input>) => {
+  const capture = <T extends Input>(index: any, value: T) => {
     if (index >= 0) data[index] = value
   }
   const submit = () => send({ t: MsgType.Input, d: data })

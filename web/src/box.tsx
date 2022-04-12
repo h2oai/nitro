@@ -1,6 +1,7 @@
 import React from 'react';
 import { Buttons } from './buttons';
 import { Calendar } from './calendar';
+import { Checkbox } from './checkbox';
 import { Checklist } from './checklist';
 import { ChoiceGroup } from './choice_group';
 import { ColorPalette } from './color_palette';
@@ -26,7 +27,9 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     case 'button':
       return <Buttons context={context} box={box} />
     case 'check':
-      return <Checklist context={context} box={box} />
+      return options.length
+        ? <Checklist context={context} box={box} />
+        : <Checkbox context={context} box={box} />
     case 'color':
       return options.length
         ? <ColorPalette context={context} box={box} />

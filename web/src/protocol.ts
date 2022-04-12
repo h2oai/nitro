@@ -32,6 +32,8 @@ export enum MsgType {
   Switch,
 }
 
+export type Input = B | S | N | S[] | N[]
+
 export type Msg = {
   t: MsgType.Error
   e: S
@@ -51,7 +53,7 @@ export type Msg = {
   d: Box
 } | {
   t: MsgType.Input, // XXX rename
-  d: Array<V | V[] | null>
+  d: Array<Input | null>
 } | {
   t: MsgType.Conf,
   d: Conf

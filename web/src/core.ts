@@ -178,6 +178,7 @@ export const gensym = (prefix: S) => {
   return () => prefix + k++
 }
 export const xid = gensym('x')
+export const isB = (x: any): x is boolean => typeof x === 'boolean'
 export const isN = (x: any): x is number => typeof x === 'number'
 export const isS = (x: any): x is string => typeof x === 'string'
 export const isV = (x: any): x is S | N => isS(x) || isN(x)

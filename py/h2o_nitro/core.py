@@ -153,6 +153,7 @@ Range = Union[
     List[V],
 ]
 Value = Union[
+    bool,
     V,
     Tuple[V, V],
     List[V],
