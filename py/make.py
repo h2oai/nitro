@@ -20,7 +20,6 @@
 #
 
 from typing import Union, List
-import shutil
 import re
 from pathlib import Path
 
@@ -52,6 +51,10 @@ def dedent(lines: List[str]) -> List[str]:
 
 def is_def(line: str) -> bool:
     return line.startswith('def ')
+
+
+def quote_newlines(line: str) -> str:
+    return line.replace('\\n', '\\\\n')
 
 
 def remove_def_if_only_def(lines: List[str]) -> List[str]:
@@ -158,11 +161,11 @@ def build_funcs(groups: List[Group]) -> str:
             for block in e.blocks:
                 if isinstance(block, Comment):
                     for line in block.lines:
-                        p(f'{line}')
+                        p(line)
                 else:
                     p("```py")
                     for line in remove_def_if_only_def(block.lines):
-                        p(f'{line}')
+                        p(quote_newlines(line))
                     p("```")
             p('""",')
             p("    '### Output',")
