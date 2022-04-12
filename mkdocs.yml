@@ -6,8 +6,7 @@ repo_url: https://github.com/h2oai/nitro
 copyright: "Copyright &copy; 2022 <a href='https://h2o.ai'>H2O.ai, Inc</a>. Licensed under <a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a>."
 theme:
   name: material
-  icon:
-    logo: material/rocket-launch-outline
+  logo: assets/nitro.svg
   features:
     - header.autohide
     - navigation.sections
