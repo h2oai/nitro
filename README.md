@@ -425,6 +425,69 @@ Or, [surprise me](#surprise-me)!
 view(f'You clicked on {choice}.')
 ```
 
+### Markdown - Tables
+
+Draw tables using `---` and `|`.
+
+- Use three or more hyphens (`---`) to create each column’s header.
+- Use `|` to separate each column.
+- Use `:---` to left-align text.
+- Use `:---:` to center text.
+- Use `---:` to right-align text.
+
+
+```py
+view('''
+
+### Basic Tables
+
+| Flavor         | Super cheap! |
+| -------------- | ------------ |
+| Cinnamon Sugar | $1.99        |
+| Powdered Sugar | $1.99        |
+| Vanilla        | $2.99        |
+| Chocolate      | $2.99        |
+| Blueberry      | $2.99        |
+
+### Column alignment
+
+| Flavor         | Super cheap! | Extras                |
+| -------------: | :----------: | :-------------------- |
+| Cinnamon Sugar | $1.99        | Sugar and spice.      |
+| Powdered Sugar | $1.99        | Served warm.          |
+| Vanilla        | $2.99        | With cookie crumbles. |
+| Chocolate      | $2.99        | With sprinkles.       |
+| Blueberry      | $2.99        | With real blueberry.  |
+
+''')
+```
+
+### Markdown - Tables from lists
+
+It's often easier to construct tables from lists of things, as shown below.
+
+
+```py
+def show_table(view: View):
+    view(make_table([
+        ['Flavor', 'Super cheap!'],
+        ['Cinnamon Sugar', '$1.99'],
+        ['Powdered Sugar', '$1.99'],
+        ['Vanilla', '$2.99'],
+        ['Chocolate', '$2.99'],
+        ['Blueberry', '$2.99'],
+    ]))
+
+
+def make_table_row(row):
+    return f"| {' | '.join(row)} |"
+
+
+def make_table(rows):
+    rows = [rows[0], ['---'] * len(rows[0]), *rows[1:]]
+    return '\n'.join([make_table_row(row) for row in rows])
+```
+
 ### Markdown - Syntax highlighting
 
 Code blocks in Markdown support syntax highlighting for 180+ languages using [highlight.js](https://highlightjs.org/).
@@ -435,21 +498,27 @@ To enable syntax highlighting, suffix the language to the opening triple-backtic
 
 
 ```py
-def markdown_syntax_highlighting(view: View):
-    view('''
-    Python:
-    ```py
-    def hello():
-        print('Hello!')
-    ```
+view('''
+Python:
+```py
+def hello():
+    print('Hello!')
+```
 
-    Javascript:
-    ```js
-    function hello() {
-        console.log('Hello!');
-    }
-    ```
-    ''')
+Ruby:
+```rb
+def hello
+    puts "Hello!"
+end
+```
+
+Javascript:
+```js
+function hello() {
+    console.log('Hello!');
+}
+```
+''')
 ```
 
 ### Layout - Basics
@@ -1265,6 +1334,28 @@ Steps can be fractional.
 ```py
 speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2)))
 view(f'Your speed is {speed} m/s')
+```
+
+### Checkbox - Basic
+
+Set `mode='check'` to show a checkbox.
+
+
+```py
+keep_signed_in = view(box('Keep me signed in', mode='check'))
+view(f'Keep me signed in: {keep_signed_in}.')
+```
+
+### Checkbox - Value
+
+Set `value=True` to pre-select the checkbox.
+
+The mode setting `mode='check'` is implied, and can be elided.
+
+
+```py
+keep_signed_in = view(box('Keep me signed in', value=True))
+view(f'Keep me signed in: {keep_signed_in}.')
 ```
 
 ### Pickers - Basic
