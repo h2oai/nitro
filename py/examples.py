@@ -1006,6 +1006,24 @@ def spinbox_decimal_step(view: View):
     view(f'Your speed is {speed} m/s')
 
 
+# # Checkbox
+
+# ## Basic
+# Set `mode='check'` to show a checkbox.
+def checkbox_basic(view: View):
+    keep_signed_in = view(box('Keep me signed in', mode='check'))
+    view(f'Keep me signed in: {keep_signed_in}.')
+
+
+# ## Value
+# Set `value=True` to pre-select the checkbox.
+#
+# The mode setting `mode='check'` is implied, and can be elided.
+def checkbox_value(view: View):
+    keep_signed_in = view(box('Keep me signed in', value=True))
+    view(f'Keep me signed in: {keep_signed_in}.')
+
+
 # # Pickers
 
 # ## Basic
