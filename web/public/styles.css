@@ -6,13 +6,28 @@
   * Licensed under the MIT license
  */
 
+:root {
+    /* Scheme */
+    --font-primary: 'Roboto Slab', serif;
+    --font-monospace: 'Roboto Mono', monospace;
+    --color-primary: #5a64f0;
+    --color-foreground: #3e3f4a;
+    --color-background: #ffffff;
+
+    /* Derived */
+    --color-light: #e1e1e1;
+    --color-quaternary-alt: #d1d1d1;
+    --color-tertiary: #f4f5f6;
+}
+
 html {
     box-sizing: border-box;
     font-size: 62.5%;
 }
 
 body {
-    font-family: 'Roboto Slab', serif;
+    font-family: var(--font-primary);
+    background: var(--color-background);
 }
 
 /* Markdown */
@@ -24,13 +39,13 @@ body {
 }
 
 .md {
-    color: #606c76;
+    color: var(--color-foreground);
     font-size: 1.6em;
     line-height: 1.6;
 }
 
 .md blockquote {
-    border-left: 0.3rem solid #d1d1d1;
+    border-left: 0.3rem solid var(--color-quaternary-alt);
     margin-left: 0;
     margin-right: 0;
     padding: 1rem 1.5rem;
@@ -42,8 +57,8 @@ body {
 
 .md code,
 .md pre {
-    font-family: 'Roboto Mono', monospace;
-    background: #f4f5f6;
+    font-family: var(--font-monospace);
+    background: var(--color-tertiary);
     font-size: 86%;
 }
 
@@ -55,25 +70,25 @@ body {
 }
 
 .md pre {
-    border-left: 0.3rem solid #9b4dca;
+    border-left: 0.3rem solid var(--color-primary);
     padding: 1rem 1.5rem;
     overflow: auto;
 }
 
 .md hr {
     border: 0;
-    border-top: 0.1rem solid #f4f5f6;
+    border-top: 0.1rem solid var(--color-tertiary);
     margin: 3.0rem 0;
 }
 
 .md a {
-    color: #9b4dca;
+    color: var(--color-primary);
     text-decoration: none;
 }
 
 .md a:focus,
 .md a:hover {
-    color: #606c76;
+    color: var(--color-foreground);
 }
 
 .md dl,
@@ -140,7 +155,7 @@ body {
 
 .md td,
 .md th {
-    border-bottom: 0.1rem solid #e1e1e1;
+    border-bottom: 0.1rem solid var(--color-light);
     padding: 1.2rem 1.5rem;
 }
 
@@ -226,7 +241,7 @@ body {
     font-size: 1.2rem;
     line-height: 1.2rem;
     padding-top: 1.2rem;
-    border-top: 1px solid #d1d1d1;
+    border-top: 1px solid var(--color-quaternary-alt);
 }
 
 .md .footnotes ol li p {
@@ -259,11 +274,12 @@ body {
 
 .art {
     /* Source: https://projects.verou.me/css3patterns/#tartan */
-    height: 1.5rem;
+    height: 2rem;
     background-color: hsl(2, 57%, 40%);
     background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0, 0, 0, .4) 50px, rgba(0, 0, 0, .4) 53px, transparent 53px, transparent 63px, rgba(0, 0, 0, .4) 63px, rgba(0, 0, 0, .4) 66px, transparent 66px, transparent 116px, rgba(0, 0, 0, .5) 116px, rgba(0, 0, 0, .5) 166px, rgba(255, 255, 255, .2) 166px, rgba(255, 255, 255, .2) 169px, rgba(0, 0, 0, .5) 169px, rgba(0, 0, 0, .5) 179px, rgba(255, 255, 255, .2) 179px, rgba(255, 255, 255, .2) 182px, rgba(0, 0, 0, .5) 182px, rgba(0, 0, 0, .5) 232px, transparent 232px),
         repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0, 0, 0, .4) 50px, rgba(0, 0, 0, .4) 53px, transparent 53px, transparent 63px, rgba(0, 0, 0, .4) 63px, rgba(0, 0, 0, .4) 66px, transparent 66px, transparent 116px, rgba(0, 0, 0, .5) 116px, rgba(0, 0, 0, .5) 166px, rgba(255, 255, 255, .2) 166px, rgba(255, 255, 255, .2) 169px, rgba(0, 0, 0, .5) 169px, rgba(0, 0, 0, .5) 179px, rgba(255, 255, 255, .2) 179px, rgba(255, 255, 255, .2) 182px, rgba(0, 0, 0, .5) 182px, rgba(0, 0, 0, .5) 232px, transparent 232px),
         repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0, 0, 0, .2) 2px, rgba(0, 0, 0, .2) 3px, transparent 3px, transparent 5px, rgba(0, 0, 0, .2) 5px);
+
 }
 
 .page {
@@ -279,7 +295,7 @@ body {
     gap: .5rem;
     font-size: 1.6em;
     line-height: 1.6;
-    color: #606c76;
+    color: var(--color-foreground);
 }
 
 .header .title {
