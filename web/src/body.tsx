@@ -25,10 +25,6 @@ const hasActions = (boxes: Box[]): B => { // recursive
   return false
 }
 
-const Container = styled.div`
-  padding: 1rem 2rem 2rem;
-`
-
 export const Body = (props: { send: Send, boxes: Box[] }) => {
   const
     original = props.boxes,
@@ -36,8 +32,8 @@ export const Body = (props: { send: Send, boxes: Box[] }) => {
     boxes: Box[] = canContinue ? original : [...original, continueButton],
     context = newCaptureContext(props.send, [])
   return (
-    <Container>
+    <div className='main'>
       <Zone context={context} boxes={boxes} stack={{}} />
-    </Container>
+    </div>
   )
 }

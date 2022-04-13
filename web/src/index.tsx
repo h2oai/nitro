@@ -18,14 +18,13 @@ import ReactDOM from 'react-dom';
 import { App } from './app';
 import { newClient } from './client';
 import { icons } from './icons';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 
 // https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/
 const
   purple = createTheme({
-    defaultFontStyle: { fontFamily: '"Source Sans 3"' },
+    defaultFontStyle: { fontFamily: '"Roboto"' },
   });
 
 loadTheme(purple)

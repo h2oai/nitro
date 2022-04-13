@@ -33,21 +33,6 @@ const hello: Msg = {
   }
 }
 
-// TODO make configurable
-// Source: https://projects.verou.me/css3patterns/#tartan
-const Texture = styled.div`
-  height: 1.5rem;
-  background-color: hsl(2, 57%, 40%);
-  background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
-  repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
-  repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0,0,0,.2) 2px, rgba(0,0,0,.2) 3px, transparent 3px, transparent 5px, rgba(0,0,0,.2) 5px);
-`
-
-const AppContainer = styled.div`
-  max-width: 720px;
-  background-color: #fff;
-  margin: 1rem auto 2rem;
-`
 export const App = make(({ client }: { client: Client }) => {
   const
     stateB = signal<AppState>({ t: AppStateT.Connecting }),
@@ -118,12 +103,12 @@ export const App = make(({ client }: { client: Client }) => {
           return <div>error: {state.error}</div>
         case AppStateT.Connected:
           return (
-            <div>
-              <Texture />
-              <AppContainer>
+            <div className='view'>
+              <div className='art' />
+              <div className='page'>
                 <Header send={state.socket.send} conf={state.conf} />
                 <Body send={state.socket.send} boxes={state.boxes} />
-              </AppContainer>
+              </div>
             </div>
           )
       }

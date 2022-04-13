@@ -1,0 +1,375 @@
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
+
+html {
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+main {
+    display: block;
+}
+
+.md h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+.md hr {
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible;
+}
+
+.md pre {
+    font-family: monospace, monospace;
+    font-size: 1em;
+}
+
+.md a {
+    background-color: transparent;
+}
+
+.md abbr[title] {
+    border-bottom: none;
+    text-decoration: underline;
+    text-decoration: underline dotted;
+}
+
+.md b,
+.md strong {
+    font-weight: bolder;
+}
+
+.md code,
+.md kbd,
+.md samp {
+    font-family: monospace, monospace;
+    font-size: 1em;
+}
+
+.md small {
+    font-size: 80%;
+}
+
+.md sub,
+.md sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+.md sub {
+    bottom: -0.25em;
+}
+
+.md sup {
+    top: -0.5em;
+}
+
+.md img {
+    border-style: none;
+}
+
+/*!
+  * Milligram v1.4.1
+  * https://milligram.io
+  *
+  * Copyright (c) 2020 CJ Patoilo
+  * Licensed under the MIT license
+ */
+
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+
+body {
+    font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+}
+
+.md *,
+.md *:after,
+.md *:before {
+    box-sizing: inherit;
+}
+
+.md {
+    color: #606c76;
+    font-size: 1.6em;
+    font-weight: 300;
+    letter-spacing: .01em;
+    line-height: 1.6;
+}
+
+.md blockquote {
+    border-left: 0.3rem solid #d1d1d1;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 1rem 1.5rem;
+}
+
+.md blockquote *:last-child {
+    margin-bottom: 0;
+}
+
+.md code,
+.md pre {
+    font-family: 'Roboto Mono', monospace;
+    background: #f4f5f6;
+    font-size: 86%;
+}
+
+.md code {
+    border-radius: .4rem;
+    margin: 0 .2rem;
+    padding: .2rem .5rem;
+    white-space: nowrap;
+}
+
+.md pre {
+    border-left: 0.3rem solid #9b4dca;
+    padding: 1rem 1.5rem;
+}
+
+.md hr {
+    border: 0;
+    border-top: 0.1rem solid #f4f5f6;
+    margin: 3.0rem 0;
+}
+
+.md a {
+    color: #9b4dca;
+    text-decoration: none;
+}
+
+.md a:focus,
+.md a:hover {
+    color: #606c76;
+}
+
+.md dl,
+.md ol,
+.md ul {
+    list-style: none;
+    margin-top: 0;
+    padding-left: 0;
+}
+
+.md dl dl,
+.md dl ol,
+.md dl ul,
+.md ol dl,
+.md ol ol,
+.md ol ul,
+.md ul dl,
+.md ul ol,
+.md ul ul {
+    font-size: 90%;
+    margin: 1.5rem 0 1.5rem 3.0rem;
+}
+
+.md ol {
+    list-style: decimal inside;
+}
+
+.md ul>li:before {
+    content: "—";
+    text-indent: -1rem;
+    margin-right: .5rem;
+}
+
+/* Workaround: Markdown renderer adds superfluous p inside ol's li.*/
+.md ol li p {
+    margin: 0;
+}
+
+.md dd,
+.md dt,
+.md li {
+    margin-bottom: 0.5rem;
+}
+
+.md blockquote,
+.md dl,
+.md figure,
+.md form,
+.md ol,
+.md p,
+.md pre,
+.md table,
+.md ul {
+    margin-bottom: 2.5rem;
+}
+
+.md table {
+    border-spacing: 0;
+    display: block;
+    overflow-x: auto;
+    text-align: left;
+    width: 100%;
+}
+
+.md td,
+.md th {
+    border-bottom: 0.1rem solid #e1e1e1;
+    padding: 1.2rem 1.5rem;
+}
+
+.md td:first-child,
+.md th:first-child {
+    padding-left: 0;
+}
+
+.md td:last-child,
+.md th:last-child {
+    padding-right: 0;
+}
+
+@media (min-width: 40rem) {
+    .md table {
+        display: table;
+        overflow-x: initial;
+    }
+}
+
+.md b,
+.md strong {
+    font-weight: bold;
+}
+
+.md p {
+    margin-top: 0;
+}
+
+.md h1,
+.md h2,
+.md h3,
+.md h4,
+.md h5,
+.md h6 {
+    font-weight: 300;
+    letter-spacing: -.1rem;
+    margin-bottom: 2.0rem;
+    margin-top: 0;
+}
+
+.md h1 {
+    font-size: 4.6rem;
+    line-height: 1.2;
+}
+
+.md h2 {
+    font-size: 3.6rem;
+    line-height: 1.25;
+}
+
+.md h3 {
+    font-size: 2.8rem;
+    line-height: 1.3;
+}
+
+.md h4 {
+    font-size: 2.2rem;
+    letter-spacing: -.08rem;
+    line-height: 1.35;
+}
+
+.md h5 {
+    font-size: 1.8rem;
+    letter-spacing: -.05rem;
+    line-height: 1.5;
+}
+
+.md h6 {
+    font-size: 1.6rem;
+    letter-spacing: 0;
+    line-height: 1.4;
+}
+
+.md img {
+    max-width: 100%;
+}
+
+/* Source: https://github.com/micromark/micromark-extension-gfm-footnote */
+
+/* Style the footnotes section. */
+.md .footnotes {
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #d1d1d1;
+}
+
+.md .footnotes ol li p {
+    display: inline;
+}
+
+
+/* Hide the section label for visual users. */
+.md .footnotes .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    word-wrap: normal;
+    border: 0;
+}
+
+/* Place [ and ] around footnote calls. */
+.md .footnotes [data-footnote-ref]::before {
+    content: '[';
+}
+
+.md .footnotes [data-footnote-ref]::after {
+    content: ']';
+}
+
+/* Layout */
+
+.art {
+    /* Source: https://projects.verou.me/css3patterns/#tartan */
+    height: 1.5rem;
+    background-color: hsl(2, 57%, 40%);
+    background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0, 0, 0, .4) 50px, rgba(0, 0, 0, .4) 53px, transparent 53px, transparent 63px, rgba(0, 0, 0, .4) 63px, rgba(0, 0, 0, .4) 66px, transparent 66px, transparent 116px, rgba(0, 0, 0, .5) 116px, rgba(0, 0, 0, .5) 166px, rgba(255, 255, 255, .2) 166px, rgba(255, 255, 255, .2) 169px, rgba(0, 0, 0, .5) 169px, rgba(0, 0, 0, .5) 179px, rgba(255, 255, 255, .2) 179px, rgba(255, 255, 255, .2) 182px, rgba(0, 0, 0, .5) 182px, rgba(0, 0, 0, .5) 232px, transparent 232px),
+        repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0, 0, 0, .4) 50px, rgba(0, 0, 0, .4) 53px, transparent 53px, transparent 63px, rgba(0, 0, 0, .4) 63px, rgba(0, 0, 0, .4) 66px, transparent 66px, transparent 116px, rgba(0, 0, 0, .5) 116px, rgba(0, 0, 0, .5) 166px, rgba(255, 255, 255, .2) 166px, rgba(255, 255, 255, .2) 169px, rgba(0, 0, 0, .5) 169px, rgba(0, 0, 0, .5) 179px, rgba(255, 255, 255, .2) 179px, rgba(255, 255, 255, .2) 182px, rgba(0, 0, 0, .5) 182px, rgba(0, 0, 0, .5) 232px, transparent 232px),
+        repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0, 0, 0, .2) 2px, rgba(0, 0, 0, .2) 3px, transparent 3px, transparent 5px, rgba(0, 0, 0, .2) 5px);
+}
+
+.page {
+    max-width: 720px;
+    background-color: #fff;
+    margin: 1rem auto 2rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    gap: .5rem;
+    font-size: 1.6em;
+    line-height: 1.6;
+    color: #606c76;
+}
+
+.header .title {
+    font-size: .8em;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.header .subtitle {
+    font-weight: 300;
+    text-transform: none;
+}
+
+.main {
+    padding: 1rem 0 2rem;
+}

@@ -85,34 +85,15 @@ const NavBar = make(({ send, options }: { send: Send, options: Option[] }) => {
   return { render }
 })
 
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 1rem 2rem;
-`
-const Title = styled.div` 
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 1rem;
-  color: #555;
-  margin-left: 0.5rem;
-`
-const Subtitle = styled.div`
-  font-weight: 400;
-  color: #999;
-  margin-left: 0.5rem;
-`
-
 export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
   const
     render = () => {
       return (
-        <Container>
+        <div className='header'>
           <Menu send={send} options={conf.menu ?? []} />
-          <Title>{conf.title}</Title>
-          <Subtitle>{conf.caption}</Subtitle>
+          <div className='title'>{conf.title} <span className='subtitle'>{conf.caption}</span></div>
           <NavBar send={send} options={conf.nav ?? []} />
-        </Container>
+        </div>
       )
     }
   return { render }

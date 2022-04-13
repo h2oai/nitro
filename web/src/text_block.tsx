@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import React from 'react';
-import { Markdown } from './markdown';
 import { BoxProps, make } from './ui';
 
 export const TextBlock = make(({ context, box }: BoxProps) => {
@@ -38,7 +37,7 @@ export const TextBlock = make(({ context, box }: BoxProps) => {
       })
     },
     render = () => {
-      return <Markdown ref={ref} dangerouslySetInnerHTML={{ __html: box.text ?? '' }} />
+      return <div className='md' ref={ref} dangerouslySetInnerHTML={{ __html: box.text ?? '' }} />
     }
   return { init: update, update, render }
 })
