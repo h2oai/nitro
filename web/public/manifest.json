@@ -1,11 +1,23 @@
 {
   "short_name": "Nitro",
   "name": "H2O Nitro App",
-  "icons": {
-    "16": "favicon-16x16.png",
-    "32": "favicon-32x32.png",
-    "192": "android-chrome-192x192.png"
-  },
+  "icons": [
+    {
+      "src": "favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
