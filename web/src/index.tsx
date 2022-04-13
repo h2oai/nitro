@@ -12,24 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { createTheme, loadTheme, registerIcons } from '@fluentui/react';
+import { loadTheme, registerIcons } from '@fluentui/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './app';
 import { newClient } from './client';
 import { icons } from './icons';
 import reportWebVitals from './reportWebVitals';
+import { generateTheme } from './theme';
 
-
-// https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/
-const
-  purple = createTheme({
-    defaultFontStyle: { fontFamily: 'inherit' },
-  });
-
-loadTheme(purple)
 registerIcons({ icons })
-
+loadTheme(generateTheme({
+  primaryFont: 'inherit',
+  monospaceFont: 'inherit',
+  primaryColor: '#5a64f0',
+  foregroundColor: '#3e3f4a',
+  backgroundColor: '#ffffff',
+}))
 const root = document.getElementById('nitro')
 const client = newClient(root?.getAttribute('data-endpoint') ?? '/nitro')
 ReactDOM.render(<App client={client} />, root);

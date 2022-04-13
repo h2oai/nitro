@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Body } from './body';
 import { Client } from './client';
 import { isN, newIncr, S, signal, U, xid } from './core';
