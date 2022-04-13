@@ -12,8 +12,10 @@ html {
 }
 
 body {
-    font-family: 'Roboto Slab', sans-serif;
+    font-family: 'Roboto Slab', serif;
 }
+
+/* Markdown */
 
 .md *,
 .md *:after,
@@ -288,7 +290,7 @@ body {
 }
 
 .header .subtitle {
-    font-weight: 300;
+    font-weight: 400;
     text-transform: none;
 }
 
