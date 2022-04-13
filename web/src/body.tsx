@@ -7,9 +7,10 @@ import { newCaptureContext } from './ui';
 import { Zone } from './zone';
 
 const continueButton: Box = {
-  xid: xid(), mode: 'button', index: -1 /* don't capture */, options: [
-    { value: 'continue', text: 'Continue', selected: true }
-  ]
+  xid: xid(),
+  mode: 'button',
+  index: -1, //don't capture
+  options: [{ value: 'continue', text: 'Continue' }]
 }
 
 const hasActions = (boxes: Box[]): B => { // recursive

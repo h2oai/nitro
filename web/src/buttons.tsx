@@ -19,26 +19,27 @@ export const Buttons = make(({ context, box }: BoxProps) => {
           context.capture(index, value)
           context.submit()
         },
-        buttons = options.map(c => {
+        hasPrimary = options.some(o => o.selected === true),
+        buttons = options.map((o, i) => {
           const
-            text = c.text,
-            onClick = () => capture(c.value),
-            button = c.selected || selection.has(c.value)
-              ? c.options
-                ? c.value === ''
-                  ? <PrimaryButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(c.options, capture)} />
-                  : <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options, capture)} onClick={onClick} />
-                : c.caption
-                  ? <CompoundButton primary text={text} secondaryText={c.caption} styles={compoundStyles} onClick={onClick} />
+            text = o.text,
+            onClick = () => capture(o.value),
+            button = (!hasPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
+              ? o.options
+                ? o.value === ''
+                  ? <PrimaryButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
+                  : <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
+                : o.caption
+                  ? <CompoundButton primary text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
                   : <PrimaryButton text={text} styles={styles} onClick={onClick} />
-              : c.options
-                ? c.value === ''
-                  ? <DefaultButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(c.options, capture)} />
-                  : <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(c.options, capture)} onClick={onClick} />
-                : c.caption
-                  ? <CompoundButton text={text} secondaryText={c.caption} styles={compoundStyles} onClick={onClick} />
+              : o.options
+                ? o.value === ''
+                  ? <DefaultButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
+                  : <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
+                : o.caption
+                  ? <CompoundButton text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
                   : <DefaultButton text={text} styles={styles} onClick={onClick} />
-          return <Stack.Item key={c.value}>{button}</Stack.Item>
+          return <Stack.Item key={o.value}>{button}</Stack.Item>
         })
       return (
         <Labeled label={text ?? ' '}>
