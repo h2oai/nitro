@@ -24,7 +24,7 @@ import reportWebVitals from './reportWebVitals';
 // https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/
 const
   purple = createTheme({
-    defaultFontStyle: { fontFamily: '"Roboto"' },
+    defaultFontStyle: { fontFamily: 'inherit' },
   });
 
 loadTheme(purple)
