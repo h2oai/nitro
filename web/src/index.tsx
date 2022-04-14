@@ -27,7 +27,7 @@ const defaultScheme = {
   primaryFont: 'inherit',
   monospaceFont: 'inherit',
   primaryColor: '#5a64f0',
-  primaryColorName: 'purple',
+  primaryColorName: 'indigo',
   foregroundColor: '#3e3f4a',
   backgroundColor: '#ffffff',
 }
