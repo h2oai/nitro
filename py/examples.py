@@ -592,7 +592,7 @@ def layout_tile(view: View):
     )
 
 
-# ## Cross-tile
+# ## Cross Tile
 # Set `cross_tile=` to control how items inside a view, row, or column are tiled along the cross axis.
 #
 # - The cross axis for a row is vertical. starting at the top, and ending at the bottom
@@ -601,7 +601,7 @@ def layout_tile(view: View):
 # `cross_tile=` can be set to `start`, `center`, `end`, `stretch`, or `normal`.
 def layout_cross_tile(view: View):
     boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
-    col_style = dict(height=100, background='#eee')
+    col_style = dict(height=200, background='#eee')
     view(
         # Pack items from the start.
         col(row(*boxes, cross_tile='start'), **col_style),
@@ -2213,75 +2213,75 @@ def rating_range(view: View):
 
 # ## Color Variables
 # To use pre-defined, named colors that sit well with the app's theme, use *color variables*.
-# Color variables take the form `var(--name)`.
-# For example, you can use `var(--red)` instead of hard-coded colors like `red` or `#ff0000` or `rgb(255,0,0)`.
+# Color variables take the form `var(--name)` or simply `$name`.
+# For example, you can use `var(--red)` or `$red` instead of hard-coded colors like `red` or `#ff0000` or `rgb(255,0,0)`.
 #
 # Color variables can be passed wherever colors are accepted, like `background`, `border`, `color`, and so on.
 #
 # There are 16 pre-defined *spectrum colors*, derived automatically from the theme's accent color, by matching its
 # saturation and lightness. The naming of each color is indicative, and its hue might appear off depending on the
-# position of the accent color's hue along the color spectrum. For example, `var(--red)` could appear pink or orange!
+# position of the accent color's hue along the color spectrum. For example, `$red` could appear pink or orange!
 #
-# Additionally, there are pre-defined color variables for various *tones* of the theme's foreground (`--foreground`),
-# background (`--background`) and accent (`--accent`) colors.
-# Accent color tones are prefixed with `--accent-`, and neutral tones (grays) are prefixed with `--neutral-`.
+# Additionally, there are pre-defined color variables for various *tones* of the theme's foreground (`$foreground`),
+# background (`$background`) and accent (`$accent`) colors.
+# Accent color tones are prefixed with `$accent-`, and neutral tones (grays) are prefixed with `$neutral-`.
 def theme_colors(view: View):
-    style = dict(width='35px', height='35px', border='#777')
+    style = dict(width='35px', height='35px', border='#777', margin='0 0 2.5rem 0')
     view(
         '### Spectrum Colors',
         row(
-            box(background='var(--red)', **style),
-            box(background='var(--lava)', **style),
-            box(background='var(--orange)', **style),
-            box(background='var(--amber)', **style),
-            box(background='var(--yellow)', **style),
-            box(background='var(--lime)', **style),
-            box(background='var(--mint)', **style),
-            box(background='var(--green)', **style),
-            box(background='var(--teal)', **style),
-            box(background='var(--cyan)', **style),
-            box(background='var(--sky)', **style),
-            box(background='var(--blue)', **style),
-            box(background='var(--indigo)', **style),
-            box(background='var(--purple)', **style),
-            box(background='var(--violet)', **style),
-            box(background='var(--pink)', **style),
+            box(background='$red', **style),
+            box(background='$lava', **style),
+            box(background='$orange', **style),
+            box(background='$amber', **style),
+            box(background='$yellow', **style),
+            box(background='$lime', **style),
+            box(background='$mint', **style),
+            box(background='$green', **style),
+            box(background='$teal', **style),
+            box(background='$cyan', **style),
+            box(background='$sky', **style),
+            box(background='$blue', **style),
+            box(background='$indigo', **style),
+            box(background='$purple', **style),
+            box(background='$violet', **style),
+            box(background='$pink', **style),
             wrap='normal',
         ),
         '### Theme Colors',
         row(
-            box(background='var(--foreground)', **style),
-            box(background='var(--background)', **style),
-            box(background='var(--accent)', **style),
+            box(background='$foreground', **style),
+            box(background='$background', **style),
+            box(background='$accent', **style),
             wrap='normal',
         ),
         '### Accent Tones',
         row(
-            box(background='var(--accent-darker)', **style),
-            box(background='var(--accent-dark)', **style),
-            box(background='var(--accent-dark-alt)', **style),
-            box(background='var(--accent-primary)', **style),
-            box(background='var(--accent-secondary)', **style),
-            box(background='var(--accent-tertiary)', **style),
-            box(background='var(--accent-light)', **style),
-            box(background='var(--accent-lighter)', **style),
-            box(background='var(--accent-lighter-alt)', **style),
+            box(background='$accent-darker', **style),
+            box(background='$accent-dark', **style),
+            box(background='$accent-dark-alt', **style),
+            box(background='$accent-primary', **style),
+            box(background='$accent-secondary', **style),
+            box(background='$accent-tertiary', **style),
+            box(background='$accent-light', **style),
+            box(background='$accent-lighter', **style),
+            box(background='$accent-lighter-alt', **style),
             wrap='normal',
         ),
         '### Neutral Tones',
         row(
-            box(background='var(--neutral-dark)', **style),
-            box(background='var(--neutral-primary)', **style),
-            box(background='var(--neutral-primary-alt)', **style),
-            box(background='var(--neutral-secondary)', **style),
-            box(background='var(--neutral-secondary-alt)', **style),
-            box(background='var(--neutral-tertiary)', **style),
-            box(background='var(--neutral-tertiary-alt)', **style),
-            box(background='var(--neutral-quaternary)', **style),
-            box(background='var(--neutral-quaternary-alt)', **style),
-            box(background='var(--neutral-light)', **style),
-            box(background='var(--neutral-lighter)', **style),
-            box(background='var(--neutral-lighter-alt)', **style),
+            box(background='$neutral-dark', **style),
+            box(background='$neutral-primary', **style),
+            box(background='$neutral-primary-alt', **style),
+            box(background='$neutral-secondary', **style),
+            box(background='$neutral-secondary-alt', **style),
+            box(background='$neutral-tertiary', **style),
+            box(background='$neutral-tertiary-alt', **style),
+            box(background='$neutral-quaternary', **style),
+            box(background='$neutral-quaternary-alt', **style),
+            box(background='$neutral-light', **style),
+            box(background='$neutral-lighter', **style),
+            box(background='$neutral-lighter-alt', **style),
             wrap='normal',
         ),
     )
