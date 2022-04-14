@@ -1,4 +1,4 @@
-import { CompoundButton, DefaultButton, IButtonStyles, PrimaryButton, Stack } from '@fluentui/react';
+import { Alignment, CompoundButton, DefaultButton, IButtonStyles, PrimaryButton, Stack } from '@fluentui/react';
 import React from 'react';
 import { V } from './core';
 import { Labeled } from './label';
@@ -11,8 +11,13 @@ export const Buttons = make(({ context, box }: BoxProps) => {
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
-        { text, index, row, options } = box,
+        { text, index, row, options, align } = box,
         horizontal = row !== false,
+        horizontalAlign = horizontal
+          ? align === 'center'
+            ? 'center'
+            : align === 'right' ? 'end' : undefined
+          : undefined,
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
         capture = (value: V) => {
@@ -43,7 +48,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
         })
       return (
         <Labeled label={text ?? ' '}>
-          <Stack horizontal={horizontal} tokens={{ childrenGap: 5 }}>{buttons}</Stack>
+          <Stack horizontal={horizontal} horizontalAlign={horizontalAlign} tokens={{ childrenGap: 5 }} >{buttons}</Stack>
         </Labeled>
       )
     }
