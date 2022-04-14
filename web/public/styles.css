@@ -60,6 +60,7 @@ html {
 body {
     font-family: var(--font-primary);
     background: var(--background);
+    color: var(--foreground);
 }
 
 /* Markdown */
@@ -71,7 +72,6 @@ body {
 }
 
 .md {
-    color: var(--foreground);
     font-size: 1.6em;
     line-height: 1.6;
 }
