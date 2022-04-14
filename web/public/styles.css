@@ -1,24 +1,54 @@
-/*!
-  * Milligram v1.4.1
-  * https://milligram.io
-  *
-  * Copyright (c) 2020 CJ Patoilo
-  * Licensed under the MIT license
- */
-
 :root {
-    /* Scheme */
+    /* Fonts */
     --font-primary: 'Roboto Slab', serif;
     --font-monospace: 'Roboto Mono', monospace;
-    --color-primary: #5a64f0;
-    --color-foreground: #3e3f4a;
-    --color-background: #ffffff;
 
-    /* Derived */
-    --color-light: #e1e1e1;
-    --color-quaternary-alt: #d1d1d1;
-    --color-tertiary: #f4f5f6;
+    /* Theme Colors */
+    --foreground: #232329;
+    --background: #ffffff;
+    --accent: #5a64f0;
+    --accent-dark: #434bb6;
+    --accent-dark-alt: #5059d8;
+    --accent-darker: #323786;
+    --accent-light: #cbcefa;
+    --accent-lighter: #e3e5fd;
+    --accent-lighter-alt: #f8f8fe;
+    --accent-primary: #5a64f0;
+    --accent-secondary: #6c75f2;
+    --accent-tertiary: #999ff6;
+    --neutral-dark: #2f3038;
+    --neutral-light: #eaeaea;
+    --neutral-lighter: #f4f4f4;
+    --neutral-lighter-alt: #f8f8f8;
+    --neutral-primary: #3e3f4a;
+    --neutral-primary-alt: #525360;
+    --neutral-quaternary: #d0d0d0;
+    --neutral-quaternary-alt: #dadada;
+    --neutral-secondary: #848592;
+    --neutral-secondary-alt: #8a8886;
+    --neutral-tertiary: #bfc0c9;
+    --neutral-tertiary-alt: #c8c8c8;
+
+    /* Spectrum Colors */
+    --indigo: hsl(236, 83%, 64%);
+    --purple: hsl(258, 83%, 64%);
+    --violet: hsl(281, 83%, 64%);
+    --pink: hsl(303, 83%, 64%);
+    --red: hsl(326, 83%, 64%);
+    --lava: hsl(348, 83%, 64%);
+    --orange: hsl(11, 83%, 64%);
+    --amber: hsl(33, 83%, 64%);
+    --yellow: hsl(56, 83%, 64%);
+    --lime: hsl(78, 83%, 64%);
+    --mint: hsl(101, 83%, 64%);
+    --green: hsl(123, 83%, 64%);
+    --teal: hsl(146, 83%, 64%);
+    --cyan: hsl(168, 83%, 64%);
+    --sky: hsl(191, 83%, 64%);
+    --blue: hsl(213, 83%, 64%);
 }
+
+/* Adapted from Milligram v1.4.1 https://milligram.io. Copyright (c) 2020 CJ Patoilo. Licensed under the MIT license */
 
 html {
     box-sizing: border-box;
@@ -27,7 +57,7 @@ html {
 
 body {
     font-family: var(--font-primary);
-    background: var(--color-background);
+    background: var(--background);
 }
 
 /* Markdown */
@@ -39,13 +69,13 @@ body {
 }
 
 .md {
-    color: var(--color-foreground);
+    color: var(--foreground);
     font-size: 1.6em;
     line-height: 1.6;
 }
 
 .md blockquote {
-    border-left: 0.3rem solid var(--color-quaternary-alt);
+    border-left: 0.3rem solid var(--neutral-quaternary-alt);
     margin-left: 0;
     margin-right: 0;
     padding: 1rem 1.5rem;
@@ -58,7 +88,7 @@ body {
 .md code,
 .md pre {
     font-family: var(--font-monospace);
-    background: var(--color-tertiary);
+    background: var(--neutral-lighter);
     font-size: 86%;
 }
 
@@ -70,25 +100,25 @@ body {
 }
 
 .md pre {
-    border-left: 0.3rem solid var(--color-primary);
+    border-left: 0.3rem solid var(--accent);
     padding: 1rem 1.5rem;
     overflow: auto;
 }
 
 .md hr {
     border: 0;
-    border-top: 0.1rem solid var(--color-tertiary);
+    border-top: 0.1rem solid var(--neutral-tertiary);
     margin: 3.0rem 0;
 }
 
 .md a {
-    color: var(--color-primary);
+    color: var(--accent);
     text-decoration: none;
 }
 
 .md a:focus,
 .md a:hover {
-    color: var(--color-foreground);
+    color: var(--foreground);
 }
 
 .md dl,
@@ -155,7 +185,7 @@ body {
 
 .md td,
 .md th {
-    border-bottom: 0.1rem solid var(--color-light);
+    border-bottom: 0.1rem solid var(--neutral-quaternary);
     padding: 1.2rem 1.5rem;
 }
 
@@ -241,7 +271,7 @@ body {
     font-size: 1.2rem;
     line-height: 1.2rem;
     padding-top: 1.2rem;
-    border-top: 1px solid var(--color-quaternary-alt);
+    border-top: 1px solid var(--neutral-quaternary);
 }
 
 .md .footnotes ol li p {
@@ -274,9 +304,9 @@ body {
 
 .art {
     height: 2rem;
-    background-color: var(--color-primary);
+    background-color: var(--accent);
     background-size: 5px 5px;
-    background-image: radial-gradient(var(--color-background) 1px, transparent 1px);
+    background-image: radial-gradient(var(--background) 1px, transparent 1px);
 }
 
 .page {
@@ -292,7 +322,7 @@ body {
     gap: .5rem;
     font-size: 1.6em;
     line-height: 1.6;
-    color: var(--color-foreground);
+    color: var(--foreground);
 }
 
 .header .title {

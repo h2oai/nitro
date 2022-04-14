@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { loadTheme, registerIcons } from '@fluentui/react';
+import { registerIcons } from '@fluentui/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './app';
 import { newClient } from './client';
 import { icons } from './icons';
 import reportWebVitals from './reportWebVitals';
-import { defineHues, generateTheme } from './theme';
+import { loadScheme } from './theme';
 
 registerIcons({ icons })
 
@@ -32,8 +32,8 @@ const defaultScheme = {
   backgroundColor: '#ffffff',
 }
 
-loadTheme(generateTheme(defaultScheme))
-defineHues(defaultScheme)
+loadScheme(defaultScheme)
+
 
 const root = document.getElementById('nitro')
 const client = newClient(root?.getAttribute('data-endpoint') ?? '/nitro')
