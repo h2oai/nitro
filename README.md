@@ -372,7 +372,7 @@ view('''
 ### Heading 3 
 #### Heading 4
 ##### Heading 5 
-###### Small print
+###### Heading 6
 
 This is a paragraph, with **bold**, *italics* 
 (or _italics_), ***important***, `code`
@@ -1009,7 +1009,7 @@ first, last, addr1, addr2, city, state, zip, action = view(
     box('Address line 2', value=''),
     row(box('City', value=''), box('State', value=''), box('Zip', value='')),
     box([
-        option('yes', 'Sign me up!', selected=True),
+        option('yes', 'Sign me up!'),
         option('no', 'Not now'),
     ])
 )
@@ -1035,7 +1035,7 @@ first, middle, last, addr1, addr2, city, state, zip, action = view(
     box('Address line 2', value=''),
     row(box('City', value='', grow=5), box('State', value='', width='20%'), box('Zip', value='', grow=1)),
     box([
-        option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+        option('yes', 'Sign me up!', caption='Terms and conditions apply'),
         option('no', 'Not now', caption="I'll decide later"),
     ])
 )
@@ -1608,7 +1608,7 @@ Set `mode='button'` to show buttons.
 
 ```py
 choice = view(box('Choose a color', mode='button', options=[
-    'yellow', 'orange', 'red', 'black'
+    'auto', 'yellow', 'orange', 'red',
 ]))
 view(f'You chose {choice}.')
 ```
@@ -1623,17 +1623,23 @@ In other words, if the first argument to `box()` is a sequence of options, then 
 
 
 ```py
-choice = view(box(['green', 'yellow', 'orange', 'red']))
+# Longer
+choice = view(box(mode='button', options=['auto', 'yellow', 'orange', 'red']))
+
+# Shorter
+choice = view(box(['auto', 'yellow', 'orange', 'red']))
+
 view(f'You chose {choice}.')
 ```
 
 
-This works when `options` is a sequence (tuple, set, list) or dictionary too. The following forms are equivalent:
+`options` can be a sequence of options, a sequence of tuples, or a dictionary. The following forms are equivalent:
 
 
 ```py
+# Longer
 choice = view(box([
-    option('green', 'Green'),
+    option('auto', 'Automatic'),
     option('yellow', 'Yellow'),
     option('orange', 'Orange'),
     option('red', 'Red'),
@@ -1641,7 +1647,7 @@ choice = view(box([
 
 # Shorter
 choice = view(box([
-    ('green', 'Green'),
+    ('auto', 'Automatic'),
     ('yellow', 'Yellow'),
     ('orange', 'Orange'),
     ('red', 'Red'),
@@ -1649,7 +1655,7 @@ choice = view(box([
 
 # Shortest
 choice = view(box(dict(
-    green='Green',
+    auto='Automatic',
     yellow='Yellow',
     orange='Orange',
     red='Red',
@@ -1658,17 +1664,17 @@ choice = view(box(dict(
 
 ### Buttons - Selected
 
-Options marked as `selected` are shown in alternate colors, also called *primary* buttons.
+By default, the first button is displayed as the primary action in the sequence.
 
-This is useful when you want to emphasize certain actions over others.
+To select a different button as primary, set `selected=True`.
 
 
 ```py
 choice = view(
     'Updates are available!',
     box([
-        option('now', 'Update now', selected=True),
-        option('tomorrow', 'Remind me tomorrow'),
+        option('now', 'Update now'),
+        option('tomorrow', 'Remind me tomorrow', selected=True),
         option('never', 'Never update'),
     ])
 )
@@ -1718,7 +1724,7 @@ Sub-options inside options are shown as split buttons.
 choice = view(
     'Send fresh donuts every day?',
     box([
-        option('yes', 'Yes!', selected=True),
+        option('yes', 'Yes!'),
         option('no', 'No', options=[
             option('later', 'Remind me later', icon='ChatBot'),
             option('never', "Don't ask me again", icon='MuteChat'),
@@ -1737,7 +1743,7 @@ Sub-options work for primary buttons, too.
 choice = view(
     'Send fresh donuts every day?',
     box([
-        option('yes', 'Yes!', selected=True, options=[
+        option('yes', 'Yes!', options=[
             option('later', 'Remind me later', icon='ChatBot'),
             option('never', "Don't ask me again", icon='MuteChat'),
         ]),
@@ -1756,7 +1762,7 @@ Set `caption=` to describe buttons.
 choice = view(
     'Send fresh donuts every day?',
     box([
-        option('yes', 'Sign me up!', caption='Terms and conditions apply', selected=True),
+        option('yes', 'Sign me up!', caption='Terms and conditions apply'),
         option('no', 'Not now', caption='I will decide later'),
     ])
 )
@@ -1765,14 +1771,14 @@ view(f'You chose {choice}.')
 
 ### Buttons - Layout
 
-By default, buttons are laid out row-wise. Set `row=False` to lay them column-wise.
+By default, buttons are arranged row-wise. Set `row=False` to arrange them column-wise.
 
 
 ```py
 choice = view(
     'Choose a color:',
     box([
-        option('auto', 'Automatic', selected=True),
+        option('auto', 'Automatic'),
         option('yellow', 'Yellow'),
         option('orange', 'Orange'),
         option('red', 'Red'),
@@ -2830,4 +2836,43 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 ```py
 stars = view(box('Rate your experience', mode='rating', value=3, range=(0, 10)))
 view(f'Your rating was {stars} stars.')
+```
+
+### Theming - Color Variables
+
+To use pre-defined, named colors that sit well with the app's theme, use *color variables*.
+Color variables take the form `var(--name)`. For example, instead of hard-coded colors like `red` or `#ff0000`
+or `rgb(255,0,0)`, pass `var(--red)`.
+
+Color variables can be passed wherever colors are accepted, like `background`, `border`, `color`, and so on.
+
+There are 16 pre-defined colors, derived automatically from the theme's primary color, by matching its saturation
+and lightness. The naming of each color is indicative, and might be off by a color depending on the position
+of the theme's primary color on the color spectrum. For example, `var(--red)` could appear pink or orange!
+
+
+```py
+style = dict(width='50px', height='50px')
+view(
+    row(
+        box(background='var(--red)', **style),
+        box(background='var(--lava)', **style),
+        box(background='var(--orange)', **style),
+        box(background='var(--amber)', **style),
+        box(background='var(--yellow)', **style),
+        box(background='var(--lime)', **style),
+        box(background='var(--mint)', **style),
+        box(background='var(--green)', **style),
+        box(background='var(--teal)', **style),
+        box(background='var(--cyan)', **style),
+        box(background='var(--sky)', **style),
+        box(background='var(--blue)', **style),
+        box(background='var(--indigo)', **style),
+        box(background='var(--purple)', **style),
+        box(background='var(--violet)', **style),
+        box(background='var(--pink)', **style),
+        width='500px',
+        wrap='normal',
+    )
+)
 ```
