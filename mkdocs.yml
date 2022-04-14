@@ -75,6 +75,7 @@ nav:
     - 'color-picker.md'
     - 'color-palette.md'
     - 'rating.md'
+    - 'theming.md'
     # End generated
   - Meta:
       - 'change-log.md'

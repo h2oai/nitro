@@ -1241,12 +1241,18 @@ def buttons_basic(view: View):
 #
 # In other words, if the first argument to `box()` is a sequence of options, then `mode='button'` is implied.
 def buttons_shorthand(view: View):
+    # Longer
+    choice = view(box(mode='button', options=['auto', 'yellow', 'orange', 'red']))
+
+    # Shorter
     choice = view(box(['auto', 'yellow', 'orange', 'red']))
+
     view(f'You chose {choice}.')
 
 
-# This works when `options` is a sequence (tuple, set, list) or dictionary too. The following forms are equivalent:
+# `options` can be a sequence of options, a sequence of tuples, or a dictionary. The following forms are equivalent:
 def buttons_shorthand_alt(view: View):
+    # Longer
     choice = view(box([
         option('auto', 'Automatic'),
         option('yellow', 'Yellow'),
@@ -2201,3 +2207,41 @@ def rating_min_max(view: View):
 def rating_range(view: View):
     stars = view(box('Rate your experience', mode='rating', value=3, range=(0, 10)))
     view(f'Your rating was {stars} stars.')
+
+
+# # Theming
+
+# ## Color Variables
+# To use pre-defined, named colors that sit well with the app's theme, use *color variables*.
+# Color variables take the form `var(--name)`. For example, instead of hard-coded colors like `red` or `#ff0000`
+# or `rgb(255,0,0)`, pass `var(--red)`.
+#
+# Color variables can be passed wherever colors are accepted, like `background`, `border`, `color`, and so on.
+#
+# There are 16 pre-defined colors, derived automatically from the theme's primary color, by matching its saturation
+# and lightness. The naming of each color is indicative, and might be off by a color depending on the position
+# of the theme's primary color on the color spectrum. For example, `var(--red)` could appear pink or orange!
+def theme_colors(view: View):
+    style = dict(width='50px', height='50px')
+    view(
+        row(
+            box(background='var(--red)', **style),
+            box(background='var(--lava)', **style),
+            box(background='var(--orange)', **style),
+            box(background='var(--amber)', **style),
+            box(background='var(--yellow)', **style),
+            box(background='var(--lime)', **style),
+            box(background='var(--mint)', **style),
+            box(background='var(--green)', **style),
+            box(background='var(--teal)', **style),
+            box(background='var(--cyan)', **style),
+            box(background='var(--sky)', **style),
+            box(background='var(--blue)', **style),
+            box(background='var(--indigo)', **style),
+            box(background='var(--purple)', **style),
+            box(background='var(--violet)', **style),
+            box(background='var(--pink)', **style),
+            width='500px',
+            wrap='normal',
+        )
+    )
