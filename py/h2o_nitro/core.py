@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import random
 from pathlib import Path
 from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable
 from collections import OrderedDict
@@ -654,3 +655,24 @@ class AsyncView(_View):
             await self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
         if read:
             return await self._read(_MsgType.Input)
+
+
+_lorem = '''
+lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna 
+aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat 
+duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur 
+excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum
+'''
+
+_lorems = set([w.strip() for w in _lorem.split(' ')])
+
+
+def _sentence(min, max):
+    return ' '.join(random.sample(_lorems, random.randint(min, max))).capitalize()
+
+
+def lorem(sentences: int = 0):
+    if sentences == 0:
+        return _sentence(4, 5)
+    lines = [_sentence(5, 9) for i in range(sentences)]
+    return '. '.join(lines) + '.'

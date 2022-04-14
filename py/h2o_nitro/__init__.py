@@ -13,6 +13,6 @@
 # limitations under the License.
 
 from .core import View, AsyncView, Box, BoxArrange, BoxAlign, Option, box, option, row, col, \
-    ProtocolError, ContextSwitchError, RemoteError, web_directory
+    ProtocolError, ContextSwitchError, RemoteError, web_directory, lorem
 
-__version__ = "0.4.2"
+__version__ = "0.5.0"
