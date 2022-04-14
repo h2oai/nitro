@@ -91,7 +91,8 @@ export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
       return (
         <div className='header'>
           <Menu send={send} options={conf.menu ?? []} />
-          <div className='title'>{conf.title} <span className='subtitle'>{conf.caption}</span></div>
+          <div className='title'>{conf.title}</div>
+          <div className='subtitle'>{conf.caption}</div>
           <NavBar send={send} options={conf.nav ?? []} />
         </div>
       )

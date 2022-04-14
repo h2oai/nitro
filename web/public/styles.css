@@ -297,14 +297,14 @@ body {
 
 .header .title {
     font-size: .8em;
+    font-weight: 700;
     letter-spacing: .05em;
     text-transform: uppercase;
-    font-weight: 700;
 }
 
 .header .subtitle {
-    font-weight: 400;
-    text-transform: none;
+    font-size: .8em;
+    letter-spacing: 0;
 }
 
 .main {
