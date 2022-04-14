@@ -7,27 +7,29 @@
     --foreground: #232329;
     --background: #ffffff;
     --accent: #5a64f0;
+
+    --accent-darker: #323786;
     --accent-dark: #434bb6;
     --accent-dark-alt: #5059d8;
-    --accent-darker: #323786;
-    --accent-light: #cbcefa;
-    --accent-lighter: #e3e5fd;
-    --accent-lighter-alt: #f8f8fe;
     --accent-primary: #5a64f0;
     --accent-secondary: #6c75f2;
     --accent-tertiary: #999ff6;
+    --accent-light: #cbcefa;
+    --accent-lighter: #e3e5fd;
+    --accent-lighter-alt: #f8f8fe;
+
     --neutral-dark: #2f3038;
-    --neutral-light: #eaeaea;
-    --neutral-lighter: #f4f4f4;
-    --neutral-lighter-alt: #f8f8f8;
     --neutral-primary: #3e3f4a;
     --neutral-primary-alt: #525360;
-    --neutral-quaternary: #d0d0d0;
-    --neutral-quaternary-alt: #dadada;
     --neutral-secondary: #848592;
     --neutral-secondary-alt: #8a8886;
     --neutral-tertiary: #bfc0c9;
     --neutral-tertiary-alt: #c8c8c8;
+    --neutral-quaternary: #d0d0d0;
+    --neutral-quaternary-alt: #dadada;
+    --neutral-light: #eaeaea;
+    --neutral-lighter: #f4f4f4;
+    --neutral-lighter-alt: #f8f8f8;
 
     /* Spectrum Colors */
     --indigo: hsl(236, 83%, 64%);
