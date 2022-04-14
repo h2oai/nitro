@@ -2213,17 +2213,22 @@ def rating_range(view: View):
 
 # ## Color Variables
 # To use pre-defined, named colors that sit well with the app's theme, use *color variables*.
-# Color variables take the form `var(--name)`. For example, instead of hard-coded colors like `red` or `#ff0000`
-# or `rgb(255,0,0)`, pass `var(--red)`.
+# Color variables take the form `var(--name)`.
+# For example, you can use `var(--red)` instead of hard-coded colors like `red` or `#ff0000` or `rgb(255,0,0)`.
 #
 # Color variables can be passed wherever colors are accepted, like `background`, `border`, `color`, and so on.
 #
-# There are 16 pre-defined colors, derived automatically from the theme's primary color, by matching its saturation
-# and lightness. The naming of each color is indicative, and might be off by a color depending on the position
-# of the theme's primary color on the color spectrum. For example, `var(--red)` could appear pink or orange!
+# There are 16 pre-defined *spectrum colors*, derived automatically from the theme's accent color, by matching its
+# saturation and lightness. The naming of each color is indicative, and its hue might appear off depending on the
+# position of the accent color's hue along the color spectrum. For example, `var(--red)` could appear pink or orange!
+#
+# Additionally, there are pre-defined color variables for various *tones* of the theme's foreground (`--foreground`),
+# background (`--background`) and accent (`--accent`) colors.
+# Accent color tones are prefixed with `--accent-`, and neutral tones (grays) are prefixed with `--neutral-`.
 def theme_colors(view: View):
-    style = dict(width='50px', height='50px')
+    style = dict(width='35px', height='35px', border='#777')
     view(
+        '### Spectrum Colors',
         row(
             box(background='var(--red)', **style),
             box(background='var(--lava)', **style),
@@ -2241,7 +2246,42 @@ def theme_colors(view: View):
             box(background='var(--purple)', **style),
             box(background='var(--violet)', **style),
             box(background='var(--pink)', **style),
-            width='500px',
             wrap='normal',
-        )
+        ),
+        '### Theme Colors',
+        row(
+            box(background='var(--foreground)', **style),
+            box(background='var(--background)', **style),
+            box(background='var(--accent)', **style),
+            wrap='normal',
+        ),
+        '### Accent Tones',
+        row(
+            box(background='var(--accent-darker)', **style),
+            box(background='var(--accent-dark)', **style),
+            box(background='var(--accent-dark-alt)', **style),
+            box(background='var(--accent-primary)', **style),
+            box(background='var(--accent-secondary)', **style),
+            box(background='var(--accent-tertiary)', **style),
+            box(background='var(--accent-light)', **style),
+            box(background='var(--accent-lighter)', **style),
+            box(background='var(--accent-lighter-alt)', **style),
+            wrap='normal',
+        ),
+        '### Neutral Tones',
+        row(
+            box(background='var(--neutral-dark)', **style),
+            box(background='var(--neutral-primary)', **style),
+            box(background='var(--neutral-primary-alt)', **style),
+            box(background='var(--neutral-secondary)', **style),
+            box(background='var(--neutral-secondary-alt)', **style),
+            box(background='var(--neutral-tertiary)', **style),
+            box(background='var(--neutral-tertiary-alt)', **style),
+            box(background='var(--neutral-quaternary)', **style),
+            box(background='var(--neutral-quaternary-alt)', **style),
+            box(background='var(--neutral-light)', **style),
+            box(background='var(--neutral-lighter)', **style),
+            box(background='var(--neutral-lighter-alt)', **style),
+            wrap='normal',
+        ),
     )
