@@ -439,13 +439,13 @@ class _View:
     def __init__(
             self,
             delegate: Callable,
-            title: str = 'H2O Nitro',
-            caption: str = 'v0.1.0',  # XXX show actual version
             context: any = None,
-            menu: Optional[Sequence[Option]] = None,
-            nav: Optional[Sequence[Option]] = None,
             send: Optional[Callable] = None,
             recv: Optional[Callable] = None,
+            title: str = 'H2O Nitro',
+            caption: str = 'v0.1.0',  # XXX show actual version
+            menu: Optional[Sequence[Option]] = None,
+            nav: Optional[Sequence[Option]] = None,
     ):
         self._delegate = delegate
         self._title = title
@@ -486,18 +486,18 @@ class View(_View):
     def __init__(
             self,
             delegate: Callable,
+            context: any = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
             title: str = None,
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
-            context: any = None,
-            send: Optional[Callable] = None,
-            recv: Optional[Callable] = None,
     ):
-        super().__init__(delegate, title, caption, context, menu, nav, send, recv)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
-        View(self._delegate, self._title, self._caption, self._menu, self._nav, context, send, recv)._run()
+        View(self._delegate, context, send, recv, self._title, self._caption, self._menu, self._nav)._run()
 
     def _run(self):
         self._send(self._join(self._read(_MsgType.Join)))
@@ -573,19 +573,18 @@ class AsyncView(_View):
     def __init__(
             self,
             delegate: Callable,
+            context: any = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
             title: str = None,
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
-            context: any = None,
-            send: Optional[Callable] = None,
-            recv: Optional[Callable] = None,
-
     ):
-        super().__init__(delegate, title, caption, context, menu, nav, send, recv)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
-        await AsyncView(self._delegate, self._title, self._caption, self._menu, self._nav, context, send, recv)._run()
+        await AsyncView(self._delegate, context, send, recv, self._title, self._caption, self._menu, self._nav)._run()
 
     async def _run(self):
         await self._send(self._join(await self._read(_MsgType.Join)))
