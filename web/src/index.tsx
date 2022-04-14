@@ -19,16 +19,22 @@ import { App } from './app';
 import { newClient } from './client';
 import { icons } from './icons';
 import reportWebVitals from './reportWebVitals';
-import { generateTheme } from './theme';
+import { defineHues, generateTheme } from './theme';
 
 registerIcons({ icons })
-loadTheme(generateTheme({
+
+const defaultScheme = {
   primaryFont: 'inherit',
   monospaceFont: 'inherit',
   primaryColor: '#5a64f0',
+  primaryColorName: ' purple',
   foregroundColor: '#3e3f4a',
   backgroundColor: '#ffffff',
-}))
+}
+
+loadTheme(generateTheme(defaultScheme))
+defineHues(defaultScheme)
+
 const root = document.getElementById('nitro')
 const client = newClient(root?.getAttribute('data-endpoint') ?? '/nitro')
 ReactDOM.render(<App client={client} />, root);
