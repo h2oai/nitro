@@ -16,7 +16,7 @@ import { cssColor, IRGB } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import { XBox } from './box';
-import { B, Dict, S, xid } from './core';
+import { B, Dict, isS, S, xid } from './core';
 import { Box } from './protocol';
 import { Context } from './ui';
 
@@ -33,9 +33,11 @@ const flexStyles: Dict<S> = {
 
 const toFlexStyle = (s: S): S => flexStyles[s] ?? s
 
+const translate = (s: S): S => isS(s) ? s.replace(/\$([\w-]+)/gi, 'var(--$1)') : s
+
 const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, color, background, border, grow, shrink, basis }: Partial<Box>, isRow: B) => {
 
-  if (align) css.textAlign = align as any
+  if (align) css.textAlign = translate(align) as any
 
   if (width !== undefined) {
     if (Array.isArray(width)) {
@@ -43,22 +45,22 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
         case 1:
           {
             const [min] = width
-            if (min) css.minWidth = min
+            if (min) css.minWidth = translate(min)
           }
           break
         case 2:
           {
             const [min, max] = width
-            if (min) css.minWidth = min
-            if (max) css.maxWidth = max
+            if (min) css.minWidth = translate(min)
+            if (max) css.maxWidth = translate(max)
           }
           break
         case 3:
           {
             const [min, max, initial] = width
-            if (min) css.minWidth = min
-            if (max) css.maxWidth = max
-            if (initial) css.width = initial
+            if (min) css.minWidth = translate(min)
+            if (max) css.maxWidth = translate(max)
+            if (initial) css.width = translate(initial)
           }
           break
       }
@@ -72,41 +74,42 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
         case 1:
           {
             const [min] = height
-            if (min) css.minHeight = min
+            if (min) css.minHeight = translate(min)
           }
           break
         case 2:
           {
             const [min, max] = height
-            if (min) css.minHeight = min
-            if (max) css.maxHeight = max
+            if (min) css.minHeight = translate(min)
+            if (max) css.maxHeight = translate(max)
           }
           break
         case 3:
           {
             const [min, max, initial] = height
-            if (min) css.minHeight = min
-            if (max) css.maxHeight = max
-            if (initial) css.height = initial
+            if (min) css.minHeight = translate(min)
+            if (max) css.maxHeight = translate(max)
+            if (initial) css.height = translate(initial)
           }
           break
       }
     } else {
-      css.height = height
+      css.height = translate(height)
     }
   }
 
-  if (margin !== undefined) css.margin = margin
-  if (padding !== undefined) css.padding = padding
+  if (margin !== undefined) css.margin = translate(margin)
+  if (padding !== undefined) css.padding = translate(padding)
 
-  if (background) css.background = background
+  if (background) css.background = translate(background)
+  console.log(css.background)
   if (color) {
-    css.color = color
+    css.color = translate(color)
   } else {
     if (background) {
       const bg = cssColor(background)
       if (bg) {
-        css.color = isBright(bg) ? '#000' : '#fff' // XXX use theme colors
+        css.color = translate(isBright(bg) ? '$foreground' : '$background') // BUG Evaluate css var first
       }
     }
   }
@@ -114,7 +117,7 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
   if (border) {
     css.borderWidth = 1
     css.borderStyle = 'solid'
-    css.borderColor = border
+    css.borderColor = translate(border)
   }
 
   if ((border || background) && padding === undefined) {
