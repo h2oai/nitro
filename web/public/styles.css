@@ -168,13 +168,16 @@ body {
 .md blockquote,
 .md dl,
 .md figure,
-.md form,
 .md ol,
 .md p,
 .md pre,
 .md table,
 .md ul {
     margin-bottom: 2.5rem;
+}
+
+.md p:only-child {
+    margin: 0;
 }
 
 .md table {
