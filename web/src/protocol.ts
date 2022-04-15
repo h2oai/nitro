@@ -69,7 +69,7 @@ export type Conf = {
   nav?: Option[]
 }
 
-export type BoxMode = 'md' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
 
 export type Box = {
   xid: S
@@ -93,6 +93,8 @@ export type Box = {
   border?: S // CSS border 1px solid ~
   color?: S  // CSS color
   background?: S // CSS background
+  image?: S // img tag or CSS background-image
+  fit?: S // CSS object-fit or background-size
   grow?: U // CSS flex-grow
   shrink?: U // CSS flex-shrink
   basis?: S // CSS flex-basis

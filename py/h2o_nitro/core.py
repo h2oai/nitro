@@ -191,6 +191,8 @@ class Box:
             padding: Optional[Sizing] = None,
             color: Optional[str] = None,
             background: Optional[str] = None,
+            image: Optional[str] = None,
+            fit: Optional[str] = None,
             border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
@@ -240,6 +242,8 @@ class Box:
         self.padding = padding
         self.color = color
         self.background = background
+        self.image = image
+        self.fit = fit
         self.border = border
         self.grow = grow
         self.shrink = shrink
@@ -281,6 +285,8 @@ class Box:
             padding=self.padding,
             color=self.color,
             background=self.background,
+            image=self.image,
+            fit=self.fit,
             border=self.border,
             grow=self.grow,
             shrink=self.shrink,
@@ -338,6 +344,8 @@ def row(
         padding: Optional[Sizing] = None,
         color: Optional[str] = None,
         background: Optional[str] = None,
+        image: Optional[str] = None,
+        fit: Optional[str] = None,
         border: Optional[str] = None,
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
@@ -357,6 +365,8 @@ def row(
         padding=padding,
         color=color,
         background=background,
+        image=image,
+        fit=fit,
         border=border,
         grow=grow,
         shrink=shrink,
@@ -377,6 +387,8 @@ def col(
         padding: Optional[Sizing] = None,
         color: Optional[str] = None,
         background: Optional[str] = None,
+        image: Optional[str] = None,
+        fit: Optional[str] = None,
         border: Optional[str] = None,
         grow: Optional[int] = None,
         shrink: Optional[int] = None,
@@ -395,6 +407,8 @@ def col(
         padding=padding,
         color=color,
         background=background,
+        image=image,
+        fit=fit,
         border=border,
         grow=grow,
         shrink=shrink,
@@ -539,6 +553,8 @@ class View(_View):
             padding: Optional[Sizing] = None,
             color: Optional[str] = None,
             background: Optional[str] = None,
+            image: Optional[str] = None,
+            fit: Optional[str] = None,
             border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
@@ -559,6 +575,8 @@ class View(_View):
                 padding=padding,
                 color=color,
                 background=background,
+                image=image,
+                fit=fit,
                 border=border,
                 grow=grow,
                 shrink=shrink,
@@ -626,6 +644,8 @@ class AsyncView(_View):
             padding: Optional[Sizing] = None,
             color: Optional[str] = None,
             background: Optional[str] = None,
+            image: Optional[str] = None,
+            fit: Optional[str] = None,
             border: Optional[str] = None,
             grow: Optional[int] = None,
             shrink: Optional[int] = None,
@@ -646,6 +666,8 @@ class AsyncView(_View):
                 padding=padding,
                 color=color,
                 background=background,
+                image=image,
+                fit=fit,
                 border=border,
                 grow=grow,
                 shrink=shrink,

@@ -62,7 +62,15 @@ const determineMode = (box: Box): BoxMode => {
     return 'text'
   }
 
-  return 'md'
+  if (box.text) {
+    return 'md'
+  }
+
+  if (box.image) {
+    return 'image'
+  }
+
+  return 'none'
 }
 
 const sanitizeRange = (box: Box) => {

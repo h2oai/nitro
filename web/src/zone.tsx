@@ -17,7 +17,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { XBox } from './box';
 import { B, Dict, isS, S, xid } from './core';
+import { ImageBlock } from './image';
 import { Box } from './protocol';
+import { TextBlock } from './text_block';
 import { Context } from './ui';
 
 // http://www.w3.org/TR/AERT#color-contrast
@@ -35,7 +37,18 @@ const toFlexStyle = (s: S): S => flexStyles[s] ?? s
 
 const translate = (s: S): S => isS(s) ? s.replace(/\$([\w-]+)/gi, 'var(--$1)') : s
 
-const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin, padding, color, background, border, grow, shrink, basis }: Partial<Box>, isRow: B) => {
+const computeStyle = (box: Partial<Box>) => {
+  const
+    { mode, row, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis } = box,
+    isRow = row ? true : false,
+    css: React.CSSProperties = {
+      flexDirection: row ? 'row' : 'column',
+      flexWrap: wrap ? 'wrap' : 'nowrap',
+      gap: gap ?? '1rem',
+      justifyContent: tile ? toFlexStyle(tile) : undefined,
+      alignItems: cross_tile ? toFlexStyle(cross_tile) : undefined,
+      alignContent: wrap ? toFlexStyle(wrap) : undefined,
+    }
 
   if (align) css.textAlign = translate(align) as any
 
@@ -101,8 +114,32 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
   if (margin !== undefined) css.margin = translate(margin)
   if (padding !== undefined) css.padding = translate(padding)
 
-  if (background) css.background = translate(background)
-  console.log(css.background)
+  if (background) css.backgroundColor = translate(background)
+
+  if (mode === 'image') {
+    const { fit } = box
+    if (fit) css.objectFit = fit as any
+  } else {
+    const { image, fit } = box
+    if (image) {
+      css.backgroundImage = `url(${image})`
+      // TODO document that scale-down is not supported
+      const size = fit === 'cover'
+        ? 'cover'
+        : fit === 'contain'
+          ? 'contain'
+          : fit === 'fill'
+            ? '100% 100%'
+            : fit === 'none'
+              ? undefined
+              : 'cover'
+
+      css.backgroundSize = size
+      css.backgroundPosition = '50% 50%'
+      css.backgroundRepeat = 'no-repeat'
+    }
+  }
+
   if (color) {
     css.color = translate(color)
   } else {
@@ -120,7 +157,7 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
     css.borderColor = translate(border)
   }
 
-  if ((border || background) && padding === undefined) {
+  if ((border || background || css.backgroundImage) && padding === undefined) {
     css.padding = '1rem'
   }
 
@@ -144,21 +181,6 @@ const Container = styled.div`
   box-sizing: border-box;
 `
 
-const computeStyle = (box: Partial<Box>) => {
-  const
-    { row, tile, cross_tile, wrap, gap } = box,
-    isRow = row ? true : false,
-    css: React.CSSProperties = {
-      flexDirection: row ? 'row' : 'column',
-      flexWrap: wrap ? 'wrap' : 'nowrap',
-      gap: gap ?? '1rem',
-      justifyContent: tile ? toFlexStyle(tile) : undefined,
-      alignItems: cross_tile ? toFlexStyle(cross_tile) : undefined,
-      alignContent: wrap ? toFlexStyle(wrap) : undefined,
-    }
-  return applyBoxStyles(css, box, isRow)
-}
-
 export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], box: Partial<Box> }) => {
   const
     children = boxes.map(box => {
@@ -166,18 +188,25 @@ export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], 
         return (
           <Zone key={xid()} context={context} boxes={box.items} box={box} />
         )
-      } else {
-        return (
-          <Container key={xid()} style={computeStyle(box)}>
-            <XBox key={box.xid} context={context} box={box} />
-          </Container>
-        )
+      }
+      const style = computeStyle(box)
+      switch (box.mode) {
+        case 'md':
+          return <TextBlock key={xid()} context={context} box={box} style={style} />
+        case 'image':
+          return <ImageBlock key={xid()} context={context} box={box} style={style} />
+        case 'none':
+          return <Container key={xid()} style={style} />
+        default:
+          return (
+            <Container key={xid()} style={style}>
+              <XBox key={box.xid} context={context} box={box} />
+            </Container>
+          )
       }
     })
 
   return (
-    <Container style={computeStyle(box)}>
-      {children}
-    </Container>
+    <Container style={computeStyle(box)}>{children}</Container>
   )
 }

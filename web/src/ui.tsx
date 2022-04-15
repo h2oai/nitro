@@ -29,6 +29,7 @@ export type Context = ReturnType<typeof newCaptureContext>
 
 export type BoxProps = { context: Context, box: Box }
 
+export type StyledBoxProps = BoxProps & { style: React.CSSProperties }
 interface Renderable {
   render(): JSX.Element
   init?(): void

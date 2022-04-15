@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import React from 'react';
-import { BoxProps, make } from './ui';
+import { make, StyledBoxProps } from './ui';
 
-export const TextBlock = make(({ context, box }: BoxProps) => {
+export const TextBlock = make(({ context, box, style }: StyledBoxProps) => {
   const
     ref = React.createRef<HTMLDivElement>(),
     update = () => {
@@ -37,7 +37,7 @@ export const TextBlock = make(({ context, box }: BoxProps) => {
       })
     },
     render = () => {
-      return <div className='md' ref={ref} dangerouslySetInnerHTML={{ __html: box.text ?? '' }} />
+      return <div className='md' ref={ref} style={style} dangerouslySetInnerHTML={{ __html: box.text ?? '' }} />
     }
   return { init: update, update, render }
 })
