@@ -52,8 +52,8 @@ nav:
   - Guide:
     - 'basics.md'
     - 'markdown.md'
+    - 'styling.md'
     - 'layout.md'
-    - 'advanced-layout.md'
     - 'forms.md'
     - 'textbox.md'
     - 'spinbox.md'
@@ -77,6 +77,7 @@ nav:
     - 'color-palette.md'
     - 'rating.md'
     - 'theming.md'
+    - 'advanced-layout.md'
     # End generated
   - Meta:
       - 'change-log.md'
