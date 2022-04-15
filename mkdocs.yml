@@ -53,6 +53,7 @@ nav:
     - 'basics.md'
     - 'markdown.md'
     - 'layout.md'
+    - 'advanced-layout.md'
     - 'forms.md'
     - 'textbox.md'
     - 'spinbox.md'
