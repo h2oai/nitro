@@ -34,7 +34,7 @@ export const Body = (props: { send: Send, boxes: Box[] }) => {
     context = newCaptureContext(props.send, [])
   return (
     <div className='main'>
-      <Zone context={context} boxes={boxes} stack={{}} />
+      <Zone context={context} boxes={boxes} box={{}} />
     </div>
   )
 }

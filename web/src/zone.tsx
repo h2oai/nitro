@@ -138,38 +138,15 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
 
   return css
 }
-const ZoneItemContainer = styled.div`
-  box-sizing: border-box;
-`
-
-const ZoneItem = ({ stackable, isRow, children }: { stackable: Box, isRow: B, children: JSX.Element }) => (
-  <ZoneItemContainer style={applyBoxStyles({}, stackable, isRow)}>
-    {children}
-  </ZoneItemContainer>
-)
 
 const Container = styled.div`
   display: flex;
   box-sizing: border-box;
 `
 
-export const Zone = ({ context, boxes, stack }: { context: Context, boxes: Box[], stack: Partial<Box> }) => {
+const computeStyle = (box: Partial<Box>, isRow: B) => {
   const
-    { row, tile, cross_tile, wrap, gap } = stack,
-    isRow = row ? true : false,
-    children = boxes.map(box => {
-      if (box.items) {
-        return (
-          <Zone key={xid()} context={context} boxes={box.items} stack={box} />
-        )
-      } else {
-        return (
-          <ZoneItem key={xid()} stackable={box} isRow={isRow}>
-            <XBox key={box.xid} context={context} box={box} />
-          </ZoneItem>
-        )
-      }
-    }),
+    { tile, cross_tile, wrap, gap } = box,
     css: React.CSSProperties = {
       flexDirection: isRow ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
@@ -178,9 +155,28 @@ export const Zone = ({ context, boxes, stack }: { context: Context, boxes: Box[]
       alignItems: cross_tile ? toFlexStyle(cross_tile) : undefined,
       alignContent: wrap ? toFlexStyle(wrap) : undefined,
     }
+  return applyBoxStyles(css, box, isRow)
+}
+
+export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], box: Partial<Box> }) => {
+  const
+    horizontal = box.row ? true : false,
+    children = boxes.map(box => {
+      if (box.items) {
+        return (
+          <Zone key={xid()} context={context} boxes={box.items} box={box} />
+        )
+      } else {
+        return (
+          <Container key={xid()} style={computeStyle(box, horizontal)}>
+            <XBox key={box.xid} context={context} box={box} />
+          </Container>
+        )
+      }
+    })
 
   return (
-    <Container style={applyBoxStyles(css, stack, isRow)}>
+    <Container style={computeStyle(box, horizontal)}>
       {children}
     </Container>
   )
