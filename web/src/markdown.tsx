@@ -16,7 +16,6 @@ import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import { micromark, Options } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
-import styled from 'styled-components';
 import { B, Dict, S, U } from './core';
 
 const opts: Options = {
@@ -24,9 +23,6 @@ const opts: Options = {
   extensions: [gfm()],
   htmlExtensions: [gfmHtml()]
 }
-
-export const Markdown = styled.div`
-`
 
 const getIndentation = (rx: RegExp, lines: S[]): U => {
   const indents: U[] = []

@@ -121,7 +121,7 @@ const applyBoxStyles = (css: React.CSSProperties, { align, width, height, margin
   }
 
   if ((border || background) && padding === undefined) {
-    css.padding = 10
+    css.padding = '1rem'
   }
 
   if (basis !== undefined) css.flexBasis = basis
@@ -173,7 +173,7 @@ export const Zone = ({ context, boxes, stack }: { context: Context, boxes: Box[]
     css: React.CSSProperties = {
       flexDirection: isRow ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
-      gap: gap ?? 10,
+      gap: gap ?? '1rem',
       justifyContent: tile ? toFlexStyle(tile) : undefined,
       alignItems: cross_tile ? toFlexStyle(cross_tile) : undefined,
       alignContent: wrap ? toFlexStyle(wrap) : undefined,
