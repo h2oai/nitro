@@ -527,10 +527,10 @@ def image_fit(view: View):
     )
 
 
-# ## Backdrop
-# If a box contains content, its image is used as a backdrop.
+# ## Background
+# If a box contains content, its image is used as a background.
 #
-# Set `fit=` to control how the backdrop should be resized to fit the box.
+# Set `fit=` to control how the background should be resized to fit the box.
 def image_background(view: View):
     style = dict(width=100, height=200, color='white')
     view(
@@ -540,9 +540,22 @@ def image_background(view: View):
             box('Astro', image='sample.jpg', fit='contain', **style),
             box('Astro', image='sample.jpg', fit='fill', **style),
             box('Astro', image='sample.jpg', fit='none', **style),
-            image='sample.jpg',  # A backdrop for the row as well!
+            image='sample.jpg',  # A background for the row as well!
         )
     )
+
+
+# ## Pattern
+# `image=` can also be set to a [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs)
+# with a [base64-encoded](https://en.wikipedia.org/wiki/Base64) image.
+#
+# The example below uses `fit='none'` to repeat a small PNG tile horizontally and vertically to form a pattern.
+def image_background_pattern(view: View):
+    view(box(
+        '# Patterns!',
+        image='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEUlEQVQIHWNggIBiEGUFxJUABisBJ85jLc8AAAAASUVORK5CYII=',
+        fit='none', height=300
+    ))
 
 
 # # Layout
