@@ -15,12 +15,15 @@ import { Slider } from './slider';
 import { Spinbox } from './spinbox';
 import { TagPicker } from './tag_picker';
 import { Textbox } from './textbox';
+import { TextBlock } from './text_block';
 import { TimePicker } from './time_picker';
 import { BoxProps } from './ui';
 
 export const XBox = ({ context, box }: BoxProps) => { // recursive 
   const { mode, options, editable, multiple } = box
   switch (mode) {
+    case 'md':
+      return <TextBlock context={context} box={box} />
     case 'button':
       return <Buttons context={context} box={box} />
     case 'check':

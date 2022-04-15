@@ -16,10 +16,9 @@ import { cssColor, IRGB } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import { XBox } from './box';
-import { B, Dict, isS, S, xid } from './core';
+import { Dict, isS, S, xid } from './core';
 import { ImageBlock } from './image';
 import { Box } from './protocol';
-import { TextBlock } from './text_block';
 import { Context } from './ui';
 
 // http://www.w3.org/TR/AERT#color-contrast
@@ -193,12 +192,8 @@ export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], 
       }
       const style = computeStyle(box)
       switch (box.mode) {
-        case 'md':
-          return <TextBlock key={xid()} context={context} box={box} style={style} />
         case 'image':
           return <ImageBlock key={xid()} context={context} box={box} style={style} />
-        case 'none':
-          return <Container key={xid()} style={style} />
         default:
           return (
             <Container key={xid()} style={style}>
