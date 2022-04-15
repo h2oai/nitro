@@ -128,15 +128,17 @@ const computeStyle = (box: Partial<Box>) => {
         ? 'cover'
         : fit === 'contain'
           ? 'contain'
-          : fit === 'fill'
-            ? '100% 100%'
-            : fit === 'none'
-              ? undefined
-              : 'cover'
+          : fit === 'fill' // not part of spec
+            ? '100% 100%' // mimic object-fit
+            : fit === 'none' // not part of spec
+              ? undefined // mimic object-fit
+              : 'cover' // default to image object-fit default
 
       css.backgroundSize = size
-      css.backgroundPosition = '50% 50%'
-      css.backgroundRepeat = 'no-repeat'
+      css.backgroundPosition = '50% 50%' // mimic default object-fit position
+      if (size) {
+        css.backgroundRepeat = 'no-repeat'
+      }
     }
   }
 
