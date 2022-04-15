@@ -829,7 +829,7 @@ view(
 )
 ```
 
-### Layout - Cross-tile
+### Layout - Cross Tile
 
 Set `cross_tile=` to control how items inside a view, row, or column are tiled along the cross axis.
 
@@ -841,7 +841,7 @@ Set `cross_tile=` to control how items inside a view, row, or column are tiled a
 
 ```py
 boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
-col_style = dict(height=100, background='#eee')
+col_style = dict(height=200, background='#eee')
 view(
     # Pack items from the start.
     col(row(*boxes, cross_tile='start'), **col_style),
@@ -966,6 +966,22 @@ view(
 )
 ```
 
+### Layout - Vertical Alignment
+
+Use `tile='center'` to center content vertically inside a box.
+
+The following example centers content both horizontally and vertically.
+
+
+```py
+view(
+    box(
+        '# Donuts',
+        tile='center', cross_tile='center',
+        height='300px', background='$foreground', color='$background',
+    )
+)
+```
 ### Forms - Basic
 
 To create a form, simply lay out all the inputs you need inside a view, then destructure the return value in order.

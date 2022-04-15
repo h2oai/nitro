@@ -720,6 +720,19 @@ def layout_grow_shrink(view: View):
     )
 
 
+# ## Vertical Alignment
+# Use `tile='center'` to center content vertically inside a box.
+#
+# The following example centers content both horizontally and vertically.
+def layout_vertical_alignment(view: View):
+    view(
+        box(
+            '# Donuts',
+            tile='center', cross_tile='center',
+            height='300px', background='$foreground', color='$background',
+        )
+    )
+
 # # Forms
 
 # ## Basic
