@@ -176,10 +176,6 @@ body {
     margin-bottom: 2.5rem;
 }
 
-.md p:only-child {
-    margin: 0;
-}
-
 .md table {
     border-spacing: 0;
     display: block;
@@ -263,6 +259,16 @@ body {
     font-size: 1.6rem;
     letter-spacing: 0;
     line-height: 1.4;
+}
+
+.md h1:only-child,
+.md h2:only-child,
+.md h3:only-child,
+.md h4:only-child,
+.md h5:only-child,
+.md h6:only-child,
+.md p:only-child {
+    margin: 0;
 }
 
 .md img {
