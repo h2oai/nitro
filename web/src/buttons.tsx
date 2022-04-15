@@ -1,6 +1,6 @@
 import { Alignment, CompoundButton, DefaultButton, IButtonStyles, PrimaryButton, Stack } from '@fluentui/react';
 import React from 'react';
-import { V } from './core';
+import { isB, V } from './core';
 import { Labeled } from './label';
 import { toContextualMenuProps } from './options';
 import { BoxProps, make } from './ui';
@@ -24,12 +24,12 @@ export const Buttons = make(({ context, box }: BoxProps) => {
           context.capture(index, value)
           context.submit()
         },
-        hasPrimary = options.some(o => o.selected === true),
+        hasNoPrimary = options.every(o => !isB(o.selected)),
         buttons = options.map((o, i) => {
           const
             text = o.text,
             onClick = () => capture(o.value),
-            button = (!hasPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
+            button = (hasNoPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
               ? o.options
                 ? o.value === ''
                   ? <PrimaryButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
