@@ -144,11 +144,12 @@ const Container = styled.div`
   box-sizing: border-box;
 `
 
-const computeStyle = (box: Partial<Box>, isRow: B) => {
+const computeStyle = (box: Partial<Box>) => {
   const
-    { tile, cross_tile, wrap, gap } = box,
+    { row, tile, cross_tile, wrap, gap } = box,
+    isRow = row ? true : false,
     css: React.CSSProperties = {
-      flexDirection: isRow ? 'row' : 'column',
+      flexDirection: row ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       gap: gap ?? '1rem',
       justifyContent: tile ? toFlexStyle(tile) : undefined,
@@ -160,7 +161,6 @@ const computeStyle = (box: Partial<Box>, isRow: B) => {
 
 export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], box: Partial<Box> }) => {
   const
-    horizontal = box.row ? true : false,
     children = boxes.map(box => {
       if (box.items) {
         return (
@@ -168,7 +168,7 @@ export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], 
         )
       } else {
         return (
-          <Container key={xid()} style={computeStyle(box, horizontal)}>
+          <Container key={xid()} style={computeStyle(box)}>
             <XBox key={box.xid} context={context} box={box} />
           </Container>
         )
@@ -176,7 +176,7 @@ export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], 
     })
 
   return (
-    <Container style={computeStyle(box, horizontal)}>
+    <Container style={computeStyle(box)}>
       {children}
     </Container>
   )
