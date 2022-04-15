@@ -485,6 +485,66 @@ def styling_padding(view: View):
     )
 
 
+# # Images
+
+# ## Basic
+# Set `image=` to display an image.
+def image_basic(view: View):
+    view(box(image='sample.jpg'))
+
+
+# ## Resize
+# Images can be resized by setting `width=` or `height=` or both.
+#
+# - If only `width=` or only `height=` are set, the image is scaled proportionally.
+# - If both `width=`and`height=`are set, the image is stretched to fit, and might appear distorted.
+def image_resize(view: View):
+    view(
+        box(image='sample.jpg', width=300),
+        box(image='sample.jpg', height=200),
+        box(image='sample.jpg', width=150, height=300),
+    )
+
+
+# ## Fit
+# Set `fit=` to control how the image should be resized to fit its box.
+#
+# - `fit='cover'` (default) scales and *clips* the image while preserving its aspect ratio.
+# - `fit='contain'` scales and *letterboxes* the image while preserving its aspect ratio.
+# - `fit='fill'` stretches the image to fit.
+# - `fit='none'` clips the image without resizing.
+# - `fit='scale-down'` behaves like either `contain` or `none`, whichever results in a smaller image.
+def image_fit(view: View):
+    style = dict(width=100, height=200)
+    view(
+        row(
+            box(image='sample.jpg', fit='cover', **style),
+            box(image='sample.jpg', fit='contain', **style),
+            box(image='sample.jpg', fit='fill', **style),
+            box(image='sample.jpg', fit='none', **style),
+            box(image='sample.jpg', fit='scale-down', **style),
+        )
+    )
+
+
+# ## Backdrop
+# If a box contains content, its image is used as a backdrop.
+#
+# Set `fit=` to control how the backdrop should be resized to fit the box.
+def image_background(view: View):
+    style = dict(width=100, height=200, color='white')
+    view(
+        row(
+            box('Astro', image='sample.jpg', **style),
+            box('Astro', image='sample.jpg', fit='cover', **style),
+            box('Astro', image='sample.jpg', fit='contain', **style),
+            box('Astro', image='sample.jpg', fit='fill', **style),
+            box('Astro', image='sample.jpg', fit='none', **style),
+            image='sample.jpg',  # A backdrop for the row as well!
+        )
+    )
+
+
 # # Layout
 
 # ## Basics
@@ -2305,7 +2365,7 @@ def theme_colors(view: View):
 
 # # Advanced Layout
 
-# ## Album
+# ## An Album
 # A simple layout for photo galleries or portfolios.
 #
 # Inspired by the [Bootstrap Album](https://getbootstrap.com/docs/4.0/examples/album/).
