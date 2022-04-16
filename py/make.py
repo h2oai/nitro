@@ -289,10 +289,21 @@ def decr_headings(s: str):
 
 
 def write_readme(groups: List[Group]):
-    readme = (docs_dir / 'index.md').read_text()
-    readme = readme.replace('assets/', 'docs/assets/')
-    readme += decr_headings((docs_dir / 'install.md').read_text())
-    (Path('..') / 'README.md').write_text(readme)
+    p = Printer()
+    p('## Guide')
+    p()
+    p('You can always view the docs for the latest version at https://nitro.h2o.ai/.')
+    p()
+    for g in groups:
+        p(f'- [{g.title}](docs/{g.name}.md)')
+
+    readme = [
+        (docs_dir / 'index.md').read_text().replace('assets/', 'docs/assets/'),
+        decr_headings((docs_dir / 'install.md').read_text()),
+        str(p)
+    ]
+
+    (Path('..') / 'README.md').write_text('\n\n'.join(readme))
 
 
 def count_examples(groups: List[Group]):

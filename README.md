@@ -82,6 +82,8 @@ use Nitro.
 - **API.** Wave's API is *dashboard-oriented*, and has several features that make it easy to develop and deploy
   real-time analytics and dashboards easily. Nitro's API is *page-flow-oriented*, and makes it radically simple to
   author sophisticated workflows and wizards without dealing with callback functions and request handlers.
+
+
 ## Getting started
 
 ### Installation
@@ -167,3 +169,38 @@ To see a list of all available frameworks, run:
 nitro list frameworks
 ```
 
+
+
+## Guide
+
+You can always view the docs for the latest version at https://nitro.h2o.ai/.
+
+- [Basics](docs/basics.md)
+- [Markdown](docs/markdown.md)
+- [Styling](docs/styling.md)
+- [Images](docs/images.md)
+- [Layout](docs/layout.md)
+- [Forms](docs/forms.md)
+- [Textbox](docs/textbox.md)
+- [Spinbox](docs/spinbox.md)
+- [Checkbox](docs/checkbox.md)
+- [Pickers](docs/pickers.md)
+- [Options](docs/options.md)
+- [Buttons](docs/buttons.md)
+- [Radio Buttons](docs/radio-buttons.md)
+- [Dropdown](docs/dropdown.md)
+- [Dropdown List](docs/dropdown-list.md)
+- [Checklist](docs/checklist.md)
+- [Slider](docs/slider.md)
+- [Range Slider](docs/range-slider.md)
+- [Time Picker](docs/time-picker.md)
+- [Date Picker](docs/date-picker.md)
+- [Calendar](docs/calendar.md)
+- [Week Picker](docs/week-picker.md)
+- [Month Picker](docs/month-picker.md)
+- [Tag Picker](docs/tag-picker.md)
+- [Color Picker](docs/color-picker.md)
+- [Color Palette](docs/color-palette.md)
+- [Rating](docs/rating.md)
+- [Theming](docs/theming.md)
+- [Advanced Layout](docs/advanced-layout.md)
