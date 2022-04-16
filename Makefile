@@ -62,7 +62,7 @@ dev-py: # Launch backend in development mode
 	cd py && FLASK_APP=h2o_nitro/docs/docs.py FLASK_ENV=development ./venv/bin/flask run
 
 dev-docs: # Rebuild docs.py when examples.py is changed
-	cd py && echo examples.py | entr $(MAKE) docs
+	cd py && find docs | entr $(MAKE) docs
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
