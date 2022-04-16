@@ -493,6 +493,8 @@ def image_basic(view: View):
     view(box(image='sample.jpg'))
 
 
+# Photo by [Ju Guan](https://unsplash.com/@guanju223?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
+
 # ## Resize
 # Images can be resized by setting `width=` or `height=` or both.
 #
@@ -2403,7 +2405,7 @@ def layout_album(view: View):
 
 def make_album_card(text, views):
     return col(
-        box('Thumbnail', tile='center', cross_tile='center', height=200, background='$neutral-tertiary'),
+        box(image='image.png', height=200),
         box(text, padding='0 1rem'),
         row(
             box(mode='button', options=[
