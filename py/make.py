@@ -284,26 +284,19 @@ def write_docs_yaml(groups: List[Group]):
     yaml_path.write_text(str(p))
 
 
-def decr_headings(s: str):
-    return re.sub(r'^#', '##', s, flags=re.MULTILINE)
-
-
 def write_readme(groups: List[Group]):
     p = Printer()
     p('## Guide')
     p()
     p('You can always view the docs for the latest version at https://nitro.h2o.ai/.')
     p()
+    p(f'- [Getting started](docs/install.md)')
     for g in groups:
         p(f'- [{g.title}](docs/{g.name}.md)')
 
-    readme = [
-        (docs_dir / 'index.md').read_text().replace('assets/', 'docs/assets/'),
-        decr_headings((docs_dir / 'install.md').read_text()),
-        str(p)
-    ]
+    readme = (docs_dir / 'index.md').read_text().replace('assets/', 'docs/assets/') + '\n\n' + str(p)
 
-    (Path('..') / 'README.md').write_text('\n\n'.join(readme))
+    (Path('..') / 'README.md').write_text(readme)
 
 
 def count_examples(groups: List[Group]):
