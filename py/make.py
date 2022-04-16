@@ -109,7 +109,8 @@ def parse_example(src: str) -> Example:
     def save():
         if block:
             block.lines = strip_lines(block.lines)
-            blocks.append(block)
+            if len(block.lines):
+                blocks.append(block)
 
     for line in lines[1:]:
         if line.startswith('#'):
@@ -213,7 +214,7 @@ def build_menu(groups: List[Group]) -> str:
 
 
 def write_tour(groups: List[Group]):
-    tour = Path('docs.template.py').read_text(). \
+    tour = (Path('docs') / '_template.py').read_text(). \
         replace('# EXAMPLES', build_funcs(groups)). \
         replace('    # TOPIC_MAP', build_topic_map(groups)). \
         replace('TOC', build_toc(groups)). \
@@ -326,9 +327,30 @@ def count_examples(groups: List[Group]):
     return n
 
 
+def read_example_code(file_name):
+    print(f'Reading {file_name} ...')
+
+    code = (Path('docs') / file_name).read_text()
+
+    # Clear everything before the first H1, if any
+    parts = code.split('# # ')
+    if len(parts) > 1:
+        parts[0] = ''
+
+    code = '\n# # '.join(parts)  # re-assemble
+
+    def include_file(match):
+        return read_example_code(match.group(1).strip())
+
+    return re.sub(r'^# #include (.+)', include_file, code, flags=re.MULTILINE)
+
+
 def main():
-    print('Reading examples...')
-    groups = parse_groups(Path('examples.py').read_text())
+    print('Collecting examples...')
+    examples_code = read_example_code('index.py')
+
+    print('Parsing examples')
+    groups = parse_groups(examples_code)
 
     print(f'Found {count_examples(groups)} examples in {len(groups)} groups.')
 

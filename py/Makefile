@@ -14,6 +14,7 @@ setup: clean ## Install dependencies
 	./venv/bin/python -m pip install -r requirements.txt
 	./venv/bin/python -m pip install --editable .
 
+.PHONY: docs
 docs: ## Compile examples into readme, docs and tour
 	./venv/bin/python make.py
 
