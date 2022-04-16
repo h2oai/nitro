@@ -284,39 +284,14 @@ def write_docs_yaml(groups: List[Group]):
     yaml_path.write_text(str(p))
 
 
-gi_separator = '# Generated Docs'
-
-
-def write_gitignore(groups: List[Group]):
-    p = Printer()
-    gi_path = Path('..') / '.gitignore'
-    gi = gi_path.read_text().split(gi_separator)[0].strip()
-    p(gi)
-    p(gi_separator)
-    for g in groups:
-        p(f'/docs/{g.name}.md')
-    gi_path.write_text(str(p))
-
-
 def decr_headings(s: str):
     return re.sub(r'^#', '##', s, flags=re.MULTILINE)
 
 
 def write_readme(groups: List[Group]):
-    p = Printer()
-    for g in groups:
-        for e in g.examples:
-            p(f'### {g.title} - {e.title}')
-            write_example(p, e)
-
     readme = (docs_dir / 'index.md').read_text()
     readme = readme.replace('assets/', 'docs/assets/')
-
     readme += decr_headings((docs_dir / 'install.md').read_text())
-
-    readme += '\n\n## Guide\n\n'
-    readme += str(p)
-
     (Path('..') / 'README.md').write_text(readme)
 
 
@@ -365,9 +340,6 @@ def main():
 
     print('Updating mkdocs.yml...')
     write_docs_yaml(groups)
-
-    print('Updating .gitignore...')
-    write_gitignore(groups)
 
     print('Done!')
 
