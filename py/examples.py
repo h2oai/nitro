@@ -167,10 +167,10 @@ def dunk_your_donuts(view: View):
     # Finally, show summary.
     view('\n'.join(summary))
 
-
 # Building a similar multi-page interactive app with a regular web framework can be
 # a fairly complex endeavor, weaving together requests and replies with logic spread across
 # multiple functions , but Nitro makes all this delightfully simple!
+
 
 # # Markdown
 
@@ -988,9 +988,9 @@ def textarea(view: View):
     bio = view(box('Bio:', lines=5))
     view(f'**Bio:** {bio}')
 
-
 # Note that `lines=` only controls the initial height of the textbox, and
 # multi-line textboxes can be resized by the user.
+
 
 # # Spinbox
 
@@ -1113,6 +1113,7 @@ def checkbox_basic(view: View):
 def checkbox_value(view: View):
     keep_signed_in = view(box('Keep me signed in', value=True))
     view(f'Keep me signed in: {keep_signed_in}.')
+
 
 
 # # Pickers
@@ -1310,6 +1311,8 @@ def options_value(view: View):
         option('red', 'Red'),
     ]))
     view(f'You chose {choice}.')
+
+
 
 
 # # Buttons
@@ -1521,6 +1524,8 @@ def radio_icon(view: View):
         option('donut', 'Donut', icon='DonutChart'),
     ]))
     view(f'You chose {choice}.')
+
+
 
 
 # # Dropdown
@@ -1920,6 +1925,7 @@ def time_24_hour(view: View):
 
 
 # # Date Picker
+
 # ## Basic
 # Set `mode='date'` to show a date-picker.
 def date_basic(view: View):
@@ -1984,6 +1990,7 @@ def date_range(view: View):
 # # Calendar
 
 # ## Basic
+
 # Set `mode='day'` to show a calendar.
 def day_basic(view: View):
     date = view(box('Pick a date', mode='day'))
@@ -2419,3 +2426,4 @@ def make_album_card(text, views):
         background='$background', border='$neutral-tertiary-alt',
         padding=0, width='32%',
     )
+
