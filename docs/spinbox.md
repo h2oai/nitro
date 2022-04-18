@@ -14,6 +14,9 @@ view(f'Your speed is {speed} km/h')
 ```
 
 
+![Screenshot](assets/screenshots/spinbox_basic.png)
+
+
 ## Value
 
 Set `value=` to a numeric value to prefill the box with the value.
@@ -31,6 +34,9 @@ In other words, calling `box()` with a numeric `value` has the same effect
 as setting `mode='number'`, and is the preferred usage.
 
 
+![Screenshot](assets/screenshots/spinbox_value.png)
+
+
 ## Min
 
 Set `min=` to specify a minimum value.
@@ -40,6 +46,9 @@ Set `min=` to specify a minimum value.
 speed = view(box('Speed (km/h)', min=10))
 view(f'Your speed is {speed} km/h')
 ```
+
+
+![Screenshot](assets/screenshots/spinbox_min.png)
 
 
 ## Max
@@ -53,6 +62,9 @@ view(f'Your speed is {speed} km/h')
 ```
 
 
+![Screenshot](assets/screenshots/spinbox_max.png)
+
+
 ## Step
 
 Set `step=` to specify how much to increment or decrement by.
@@ -64,6 +76,9 @@ The default step is `1`.
 speed = view(box('Speed (km/h)', step=5))
 view(f'Your speed is {speed} km/h')
 ```
+
+
+![Screenshot](assets/screenshots/spinbox_step.png)
 
 
 ## Precision
@@ -83,6 +98,9 @@ view(f'Your speed is {speed} m/s')
 ```
 
 
+![Screenshot](assets/screenshots/spinbox_precision.png)
+
+
 ## Min, Max, Step, Precision
 
 `min=`, `max=`, `step=` and `precision=` can be combined.
@@ -92,6 +110,9 @@ view(f'Your speed is {speed} m/s')
 speed = view(box('Speed (km/h)', min=10, max=100, step=5))
 view(f'Your speed is {speed} km/h')
 ```
+
+
+![Screenshot](assets/screenshots/spinbox_range.png)
 
 
 ## Range
@@ -107,6 +128,9 @@ view(f'Your speed is {speed} km/h')
 ```
 
 
+![Screenshot](assets/screenshots/spinbox_range_alt.png)
+
+
 ## Range with step
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
@@ -118,6 +142,9 @@ This is a shorthand notation for setting `min=`, `max=` and `step` individually.
 speed = view(box('Speed (km/h)', range=(10, 100, 5)))
 view(f'Your speed is {speed} km/h')
 ```
+
+
+![Screenshot](assets/screenshots/spinbox_range_alt_step.png)
 
 
 ## Range with precision
@@ -132,6 +159,9 @@ view(f'Your speed is {speed} m/s')
 ```
 
 
+![Screenshot](assets/screenshots/spinbox_range_alt_precision.png)
+
+
 ## Zero-crossing range
 
 Ranges can cross zero.
@@ -143,6 +173,9 @@ view(f'Your speed is {speed} m/s')
 ```
 
 
+![Screenshot](assets/screenshots/spinbox_negative.png)
+
+
 ## Fractional steps
 
 Steps can be fractional.
@@ -152,3 +185,6 @@ Steps can be fractional.
 speed = view(box('Speed (m/s)', value=0.6, range=(-2, 2, 0.2)))
 view(f'Your speed is {speed} m/s')
 ```
+
+
+![Screenshot](assets/screenshots/spinbox_decimal_step.png)

@@ -7,7 +7,7 @@
 Set `background=` to apply a background color.
 
 The text color is automatically changed to a contrasting color if not specified.
-A `10px` padding is automatically applied if not specified.
+A padding is automatically applied if not specified.
 
 
 ```py
@@ -23,6 +23,9 @@ view(
     box(text, background='#1d3557'),
 )
 ```
+
+
+![Screenshot](assets/screenshots/styling_background.png)
 
 
 ## Text Color
@@ -43,11 +46,14 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/styling_color.png)
+
+
 ## Border Color
 
 Set `border=` to add a border.
 
-A `10px` padding is automatically applied if not specified.
+A padding is automatically applied if not specified.
 
 
 ```py
@@ -61,6 +67,9 @@ view(
     box(text, border='#1d3557'),
 )
 ```
+
+
+![Screenshot](assets/screenshots/styling_border.png)
 
 
 ## Align Text
@@ -83,6 +92,9 @@ view(
     )
 )
 ```
+
+
+![Screenshot](assets/screenshots/styling_align.png)
 
 
 ## Sizing
@@ -125,6 +137,9 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/styling_size.png)
+
+
 ## Margin
 
 Set `margin=` to add a margin around each item.
@@ -156,6 +171,9 @@ boxes = [
 ]
 view(col(*[row(b, border='#000', padding=0) for b in boxes]))
 ```
+
+
+![Screenshot](assets/screenshots/styling_margin.png)
 
 
 ## Padding
@@ -190,3 +208,6 @@ view(
     )
 )
 ```
+
+
+![Screenshot](assets/screenshots/styling_padding.png)

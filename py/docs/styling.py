@@ -21,7 +21,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Set `background=` to apply a background color.
 #
 # The text color is automatically changed to a contrasting color if not specified.
-# A `10px` padding is automatically applied if not specified.
+# A padding is automatically applied if not specified.
 def styling_background(view: View):
     text = '''
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
@@ -53,7 +53,7 @@ def styling_color(view: View):
 # ## Border Color
 # Set `border=` to add a border.
 #
-# A `10px` padding is automatically applied if not specified.
+# A padding is automatically applied if not specified.
 def styling_border(view: View):
     text = '''
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 

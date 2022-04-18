@@ -28,6 +28,9 @@ This behavior can be controlled using `mode=`, explained in later examples.
 The example above has 4 options, hence radio buttons are shown.
 
 
+![Screenshot](assets/screenshots/picker_basic.png)
+
+
 ## Buttons
 
 Buttons are shown for up to 3 options.
@@ -41,6 +44,9 @@ choice = view(box('Choose a color', options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/picker_buttons.png)
 
 
 ## Radio Buttons
@@ -58,6 +64,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/picker_radio.png)
+
+
 ## Dropdown
 
 A dropdown menu is shown for more than 7 options.
@@ -71,6 +80,9 @@ choice = view(box('Choose a color', options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/picker_dropdown.png)
 
 
 ## Dropdown List
@@ -90,6 +102,9 @@ view(f'You chose {choices}.')
 ```
 
 
+![Screenshot](assets/screenshots/picker_multiple_dropdown.png)
+
+
 ## Checklist
 
 A checklist is shown for up to 7 options when `multiple=True`.
@@ -105,6 +120,9 @@ view(f'You chose {choices}.')
 ```
 
 
+![Screenshot](assets/screenshots/picker_checklist.png)
+
+
 ## Required
 
 Set `required=True` to indicate that input is required.
@@ -118,6 +136,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/picker_dropdown_required.png)
+
+
 ## Error
 
 Set `error=` to show an error message below the box.
@@ -129,3 +150,6 @@ choice = view(box('Choose a color', mode='menu', error='Invalid input', options=
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/picker_dropdown_error.png)

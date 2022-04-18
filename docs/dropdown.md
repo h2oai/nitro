@@ -17,6 +17,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/dropdown_basic.png)
+
+
 ## Value
 
 Set `value=` to pre-select an option having that value.
@@ -33,6 +36,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/dropdown_value.png)
+
+
 ## Selected
 
 Set `selected=True` to pre-select an option.
@@ -47,6 +53,9 @@ choice = view(box('Choose a color', mode='menu', options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/dropdown_selected.png)
 
 
 ## Grouped
@@ -73,6 +82,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/dropdown_grouped.png)
+
+
 ## Editable
 
 Set `editable=True` to allow arbitrary input in addition to the presented options.
@@ -86,3 +98,6 @@ choice = view(box('Choose a color', editable=True, options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/dropdown_editable.png)

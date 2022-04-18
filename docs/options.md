@@ -28,6 +28,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/options_basic.png)
+
+
 ## From sequence
 
 If `options` is a sequence (tuple, set or list), the elements of the sequence are used as options.
@@ -39,6 +42,9 @@ choice = view(box('Choose a color', options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/options_sequence.png)
 
 
 ## From string
@@ -53,6 +59,9 @@ view(f'You chose {choice}.')
 
 
 In other words, `'green yellow orange red'` is shorthand for `['green', 'yellow', 'orange', 'red']`.
+
+
+![Screenshot](assets/screenshots/options_string.png)
 
 
 ## From tuples
@@ -74,6 +83,9 @@ view(f'You chose {choice}.')
 Here, `(value, text)` is shorthand for `option(value, text)`.
 
 
+![Screenshot](assets/screenshots/options_tuples.png)
+
+
 ## From dictionary
 
 `options=` can also be specified as a `dict` of `value: text` entries.
@@ -91,6 +103,9 @@ view(f'You chose {choice}.')
 
 
 This is the most concise way to pass options where labels differ from values.
+
+
+![Screenshot](assets/screenshots/options_dict.png)
 
 
 ## Selected
@@ -111,6 +126,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/options_selected.png)
+
+
 ## Value
 
 Set `value=` on the box to pre-select an option having that value.
@@ -127,3 +145,6 @@ choice = view(box('Choose a color', value='yellow', options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/options_value.png)

@@ -19,6 +19,9 @@ view(f'You chose {choices}.')
 ```
 
 
+![Screenshot](assets/screenshots/checklist_basic.png)
+
+
 ## Value
 
 Set `value=` to pre-select options having those values.
@@ -33,6 +36,9 @@ choices = view(box(
 ))
 view(f'You chose {choices}.')
 ```
+
+
+![Screenshot](assets/screenshots/checklist_value.png)
 
 
 ## Selected
@@ -53,3 +59,6 @@ choices = view(box(
 ))
 view(f'You chose {choices}.')
 ```
+
+
+![Screenshot](assets/screenshots/checklist_selected.png)

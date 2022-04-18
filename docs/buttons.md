@@ -17,6 +17,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/buttons_basic.png)
+
+
 ## Shorthand
 
 Most often, it doesn't make sense to show a text prompt above a set of buttons.
@@ -67,6 +70,9 @@ choice = view(box(dict(
 ```
 
 
+![Screenshot](assets/screenshots/buttons_shorthand.png)
+
+
 ## Selected
 
 By default, the first button is displayed as the primary action in the sequence.
@@ -87,6 +93,9 @@ view(f'You chose to update {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/buttons_selected.png)
+
+
 ## Value
 
 Alternatively, Set `value=` to mark a button as *primary*.
@@ -105,6 +114,9 @@ view(f'You chose to update {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/buttons_value.png)
+
+
 ## Values
 
 If `value=` is set to a sequence, all buttons with those values are marked as *primary*.
@@ -121,6 +133,9 @@ choice = view(
 )
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/buttons_values.png)
 
 
 ## Split Buttons
@@ -143,6 +158,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/buttons_split.png)
+
+
 ## Primary Split Buttons
 
 Sub-options work for primary buttons, too.
@@ -163,6 +181,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/buttons_selected_split.png)
+
+
 ## Caption
 
 Set `caption=` to describe buttons.
@@ -178,6 +199,9 @@ choice = view(
 )
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/buttons_caption.png)
 
 
 ## Layout
@@ -197,3 +221,6 @@ choice = view(
 )
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/buttons_layout.png)

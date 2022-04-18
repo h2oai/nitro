@@ -17,6 +17,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/radio_basic.png)
+
+
 ## Value
 
 Set `value=` to pre-select an option having that value.
@@ -31,6 +34,9 @@ choice = view(box('Choose a color', mode='radio', value='yellow', options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/radio_value.png)
 
 
 ## Selected
@@ -49,6 +55,9 @@ view(f'You chose {choice}.')
 ```
 
 
+![Screenshot](assets/screenshots/radio_selected.png)
+
+
 ## Icons
 
 Set `icon=` to show graphical options.
@@ -65,3 +74,6 @@ choice = view(box('Choose a chart type', mode='radio', options=[
 ]))
 view(f'You chose {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/radio_icon.png)

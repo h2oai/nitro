@@ -46,3 +46,6 @@ def make_album_card(text, views):
         padding=0, width='32%',
     )
 ```
+
+
+![Screenshot](assets/screenshots/layout_album.png)

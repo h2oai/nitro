@@ -13,6 +13,9 @@ view(f'You picked {date}.')
 ```
 
 
+![Screenshot](assets/screenshots/date_basic.png)
+
+
 ## Placeholder
 
 Set `placeholder=` to show placeholder text.
@@ -24,6 +27,9 @@ view(f'You picked {date}.')
 ```
 
 
+![Screenshot](assets/screenshots/date_placeholder.png)
+
+
 ## Required
 
 Set `required=True` to indicate that input is required.
@@ -33,6 +39,9 @@ Set `required=True` to indicate that input is required.
 date = view(box('Pick a date', mode='date', required=True))
 view(f'You picked {date}.')
 ```
+
+
+![Screenshot](assets/screenshots/date_required.png)
 
 
 ## Value
@@ -49,6 +58,9 @@ view(f'You picked {date}.')
 ```
 
 
+![Screenshot](assets/screenshots/date_value.png)
+
+
 ## Min
 
 Set `min=` to specify a minimum date.
@@ -58,6 +70,9 @@ Set `min=` to specify a minimum date.
 date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01'))
 view(f'You picked {date}.')
 ```
+
+
+![Screenshot](assets/screenshots/date_min.png)
 
 
 ## Max
@@ -71,6 +86,9 @@ view(f'You picked {date}.')
 ```
 
 
+![Screenshot](assets/screenshots/date_max.png)
+
+
 ## Min and Max
 
 Set both `min=` and `max=` to restrict selection between two dates.
@@ -80,6 +98,9 @@ Set both `min=` and `max=` to restrict selection between two dates.
 date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
 view(f'You picked {date}.')
 ```
+
+
+![Screenshot](assets/screenshots/date_min_max.png)
 
 
 ## Range
@@ -93,3 +114,6 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 date = view(box('Pick a date', mode='date', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
 view(f'You picked {date}.')
 ```
+
+
+![Screenshot](assets/screenshots/date_range.png)

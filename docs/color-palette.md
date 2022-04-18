@@ -24,6 +24,9 @@ view(f'You chose {color}.')
 ```
 
 
+![Screenshot](assets/screenshots/palette_basic.png)
+
+
 ## Value
 
 Set `value=` to pre-select an option having that color value.
@@ -42,6 +45,9 @@ view(f'You chose {color}.')
 ```
 
 
+![Screenshot](assets/screenshots/palette_value.png)
+
+
 ## Selected
 
 Alternatively, set `selected=True` to pre-select a color in the palette.
@@ -58,3 +64,6 @@ color = view(box('Choose a color', mode='color', options=[
 ]))
 view(f'You chose {color}.')
 ```
+
+
+![Screenshot](assets/screenshots/palette_selected.png)

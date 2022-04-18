@@ -13,6 +13,9 @@ view(f'Alarm set for {time}.')
 ```
 
 
+![Screenshot](assets/screenshots/time_basic.png)
+
+
 ## With seconds
 
 Include seconds in the `value` to show a seconds component.
@@ -22,6 +25,9 @@ Include seconds in the `value` to show a seconds component.
 time = view(box('Set alarm for:', mode='time', value='3:04:05PM'))
 view(f'Alarm set for {time}.')
 ```
+
+
+![Screenshot](assets/screenshots/time_seconds.png)
 
 
 ## Hour only
@@ -35,6 +41,9 @@ view(f'Alarm set for {time}.')
 ```
 
 
+![Screenshot](assets/screenshots/time_hour.png)
+
+
 ## 24-hour clock
 
 Exclude `AM` or `PM` from the `value` to accept input in military time.
@@ -44,6 +53,9 @@ Exclude `AM` or `PM` from the `value` to accept input in military time.
 time = view(box('Set alarm for:', mode='time', value='15:04'))
 view(f'Alarm set for {time}.')
 ```
+
+
+![Screenshot](assets/screenshots/time_24.png)
 
 
 ## 24-hour clock, with seconds
@@ -57,6 +69,9 @@ view(f'Alarm set for {time}.')
 ```
 
 
+![Screenshot](assets/screenshots/time_24_seconds.png)
+
+
 ## 24-hour clock, hour only
 
 Exclude minutes and seconds from the `value` to show only the hour component.
@@ -66,3 +81,6 @@ Exclude minutes and seconds from the `value` to show only the hour component.
 time = view(box('Set alarm for:', mode='time', value='15'))
 view(f'Alarm set for {time}.')
 ```
+
+
+![Screenshot](assets/screenshots/time_24_hour.png)

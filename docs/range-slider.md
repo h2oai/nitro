@@ -15,6 +15,9 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ```
 
 
+![Screenshot](assets/screenshots/range_slider_basic.png)
+
+
 ## Min
 
 Set `min=` to specify a minimum value.
@@ -24,6 +27,9 @@ Set `min=` to specify a minimum value.
 start, end = view(box('Speed range (km/h)', value=(3, 7), min=3))
 view(f'Your speed ranges between {start} and {end} km/h')
 ```
+
+
+![Screenshot](assets/screenshots/range_slider_min.png)
 
 
 ## Max
@@ -37,6 +43,9 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ```
 
 
+![Screenshot](assets/screenshots/range_slider_max.png)
+
+
 ## Step
 
 Set `step=` to specify how much to increment or decrement by.
@@ -48,6 +57,9 @@ The default step is `1`.
 start, end = view(box('Speed range (km/h)', value=(2, 6), step=2))
 view(f'Your speed ranges between {start} and {end} km/h')
 ```
+
+
+![Screenshot](assets/screenshots/range_slider_step.png)
 
 
 ## Precision
@@ -66,6 +78,9 @@ view(f'Your speed ranges between {start} and {end} m/s')
 ```
 
 
+![Screenshot](assets/screenshots/range_slider_precision.png)
+
+
 ## Min, Max, Step, Precision
 
 `min=`, `max=`, `step=` and `precision=` can be combined.
@@ -75,6 +90,9 @@ view(f'Your speed ranges between {start} and {end} m/s')
 start, end = view(box('Speed range (km/h)', value=(30, 70), min=10, max=100, step=5))
 view(f'Your speed ranges between {start} and {end} km/h')
 ```
+
+
+![Screenshot](assets/screenshots/range_slider_range.png)
 
 
 ## Range
@@ -90,6 +108,9 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ```
 
 
+![Screenshot](assets/screenshots/range_slider_range_alt.png)
+
+
 ## Range with step
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
@@ -101,6 +122,9 @@ This is a shorthand notation for setting `min=`, `max=` and `step` individually.
 start, end = view(box('Speed range (km/h)', value=(30, 70), range=(10, 100, 5)))
 view(f'Your speed ranges between {start} and {end} km/h')
 ```
+
+
+![Screenshot](assets/screenshots/range_slider_range_alt_step.png)
 
 
 ## Range with precision
@@ -116,6 +140,9 @@ view(f'Your speed ranges between {start} and {end} m/s')
 ```
 
 
+![Screenshot](assets/screenshots/range_slider_range_alt_precision.png)
+
+
 ## Zero-crossing range
 
 Ranges can cross zero.
@@ -127,6 +154,9 @@ view(f'Your speed ranges between {start} and {end} m/s')
 ```
 
 
+![Screenshot](assets/screenshots/range_slider_negative.png)
+
+
 ## Fractional steps
 
 Steps can be fractional.
@@ -136,3 +166,6 @@ Steps can be fractional.
 start, end = view(box('Speed range (m/s)', value=(-0.4, 0.4), range=(-2, 2, 0.2)))
 view(f'Your speed ranges between {start} and {end} m/s')
 ```
+
+
+![Screenshot](assets/screenshots/range_slider_decimal_step.png)

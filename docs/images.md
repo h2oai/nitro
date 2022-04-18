@@ -15,6 +15,9 @@ view(box(image='sample.jpg'))
 Photo by [Ju Guan](https://unsplash.com/@guanju223?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
 
+![Screenshot](assets/screenshots/image_basic.png)
+
+
 ## Resize
 
 Images can be resized by setting `width=` or `height=` or both.
@@ -30,6 +33,9 @@ view(
     box(image='sample.jpg', width=150, height=300),
 )
 ```
+
+
+![Screenshot](assets/screenshots/image_resize.png)
 
 
 ## Fit
@@ -57,6 +63,9 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/image_fit.png)
+
+
 ## Background
 
 If a box contains content, its image is used as a background.
@@ -79,6 +88,9 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/image_background.png)
+
+
 ## Pattern
 
 `image=` can also be set to a [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs)
@@ -94,3 +106,6 @@ view(box(
     fit='none', height=300
 ))
 ```
+
+
+![Screenshot](assets/screenshots/image_background_pattern.png)

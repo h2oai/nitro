@@ -15,6 +15,9 @@ view(f'You entered {x}.')
 ```
 
 
+![Screenshot](assets/screenshots/textbox_basic.png)
+
+
 ## Value
 
 Set `value=` to prefill the box with a value.
@@ -28,6 +31,9 @@ view(f'Your speed is {speed} km/h.')
 ```
 
 
+![Screenshot](assets/screenshots/textbox_value.png)
+
+
 ## Label
 
 Any text passed to `box()` is used as a label.
@@ -37,6 +43,9 @@ Any text passed to `box()` is used as a label.
 speed = view(box('Speed', value='60'))
 view(f'Your speed is {speed} km/h.')
 ```
+
+
+![Screenshot](assets/screenshots/textbox_label.png)
 
 
 ## Placeholder
@@ -50,6 +59,9 @@ view(f'Your speed is {speed} km/h.')
 ```
 
 
+![Screenshot](assets/screenshots/textbox_placeholder.png)
+
+
 ## Required
 
 Set `required=True` to indicate that input is required.
@@ -59,6 +71,9 @@ Set `required=True` to indicate that input is required.
 speed = view(box('Speed (km/h)', required=True))
 view(f'Your speed is {speed} km/h.')
 ```
+
+
+![Screenshot](assets/screenshots/textbox_required.png)
 
 
 ## Input Mask
@@ -83,6 +98,9 @@ To construct the input mask:
 - Use a backslash to escape any character.
 
 
+![Screenshot](assets/screenshots/textbox_mask.png)
+
+
 ## Icon
 
 Set `icon=` to show an icon at the end of the box.
@@ -92,6 +110,9 @@ Set `icon=` to show an icon at the end of the box.
 phrase = view(box('Filter results containing:', icon='Filter'))
 view(f'You set a filter on `{phrase}`.')
 ```
+
+
+![Screenshot](assets/screenshots/textbox_icon.png)
 
 
 ## Prefix
@@ -105,6 +126,9 @@ view(f'Your website is https://{website}.')
 ```
 
 
+![Screenshot](assets/screenshots/textbox_prefix.png)
+
+
 ## Suffix
 
 Set `suffix=` to show a suffix at the end of the box.
@@ -114,6 +138,9 @@ Set `suffix=` to show a suffix at the end of the box.
 website = view(box('Website', suffix='.com', value='example'))
 view(f'Your website is {website}.com.')
 ```
+
+
+![Screenshot](assets/screenshots/textbox_suffix.png)
 
 
 ## Prefix and Suffix
@@ -127,6 +154,9 @@ view(f'Your website is https://{website}.com.')
 ```
 
 
+![Screenshot](assets/screenshots/textbox_prefix_suffix.png)
+
+
 ## Error
 
 Set `error=` to show an error message below the box.
@@ -135,6 +165,9 @@ Set `error=` to show an error message below the box.
 ```py
 speed = view(box('Speed (km/h)', error='Invalid input'))
 ```
+
+
+![Screenshot](assets/screenshots/textbox_error.png)
 
 
 ## Password
@@ -146,6 +179,9 @@ Set `password=True` when accepting passwords and other confidential inputs.
 password = view(box('Password field', password=True))
 view(f'Your password `{password}` is not strong enough!')
 ```
+
+
+![Screenshot](assets/screenshots/textbox_password.png)
 
 
 ## Multiple lines
@@ -161,3 +197,6 @@ view(f'**Bio:** {bio}')
 
 Note that `lines=` only controls the initial height of the textbox, and
 multi-line textboxes can be resized by the user.
+
+
+![Screenshot](assets/screenshots/textarea.png)

@@ -51,6 +51,9 @@ Here is a footnote[^1] and another one[^another].
 Any uniform indentation is automatically ignored.
 
 
+![Screenshot](assets/screenshots/markdown_basic.png)
+
+
 ## Links as inputs
 
 Local links in markdown content behave just like any other input.
@@ -69,6 +72,9 @@ Or, [surprise me](#surprise-me)!
 ''')
 view(f'You clicked on {choice}.')
 ```
+
+
+![Screenshot](assets/screenshots/markdown_links.png)
 
 
 ## Tables
@@ -109,6 +115,9 @@ view('''
 ```
 
 
+![Screenshot](assets/screenshots/markdown_table.png)
+
+
 ## Tables from lists
 
 It's often easier to construct tables from lists of things, as shown below.
@@ -134,6 +143,9 @@ def make_table(rows):
     rows = [rows[0], ['---'] * len(rows[0]), *rows[1:]]
     return '\n'.join([make_table_row(row) for row in rows])
 ```
+
+
+![Screenshot](assets/screenshots/show_table.png)
 
 
 ## Syntax highlighting
@@ -168,3 +180,6 @@ function hello() {
 ```
 ''')
 ```
+
+
+![Screenshot](assets/screenshots/markdown_syntax_highlighting.png)

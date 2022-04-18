@@ -13,6 +13,9 @@ view(f'Keep me signed in: {keep_signed_in}.')
 ```
 
 
+![Screenshot](assets/screenshots/checkbox_basic.png)
+
+
 ## Value
 
 Set `value=True` to pre-select the checkbox.
@@ -24,3 +27,6 @@ The mode setting `mode='check'` is implied, and can be elided.
 keep_signed_in = view(box('Keep me signed in', value=True))
 view(f'Keep me signed in: {keep_signed_in}.')
 ```
+
+
+![Screenshot](assets/screenshots/checkbox_value.png)

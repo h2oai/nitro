@@ -80,3 +80,6 @@ view(
     ),
 )
 ```
+
+
+![Screenshot](assets/screenshots/theme_colors.png)

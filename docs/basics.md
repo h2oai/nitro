@@ -16,6 +16,9 @@ Here, `view()` is comparable to Python's built-in `print()` function,
 and prints its arguments to the web page.
 
 
+![Screenshot](assets/screenshots/hello_world.png)
+
+
 ## Formatting content
 
 Strings passed to `view()` are interpreted as
@@ -25,6 +28,9 @@ Strings passed to `view()` are interpreted as
 ```py
 view('_Less_ `code` means _less_ **bugs**.')
 ```
+
+
+![Screenshot](assets/screenshots/format_content.png)
 
 
 ## Show multiline content
@@ -42,6 +48,9 @@ The King said, very gravely:
 ```
 
 
+![Screenshot](assets/screenshots/format_multiline_content.png)
+
+
 ## Show items at once
 
 Pass multiple arguments to `view()` to lay them out top to bottom.
@@ -56,6 +65,9 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/display_multiple.png)
+
+
 ## Show items one at a time
 
 Call `view()` multiple times to show items one at a time.
@@ -68,6 +80,9 @@ view('Begin at the beginning,')
 view('And go on till you come to the end,')
 view('Then stop.')
 ```
+
+
+![Screenshot](assets/screenshots/sequence_views.png)
 
 
 ## Style text
@@ -90,6 +105,9 @@ In general, `box()` can be used to create all kinds of content, like text blocks
 spinboxes, checklists, buttons, calendars, and so on.
 
 
+![Screenshot](assets/screenshots/style_text.png)
+
+
 ## Get user input
 
 Call `box()` with `value=` to create an input field and pass it to `view()`.
@@ -106,6 +124,9 @@ view(f'Hello, {name}!')
 
 
 Here, `view(box())` behaves similar to Python's built-in `input()` function.
+
+
+![Screenshot](assets/screenshots/get_input.png)
 
 
 ## Get inputs one at a time
@@ -125,6 +146,9 @@ view(f'Hello, {first_name} {last_name}!')
 ```
 
 
+![Screenshot](assets/screenshots/sequence_inputs.png)
+
+
 ## Get inputs at once
 
 Pass multiple boxes to `view()` to prompt for inputs at once.
@@ -141,6 +165,9 @@ first_name, last_name = view(
 # Print the entered values
 view(f'Hello, {first_name} {last_name}!')
 ```
+
+
+![Screenshot](assets/screenshots/accept_multiple_inputs.png)
 
 
 ## Putting it all together
@@ -197,3 +224,6 @@ view('\n'.join(summary))
 Building a similar multi-page interactive app with a regular web framework can be
 a fairly complex endeavor, weaving together requests and replies with logic spread across
 multiple functions , but Nitro makes all this delightfully simple!
+
+
+![Screenshot](assets/screenshots/dunk_your_donuts.png)

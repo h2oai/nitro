@@ -17,6 +17,9 @@ view(f'You chose {tags}.')
 ```
 
 
+![Screenshot](assets/screenshots/tag_picker_basic.png)
+
+
 ## Value
 
 Set `value=` to pre-select options having those values.
@@ -31,6 +34,9 @@ tags = view(box(
 ))
 view(f'You chose {tags}.')
 ```
+
+
+![Screenshot](assets/screenshots/tag_picker_value.png)
 
 
 ## Selected
@@ -50,3 +56,6 @@ tags = view(box('Choose some tags', mode='tag', options=[
 ]))
 view(f'You chose {tags}.')
 ```
+
+
+![Screenshot](assets/screenshots/tag_picker_selected.png)

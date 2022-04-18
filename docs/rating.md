@@ -15,6 +15,9 @@ view(f'Your rating was {stars} stars.')
 ```
 
 
+![Screenshot](assets/screenshots/rating_basic.png)
+
+
 ## Value
 
 Set `value=` to specify a default value.
@@ -24,6 +27,9 @@ Set `value=` to specify a default value.
 stars = view(box('Rate your experience', mode='rating', value=3))
 view(f'Your rating was {stars} stars.')
 ```
+
+
+![Screenshot](assets/screenshots/rating_value.png)
 
 
 ## Min
@@ -37,6 +43,9 @@ view(f'Your rating was {stars} stars.')
 ```
 
 
+![Screenshot](assets/screenshots/rating_min.png)
+
+
 ## Max
 
 Set `max=` to increase the number of stars displayed.
@@ -46,6 +55,9 @@ Set `max=` to increase the number of stars displayed.
 stars = view(box('Rate your experience', mode='rating', value=3, max=10))
 view(f'Your rating was {stars} stars.')
 ```
+
+
+![Screenshot](assets/screenshots/rating_max.png)
 
 
 ## Min and max
@@ -59,6 +71,9 @@ view(f'Your rating was {stars} stars.')
 ```
 
 
+![Screenshot](assets/screenshots/rating_min_max.png)
+
+
 ## Range
 
 Set `range=` to a `(min, max)` tuple to control min/max stars.
@@ -70,3 +85,6 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 stars = view(box('Rate your experience', mode='rating', value=3, range=(0, 10)))
 view(f'Your rating was {stars} stars.')
 ```
+
+
+![Screenshot](assets/screenshots/rating_range.png)

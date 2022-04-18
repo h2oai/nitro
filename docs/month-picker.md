@@ -13,6 +13,9 @@ view(f'You picked {month}.')
 ```
 
 
+![Screenshot](assets/screenshots/month_basic.png)
+
+
 ## Value
 
 Set `value=` to pre-select a month.
@@ -27,6 +30,9 @@ view(f'You picked {month}.')
 ```
 
 
+![Screenshot](assets/screenshots/month_value.png)
+
+
 ## Min
 
 Set `min=` to specify a minimum date.
@@ -36,6 +42,9 @@ Set `min=` to specify a minimum date.
 month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01'))
 view(f'You picked {month}.')
 ```
+
+
+![Screenshot](assets/screenshots/month_min.png)
 
 
 ## Max
@@ -49,6 +58,9 @@ view(f'You picked {month}.')
 ```
 
 
+![Screenshot](assets/screenshots/month_max.png)
+
+
 ## Min and Max
 
 Set both `min=` and `max=` to restrict selection between two dates.
@@ -58,6 +70,9 @@ Set both `min=` and `max=` to restrict selection between two dates.
 month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
 view(f'You picked {month}.')
 ```
+
+
+![Screenshot](assets/screenshots/month_min_max.png)
 
 
 ## Range
@@ -71,3 +86,6 @@ This is a shorthand notation for setting `min=` and `max=` individually.
 month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
 view(f'You picked {month}.')
 ```
+
+
+![Screenshot](assets/screenshots/month_range.png)

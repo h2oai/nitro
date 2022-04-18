@@ -17,6 +17,9 @@ view(f'You entered `{username}`/`{password}` and then clicked on {action}.')
 ```
 
 
+![Screenshot](assets/screenshots/form_basic.png)
+
+
 ## Horizontal
 
 Wrap items with `row()` to lay them out left to right.
@@ -33,6 +36,9 @@ username, password, action = view(
 )
 view(f'You entered `{username}`/`{password}` and then clicked on {action}.')
 ```
+
+
+![Screenshot](assets/screenshots/form_horizontal.png)
 
 
 ## Combined
@@ -61,6 +67,9 @@ Sign up: {action}
 ```
 
 
+![Screenshot](assets/screenshots/form_combo.png)
+
+
 ## Improved
 
 Specify additional layout parameters like `width=`, `grow=`, etc. to get more control over
@@ -86,3 +95,6 @@ Address: {first} {middle} {last}, {addr1}, {addr2}, {city} {state} {zip}
 Sign up: {action}
 ''')
 ```
+
+
+![Screenshot](assets/screenshots/form_improved.png)

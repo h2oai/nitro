@@ -16,6 +16,9 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/layout_basic.png)
+
+
 ## Rows
 
 Use `row()` to lay out multiple items horizontally, left to right.
@@ -43,6 +46,9 @@ view(
     row=True,
 )
 ```
+
+
+![Screenshot](assets/screenshots/layout_row.png)
 
 
 ## Columns
@@ -73,6 +79,9 @@ view(
     ),
 )
 ```
+
+
+![Screenshot](assets/screenshots/layout_col.png)
 
 
 ## Tile
@@ -117,6 +126,9 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/layout_tile.png)
+
+
 ## Cross Tile
 
 Set `cross_tile=` to control how items inside a view, row, or column are tiled along the cross axis.
@@ -149,6 +161,9 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/layout_cross_tile.png)
+
+
 ## Gap
 
 Set `gap=` to control the spacing between items. The default gap is `10` or `'10px'`.
@@ -162,6 +177,9 @@ view(
     gap=25,
 )
 ```
+
+
+![Screenshot](assets/screenshots/layout_gap.png)
 
 
 ## Wrap
@@ -201,6 +219,9 @@ view(
     row(*boxes, wrap='normal', **row_style),
 )
 ```
+
+
+![Screenshot](assets/screenshots/layout_wrap.png)
 
 
 ## Grow and Shrink
@@ -272,6 +293,9 @@ view(
 ```
 
 
+![Screenshot](assets/screenshots/layout_grow_shrink.png)
+
+
 ## Vertical Alignment
 
 Use `tile='center'` to center content vertically inside a box.
@@ -288,3 +312,6 @@ view(
     )
 )
 ```
+
+
+![Screenshot](assets/screenshots/layout_vertical_alignment.png)

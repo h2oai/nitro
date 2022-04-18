@@ -18,6 +18,9 @@ view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
 ```
 
 
+![Screenshot](assets/screenshots/color_basic.png)
+
+
 ## Value
 
 Set `value=` to pre-select a color.
@@ -42,3 +45,6 @@ The return value, as in the previous example, is a `(r, g, b, a)` tuple.
 color = view(box('Choose a color', mode='color', value='#a241e8'))
 view(f'You chose {color}.')
 ```
+
+
+![Screenshot](assets/screenshots/color_value.png)

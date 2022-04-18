@@ -20,6 +20,9 @@ view(f'You chose {choices}.')
 ```
 
 
+![Screenshot](assets/screenshots/multi_dropdown_basic.png)
+
+
 ## Value
 
 Set `value=` to pre-select options having those values.
@@ -35,6 +38,9 @@ choices = view(box(
 ))
 view(f'You chose {choices}.')
 ```
+
+
+![Screenshot](assets/screenshots/multi_dropdown_value.png)
 
 
 ## Selected
@@ -56,3 +62,6 @@ choices = view(box(
 ))
 view(f'You chose {choices}.')
 ```
+
+
+![Screenshot](assets/screenshots/multi_dropdown_selected.png)
