@@ -32,7 +32,7 @@ setup-docs: ## Set up docs for development mode
 	cd tools/docs && ./venv/bin/python -m pip install -r requirements.txt
 
 .PHONY: docs
-docs: ## Build docs
+docs: docs-py ## Build docs
 	./tools/docs/venv/bin/mkdocs build
 
 clean-docs: ## Clean docs
@@ -64,6 +64,9 @@ dev-py: # Launch backend in development mode
 
 dev-docs: # Rebuild docs.py when examples.py is changed
 	cd py && find docs | entr $(MAKE) docs
+
+docs-py: # Rebuild docs.py from examples.py
+	cd py && $(MAKE) docs
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
