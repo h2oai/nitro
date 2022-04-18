@@ -1,10 +1,10 @@
 all: build
 
-setup: clean setup-web setup-py setup-docs ## Install dependencies
+setup: clean setup-web setup-py setup-screenshots setup-docs ## Install dependencies
 
 build: web py docs ## Build everything
 
-clean: clean-docs clean-py clean-web ## Clean everything
+clean: clean-docs clean-screenshots clean-py clean-web ## Clean everything
 
 setup-web: ## Install dependencies for web
 	cd web && npm ci
@@ -37,6 +37,17 @@ docs: docs-py ## Build docs
 
 clean-docs: ## Clean docs
 	rm -rf tools/docs/venv
+
+setup-screenshots: # Set up screenshot automation tooling
+	mkdir -p tools/screenshots && cd tools/screenshots && python3 -m venv venv
+	cd tools/screenshots && ./venv/bin/python -m pip install --upgrade pip
+	cd tools/screenshots && ./venv/bin/python -m pip install -r requirements.txt
+
+screenshots: # Capture screenshots for docs
+	./tools/screenshots/venv/bin/python tools/screenshots/screenshot.py
+
+clean-screenshots: # Clean screenshot automation tooling
+	rm -rf tools/screenshots/venv
 
 serve-docs: # Launch docs in development mode
 	./tools/docs/venv/bin/mkdocs serve
