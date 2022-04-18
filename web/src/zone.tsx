@@ -187,16 +187,16 @@ export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], 
     children = boxes.map(box => {
       if (box.items) {
         return (
-          <Zone key={xid()} context={context} boxes={box.items} box={box} />
+          <Zone key={xid()} data-name={box.name ?? undefined} context={context} boxes={box.items} box={box} />
         )
       }
       const style = computeStyle(box)
       switch (box.mode) {
         case 'image':
-          return <ImageBlock key={xid()} context={context} box={box} style={style} />
+          return <ImageBlock key={xid()} data-name={box.name ?? undefined} context={context} box={box} style={style} />
         default:
           return (
-            <Container key={xid()} style={style}>
+            <Container key={xid()} data-name={box.name ?? undefined} style={style}>
               <XBox key={box.xid} context={context} box={box} />
             </Container>
           )
@@ -204,6 +204,6 @@ export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], 
     })
 
   return (
-    <Container style={computeStyle(box)}>{children}</Container>
+    <Container data-name={box.name ?? undefined} style={computeStyle(box)}>{children}</Container>
   )
 }

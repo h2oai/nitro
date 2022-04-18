@@ -333,6 +333,7 @@ class BoxAlign(Enum):
 
 def row(
         *items: Item,
+        name: Optional[str] = None,
         tile: Optional[str] = None,
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
@@ -353,6 +354,7 @@ def row(
 ) -> Box:
     return Box(
         items=items,
+        name=name,
         row=True,
         tile=tile,
         cross_tile=cross_tile,
@@ -376,6 +378,7 @@ def row(
 
 def col(
         *items: Item,
+        name: Optional[str] = None,
         tile: Optional[str] = None,
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
@@ -396,6 +399,7 @@ def col(
 ) -> Box:
     return Box(
         items=items,
+        name=name,
         tile=tile,
         cross_tile=cross_tile,
         wrap=wrap,
