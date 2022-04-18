@@ -184,6 +184,9 @@ class Box:
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[Length] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[Length] = None,
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
@@ -191,12 +194,9 @@ class Box:
             padding: Optional[Sizing] = None,
             color: Optional[str] = None,
             background: Optional[str] = None,
+            border: Optional[str] = None,
             image: Optional[str] = None,
             fit: Optional[str] = None,
-            border: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
             icon: Optional[str] = None,
             min: Optional[V] = None,
             max: Optional[V] = None,
@@ -235,6 +235,9 @@ class Box:
         self.cross_tile = cross_tile
         self.wrap = wrap
         self.gap = gap
+        self.grow = grow
+        self.shrink = shrink
+        self.basis = basis
         self.align = align
         self.width = width
         self.height = height
@@ -242,12 +245,9 @@ class Box:
         self.padding = padding
         self.color = color
         self.background = background
+        self.border = border
         self.image = image
         self.fit = fit
-        self.border = border
-        self.grow = grow
-        self.shrink = shrink
-        self.basis = basis
         self.icon = icon
         self.min = min
         self.max = max
@@ -278,6 +278,9 @@ class Box:
             cross_tile=self.cross_tile,
             wrap=self.wrap,
             gap=self.gap,
+            grow=self.grow,
+            shrink=self.shrink,
+            basis=self.basis,
             align=self.align,
             width=self.width,
             height=self.height,
@@ -285,12 +288,9 @@ class Box:
             padding=self.padding,
             color=self.color,
             background=self.background,
+            border=self.border,
             image=self.image,
             fit=self.fit,
-            border=self.border,
-            grow=self.grow,
-            shrink=self.shrink,
-            basis=self.basis,
             icon=self.icon,
             min=self.min,
             max=self.max,
@@ -337,6 +337,9 @@ def row(
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
         gap: Optional[Length] = None,
+        grow: Optional[int] = None,
+        shrink: Optional[int] = None,
+        basis: Optional[Length] = None,
         align: Optional[str] = None,
         width: Optional[Sizing] = None,
         height: Optional[Sizing] = None,
@@ -344,12 +347,9 @@ def row(
         padding: Optional[Sizing] = None,
         color: Optional[str] = None,
         background: Optional[str] = None,
+        border: Optional[str] = None,
         image: Optional[str] = None,
         fit: Optional[str] = None,
-        border: Optional[str] = None,
-        grow: Optional[int] = None,
-        shrink: Optional[int] = None,
-        basis: Optional[Length] = None,
 ) -> Box:
     return Box(
         items=items,
@@ -358,6 +358,9 @@ def row(
         cross_tile=cross_tile,
         wrap=wrap,
         gap=gap,
+        grow=grow,
+        shrink=shrink,
+        basis=basis,
         align=align,
         width=width,
         height=height,
@@ -365,12 +368,9 @@ def row(
         padding=padding,
         color=color,
         background=background,
+        border=border,
         image=image,
         fit=fit,
-        border=border,
-        grow=grow,
-        shrink=shrink,
-        basis=basis,
     )
 
 
@@ -380,6 +380,9 @@ def col(
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
         gap: Optional[Length] = None,
+        grow: Optional[int] = None,
+        shrink: Optional[int] = None,
+        basis: Optional[Length] = None,
         align: Optional[str] = None,
         width: Optional[Sizing] = None,
         height: Optional[Sizing] = None,
@@ -387,12 +390,9 @@ def col(
         padding: Optional[Sizing] = None,
         color: Optional[str] = None,
         background: Optional[str] = None,
+        border: Optional[str] = None,
         image: Optional[str] = None,
         fit: Optional[str] = None,
-        border: Optional[str] = None,
-        grow: Optional[int] = None,
-        shrink: Optional[int] = None,
-        basis: Optional[Length] = None,
 ) -> Box:
     return Box(
         items=items,
@@ -400,6 +400,9 @@ def col(
         cross_tile=cross_tile,
         wrap=wrap,
         gap=gap,
+        grow=grow,
+        shrink=shrink,
+        basis=basis,
         align=align,
         width=width,
         height=height,
@@ -407,12 +410,9 @@ def col(
         padding=padding,
         color=color,
         background=background,
+        border=border,
         image=image,
         fit=fit,
-        border=border,
-        grow=grow,
-        shrink=shrink,
-        basis=basis,
     )
 
 
@@ -546,6 +546,9 @@ class View(_View):
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[Length] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[Length] = None,
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
@@ -553,12 +556,9 @@ class View(_View):
             padding: Optional[Sizing] = None,
             color: Optional[str] = None,
             background: Optional[str] = None,
+            border: Optional[str] = None,
             image: Optional[str] = None,
             fit: Optional[str] = None,
-            border: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
     ):
         if len(items):
             b = Box(
@@ -568,6 +568,9 @@ class View(_View):
                 cross_tile=cross_tile,
                 wrap=wrap,
                 gap=gap,
+                grow=grow,
+                shrink=shrink,
+                basis=basis,
                 align=align,
                 width=width,
                 height=height,
@@ -575,12 +578,9 @@ class View(_View):
                 padding=padding,
                 color=color,
                 background=background,
+                border=border,
                 image=image,
                 fit=fit,
-                border=border,
-                grow=grow,
-                shrink=shrink,
-                basis=basis,
             )
 
             self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
@@ -637,6 +637,9 @@ class AsyncView(_View):
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
             gap: Optional[Length] = None,
+            grow: Optional[int] = None,
+            shrink: Optional[int] = None,
+            basis: Optional[Length] = None,
             align: Optional[str] = None,
             width: Optional[Sizing] = None,
             height: Optional[Sizing] = None,
@@ -644,12 +647,9 @@ class AsyncView(_View):
             padding: Optional[Sizing] = None,
             color: Optional[str] = None,
             background: Optional[str] = None,
+            border: Optional[str] = None,
             image: Optional[str] = None,
             fit: Optional[str] = None,
-            border: Optional[str] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
     ):
         if len(items):
             b = Box(
@@ -659,6 +659,9 @@ class AsyncView(_View):
                 cross_tile=cross_tile,
                 wrap=wrap,
                 gap=gap,
+                grow=grow,
+                shrink=shrink,
+                basis=basis,
                 align=align,
                 width=width,
                 height=height,
@@ -666,12 +669,9 @@ class AsyncView(_View):
                 padding=padding,
                 color=color,
                 background=background,
+                border=border,
                 image=image,
                 fit=fit,
-                border=border,
-                grow=grow,
-                shrink=shrink,
-                basis=basis,
             )
 
             await self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
