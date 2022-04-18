@@ -28,7 +28,8 @@ clean-py: ## Clean Python dependencies
 
 setup-docs: ## Set up docs for development mode
 	mkdir -p tools/docs && cd tools/docs && python3 -m venv venv
-	./tools/docs/venv/bin/python -m pip install --upgrade pip mkdocs-material
+	cd tools/docs && ./venv/bin/python -m pip install --upgrade pip
+	cd tools/docs && ./venv/bin/python -m pip install -r requirements.txt
 
 .PHONY: docs
 docs: ## Build docs
