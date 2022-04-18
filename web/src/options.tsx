@@ -17,7 +17,7 @@ import { gensym, V, xid } from './core';
 import { Box, Option } from './protocol';
 
 export const
-  toContextualMenuItem = ({ value, text, caption, icon, options }: Option, capture: (v: V) => void): IContextualMenuItem => {
+  toContextualMenuItem = ({ name, value, text, caption, icon, options }: Option, capture: (v: V) => void): IContextualMenuItem => {
     return text
       ? {
         key: String(value),
@@ -26,6 +26,7 @@ export const
         iconProps: icon ? { iconName: icon } : undefined,
         subMenuProps: options ? toContextualMenuProps(options, capture) : undefined,
         onClick: () => capture(value),
+        'data-name': name,
       } : {
         key: xid(),
         itemType: ContextualMenuItemType.Divider,

@@ -32,18 +32,18 @@ export const Buttons = make(({ context, box }: BoxProps) => {
             button = (hasNoPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
               ? o.options
                 ? o.value === ''
-                  ? <PrimaryButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
-                  : <PrimaryButton split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
+                  ? <PrimaryButton data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
+                  : <PrimaryButton data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
                 : o.caption
-                  ? <CompoundButton primary text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
-                  : <PrimaryButton text={text} styles={styles} onClick={onClick} />
+                  ? <CompoundButton data-name={o.name} primary text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
+                  : <PrimaryButton data-name={o.name} text={text} styles={styles} onClick={onClick} />
               : o.options
                 ? o.value === ''
-                  ? <DefaultButton text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
-                  : <DefaultButton split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
+                  ? <DefaultButton data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
+                  : <DefaultButton data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
                 : o.caption
-                  ? <CompoundButton text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
-                  : <DefaultButton text={text} styles={styles} onClick={onClick} />
+                  ? <CompoundButton data-name={o.name} text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
+                  : <DefaultButton data-name={o.name} text={text} styles={styles} onClick={onClick} />
           return <Stack.Item key={o.value}>{button}</Stack.Item>
         })
       return (

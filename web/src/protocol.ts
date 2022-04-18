@@ -120,6 +120,7 @@ export type Box = {
 export type Option = {
   value: V
   text?: S
+  name?: S
   icon?: S
   caption?: S
   selected?: B

@@ -102,6 +102,7 @@ class Option:
             self,
             value: Union[V, Callable],
             text: Optional[str] = None,
+            name: Optional[str] = None,
             icon: Optional[str] = None,
             caption: Optional[str] = None,
             selected: Optional[bool] = None,
@@ -110,6 +111,7 @@ class Option:
         self.delegate = value if callable(value) else None
         self.value = value if self.delegate is None else _xid()
         self.text = text
+        self.name = name
         self.icon = icon
         self.caption = caption
         self.selected = selected
@@ -119,6 +121,7 @@ class Option:
         d = dict(
             value=self.value,
             text=self.text,
+            name=self.name,
             icon=self.icon,
             caption=self.caption,
             selected=self.selected,
