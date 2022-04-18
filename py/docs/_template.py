@@ -36,6 +36,10 @@ TOC
 '''
 
 
+def view_output(view: View, docs, *args, **kwargs):
+    view(*docs, col(*args, name='output', padding=20, border='$neutral-quaternary', **kwargs))
+
+
 def main(view: View):
     topic = view(table_of_contents)
     topics[topic](view)
@@ -50,7 +54,7 @@ nitro = View(
         # MENU
     ],
     nav=[
-        option(main, 'Contents'),
+        option(main, 'Contents', name='contents'),
     ],
 )
 

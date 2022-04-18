@@ -176,7 +176,7 @@ def build_funcs(groups: List[Group]) -> str:
                 if isinstance(block, Code):
                     p()
                     for line in block.lines:
-                        p(line.replace('view(', f'view(*{doc_var}, '))
+                        p(line.replace('view(', f'view_output(view, {doc_var}, '))
                     p()
     return str(p)
 
@@ -243,7 +243,7 @@ def write_example(p: Printer, e: Example):
 docs_dir = Path('..') / 'docs'
 
 
-def write_docs_examples(groups: List[Group]):
+def write_docs(groups: List[Group]):
     for g in groups:
         p = Printer()
         p(f'# {g.title}')
@@ -253,6 +253,9 @@ def write_docs_examples(groups: List[Group]):
             p()
             p(f'## {e.title}')
             write_example(p, e)
+            p()
+            p(f'![Screenshot](assets/screenshots/{e.name}.png)')
+            p()
         (docs_dir / f'{g.name}.md').write_text(str(p))
 
 
@@ -340,7 +343,7 @@ def main():
     write_readme(groups)
 
     print('Generating examples for docs...')
-    write_docs_examples(groups)
+    write_docs(groups)
 
     print('Updating mkdocs.yml...')
     write_docs_yaml(groups)
