@@ -3,9 +3,10 @@ import { Body } from './body';
 import { Client } from './client';
 import { isN, newIncr, S, signal, U, xid } from './core';
 import { Header } from './header';
-import { reIndex, sanitizeBox } from './heuristics';
+import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { Box, Conf, Msg, MsgType } from './protocol';
 import { Socket, SocketEvent, SocketEventT } from './socket';
+import { defaultScheme, Scheme } from './theme';
 import { make } from './ui';
 
 enum AppStateT { Connecting, Disconnected, Invalid, Connected }
@@ -21,8 +22,7 @@ type AppState = {
 } | {
   t: AppStateT.Connected
   socket: Socket
-  boxes: Box[]
-  conf: Conf
+  client: Client
 }
 
 const hello: Msg = {
@@ -52,7 +52,7 @@ export const App = make(({ client }: { client: Client }) => {
                 {
                   const { d: box, p: position } = msg
                   box.xid = xid()
-                  const { conf, boxes } = client
+                  const { boxes } = client
                   if (isN(position) && position >= 0 && position < boxes.length) {
                     boxes[position] = box
                   } else {
@@ -60,17 +60,36 @@ export const App = make(({ client }: { client: Client }) => {
                     boxes.push(sanitizeBox(box))
                   }
                   reIndex(boxes, newIncr())
-                  stateB({ t: AppStateT.Connected, socket, conf, boxes })
+                  stateB({ t: AppStateT.Connected, socket, client })
                 }
                 break
               case MsgType.Conf:
                 {
-                  const { d: conf } = msg
-                  client.conf = conf
+                  const
+                    { d: conf } = msg,
+                    { title, caption, menu, nav, theme } = conf
+
+                  if (title) client.titleB(title)
+                  if (caption) client.captionB(caption)
+                  if (menu) client.menuB(sanitizeOptions(menu))
+                  if (nav) client.navB(sanitizeOptions(nav))
+                  if (theme) {
+                    const
+                      d = defaultScheme,
+                      scheme: Scheme = {
+                        primaryFont: d.primaryFont,
+                        monospaceFont: d.monospaceFont,
+                        backgroundColor: theme.background_color ?? d.backgroundColor,
+                        foregroundColor: theme.foreground_color ?? d.foregroundColor,
+                        primaryColor: theme.accent_color ?? d.primaryColor,
+                        primaryColorName: theme.accent_color_name ?? d.primaryColorName,
+                      }
+                    client.schemeB(scheme)
+                  }
+
                   const state = stateB()
                   if (state.t === AppStateT.Connected) {
-                    const { conf, boxes } = client
-                    stateB({ t: AppStateT.Connected, socket, conf, boxes })
+                    stateB({ t: AppStateT.Connected, socket, client })
                   }
                 }
                 break
@@ -105,8 +124,8 @@ export const App = make(({ client }: { client: Client }) => {
             <div className='view'>
               <div className='art' />
               <div className='page'>
-                <Header send={state.socket.send} conf={state.conf} />
-                <Body send={state.socket.send} boxes={state.boxes} />
+                <Header send={state.socket.send} client={client} />
+                <Body send={state.socket.send} boxes={client.boxes} />
               </div>
             </div>
           )

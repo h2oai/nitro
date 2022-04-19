@@ -16,6 +16,7 @@ import { CommandBar, ContextualMenu } from '@fluentui/react';
 import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import styled from 'styled-components';
+import { Client } from './client';
 import { signal, V } from './core';
 import { toContextualMenuItem } from './options';
 import { Conf, MsgType, Option } from './protocol';
@@ -85,15 +86,21 @@ const NavBar = make(({ send, options }: { send: Send, options: Option[] }) => {
   return { render }
 })
 
-export const Header = make(({ send, conf }: { send: Send, conf: Conf }) => {
+export const Header = make(({ send, client }: { send: Send, client: Client }) => {
   const
     render = () => {
+      const
+        title = client.titleB(),
+        caption = client.captionB(),
+        menu = client.menuB() ?? [],
+        nav = client.navB() ?? []
+
       return (
         <div className='header'>
-          <Menu send={send} options={conf.menu ?? []} />
-          <div className='title'>{conf.title}</div>
-          <div className='subtitle'>{conf.caption}</div>
-          <NavBar send={send} options={conf.nav ?? []} />
+          <Menu send={send} options={menu} />
+          <div className='title'>{title}</div>
+          <div className='caption'>{caption}</div>
+          <NavBar send={send} options={nav} />
         </div>
       )
     }

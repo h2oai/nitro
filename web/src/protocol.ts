@@ -62,11 +62,19 @@ export type Msg = {
   d: V
 }
 
+export type Theme = {
+  foreground_color?: S
+  background_color?: S
+  accent_color?: S
+  accent_color_name?: S
+}
+
 export type Conf = {
   title?: S,
   caption?: S,
   menu?: Option[]
   nav?: Option[]
+  theme?: Theme
 }
 
 export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'

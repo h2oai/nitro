@@ -173,6 +173,28 @@ Sizing = Union[
 ]
 
 
+class Theme:
+    def __init__(
+            self,
+            background_color: str,
+            foreground_color: str,
+            accent_color: str,
+            accent_color_name: str,
+    ):
+        self.background_color = background_color
+        self.foreground_color = foreground_color
+        self.accent_color = accent_color
+        self.accent_color_name = accent_color_name
+
+    def dump(self) -> dict:
+        return dict(
+            background_color=self.background_color,
+            foreground_color=self.foreground_color,
+            accent_color=self.accent_color,
+            accent_color_name=self.accent_color_name,
+        )
+
+
 class Box:
     def __init__(
             self,
@@ -468,12 +490,14 @@ class _View:
             caption: str = 'v0.1.0',  # XXX show actual version
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            theme: Optional[Theme] = None,
     ):
         self._delegate = delegate
         self._title = title
         self._caption = caption
         self._menu = menu or []
         self._nav = nav or []
+        self._theme = theme
         self.context = context or {}
         self._send = send
         self._recv = recv
@@ -489,6 +513,7 @@ class _View:
             caption=self._caption,
             menu=_dump(self._menu),
             nav=_dump(self._nav),
+            theme=_dump(self._theme),
         )))
 
     def __getitem__(self, key):
@@ -515,11 +540,22 @@ class View(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            theme: Optional[Theme] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
-        View(self._delegate, context, send, recv, self._title, self._caption, self._menu, self._nav)._run()
+        View(
+            self._delegate,
+            context,
+            send,
+            recv,
+            self._title,
+            self._caption,
+            self._menu,
+            self._nav,
+            self._theme,
+        )._run()
 
     def _run(self):
         self._send(self._join(self._read(_MsgType.Join)))
@@ -541,6 +577,16 @@ class View(_View):
 
     def _write(self, t: _MsgType, s: Box, position: Optional[int]):
         self._send(_marshal(_clean(dict(t=t, d=s.dump(), p=position))))
+
+    def set(
+            self,
+            title: str = None,
+            caption: str = None,
+            menu: Optional[Sequence[Option]] = None,
+            nav: Optional[Sequence[Option]] = None,
+            theme: Optional[Theme] = None,
+    ):
+        pass
 
     def __call__(
             self,
@@ -592,7 +638,8 @@ class View(_View):
 
             self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
         if read:
-            return self._read(_MsgType.Input)
+            res = self._read(_MsgType.Input)
+            return res
 
 
 class AsyncView(_View):
@@ -606,11 +653,22 @@ class AsyncView(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            theme: Optional[Theme] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
-        await AsyncView(self._delegate, context, send, recv, self._title, self._caption, self._menu, self._nav)._run()
+        await AsyncView(
+            self._delegate,
+            context,
+            send,
+            recv,
+            self._title,
+            self._caption,
+            self._menu,
+            self._nav,
+            self._theme,
+        )._run()
 
     async def _run(self):
         await self._send(self._join(await self._read(_MsgType.Join)))

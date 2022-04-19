@@ -1,24 +1,35 @@
-import { S } from './core'
-import { Box, Conf } from './protocol'
+import { loadTheme } from '@fluentui/react'
+import { S, on, signal } from './core'
+import { Box, Option } from './protocol'
 import { connect, Socket, SocketEvent } from './socket'
+import { defaultScheme, loadScheme } from './theme'
 
 
 export const newClient = (endpoint: S) => {
-  const boxes: Box[] = []
-  const conf: Conf = {
-    title: 'H2O Nitro',
-    caption: 'v0.1.0', // XXX show actual version
-    menu: [],
-    nav: [],
-  }
-
   let _socket: Socket | null = null
-  const socket = (handle: (s: Socket, e: SocketEvent) => void): Socket => {
-    if (_socket) return _socket
-    return _socket = connect(endpoint, e => { if (_socket) handle(_socket, e) })
-  }
+  const
+    boxes: Box[] = [],
+    titleB = signal('H2O Nitro'),
+    captionB = signal('v0.1.0'),
+    menuB = signal<Option[]>([]),
+    navB = signal<Option[]>([]),
+    schemeB = signal(defaultScheme),
+    socket = (handle: (s: Socket, e: SocketEvent) => void): Socket => {
+      if (_socket) return _socket
+      return _socket = connect(endpoint, e => {
+        if (_socket) handle(_socket, e)
+      })
+    }
+
+  on(titleB, title => document.title = title)
+  on(schemeB, scheme => loadScheme(scheme))
+
   return {
-    conf,
+    titleB,
+    captionB,
+    menuB,
+    navB,
+    schemeB,
     boxes,
     socket,
   }

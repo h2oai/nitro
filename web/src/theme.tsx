@@ -10,6 +10,15 @@ export type Scheme = {
   backgroundColor: S
 }
 
+export const defaultScheme: Scheme = {
+  primaryFont: 'inherit',
+  monospaceFont: 'inherit',
+  primaryColor: '#5a64f0',
+  primaryColorName: 'indigo',
+  foregroundColor: '#3e3f4a',
+  backgroundColor: '#ffffff',
+}
+
 const
   hueNames = [
     'lava',

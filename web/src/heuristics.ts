@@ -113,7 +113,7 @@ const sanitizeRange = (box: Box) => {
   }
 }
 
-const sanitizeOptions = (x: any): Option[] => { // recursive
+export const sanitizeOptions = (x: any): Option[] => { // recursive
   if (!x) return []
   if (Array.isArray(x)) {
     const c: Option[] = []

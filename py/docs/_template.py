@@ -37,7 +37,7 @@ TOC
 
 
 def view_output(view: View, docs, *args, **kwargs):
-    view(*docs, col(*args, name='output', padding=20, border='$neutral-quaternary', **kwargs))
+    return view(*docs, col(*args, name='output', padding=20, border='$neutral-quaternary', **kwargs))
 
 
 def main(view: View):

@@ -23,20 +23,10 @@ import { loadScheme } from './theme';
 
 registerIcons({ icons })
 
-const defaultScheme = {
-  primaryFont: 'inherit',
-  monospaceFont: 'inherit',
-  primaryColor: '#5a64f0',
-  primaryColorName: 'indigo',
-  foregroundColor: '#3e3f4a',
-  backgroundColor: '#ffffff',
-}
-
-loadScheme(defaultScheme)
-
 
 const root = document.getElementById('nitro')
-const client = newClient(root?.getAttribute('data-endpoint') ?? '/nitro')
+const client = newClient(root?.getAttribute('data-endpoint') ?? '/nitro') // TODO document
+loadScheme(client.schemeB())
 ReactDOM.render(<App client={client} />, root);
 
 // If you want to start measuring performance in your app, pass a function
