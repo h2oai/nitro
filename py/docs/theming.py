@@ -12,25 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from h2o_nitro import View, box, row, col, option, lorem
+from h2o_nitro import View, box, row, col, option, lorem, Theme
 
 
 # # Theming
 
 # ## Color Variables
-# To use pre-defined, named colors that sit well with the app's theme, use *color variables*.
-# Color variables take the form `var(--name)` or simply `$name`.
-# For example, you can use `var(--red)` or `$red` instead of hard-coded colors like `red` or `#ff0000` or `rgb(255,0,0)`.
+# *Color variables* are pre-defined, named colors that match the app's theme.
 #
-# Color variables can be passed wherever colors are accepted, like `background`, `border`, `color`, and so on.
+# Color variables take the form `var(--name)`, or simply `$name`. For example, you can use
+# `var(--red)` or `$red` instead of hard-coded colors like `red` or `#ff0000` or `rgb(255,0,0)`.
 #
-# There are 16 pre-defined *spectrum colors*, derived automatically from the theme's accent color, by matching its
-# saturation and lightness. The naming of each color is indicative, and its hue might appear off depending on the
-# position of the accent color's hue along the color spectrum. For example, `$red` could appear pink or orange!
+# Color variables can be passed wherever colors are accepted, like `background=`, `border=`, `color=`, and so on.
+#
+# There are 16 pre-defined *spectrum colors*, derived automatically from the theme's accent color by matching its
+# saturation and lightness. Spectrum colors are useful for data visualizations and infographics. The naming of each
+# color is only indicative, and its hue might appear off depending on the position of the accent color's hue along the
+# color spectrum. For example, `$red` could appear pink or orange!
 #
 # Additionally, there are pre-defined color variables for various *tones* of the theme's foreground (`$foreground`),
 # background (`$background`) and accent (`$accent`) colors.
-# Accent color tones are prefixed with `$accent-`, and neutral tones (grays) are prefixed with `$neutral-`.
+# Accent tones are prefixed with `$accent-`, and neutral tones (grays) are prefixed with `$neutral-`.
 def theme_colors(view: View):
     style = dict(width='35px', height='35px', border='#777', margin='0 0 2.5rem 0')
     view(
@@ -91,3 +93,33 @@ def theme_colors(view: View):
             wrap='normal',
         ),
     )
+
+
+# ## Theme Switching
+# Themes can be switched dynamically. This is useful when end-users need to switch the app's theme.
+#
+# Use `Theme()` to define a theme. Use `view.set(theme=)` to set the theme.
+def theme_switching(view: View):
+    themes = {
+        'Red': Theme(
+            background_color='#fff',
+            foreground_color='#3e3f4a',
+            accent_color='#ef534f',
+            accent_color_name='red'
+        ),
+        'Dark Red': Theme(
+            background_color='#3e3f4a',
+            foreground_color='#fff',
+            accent_color='#ef534f',
+            accent_color_name='red'
+        ),
+    }
+
+    while True:
+        theme, action = view(
+            box('Change theme to:', mode='radio', options=list(themes.keys())),
+            box(['Apply', 'Done'])
+        )
+        if action == 'Done':
+            break
+        view.set(theme=themes.get(theme))
