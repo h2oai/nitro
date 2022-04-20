@@ -64,8 +64,8 @@ def remove_def_if_only_def(lines: List[str]) -> List[str]:
             n += 1
     if n == 1:
         if is_def(lines[0]):
-            return dedent(lines[1:])
-    return lines
+            lines = dedent(lines[1:])
+    return [line for line in lines if 'view()' not in line]
 
 
 def strip_lines(lines: List[str]) -> List[str]:
@@ -169,7 +169,18 @@ def build_funcs(groups: List[Group]) -> str:
                         p(quote_newlines(line))
                     p("```")
             p('""",')
-            p("    '### Output',")
+
+            has_output = True
+            for block in e.blocks:
+                if has_output and isinstance(block, Code):
+                    for line in block.lines:
+                        if 'view()' in line:
+                            has_output = False
+                            break
+
+            if has_output:
+                p("    '### Output',")
+
             p(')')
             p()
             for block in e.blocks:
