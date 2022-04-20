@@ -23,6 +23,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # #include textbox.py
 # #include spinbox.py
 # #include checkbox.py
+# #include toggle.py
 # #include pickers.py
 # #include options.py
 # #include buttons.py

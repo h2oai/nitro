@@ -59,6 +59,7 @@ nav:
     - 'textbox.md'
     - 'spinbox.md'
     - 'checkbox.md'
+    - 'toggle.md'
     - 'pickers.md'
     - 'options.md'
     - 'buttons.md'

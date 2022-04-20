@@ -98,6 +98,7 @@ You can always view the docs for the latest version at https://nitro.h2o.ai/.
 - [Textbox](docs/textbox.md)
 - [Spinbox](docs/spinbox.md)
 - [Checkbox](docs/checkbox.md)
+- [Toggle](docs/toggle.md)
 - [Pickers](docs/pickers.md)
 - [Options](docs/options.md)
 - [Buttons](docs/buttons.md)
