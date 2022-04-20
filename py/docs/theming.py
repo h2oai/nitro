@@ -126,7 +126,7 @@ def theme_dark_mode(view: View):
 # background (`$background`) and accent (`$accent`) colors.
 # Accent tones are prefixed with `$accent-`, and neutral tones (grays) are prefixed with `$neutral-`.
 def theme_colors(view: View):
-    style = dict(width='35px', height='35px', border='#777', margin='0 0 2.5rem 0')
+    style = dict(width=30, height=30, border='#777', margin='0 0 2.5rem 0')
     view(
         '### Spectrum Colors',
         row(
@@ -310,7 +310,7 @@ def theme_samples(view: View):
                 box('Rate this', mode='rating'),
                 padding='2rem', border='$neutral-tertiary'
             ),
-            box(['Apply', 'Done'])
+            box(['Apply Theme', 'Done'])
         )
         theme_name = response[0]
         action = response[len(response) - 1]
