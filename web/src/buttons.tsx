@@ -7,11 +7,11 @@ import { BoxProps, make } from './ui';
 
 export const Buttons = make(({ context, box }: BoxProps) => {
   const
-    { value } = box,
+    { value, index } = box,
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
-        { text, index, row, options, align } = box,
+        { text, row, options, align } = box,
         horizontal = row !== false,
         horizontalAlign = horizontal
           ? align === 'center'
@@ -52,6 +52,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
         </Labeled>
       )
     }
+  context.capture(index, null)
   return { render }
 })
 
