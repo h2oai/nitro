@@ -22,7 +22,7 @@ export const newClient = (endpoint: S) => {
     }
 
   on(titleB, title => document.title = title)
-  on(schemeB, scheme => loadScheme(scheme))
+  on(schemeB, scheme => window.setTimeout(() => loadScheme(scheme), 100))
 
   return {
     titleB,

@@ -4,7 +4,7 @@ import { Client } from './client';
 import { isN, newIncr, S, signal, U, xid } from './core';
 import { Header } from './header';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
-import { Box, Conf, Msg, MsgType } from './protocol';
+import { Box, Setting, Msg, MsgType } from './protocol';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { defaultScheme, Scheme } from './theme';
 import { make } from './ui';
@@ -63,7 +63,7 @@ export const App = make(({ client }: { client: Client }) => {
                   stateB({ t: AppStateT.Connected, socket, client })
                 }
                 break
-              case MsgType.Conf:
+              case MsgType.Set:
                 {
                   const
                     { d: conf } = msg,

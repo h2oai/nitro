@@ -17,19 +17,12 @@ import { B, I, N, Pair, S, Triple, U, V } from "./core"
 export enum MsgType {
   Error = 1,
   Join,
-  Leave,
-  Abort,
-  Resume,
-  Request,
-  Response,
-  Watch,
-  Event,
+  Switch,
   Input,
+  Set,
   Insert,
   Update,
   Remove,
-  Conf,
-  Switch,
 }
 
 export type Input = B | S | N | S[] | N[]
@@ -41,6 +34,15 @@ export type Msg = {
   t: MsgType.Join
   d: any // XXX formalize
 } | {
+  t: MsgType.Switch,
+  d: V
+} | {
+  t: MsgType.Input, // XXX rename
+  d: Array<Input | null>
+} | {
+  t: MsgType.Set,
+  d: Setting
+} | {
   t: MsgType.Insert
   d: Box
   p?: I
@@ -51,15 +53,6 @@ export type Msg = {
 } | {
   t: MsgType.Remove
   d: Box
-} | {
-  t: MsgType.Input, // XXX rename
-  d: Array<Input | null>
-} | {
-  t: MsgType.Conf,
-  d: Conf
-} | {
-  t: MsgType.Switch,
-  d: V
 }
 
 export type Theme = {
@@ -69,7 +62,7 @@ export type Theme = {
   accent_color_name?: S
 }
 
-export type Conf = {
+export type Setting = {
   title?: S,
   caption?: S,
   menu?: Option[]

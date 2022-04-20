@@ -33,19 +33,12 @@ def _xid() -> str:
 class _MsgType(IntEnum):
     Error = 1
     Join = 2
-    Leave = 3
-    Abort = 4
-    Resume = 5
-    Request = 6
-    Response = 7
-    Watch = 8
-    Event = 9
-    Input = 10
-    Insert = 11
-    Update = 12
-    Remove = 13
-    Conf = 14
-    Switch = 15
+    Switch = 3
+    Input = 4
+    Set = 5
+    Insert = 6
+    Update = 7
+    Remove = 8
 
 
 _primitive = (bool, int, float, str)
@@ -479,6 +472,22 @@ def _interpret(msg, expected: int):
     raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
 
 
+def _marshal_set(
+        title: str = None,
+        caption: str = None,
+        menu: Optional[Sequence[Option]] = None,
+        nav: Optional[Sequence[Option]] = None,
+        theme: Optional[Theme] = None,
+) -> dict:
+    return _marshal(dict(t=_MsgType.Set, d=_clean(dict(
+        title=title,
+        caption=caption,
+        menu=_dump(menu),
+        nav=_dump(nav),
+        theme=_dump(theme),
+    ))))
+
+
 class _View:
     def __init__(
             self,
@@ -493,14 +502,14 @@ class _View:
             theme: Optional[Theme] = None,
     ):
         self._delegate = delegate
+        self.context = context or {}
+        self._send = send
+        self._recv = recv
         self._title = title
         self._caption = caption
         self._menu = menu or []
         self._nav = nav or []
         self._theme = theme
-        self.context = context or {}
-        self._send = send
-        self._recv = recv
 
         self._delegates: Dict[str, Callable] = dict()
         _collect_delegates(self._delegates, self._menu)
@@ -508,13 +517,13 @@ class _View:
 
     def _join(self, msg):
         # XXX handle join msg
-        return _marshal(dict(t=_MsgType.Conf, d=dict(
+        return _marshal_set(
             title=self._title,
             caption=self._caption,
             menu=_dump(self._menu),
             nav=_dump(self._nav),
             theme=_dump(self._theme),
-        )))
+        )
 
     def __getitem__(self, key):
         return self.context.get(key)
@@ -575,9 +584,6 @@ class View(_View):
             return _interpret(_unmarshal(m), expected)
         raise InterruptError()
 
-    def _write(self, t: _MsgType, s: Box, position: Optional[int]):
-        self._send(_marshal(_clean(dict(t=t, d=s.dump(), p=position))))
-
     def set(
             self,
             title: str = None,
@@ -586,7 +592,13 @@ class View(_View):
             nav: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
     ):
-        pass
+        self._send(_marshal_set(
+            title=title,
+            caption=caption,
+            menu=menu,
+            nav=nav,
+            theme=theme,
+        ))
 
     def __call__(
             self,
@@ -635,8 +647,11 @@ class View(_View):
                 image=image,
                 fit=fit,
             )
-
-            self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
+            self._send(_marshal(_clean(dict(
+                t=_MsgType.Update if overwrite else _MsgType.Insert,
+                d=b.dump(),
+                p=position,
+            ))))
         if read:
             res = self._read(_MsgType.Input)
             return res
@@ -688,8 +703,21 @@ class AsyncView(_View):
             return _interpret(_unmarshal(m), expected)
         raise InterruptError()
 
-    async def _write(self, t: _MsgType, b: Box, position: Optional[int]):
-        await self._send(_marshal(_clean(dict(t=t, d=b.dump(), p=position))))
+    async def set(
+            self,
+            title: str = None,
+            caption: str = None,
+            menu: Optional[Sequence[Option]] = None,
+            nav: Optional[Sequence[Option]] = None,
+            theme: Optional[Theme] = None,
+    ):
+        await self._send(_marshal_set(
+            title=title,
+            caption=caption,
+            menu=menu,
+            nav=nav,
+            theme=theme,
+        ))
 
     async def __call__(
             self,
@@ -738,8 +766,11 @@ class AsyncView(_View):
                 image=image,
                 fit=fit,
             )
-
-            await self._write(_MsgType.Update if overwrite else _MsgType.Insert, b, position)
+            await self._send(_marshal(_clean(dict(
+                t=_MsgType.Update if overwrite else _MsgType.Insert,
+                d=b.dump(),
+                p=position,
+            ))))
         if read:
             return await self._read(_MsgType.Input)
 

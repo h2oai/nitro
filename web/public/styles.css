@@ -322,7 +322,7 @@ body {
 
 .page {
     max-width: 720px;
-    background-color: #fff;
+    background-color: var(--background);
     margin: 1rem auto 2rem;
 }
 
@@ -343,7 +343,7 @@ body {
     text-transform: uppercase;
 }
 
-.header .subtitle {
+.header .caption {
     font-size: .8em;
     letter-spacing: 0;
 }

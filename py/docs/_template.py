@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from h2o_nitro import web_directory, View, box, option, row, col, ContextSwitchError, lorem, __version__ as version
+from h2o_nitro import web_directory, View, box, option, row, col, ContextSwitchError, lorem, Theme, __version__ as version
 import simple_websocket
 from flask import Flask, request, send_from_directory
 
@@ -25,12 +25,14 @@ topics = dict(
 table_of_contents = '''
 # Welcome to Nitro!
 
-Nitro is the quickest way to build interactive web apps using Python.
+Nitro is the simplest way to build interactive web apps using Python.
 No front-end experience required.
 
 This application is a collection of live, annotated examples for how to use
 Nitro. It acts as a reference for how to do various things using Nitro, 
 but can also be used as a guide to learn about many of the features Nitro provides.
+
+You can always view an online version of these docs at [https://nitro.h2o.ai](https://nitro.h2o.ai).
 
 TOC
 '''
