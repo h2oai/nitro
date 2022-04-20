@@ -17,18 +17,41 @@ from h2o_nitro import View, box, row, col, option, lorem, Theme
 
 # # Theming
 
-# ## Theme Switching
-# Themes can be switched dynamically. This is useful when end-users need to switch the app's theme.
-#
-# Use `view.set(theme=)` to set the theme.
+# ## Setting a theme
+# Pass `theme=` when creating the app's `View()`.
 #
 # Use `Theme()` to define a theme.
 # - `background_color` sets the color of the page background.
 # - `foreground_color` sets the color of the page text.
 # - `accent_color` sets the accent color.
-# - `accent_color_name` sets the closest matching named color. Must be one of `red`, `lava`, `orange`, `amber`,
-#   `yellow`, `lime`, `mint`, `green`, `teal`, `cyan`, `sky`, `blue`, `indigo`, `purple`, `violet`, or `pink`.
-#   This is used to pick spectrum colors, useful for visualizations and infographics.
+# - `accent_color_name` describes the accent color.
+#
+# `accent_color_name` must be one of `red`, `lava`, `orange`, `amber`, `yellow`, `lime`, `mint`, `green`, `teal`,
+# `cyan`, `sky`, `blue`, `indigo`, `purple`, `violet`, or `pink`.
+# This is used to automatically pick matching spectrum colors, useful for visualizations and infographics.
+def theme_basic(view: View):
+    # App entry point
+    def main(view: View):
+        pass
+
+    # Create theme
+    my_theme = Theme(
+        background_color='#fff',
+        foreground_color='#3e3f4a',
+        accent_color='#ef534f',
+        accent_color_name='green'
+    )
+
+    # Set theme when creating the View()
+    nitro = View(main, title='My App', caption='v1.0', theme=my_theme)
+
+    view()
+
+
+# ## Theme Switching
+# Use `view.set(theme=)` to change the theme dynamically.
+#
+# This is useful when you want to allow the app's end-users to switch app's theme.
 def theme_switching(view: View):
     action = view(box(dict(change='Change my theme', dont_change='Done')))
     if action == 'change':
