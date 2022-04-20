@@ -48,7 +48,7 @@ def theme_basic(view: View):
     view()
 
 
-# ## Theme Switching
+# ## Theme switching
 # Use `view.set(theme=)` to change the theme dynamically.
 #
 # This is useful when you want to allow the app's end-users to switch app's theme.
@@ -109,7 +109,7 @@ def theme_dark_mode(view: View):
             ))
 
 
-# ## Color Variables
+# ## Color variables
 # *Color variables* are pre-defined, named colors that match the app's theme.
 #
 # Color variables take the form `var(--name)`, or simply `$name`. For example, you can use
@@ -295,10 +295,26 @@ def theme_samples(view: View):
     theme_name = theme_names[0]
 
     while True:
-        theme_name, action = view(
-            box('Pick a theme', value=theme_name, options=theme_names, ),
+        response = view(
+            box('Pick a theme', value=theme_name, options=theme_names),
+            col(
+                # Sample fields
+                box('Enter text', placeholder='Enter some text'),
+                box('Enter a number', value=42),
+                box('Check this', mode='check', value=True),
+                box('Toggle this', mode='toggle', value=True),
+                box('Are you sure?', mode='radio', options=['Yes', 'No']),
+                box('Pick a flavor', mode='menu', options=['Chocolate', 'Vanilla'], value='Chocolate'),
+                box('Pick a value', mode='range', value=42, range=(0, 100)),
+                box('Pick a day', mode='day'),
+                box('Rate this', mode='rating'),
+                padding='2rem', border='$neutral-tertiary'
+            ),
             box(['Apply', 'Done'])
         )
+        theme_name = response[0]
+        action = response[len(response) - 1]
+
         if action == 'Done':
             break
         view.set(theme=theme_lookup.get(theme_name))
