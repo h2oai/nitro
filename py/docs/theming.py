@@ -53,14 +53,30 @@ def theme_basic(view: View):
 #
 # This is useful when you want to allow the app's end-users to switch app's theme.
 def theme_switching(view: View):
-    action = view(box(dict(change='Change my theme', dont_change='Done')))
-    if action == 'change':
-        view.set(theme=Theme(
-            background_color='#fff',
-            foreground_color='#3e3f4a',
-            accent_color='#ef534f',
-            accent_color_name='red'
-        ))
+    make_red = False
+    while True:
+        make_red, done = view(
+            box('Apply red theme', mode='toggle', value=make_red),
+            box(['Done'])
+        )
+
+        if done:
+            break
+
+        if make_red:
+            view.set(theme=Theme(
+                background_color='#fff',
+                foreground_color='#3e3f4a',
+                accent_color='#ef534f',
+                accent_color_name='red'
+            ))
+        else:
+            view.set(theme=Theme(
+                background_color='#fff',
+                foreground_color='#3e3f4a',
+                accent_color='#5a64f0',
+                accent_color_name='indigo'
+            ))
 
 
 # ## Color Variables
