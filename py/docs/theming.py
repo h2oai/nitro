@@ -79,6 +79,36 @@ def theme_switching(view: View):
             ))
 
 
+# ## Dark mode
+# A simple way to allow switching between dark and light modes is to exchange the `background_color` and
+# `foreground_color` in the theme, provided the `accent_color` works with both dark and light backgrounds.
+def theme_dark_mode(view: View):
+    dark_mode = False
+    while True:
+        dark_mode, done = view(
+            box('Dark Mode', mode='toggle', value=dark_mode),
+            box(['Done'])
+        )
+
+        if done:
+            break
+
+        if dark_mode:
+            view.set(theme=Theme(
+                background_color='#3e3f4a',  # dark background
+                foreground_color='#fff',  # light foreground
+                accent_color='#ef534f',
+                accent_color_name='red'
+            ))
+        else:
+            view.set(theme=Theme(
+                background_color='#fff',  # light background
+                foreground_color='#3e3f4a',  # dark foreground
+                accent_color='#ef534f',
+                accent_color_name='red'
+            ))
+
+
 # ## Color Variables
 # *Color variables* are pre-defined, named colors that match the app's theme.
 #
