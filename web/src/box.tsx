@@ -17,6 +17,7 @@ import { TagPicker } from './tag_picker';
 import { Textbox } from './textbox';
 import { TextBlock } from './text_block';
 import { TimePicker } from './time_picker';
+import { Toggle } from './toggle';
 import { BoxProps } from './ui';
 
 export const XBox = ({ context, box }: BoxProps) => { // recursive 
@@ -30,6 +31,8 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
       return options.length
         ? <Checklist context={context} box={box} />
         : <Checkbox context={context} box={box} />
+    case 'toggle':
+      return <Toggle context={context} box={box} />
     case 'color':
       return options.length
         ? <ColorPalette context={context} box={box} />

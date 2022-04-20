@@ -70,7 +70,7 @@ export type Setting = {
   theme?: Theme
 }
 
-export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
 
 export type Box = {
   xid: S
