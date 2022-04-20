@@ -21,6 +21,7 @@ export const Toggle = make(({ context, box }: BoxProps) => {
                         label={text}
                         defaultChecked={value ? true : false}
                         onChange={(_, checked) => onChecked(checked)}
+                        inlineLabel
                     />
                 </Container>
             )
