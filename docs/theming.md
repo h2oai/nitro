@@ -4,19 +4,21 @@
 
 ## Color Variables
 
-To use pre-defined, named colors that sit well with the app's theme, use *color variables*.
-Color variables take the form `var(--name)` or simply `$name`.
-For example, you can use `var(--red)` or `$red` instead of hard-coded colors like `red` or `#ff0000` or `rgb(255,0,0)`.
+*Color variables* are pre-defined, named colors that match the app's theme.
 
-Color variables can be passed wherever colors are accepted, like `background`, `border`, `color`, and so on.
+Color variables take the form `var(--name)`, or simply `$name`. For example, you can use
+`var(--red)` or `$red` instead of hard-coded colors like `red` or `#ff0000` or `rgb(255,0,0)`.
 
-There are 16 pre-defined *spectrum colors*, derived automatically from the theme's accent color, by matching its
-saturation and lightness. The naming of each color is indicative, and its hue might appear off depending on the
-position of the accent color's hue along the color spectrum. For example, `$red` could appear pink or orange!
+Color variables can be passed wherever colors are accepted, like `background=`, `border=`, `color=`, and so on.
+
+There are 16 pre-defined *spectrum colors*, derived automatically from the theme's accent color by matching its
+saturation and lightness. Spectrum colors are useful for data visualizations and infographics. The naming of each
+color is only indicative, and its hue might appear off depending on the position of the accent color's hue along the
+color spectrum. For example, `$red` could appear pink or orange!
 
 Additionally, there are pre-defined color variables for various *tones* of the theme's foreground (`$foreground`),
 background (`$background`) and accent (`$accent`) colors.
-Accent color tones are prefixed with `$accent-`, and neutral tones (grays) are prefixed with `$neutral-`.
+Accent tones are prefixed with `$accent-`, and neutral tones (grays) are prefixed with `$neutral-`.
 
 
 ```py
