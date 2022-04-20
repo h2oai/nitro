@@ -34,7 +34,7 @@ export const Dropdown = make(({ context, box }: BoxProps) => {
           label={text}
           placeholder={placeholder}
           options={items}
-          selectedKey={selectedKey}
+          defaultSelectedKey={selectedKey}
           errorMessage={error}
           required={required ? true : false}
           onChange={onChange}
