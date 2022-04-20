@@ -47,7 +47,7 @@ const
   },
   cycleHues = (color: S, n: U) => {
     const
-      c = getColorFromString(color)!,
+      c = getColorFromString(color) ?? getColorFromString(defaultScheme.primaryColor)!,
       hsl = hsv2hsl(c.h, c.s, c.v),
       h = hsl.h,
       s = Math.round(hsl.s),
