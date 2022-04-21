@@ -1,6 +1,6 @@
 # Nitro
 
-Nitro (N<sub>2</sub>O) is the quickest way to build web apps using Python. No front-end experience required.
+Nitro (N<sub>2</sub>O) is the simplest way to build web apps using Python. No front-end experience required.
 
 ![Nitro](docs/assets/banner.png)
 

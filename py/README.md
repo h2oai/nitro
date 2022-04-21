@@ -1,4 +1,4 @@
-Nitro is the quickest way to build web apps using Python. No front-end experience required.
+Nitro is the simplest way to build web apps using Python. No front-end experience required.
 
 [Documentation](https://nitro.h2o.ai) | [Source](https://github.com/h2oai/nitro)
 
