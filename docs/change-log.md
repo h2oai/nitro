@@ -17,6 +17,45 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.5.0
+
+Apr 21, 2022
+
+**Highlights**: Major improvements to typography; support for theming.
+
+- Added
+    - Theming: specify startup theme, switch themes dynamically, dark-mode, define custom themes.
+    - Auto-generated matching colors for data visualizations.
+    - Support for using color variables wherever colors are supported, e.g. `$red`.
+    - Customize app's CSS by editing `styles.css`.
+    - Toggle component (`box mode='toggle'`).
+    - Image component (`box mode='image'`), with support for different kinds of `fit`.
+    - Standalone checkboxes (`box mode='check'` without options).
+    - Docs pages now include screenshots for each example.
+    - Allow using images for box/row/col backgrounds.
+    - Improve connection, disconnection, error overlays.
+    - Basic lorem-ipsum placeholder text generator, helpful for mockups.
+    - The box/row/col `name` is translated to the HTML `data-name` attribute for automation.
+    - Add an advanced layout example. More to come in future versions!
+
+- Changed
+    - Major improvements to typography and layout
+    - Default to *Roboto Slab*, a friendlier-looking, geometric slab-serif font.
+    - Automatically render first button in a set as the primary button.
+    - Automatically mark first radio button in a set as selected.
+    - Automatically render a checkbox if box value is a boolean.
+
+- Fixed
+    - Bug: Dropdown does not display selected value when changed.
+    - Respect `align=` for horizontal button sets.
+
+## v0.4.2
+
+Apr 01, 2022
+
+- Fixed
+    - Fix Flask error 'PosixPath' object has no attribute 'rstrip' in Python < 3.8
+
 ## v0.4.1
 
 Apr 01, 2022
