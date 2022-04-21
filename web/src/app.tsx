@@ -155,7 +155,6 @@ export const App = make(({ client }: { client: Client }) => {
     },
     render = () => {
       const state = stateB()
-      console.log('state', state)
       switch (state.t) {
         case AppStateT.Connecting:
           return (
