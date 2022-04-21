@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
+import styled from 'styled-components';
 import { Body } from './body';
 import { Client } from './client';
 import { isN, newIncr, S, signal, U, xid } from './core';
@@ -45,6 +46,34 @@ const hello: Msg = {
     language: window.navigator.language, // XXX formalize
   }
 }
+
+const Overlay = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+const Danger = styled.div`
+    text-align: center;
+    padding: 2rem;
+    font-size: 2rem;
+    color: #842029;
+    background-color: #f8d7da;
+    border: 1px solid #f5c2c7;
+`
+const Warning = styled.div`
+    text-align: center;
+    padding: 2rem;
+    font-size: 2rem;
+    color: #664d03;
+    background-color: #fff3cd;
+    border: 1px solid #ffecb5;
+`
 
 export const App = make(({ client }: { client: Client }) => {
   const
@@ -117,7 +146,7 @@ export const App = make(({ client }: { client: Client }) => {
           stateB({ t: AppStateT.Disconnected, retry: e.retry })
           break
         case SocketEventT.Error:
-          stateB({ t: AppStateT.Invalid, error: e.error })
+          stateB({ t: AppStateT.Invalid, error: String(e.error) })
           break
       }
     },
@@ -126,13 +155,26 @@ export const App = make(({ client }: { client: Client }) => {
     },
     render = () => {
       const state = stateB()
+      console.log('state', state)
       switch (state.t) {
         case AppStateT.Connecting:
-          return <div>connecting</div>
+          return (
+            <Overlay>
+              <Warning>Connecting...</Warning>
+            </Overlay>
+          )
         case AppStateT.Disconnected:
-          return <div>disconnected, retrying in {state.retry} seconds </div>
+          return (
+            <Overlay>
+              <Warning>Disconnected, retrying in {state.retry} seconds...</Warning>
+            </Overlay>
+          )
         case AppStateT.Invalid:
-          return <div>error: {state.error}</div>
+          return (
+            <Overlay>
+              <Danger>Error: {state.error}</Danger>
+            </Overlay>
+          )
         case AppStateT.Connected:
           return (
             <div className='view'>
