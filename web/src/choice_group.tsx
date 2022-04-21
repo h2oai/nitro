@@ -14,19 +14,21 @@
 
 import { ChoiceGroup as FChoiceGroup, IChoiceGroupOption } from '@fluentui/react';
 import React from 'react';
+import { isB } from './core';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
 
 export const ChoiceGroup = make(({ context, box }: BoxProps) => {
   const
     { index, text, placeholder, required, options } = box,
+    hasNoPrimary = options.every(o => !isB(o.selected)),
     selected = selectedOf(box),
     items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
       key: String(value),
       text: String(text),
       iconProps: iconName ? { iconName } : undefined,
     })),
-    selectedKey = selected ? selected.value : undefined,
+    selectedKey = selected ? selected.value : (hasNoPrimary && options.length > 0) ? options[0].value : undefined,
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IChoiceGroupOption) => {
       if (option) context.capture(index, option?.key)
     },
@@ -43,7 +45,7 @@ export const ChoiceGroup = make(({ context, box }: BoxProps) => {
       )
     }
 
-  if (selected) context.capture(index, selected.value)
+  if (selectedKey) context.capture(index, selectedKey)
 
   return { render }
 })

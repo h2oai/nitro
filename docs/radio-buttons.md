@@ -8,6 +8,8 @@ Set `mode='radio'` to show radio buttons.
 
 `mode=` can be elided when there are 4-7 options.
 
+The first option is automatically selected.
+
 
 ```py
 choice = view(box('Choose a color', mode='radio', options=[

@@ -21,6 +21,8 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Set `mode='radio'` to show radio buttons.
 #
 # `mode=` can be elided when there are 4-7 options.
+#
+# The first option is automatically selected.
 def radio_basic(view: View):
     choice = view(box('Choose a color', mode='radio', options=[
         'blue', 'green', 'yellow', 'orange', 'red', 'black'
