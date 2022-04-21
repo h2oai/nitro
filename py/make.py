@@ -170,15 +170,7 @@ def build_funcs(groups: List[Group]) -> str:
                     p("```")
             p('""",')
 
-            has_output = True
-            for block in e.blocks:
-                if has_output and isinstance(block, Code):
-                    for line in block.lines:
-                        if 'view()' in line:
-                            has_output = False
-                            break
-
-            if has_output:
+            if not e.name.endswith('_noop'):
                 p("    '### Output',")
 
             p(')')
@@ -265,8 +257,9 @@ def write_docs(groups: List[Group]):
             p(f'## {e.title}')
             write_example(p, e)
             p()
-            p(f'![Screenshot](assets/screenshots/{e.name}.png)')
-            p()
+            if not e.name.endswith('_noop'):
+                p(f'![Screenshot](assets/screenshots/{e.name}.png)')
+                p()
         (docs_dir / f'{g.name}.md').write_text(str(p))
 
 

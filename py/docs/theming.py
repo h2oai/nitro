@@ -29,7 +29,7 @@ from h2o_nitro import View, box, row, col, option, lorem, Theme
 # `accent_color_name` must be one of `red`, `lava`, `orange`, `amber`, `yellow`, `lime`, `mint`, `green`, `teal`,
 # `cyan`, `sky`, `blue`, `indigo`, `purple`, `violet`, or `pink`.
 # This is used to automatically pick matching spectrum colors, useful for visualizations and infographics.
-def theme_basic(view: View):
+def theme_basic_noop(view: View):
     # App entry point
     def main(view: View):
         pass

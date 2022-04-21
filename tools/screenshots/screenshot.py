@@ -19,9 +19,10 @@ with sync_playwright() as p:
     print(f'Collected {len(example_names)} examples.')
 
     for name in example_names:
-        print(f'Capturing {name}...')
-        page.locator(f'[data-jump={name}]').click()
-        page.locator('[data-name=output]').screenshot(path=str(output_dir / f'{name}.png'))
-        page.locator('[data-name=contents]').click()
+        if not name.endswith('_noop'):
+            print(f'Capturing {name}...')
+            page.locator(f'[data-jump={name}]').click()
+            page.locator('[data-name=output]').screenshot(path=str(output_dir / f'{name}.png'))
+            page.locator('[data-name=contents]').click()
     browser.close()
     print('Done!')

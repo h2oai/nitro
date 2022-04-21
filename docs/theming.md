@@ -36,8 +36,6 @@ nitro = View(main, title='My App', caption='v1.0', theme=my_theme)
 ```
 
 
-![Screenshot](assets/screenshots/theme_basic.png)
-
 
 ## Theme switching
 
