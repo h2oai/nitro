@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from h2o_nitro import web_directory, View, box, option, row, col, ContextSwitchError, lorem, Theme, \
+from h2o_nitro import web_directory, View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \
     __version__ as version
 import simple_websocket
 from flask import Flask, request, send_from_directory
