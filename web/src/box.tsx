@@ -27,6 +27,7 @@ import { Droplist } from './droplist';
 import { Rating } from './rating';
 import { Slider } from './slider';
 import { Spinbox } from './spinbox';
+import { Table } from './table';
 import { TagPicker } from './tag_picker';
 import { Textbox } from './textbox';
 import { TextBlock } from './text_block';
@@ -71,6 +72,8 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
       return <Slider context={context} box={box} />
     case 'rating':
       return <Rating context={context} box={box} />
+    case 'table':
+      return <Table context={context} box={box} />
     case 'tag':
       return <TagPicker context={context} box={box} />
     case 'text':

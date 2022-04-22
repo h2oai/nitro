@@ -70,7 +70,7 @@ export type Setting = {
   theme?: Theme
 }
 
-export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating'
+export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating' | 'table'
 
 export type Box = {
   xid: S
@@ -80,6 +80,7 @@ export type Box = {
   mode?: BoxMode
   value?: V | Pair<V>
   options: Option[]
+  headers?: Header[]
   items?: Box[]
   row?: B
   tile?: S
@@ -126,4 +127,8 @@ export type Option = {
   caption?: S
   selected?: B
   options?: Option[]
+}
+
+export type Header = {
+  text: S
 }

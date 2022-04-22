@@ -42,6 +42,8 @@ const hasActions = (boxes: Box[]): B => { // recursive
           break
         case 'toggle':
           return true
+        case 'table':
+          return true
       }
     }
   }

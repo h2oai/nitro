@@ -90,6 +90,28 @@ N = Union[int, float]
 V = Union[N, str]
 
 
+class Header:
+    def __init__(
+            self,
+            text: str,
+    ):
+        self.text = text
+
+    def dump(self) -> dict:
+        return _clean(dict(
+            text=self.text,
+        ))
+
+
+header = Header
+
+Headers = Union[
+    Tuple[Header, ...],
+    List[Header],
+    Set[Header],
+]
+
+
 class Option:
     def __init__(
             self,
@@ -111,7 +133,7 @@ class Option:
         self.options = options
 
     def dump(self) -> dict:
-        d = dict(
+        return _clean(dict(
             value=self.value,
             text=self.text,
             name=self.name,
@@ -119,8 +141,7 @@ class Option:
             caption=self.caption,
             selected=self.selected,
             options=_dump(self.options),
-        )
-        return _clean(d)
+        ))
 
 
 option = Option
@@ -196,6 +217,7 @@ class Box:
             mode: Optional[str] = None,
             value: Optional[Value] = None,
             options: Optional[Options] = None,
+            headers: Optional[Headers] = None,
             items: Optional[Items] = None,
             row: Optional[bool] = None,
             tile: Optional[str] = None,
@@ -247,6 +269,7 @@ class Box:
         self.mode = mode
         self.value = value
         self.options = opts
+        self.headers = headers
         self.items = items
         self.row = row
         self.tile = tile
@@ -290,6 +313,7 @@ class Box:
             mode=self.mode,
             value=self.value,
             options=_dump(self.options),
+            headers=_dump(self.headers),
             items=_dump(self.items),
             row=self.row,
             tile=self.tile,
