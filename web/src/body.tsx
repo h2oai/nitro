@@ -33,8 +33,16 @@ const hasActions = (boxes: Box[]): B => { // recursive
       if (hasActions(box.items)) return true
     } else {
       const { mode } = box
-      if (mode === 'button' && box.options.length) return true
-      if (mode === 'md' && box.index >= 0) return true
+      switch (mode) {
+        case 'button':
+          if (box.options.length) return true
+          break
+        case 'md':
+          if (box.index >= 0) return true
+          break
+        case 'toggle':
+          return true
+      }
     }
   }
   return false
