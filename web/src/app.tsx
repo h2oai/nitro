@@ -59,20 +59,20 @@ const Overlay = styled.div`
   align-items: center;
 `
 const Danger = styled.div`
-    text-align: center;
-    padding: 2rem;
-    font-size: 2rem;
-    color: #842029;
-    background-color: #f8d7da;
-    border: 1px solid #f5c2c7;
+  text-align: center;
+  padding: 2rem;
+  font-size: 2rem;
+  color: #842029;
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
 `
 const Warning = styled.div`
-    text-align: center;
-    padding: 2rem;
-    font-size: 2rem;
-    color: #664d03;
-    background-color: #fff3cd;
-    border: 1px solid #ffecb5;
+  text-align: center;
+  padding: 2rem;
+  font-size: 2rem;
+  color: #664d03;
+  background-color: #fff3cd;
+  border: 1px solid #ffecb5;
 `
 
 export const App = make(({ client }: { client: Client }) => {
