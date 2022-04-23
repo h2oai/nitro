@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import React from 'react';
-import styled from 'styled-components';
 import { B, xid } from './core';
 import { Box } from './protocol';
 import { Send } from './socket';
@@ -43,7 +42,7 @@ const hasActions = (boxes: Box[]): B => { // recursive
         case 'toggle':
           return true
         case 'table':
-          return true
+          if (!box.multiple) return true // single-select
       }
     }
   }

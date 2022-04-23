@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { DetailsList, DetailsListLayoutMode, IColumn, Selection, Position, SelectionMode, SpinButton, CheckboxVisibility, Link } from '@fluentui/react';
+import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { valueFromRange, isS, toN, Dict, V, S, U } from './core';
+import { Dict, S, U, V } from './core';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
-type TableRow = Dict<any> & { value: V }
+type TableRow = Dict<any> & { value: S }
 
 export const Table = make(({ context, box }: BoxProps) => {
   const
@@ -28,7 +28,12 @@ export const Table = make(({ context, box }: BoxProps) => {
     capture = () => context.capture(index, Array.from(selectedValues)),
     selection = new Selection({
       onSelectionChanged: () => {
-        console.log('selection', selection.getSelectedCount(), selection.getSelection())
+        const items = selection.getSelection() as TableRow[]
+        selectedValues.clear()
+        for (const item of items) {
+          selectedValues.add(item.value)
+        }
+        capture()
       }
     }),
     onItemInvoked = (item: any) => {
@@ -68,7 +73,7 @@ export const Table = make(({ context, box }: BoxProps) => {
         items = options.map((o): TableRow => {
           const
             { value, options } = o,
-            row: TableRow = { value }
+            row: TableRow = { value: String(value) }
 
           if (options) {
             options.forEach((o, i) => row[`f${i}`] = o.text)
@@ -82,7 +87,6 @@ export const Table = make(({ context, box }: BoxProps) => {
           items={items}
           columns={columns}
           setKey="set"
-          // selectionMode={SelectionMode.multiple} // TODO
           layoutMode={DetailsListLayoutMode.justified}
           selection={selection}
           selectionPreservedOnEmptyClick={true}
