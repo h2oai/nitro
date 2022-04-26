@@ -18,36 +18,68 @@ import { Dict, S, U, V } from './core';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
-type TableRow = Dict<any> & { value: S }
+type TableRow = { key: S }
 
 export const Table = make(({ context, box }: BoxProps) => {
   const
-    { index, multiple } = box,
+    { index, headers, options, multiple } = box,
     selecteds = selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.capture(index, Array.from(selectedValues)),
-    selection = new Selection({
-      onSelectionChanged: () => {
-        const items = selection.getSelection() as TableRow[]
-        selectedValues.clear()
-        for (const item of items) {
-          selectedValues.add(item.value)
-        }
-        capture()
+    columns = (headers ?? []).map((h, i): IColumn => {
+      return {
+        key: `f${i}`,
+        name: h.text,
+        minWidth: 100, // TODO pick from width tuple
+        fieldName: `f${i}`,
+        // isRowHeader: i===0, 
+        isSorted: true,
+        // data: 'string', // TODO
+        // iconName: '' // TODO
+        // isIconOnly: true, // TODO
       }
     }),
+    items = options.map((o): TableRow => {
+      const
+        { value, options } = o,
+        row: TableRow = { key: String(value) }
+
+      if (options) {
+        options.forEach((o, i) => (row as Dict<any>)[`f${i}`] = o.text)
+      }
+
+      return row
+    }),
+    selection = (() => {
+      const selection = new Selection({
+        onSelectionChanged: () => {
+          const items = selection.getSelection() as TableRow[]
+          selectedValues.clear()
+          for (const item of items) {
+            selectedValues.add(item.key)
+          }
+          capture()
+        }
+      })
+      selection.setItems(items)
+
+      // Init selection
+      for (const key of Array.from(selectedValues)) selection.setKeySelected(key, true, false)
+
+      return selection
+    })(),
     onItemInvoked = (item: any) => {
       console.log('invoked', item)
     },
-    onRenderItemColumn = (item: TableRow, _?: U, column?: IColumn) => {
+    onRenderItemColumn = (row: TableRow, _?: U, column?: IColumn) => {
       if (!column) return <span />
 
-      const text = item[column.key]
+      const text = (row as Dict<any>)[column.key]
       if (multiple) {
         return <span>{text}</span>
       }
       const onClick = () => {
-        context.capture(index, item.value)
+        context.capture(index, row.key)
         context.submit()
       }
       return column.key === 'f0'
@@ -55,33 +87,6 @@ export const Table = make(({ context, box }: BoxProps) => {
         : <span>{text}</span>
     },
     render = () => {
-      const
-        { headers, options } = box,
-        columns = (headers ?? []).map((h, i): IColumn => {
-          return {
-            key: `f${i}`,
-            name: h.text,
-            minWidth: 100, // TODO pick from width tuple
-            fieldName: `f${i}`,
-            // isRowHeader: i===0, 
-            // isSorted: false, // TODO
-            // data: 'string', // TODO
-            // iconName: '' // TODO
-            // isIconOnly: true, // TODO
-          }
-        }),
-        items = options.map((o): TableRow => {
-          const
-            { value, options } = o,
-            row: TableRow = { value: String(value) }
-
-          if (options) {
-            options.forEach((o, i) => row[`f${i}`] = o.text)
-          }
-
-          return row
-        })
-
       return (
         <DetailsList
           items={items}
@@ -91,8 +96,8 @@ export const Table = make(({ context, box }: BoxProps) => {
           selection={selection}
           selectionPreservedOnEmptyClick={true}
           ariaLabelForSelectionColumn="Toggle selection"
-          ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-          checkButtonAriaLabel="select row"
+          ariaLabelForSelectAllCheckbox="Select All"
+          checkButtonAriaLabel="Select"
           onRenderItemColumn={onRenderItemColumn}
           onItemInvoked={onItemInvoked}
           selectionMode={multiple ? SelectionMode.multiple : SelectionMode.single}
@@ -100,5 +105,6 @@ export const Table = make(({ context, box }: BoxProps) => {
         />
       )
     }
+
   return { render }
 })
