@@ -94,12 +94,15 @@ class Header:
     def __init__(
             self,
             text: str,
+            primary: Optional[bool] = None,
     ):
         self.text = text
+        self.primary = primary
 
     def dump(self) -> dict:
         return _clean(dict(
             text=self.text,
+            primary=self.primary,
         ))
 
 

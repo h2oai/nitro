@@ -41,6 +41,28 @@ def table_basic(view: View):
     view(f'You chose {x}.')
 
 
+# ## Primary Column
+# By default, the first column's cells are clickable.
+# To set a different column as clickable, set `primary=True` on its header.
+def table_primary(view: View):
+    x = view(box(
+        mode='table',
+        headers=[
+            header('Flavor'),
+            header('Super cheap!', primary=True),
+            header('Extras'),
+        ],
+        options=[
+            option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+            option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+            option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+            option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+        ],
+    ))
+    view(f'You chose {x}.')
+
+
 # ## Multi-select
 # Set `multiple=True` to allow multiple rows to be selected.
 #

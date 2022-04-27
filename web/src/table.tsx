@@ -155,5 +155,7 @@ export const Table = make(({ context, box }: BoxProps) => {
       )
     }
 
+  console.log(primaryColumnKey)
+
   return { render }
 })

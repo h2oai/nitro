@@ -131,4 +131,5 @@ export type Option = {
 
 export type Header = {
   text: S
+  primary?: B
 }
