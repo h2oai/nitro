@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, Link, Selection, SelectionMode } from '@fluentui/react';
+import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { Dict, S, U, V } from './core';
+import { Dict, S, U } from './core';
 import { selectedsOf } from './options';
+import { Option } from './protocol';
 import { BoxProps, make } from './ui';
 
 type TableRow = { key: S }
+type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
 export const Table = make(({ context, box }: BoxProps) => {
   const
@@ -39,25 +41,70 @@ export const Table = make(({ context, box }: BoxProps) => {
         // isIconOnly: true, // TODO
       }
     }),
-    items = options.map((o): TableRow => {
+    isRow = ({ options }: Option) => {
+      if (!options) return false
+      for (const option of options) if (option.options?.length) return false
+      return true
+    },
+    createRow = (o: Option): TableRow => {
       const
         { value, options } = o,
         row: TableRow = { key: String(value) }
 
-      if (options) {
-        options.forEach((o, i) => (row as Dict<any>)[`f${i}`] = o.text)
-      }
+      if (options) options.forEach((o, i) => (row as Dict<any>)[`f${i}`] = o.text)
 
       return row
-    }),
-    selection = (() => {
+    },
+    createGroup = (o: Option): TableGroup => {
+      const
+        rows: TableRow[] = [],
+        groups: TableGroup[] = [],
+        { options } = o
+      if (options) {
+        for (const o of options) {
+          if (isRow(o)) {
+            rows.push(createRow(o))
+          } else {
+            groups.push(createGroup(o))
+          }
+        }
+      }
+      return { key: String(o.value), text: o.text ?? 'Group', rows, groups }
+    },
+    countItems = (groups: IGroup[]) => {
+      let count = 0
+      for (const group of groups) {
+        count += group.children?.length ? countItems(group.children) : group.count
+      }
+      return count
+    },
+    initItems = (): [TableRow[], IGroup[]] => {
+      const
+        { rows, groups } = createGroup({ value: '', options }),
+        items: TableRow[] = [],
+        igroups: IGroup[] = [],
+        flatten = (group: TableGroup, level: U): IGroup => {
+          const
+            startIndex = items.length,
+            children = group.groups.map(g => flatten(g, level + 1)),
+            count = children.length ? countItems(children) : group.rows.length,
+            igroup = { key: group.key, name: group.text, startIndex, count, level, children }
+          for (const row of group.rows) items.push(row)
+          return igroup
+        }
+
+      for (const group of groups) igroups.push(flatten(group, 0))
+      for (const row of rows) items.push(row)
+
+      return [items, igroups]
+    },
+    [items, groups] = initItems(),
+    initSelection = () => {
       const selection = new Selection({
         onSelectionChanged: () => {
           const items = selection.getSelection() as TableRow[]
           selectedValues.clear()
-          for (const item of items) {
-            selectedValues.add(item.key)
-          }
+          for (const item of items) selectedValues.add(item.key)
           capture()
         }
       })
@@ -67,7 +114,8 @@ export const Table = make(({ context, box }: BoxProps) => {
       for (const key of Array.from(selectedValues)) selection.setKeySelected(key, true, false)
 
       return selection
-    })(),
+    },
+    selection = initSelection(),
     onItemInvoked = (item: any) => {
       console.log('invoked', item)
     },
@@ -90,6 +138,7 @@ export const Table = make(({ context, box }: BoxProps) => {
       return (
         <DetailsList
           items={items}
+          groups={groups}
           columns={columns}
           setKey="set"
           layoutMode={DetailsListLayoutMode.justified}

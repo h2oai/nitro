@@ -32,7 +32,7 @@ def table_basic(view: View):
         ],
         options=[
             option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
-            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm.']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
             option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
             option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
             option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
@@ -55,7 +55,7 @@ def table_multiselect(view: View):
         ],
         options=[
             option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
-            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm.']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
             option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
             option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
             option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
@@ -77,7 +77,7 @@ def table_value(view: View):
         ],
         options=[
             option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
-            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm.']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
             option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
             option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
             option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
@@ -100,11 +100,71 @@ def table_selected(view: View):
         ],
         options=[
             option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
-            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm.']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
             option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles'], selected=True),
             option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
             option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry'], selected=True),
         ],
         multiple=True,
+    ))
+    view(f'You chose {x}.')
+
+
+# ## Grouped
+# To group rows, use nested options.
+def table_grouped(view: View):
+    x = view(box(
+        mode='table',
+        headers=[
+            header('Flavor'),
+            header('Super cheap!'),
+            header('Extras'),
+        ],
+        options=[
+            option('donuts', text='Donuts', options=[
+                option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+                option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+                option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+                option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+                option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+            ]),
+            option('coffee', text='Coffee', options=[
+                option('blonde', options=['Blonde Roast', '$1.49', 'Light and creamy']),
+                option('medium', options=['Medium Roast', '$1.49', 'House favorite']),
+                option('dark', options=['Dark Roast', '$1.49', 'Bold and sassy']),
+            ]),
+        ],
+    ))
+    view(f'You chose {x}.')
+
+
+# ## Multi-level
+# Rows can be nested at multiple levels.
+def table_grouped_multiple(view: View):
+    x = view(box(
+        mode='table',
+        headers=[
+            header('Flavor'),
+            header('Super cheap!'),
+            header('Extras'),
+        ],
+        options=[
+            option('donuts', text='Donuts', options=[
+                option('popular', text='Popular', options=[
+                    option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+                    option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+                ]),
+                option('specialty', text='Specialty', options=[
+                    option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+                    option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+                    option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+                ]),
+            ]),
+            option('coffee', text='Coffee', options=[
+                option('blonde', options=['Blonde Roast', '$1.49', 'Light and creamy']),
+                option('medium', options=['Medium Roast', '$1.49', 'House favorite']),
+                option('dark', options=['Dark Roast', '$1.49', 'Bold and sassy']),
+            ]),
+        ],
     ))
     view(f'You chose {x}.')
