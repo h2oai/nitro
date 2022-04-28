@@ -194,7 +194,7 @@ def table_basic(view: View):
 # To make a column's cells clickable, set `mode='link'` on its header.
 #
 # If set, `view()` returns the `value` of the clicked row.
-def table_primary(view: View):
+def table_clickable(view: View):
     choice = view(box(
         mode='table',
         headers=[

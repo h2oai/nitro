@@ -14,7 +14,7 @@
 
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { Dict, S, signal, U } from './core';
+import { B, Dict, S, signal, U } from './core';
 import { selectedsOf } from './options';
 import { Option } from './protocol';
 import { BoxProps, make } from './ui';
@@ -31,20 +31,44 @@ export const Table = make(({ context, box }: BoxProps) => {
     capture = () => context.capture(index, Array.from(selectedValues)),
     primaryColumnIndex = headers ? headers.findIndex(h => h.mode === 'link') : -1,
     primaryColumnKey = `f${primaryColumnIndex}`,
+    sortRows = (rows: TableRow[], key: S, descending?: B): TableRow[] => {
+      return rows.slice(0).sort((a: any, b: any) => ((descending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1));
+    },
+    onColumnClick = (ev: React.MouseEvent<HTMLElement>, clickedColumn: IColumn) => {
+      const
+        [currentColumns, currentItems] = contentB(),
+        columns = currentColumns.slice(0),
+        column = columns.filter(c => c.key === clickedColumn.key)[0]
+
+      columns.forEach(c => {
+        if (c === column) {
+          c.isSortedDescending = !c.isSortedDescending
+          c.isSorted = true
+        } else {
+          c.isSorted = false
+          c.isSortedDescending = true
+        }
+      })
+
+      const rows = sortRows(currentItems, column.fieldName!, column.isSortedDescending)
+
+      contentB([columns, rows])
+    },
     columns = (headers ?? []).map((h, i): IColumn => {
       return {
         key: `f${i}`,
         name: h.text,
         minWidth: 100, // TODO pick from width tuple
         fieldName: `f${i}`,
+        isSorted: false,
+        isSortedDescending: true,
         // isRowHeader: i===0, 
-        isSorted: true,
         // data: 'string', // TODO
         // iconName: '' // TODO
         // isIconOnly: true, // TODO
+        onColumnClick,
       }
     }),
-    columnsB = signal(columns),
     isRow = ({ options }: Option) => {
       if (!options) return false
       for (const option of options) if (option.options?.length) return false
@@ -75,14 +99,14 @@ export const Table = make(({ context, box }: BoxProps) => {
       }
       return { key: String(o.value), text: o.text ?? 'Group', rows, groups }
     },
-    countItems = (groups: IGroup[]) => {
+    countRows = (groups: IGroup[]) => {
       let count = 0
       for (const group of groups) {
-        count += group.children?.length ? countItems(group.children) : group.count
+        count += group.children?.length ? countRows(group.children) : group.count
       }
       return count
     },
-    initItems = (): [TableRow[], IGroup[]] => {
+    initRows = (): [TableRow[], IGroup[]] => {
       const
         { rows, groups } = createGroup({ value: '', options }),
         items: TableRow[] = [],
@@ -91,7 +115,7 @@ export const Table = make(({ context, box }: BoxProps) => {
           const
             startIndex = items.length,
             children = group.groups.map(g => flatten(g, level + 1)),
-            count = children.length ? countItems(children) : group.rows.length,
+            count = children.length ? countRows(children) : group.rows.length,
             igroup = { key: group.key, name: group.text, startIndex, count, level, children }
           for (const row of group.rows) items.push(row)
           return igroup
@@ -102,8 +126,7 @@ export const Table = make(({ context, box }: BoxProps) => {
 
       return [items, igroups]
     },
-    [items, groups] = initItems(),
-    itemsB = signal(items),
+    [rows, groups] = initRows(),
     initSelection = () => {
       const selection = new Selection({
         onSelectionChanged: () => {
@@ -113,7 +136,7 @@ export const Table = make(({ context, box }: BoxProps) => {
           capture()
         }
       })
-      selection.setItems(items)
+      selection.setItems(rows)
 
       // Init selection
       for (const key of Array.from(selectedValues)) selection.setKeySelected(key, true, false)
@@ -136,13 +159,12 @@ export const Table = make(({ context, box }: BoxProps) => {
         ? <Link href="" onClick={onClick}>{text}</Link>
         : <span>{text}</span>
     },
+    contentB = signal<[IColumn[], TableRow[]]>([columns, rows]),
     render = () => {
-      const
-        items = itemsB(),
-        columns = columnsB()
+      const [columns, rows] = contentB()
       return (
         <DetailsList
-          items={items}
+          items={rows}
           groups={groups.length ? groups : undefined}
           columns={columns}
           setKey="set"
@@ -159,5 +181,5 @@ export const Table = make(({ context, box }: BoxProps) => {
       )
     }
 
-  return { render }
+  return { render, contentB }
 })

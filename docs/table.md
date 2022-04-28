@@ -56,4 +56,4 @@ view(f'You chose {choice}.')
 ```
 
 
-![Screenshot](assets/screenshots/table_primary.png)
+![Screenshot](assets/screenshots/table_clickable.png)
