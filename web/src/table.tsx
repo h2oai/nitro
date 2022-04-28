@@ -105,6 +105,7 @@ export const Table = make(({ context, box }: BoxProps) => {
         isIconOnly,
         onColumnClick,
         data: h,
+        isResizable: resizable ?? true,
       }
     }),
     isRow = ({ options }: Option) => {
