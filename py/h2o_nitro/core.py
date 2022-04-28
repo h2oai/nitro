@@ -107,12 +107,14 @@ class Header:
             mode: Optional[str] = None,
             width: Optional[Sizing] = None,
             resizable: Optional[bool] = None,
+            multiline: Optional[bool] = None,
     ):
         self.text = text
         self.icon = icon
         self.mode = mode
         self.width = width
         self.resizable = resizable
+        self.multiline = multiline
 
     def dump(self) -> dict:
         return _clean(dict(
@@ -121,6 +123,7 @@ class Header:
             mode=self.mode,
             width=self.width,
             resizable=self.resizable,
+            multiline=self.multiline,
         ))
 
 

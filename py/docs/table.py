@@ -297,3 +297,22 @@ def table_header_resizable(view: View):
         ],
     ))
 
+
+# ## Enable multiline cells
+# Set `Multiline=True` to allow multiline text in a column's cells
+def table_column_multiline(view: View):
+    view(box(
+        mode='table',
+        headers=[
+            header('Flavor'),
+            header('Super cheap!'),
+            header('Extras', multiline=True),
+        ],
+        options=[
+            option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+            option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+            option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+            option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+        ],
+    ))

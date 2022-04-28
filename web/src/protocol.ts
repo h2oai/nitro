@@ -135,4 +135,5 @@ export type Header = {
   icon?: S
   width?: S | [S] | Pair<S> | Triple<S> // CSS width / [min] / [min, max] / [min, max, initial]
   resizable?: B
+  multiline?: B
 }
