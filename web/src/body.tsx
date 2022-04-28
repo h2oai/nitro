@@ -42,7 +42,7 @@ const hasActions = (boxes: Box[]): B => { // recursive
         case 'toggle':
           return true
         case 'table':
-          if (!box.multiple) return true // single-select
+          if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
       }
     }
   }

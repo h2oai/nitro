@@ -70,7 +70,7 @@ export type Setting = {
   theme?: Theme
 }
 
-export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating' | 'table'
+export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating' | 'list' | 'table'
 
 export type Box = {
   xid: S
@@ -131,5 +131,5 @@ export type Option = {
 
 export type Header = {
   text: S
-  primary?: B
+  mode?: 'link'
 }

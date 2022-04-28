@@ -14,7 +14,7 @@
 
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { Dict, S, U } from './core';
+import { Dict, S, signal, U } from './core';
 import { selectedsOf } from './options';
 import { Option } from './protocol';
 import { BoxProps, make } from './ui';
@@ -24,10 +24,13 @@ type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
 export const Table = make(({ context, box }: BoxProps) => {
   const
-    { index, headers, options, multiple } = box,
+    { mode, index, headers, options, multiple } = box,
+    isList = mode === 'list',
     selecteds = selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.capture(index, Array.from(selectedValues)),
+    primaryColumnIndex = headers ? headers.findIndex(h => h.mode === 'link') : -1,
+    primaryColumnKey = `f${primaryColumnIndex}`,
     columns = (headers ?? []).map((h, i): IColumn => {
       return {
         key: `f${i}`,
@@ -41,6 +44,7 @@ export const Table = make(({ context, box }: BoxProps) => {
         // isIconOnly: true, // TODO
       }
     }),
+    columnsB = signal(columns),
     isRow = ({ options }: Option) => {
       if (!options) return false
       for (const option of options) if (option.options?.length) return false
@@ -99,6 +103,7 @@ export const Table = make(({ context, box }: BoxProps) => {
       return [items, igroups]
     },
     [items, groups] = initItems(),
+    itemsB = signal(items),
     initSelection = () => {
       const selection = new Selection({
         onSelectionChanged: () => {
@@ -116,29 +121,29 @@ export const Table = make(({ context, box }: BoxProps) => {
       return selection
     },
     selection = initSelection(),
-    onItemInvoked = (item: any) => {
-      console.log('invoked', item)
-    },
     onRenderItemColumn = (row: TableRow, _?: U, column?: IColumn) => {
       if (!column) return <span />
 
       const text = (row as Dict<any>)[column.key]
-      if (multiple) {
-        return <span>{text}</span>
-      }
+      if (isList) return <span>{text}</span>
+
+      // Single-select
       const onClick = () => {
         context.capture(index, row.key)
         context.submit()
       }
-      return column.key === 'f0'
+      return column.key === primaryColumnKey
         ? <Link href="" onClick={onClick}>{text}</Link>
         : <span>{text}</span>
     },
     render = () => {
+      const
+        items = itemsB(),
+        columns = columnsB()
       return (
         <DetailsList
           items={items}
-          groups={groups}
+          groups={groups.length ? groups : undefined}
           columns={columns}
           setKey="set"
           layoutMode={DetailsListLayoutMode.justified}
@@ -148,14 +153,11 @@ export const Table = make(({ context, box }: BoxProps) => {
           ariaLabelForSelectAllCheckbox="Select All"
           checkButtonAriaLabel="Select"
           onRenderItemColumn={onRenderItemColumn}
-          onItemInvoked={onItemInvoked}
-          selectionMode={multiple ? SelectionMode.multiple : SelectionMode.single}
-          checkboxVisibility={multiple ? undefined : CheckboxVisibility.hidden}
+          selectionMode={isList ? multiple ? SelectionMode.multiple : SelectionMode.single : SelectionMode.none}
+          checkboxVisibility={isList ? undefined : CheckboxVisibility.hidden}
         />
       )
     }
-
-  console.log(primaryColumnKey)
 
   return { render }
 })

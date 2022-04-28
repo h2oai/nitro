@@ -73,6 +73,7 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     case 'rating':
       return <Rating context={context} box={box} />
     case 'table':
+    case 'list':
       return <Table context={context} box={box} />
     case 'tag':
       return <TagPicker context={context} box={box} />
