@@ -88,7 +88,7 @@ export const connect = (address: S, handle: SocketEventHandler): Socket => {
         if (!data) return
         try {
           const message = unmarshal(data)
-          console.log('recv', message) // XXX remove
+          // console.log('recv', message)
           handle({ t: SocketEventT.Message, message })
         } catch (error) {
           console.error(error)
@@ -101,7 +101,7 @@ export const connect = (address: S, handle: SocketEventHandler): Socket => {
       }
     },
     send = (message: any) => {
-      console.log('send', message) // XXX remove
+      // console.log('send', message)
       defer(0, () => {
         if (_socket && message) _socket.send(marshal(message))
       })
