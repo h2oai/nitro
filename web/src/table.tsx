@@ -15,8 +15,9 @@
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
 import { B, Dict, S, signal, U } from './core';
+import { markdown } from './markdown';
 import { selectedsOf } from './options';
-import { Option } from './protocol';
+import { Header, Option } from './protocol';
 import { BoxProps, make } from './ui';
 
 type TableRow = { key: S }
@@ -29,8 +30,8 @@ export const Table = make(({ context, box }: BoxProps) => {
     selecteds = selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.capture(index, Array.from(selectedValues)),
-    primaryColumnIndex = headers ? headers.findIndex(h => h.mode === 'link') : -1,
-    primaryColumnKey = `f${primaryColumnIndex}`,
+    linkColumnIndex = headers ? headers.findIndex(h => h.mode === 'link') : -1,
+    linkColumnKey = `f${linkColumnIndex}`,
     sortRows = (rows: TableRow[], key: S, descending?: B): TableRow[] => {
       return rows.slice(0).sort((a: any, b: any) => ((descending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1));
     },
@@ -67,6 +68,7 @@ export const Table = make(({ context, box }: BoxProps) => {
         // iconName: '' // TODO
         // isIconOnly: true, // TODO
         onColumnClick,
+        data: h,
       }
     }),
     isRow = ({ options }: Option) => {
@@ -144,20 +146,33 @@ export const Table = make(({ context, box }: BoxProps) => {
       return selection
     },
     selection = initSelection(),
+    renderCell = (text: S, h?: Header) => {
+      if (h) {
+        switch (h.mode) {
+          case 'md':
+            {
+              const [__html, _] = markdown(text)
+              return <span className='table-md' dangerouslySetInnerHTML={{ __html }} />
+            }
+            break
+        }
+      }
+      return <span>{text}</span>
+    },
     onRenderItemColumn = (row: TableRow, _?: U, column?: IColumn) => {
       if (!column) return <span />
 
       const text = (row as Dict<any>)[column.key]
-      if (isList) return <span>{text}</span>
+      if (isList) return renderCell(text, column.data as Header)
 
-      // Single-select
+      // mode = 'table'
       const onClick = () => {
         context.capture(index, row.key)
         context.submit()
       }
-      return column.key === primaryColumnKey
+      return column.key === linkColumnKey
         ? <Link href="" onClick={onClick}>{text}</Link>
-        : <span>{text}</span>
+        : renderCell(text, column.data as Header)
     },
     contentB = signal<[IColumn[], TableRow[]]>([columns, rows]),
     render = () => {

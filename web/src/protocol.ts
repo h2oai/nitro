@@ -131,5 +131,5 @@ export type Option = {
 
 export type Header = {
   text: S
-  mode?: 'link'
+  mode?: 'md' | 'link'
 }

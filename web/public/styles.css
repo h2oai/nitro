@@ -311,6 +311,10 @@ body {
     content: ']';
 }
 
+.table-md p {
+    margin: 0;
+}
+
 /* Layout */
 
 .art {
