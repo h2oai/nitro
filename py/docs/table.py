@@ -37,7 +37,7 @@ def table_basic(view: View):
     ))
 
 
-# ## Links
+# ## Make rows clickable
 # To make rows clickable, set `mode='link'` on a header.
 #
 # If set, `view()` returns the `value` of the clicked row.
@@ -60,7 +60,7 @@ def table_clickable(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Markdown
+# ## Use markdown in cells
 # By default, cells are interpreted as plain text. To interpret them as markdown, set `mode='md'` on the header.
 def table_markdown(view: View):
     choice = view(box(
@@ -82,7 +82,7 @@ def table_markdown(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Selectable
+# ## Enable multi-select
 # Set `multiple=True` to allow rows to be selected. This effectively allow a table to be used in place of a
 # dropdown menu, especially useful when each item has multiple attributes.
 #
@@ -107,7 +107,7 @@ def table_multiselect(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Single-select
+# ## Enable single select
 # Set `multiple=False` to allow at most one row to be selected.
 #
 # The return value is the `value` of the selected row.
@@ -131,7 +131,7 @@ def table_singleselect(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Value
+# ## Set selected rows
 # Set `value=` to pre-select one or more rows.
 def table_value(view: View):
     choices = view(box(
@@ -154,7 +154,7 @@ def table_value(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Selected
+# ## Select individual rows
 # Alternatively, set `selected=True` on a row to pre-select the row.
 def table_selected(view: View):
     choices = view(box(
@@ -176,7 +176,7 @@ def table_selected(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Grouped
+# ## Group rows
 # To group rows, use nested options.
 def table_grouped(view: View):
     choice = view(box(
@@ -204,7 +204,7 @@ def table_grouped(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Multi-level Grouped
+# ## Group rows at multiple levels
 # Rows can be nested at multiple levels.
 def table_multilevel(view: View):
     choice = view(box(
@@ -236,7 +236,7 @@ def table_multilevel(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Column Width
+# ## Set column width
 # Set `width=` to set the minimum width of the column.
 #
 # To set both minimum and maximum widths, set `width=` to a `(min, max)` tuple.

@@ -29,7 +29,7 @@ view(box(
 ![Screenshot](assets/screenshots/table_basic.png)
 
 
-## Links
+## Make rows clickable
 
 To make rows clickable, set `mode='link'` on a header.
 
@@ -59,7 +59,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/table_clickable.png)
 
 
-## Markdown
+## Use markdown in cells
 
 By default, cells are interpreted as plain text. To interpret them as markdown, set `mode='md'` on the header.
 
@@ -88,7 +88,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/table_markdown.png)
 
 
-## Selectable
+## Enable multi-select
 
 Set `multiple=True` to allow rows to be selected. This effectively allow a table to be used in place of a
 dropdown menu, especially useful when each item has multiple attributes.
@@ -120,7 +120,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/table_multiselect.png)
 
 
-## Single-select
+## Enable single select
 
 Set `multiple=False` to allow at most one row to be selected.
 
@@ -151,7 +151,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/table_singleselect.png)
 
 
-## Value
+## Set selected rows
 
 Set `value=` to pre-select one or more rows.
 
@@ -181,7 +181,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/table_value.png)
 
 
-## Selected
+## Select individual rows
 
 Alternatively, set `selected=True` on a row to pre-select the row.
 
@@ -210,7 +210,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/table_selected.png)
 
 
-## Grouped
+## Group rows
 
 To group rows, use nested options.
 
@@ -245,7 +245,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/table_grouped.png)
 
 
-## Multi-level Grouped
+## Group rows at multiple levels
 
 Rows can be nested at multiple levels.
 
@@ -284,7 +284,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/table_multilevel.png)
 
 
-## Column Width
+## Set column width
 
 Set `width=` to set the minimum width of the column.
 
