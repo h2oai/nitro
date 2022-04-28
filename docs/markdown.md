@@ -54,7 +54,7 @@ Any uniform indentation is automatically ignored.
 ![Screenshot](assets/screenshots/markdown_basic.png)
 
 
-## Links as inputs
+## Handle clicks on links
 
 Local links in markdown content behave just like any other input.
 
@@ -77,7 +77,7 @@ view(f'You clicked on {choice}.')
 ![Screenshot](assets/screenshots/markdown_links.png)
 
 
-## Tables
+## Show tables
 
 Draw tables using `---` and `|`.
 
@@ -118,7 +118,7 @@ view('''
 ![Screenshot](assets/screenshots/markdown_table.png)
 
 
-## Tables from lists
+## Create tables from lists
 
 It's often easier to construct tables from lists of things, as shown below.
 
@@ -148,7 +148,7 @@ def make_table(rows):
 ![Screenshot](assets/screenshots/show_table.png)
 
 
-## Syntax highlighting
+## Syntax highlighting in code blocks
 
 Code blocks in Markdown support syntax highlighting for 180+ languages using [highlight.js](https://highlightjs.org/).
 

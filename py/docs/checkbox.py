@@ -24,7 +24,7 @@ def checkbox_basic(view: View):
     view(f'Keep me signed in: {keep_signed_in}.')
 
 
-# ## Value
+# ## Set initial value
 # Set `value=True` to pre-select the checkbox.
 #
 # The mode setting `mode='check'` is implied, and can be elided.

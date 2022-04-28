@@ -25,7 +25,7 @@ def day_basic(view: View):
     view(f'You picked {date}.')
 
 
-# ## Value
+# ## Set initial date
 # Set `value=` to pre-select a date.
 #
 # Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
@@ -35,28 +35,28 @@ def day_value(view: View):
     view(f'You picked {date}.')
 
 
-# ## Min
+# ## Set min date
 # Set `min=` to specify a minimum date.
 def day_min(view: View):
     date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01'))
     view(f'You picked {date}.')
 
 
-# ## Max
+# ## Set max date
 # Set `max=` to specify a maximum date.
 def day_max(view: View):
     date = view(box('Pick a date', mode='day', value='2021-10-10', max='2022-12-31'))
     view(f'You picked {date}.')
 
 
-# ## Min and Max
+# ## Combine min and max dates
 # Set both `min=` and `max=` to restrict selection between two dates.
 def day_min_max(view: View):
     date = view(box('Pick a date', mode='day', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {date}.')
 
 
-# ## Range
+# ## Set range
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.

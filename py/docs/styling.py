@@ -17,7 +17,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # # Styling
 
-# ## Background Color
+# ## Set background color
 # Set `background=` to apply a background color.
 #
 # The text color is automatically changed to a contrasting color if not specified.
@@ -36,7 +36,7 @@ def styling_background(view: View):
     )
 
 
-# ## Text Color
+# ## Set text color
 # Set `color=` to change the text color.
 def styling_color(view: View):
     text = '''
@@ -50,7 +50,7 @@ def styling_color(view: View):
     )
 
 
-# ## Border Color
+# ## Set border color
 # Set `border=` to add a border.
 #
 # A padding is automatically applied if not specified.
@@ -66,7 +66,7 @@ def styling_border(view: View):
     )
 
 
-# ## Align Text
+# ## Set text alignment
 # Set `align=` to `left`, `right`, `center` or `justify` to align text.
 def styling_align(view: View):
     text = '''
@@ -84,7 +84,7 @@ def styling_align(view: View):
     )
 
 
-# ## Sizing
+# ## Set width and height
 # Nitro provides extensive control over how items are sized and spaced, using `width`, `height`, `margin`, `padding`,
 # and `gap`.
 #
@@ -121,7 +121,7 @@ def styling_size(view: View):
     )
 
 
-# ## Margin
+# ## Set margins
 # Set `margin=` to add a margin around each item.
 #
 # Top, right, bottom, left margins can be controlled independently, and are specified
@@ -150,7 +150,7 @@ def styling_margin(view: View):
     view(col(*[row(b, border='#000', padding=0) for b in boxes]))
 
 
-# ## Padding
+# ## Set padding
 # Set `padding=` to control the padding (inset) inside each item.
 #
 # Top, right, bottom, left paddings can be controlled independently, and are specified

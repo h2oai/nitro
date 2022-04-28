@@ -21,9 +21,9 @@ view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
 ![Screenshot](assets/screenshots/color_basic.png)
 
 
-## Value
+## Set initial color
 
-Set `value=` to pre-select a color.
+Set `value=` to set the initial color.
 
 A color value can be:
 

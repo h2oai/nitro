@@ -18,7 +18,7 @@ view(f'You entered {x}.')
 ![Screenshot](assets/screenshots/textbox_basic.png)
 
 
-## Value
+## Set initial value
 
 Set `value=` to prefill the box with a value.
 
@@ -34,7 +34,7 @@ view(f'Your speed is {speed} km/h.')
 ![Screenshot](assets/screenshots/textbox_value.png)
 
 
-## Label
+## Set a label
 
 Any text passed to `box()` is used as a label.
 
@@ -48,7 +48,7 @@ view(f'Your speed is {speed} km/h.')
 ![Screenshot](assets/screenshots/textbox_label.png)
 
 
-## Placeholder
+## Show placeholder text
 
 Use `placeholder=` to show placeholder text inside the box.
 
@@ -62,7 +62,7 @@ view(f'Your speed is {speed} km/h.')
 ![Screenshot](assets/screenshots/textbox_placeholder.png)
 
 
-## Required
+## Mark as required
 
 Set `required=True` to indicate that input is required.
 
@@ -76,7 +76,7 @@ view(f'Your speed is {speed} km/h.')
 ![Screenshot](assets/screenshots/textbox_required.png)
 
 
-## Input Mask
+## Control input format
 
 Set `mask=` to specify an input mask. An input mask is used to format the text field
 for the expected entry.
@@ -101,7 +101,7 @@ To construct the input mask:
 ![Screenshot](assets/screenshots/textbox_mask.png)
 
 
-## Icon
+## Show an icon
 
 Set `icon=` to show an icon at the end of the box.
 
@@ -115,7 +115,7 @@ view(f'You set a filter on `{phrase}`.')
 ![Screenshot](assets/screenshots/textbox_icon.png)
 
 
-## Prefix
+## Set prefix text
 
 Set `prefix=` to show a prefix at the start of the box.
 
@@ -129,7 +129,7 @@ view(f'Your website is https://{website}.')
 ![Screenshot](assets/screenshots/textbox_prefix.png)
 
 
-## Suffix
+## Set suffix text
 
 Set `suffix=` to show a suffix at the end of the box.
 
@@ -143,7 +143,7 @@ view(f'Your website is {website}.com.')
 ![Screenshot](assets/screenshots/textbox_suffix.png)
 
 
-## Prefix and Suffix
+## Set both prefix and suffix texts
 
 A textbox can show both a prefix and a suffix at the same time.
 
@@ -157,7 +157,7 @@ view(f'Your website is https://{website}.com.')
 ![Screenshot](assets/screenshots/textbox_prefix_suffix.png)
 
 
-## Error
+## Show an error message
 
 Set `error=` to show an error message below the box.
 
@@ -170,7 +170,7 @@ speed = view(box('Speed (km/h)', error='Invalid input'))
 ![Screenshot](assets/screenshots/textbox_error.png)
 
 
-## Password
+## Accept a password
 
 Set `password=True` when accepting passwords and other confidential inputs.
 
@@ -184,7 +184,7 @@ view(f'Your password `{password}` is not strong enough!')
 ![Screenshot](assets/screenshots/textbox_password.png)
 
 
-## Multiple lines
+## Enable multiple lines
 
 Set `lines=` to show a multi-line text box (also called a *text area*).
 

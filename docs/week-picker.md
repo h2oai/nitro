@@ -16,7 +16,7 @@ view(f'You picked {week}.')
 ![Screenshot](assets/screenshots/week_basic.png)
 
 
-## Value
+## Set initial week
 
 Set `value=` to pre-select a week.
 
@@ -33,7 +33,7 @@ view(f'You picked {week}.')
 ![Screenshot](assets/screenshots/week_value.png)
 
 
-## Min
+## Set min date
 
 Set `min=` to specify a minimum date.
 
@@ -47,7 +47,7 @@ view(f'You picked {week}.')
 ![Screenshot](assets/screenshots/week_min.png)
 
 
-## Max
+## Set max date
 
 Set `max=` to specify a maximum date.
 
@@ -61,7 +61,7 @@ view(f'You picked {week}.')
 ![Screenshot](assets/screenshots/week_max.png)
 
 
-## Min and Max
+## Combine min and max dates
 
 Set both `min=` and `max=` to restrict selection between two dates.
 
@@ -75,7 +75,7 @@ view(f'You picked {week}.')
 ![Screenshot](assets/screenshots/week_min_max.png)
 
 
-## Range
+## Set range
 
 Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 

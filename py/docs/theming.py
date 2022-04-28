@@ -17,7 +17,7 @@ from h2o_nitro import View, box, row, col, option, lorem, Theme
 
 # # Theming
 
-# ## Setting a theme
+# ## Set initial theme
 # Pass `theme=` when creating the app's `View()`.
 #
 # Use `Theme()` to define a theme.
@@ -48,7 +48,7 @@ def theme_basic_noop(view: View):
     view()
 
 
-# ## Theme switching
+# ## Switch theme dynamically
 # Use `view.set(theme=)` to change the theme dynamically.
 #
 # This is useful when you want to allow the app's end-users to switch app's theme.
@@ -109,7 +109,7 @@ def theme_dark_mode(view: View):
             ))
 
 
-# ## Color variables
+# ## Use color variables
 # *Color variables* are pre-defined, named colors that match the app's theme.
 #
 # Color variables take the form `var(--name)`, or simply `$name`. For example, you can use
@@ -187,7 +187,7 @@ def theme_colors(view: View):
     )
 
 
-# ## Sample themes
+# ## Some sample themes
 # This example provides some sample themes that you can use in your own app.
 def theme_samples(view: View):
     themes = [

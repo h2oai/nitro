@@ -19,7 +19,7 @@ view(
 ![Screenshot](assets/screenshots/layout_basic.png)
 
 
-## Rows
+## Lay out horizontally
 
 Use `row()` to lay out multiple items horizontally, left to right.
 
@@ -51,7 +51,7 @@ view(
 ![Screenshot](assets/screenshots/layout_row.png)
 
 
-## Columns
+## Lay out vertically
 
 Use `col()` to lay out multiple items vertically, top to bottom.
 
@@ -84,7 +84,7 @@ view(
 ![Screenshot](assets/screenshots/layout_col.png)
 
 
-## Tile
+## Control tiling
 
 Set `tile=` to control how items inside a view, row, or column are tiled along the main axis.
 
@@ -129,7 +129,7 @@ view(
 ![Screenshot](assets/screenshots/layout_tile.png)
 
 
-## Cross Tile
+## Control cross tiling
 
 Set `cross_tile=` to control how items inside a view, row, or column are tiled along the cross axis.
 
@@ -164,7 +164,7 @@ view(
 ![Screenshot](assets/screenshots/layout_cross_tile.png)
 
 
-## Gap
+## Control spacing
 
 Set `gap=` to control the spacing between items. The default gap is `10` or `'10px'`.
 
@@ -182,7 +182,7 @@ view(
 ![Screenshot](assets/screenshots/layout_gap.png)
 
 
-## Wrap
+## Control wrapping
 
 Set `wrap=` to control how items are wrapped inside a view, row, or column.
 
@@ -224,7 +224,7 @@ view(
 ![Screenshot](assets/screenshots/layout_wrap.png)
 
 
-## Grow and Shrink
+## Grow or shrink some items
 
 Set `grow=` or `shrink=` to specify what amount of the available space the item should take up
 inside a view, row, or column.
@@ -296,7 +296,7 @@ view(
 ![Screenshot](assets/screenshots/layout_grow_shrink.png)
 
 
-## Vertical Alignment
+## Center content vertically
 
 Use `tile='center'` to center content vertically inside a box.
 

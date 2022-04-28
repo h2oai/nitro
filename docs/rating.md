@@ -18,7 +18,7 @@ view(f'Your rating was {stars} stars.')
 ![Screenshot](assets/screenshots/rating_basic.png)
 
 
-## Value
+## Set initial rating
 
 Set `value=` to specify a default value.
 
@@ -32,7 +32,7 @@ view(f'Your rating was {stars} stars.')
 ![Screenshot](assets/screenshots/rating_value.png)
 
 
-## Min
+## Allow zero stars
 
 Set `min=0` to allow zero stars.
 
@@ -46,7 +46,7 @@ view(f'Your rating was {stars} stars.')
 ![Screenshot](assets/screenshots/rating_min.png)
 
 
-## Max
+## Set maximum number of stars
 
 Set `max=` to increase the number of stars displayed.
 
@@ -60,7 +60,7 @@ view(f'Your rating was {stars} stars.')
 ![Screenshot](assets/screenshots/rating_max.png)
 
 
-## Min and max
+## Combine min and max stars
 
 `min=` and `max=` can be combined.
 
@@ -74,7 +74,7 @@ view(f'Your rating was {stars} stars.')
 ![Screenshot](assets/screenshots/rating_min_max.png)
 
 
-## Range
+## Set range
 
 Set `range=` to a `(min, max)` tuple to control min/max stars.
 

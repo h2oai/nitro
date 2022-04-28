@@ -31,7 +31,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/options_basic.png)
 
 
-## From sequence
+## Create options from a sequence
 
 If `options` is a sequence (tuple, set or list), the elements of the sequence are used as options.
 
@@ -47,7 +47,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/options_sequence.png)
 
 
-## From string
+## Create options from a string
 
 If `options=` is set to a string, each word in the string is used as an option.
 
@@ -64,7 +64,7 @@ In other words, `'green yellow orange red'` is shorthand for `['green', 'yellow'
 ![Screenshot](assets/screenshots/options_string.png)
 
 
-## From tuples
+## Create options from tuples
 
 `options=` can also be specified as a sequence of `(value, text)` tuples.
 
@@ -86,7 +86,7 @@ Here, `(value, text)` is shorthand for `option(value, text)`.
 ![Screenshot](assets/screenshots/options_tuples.png)
 
 
-## From dictionary
+## Create options from a dictionary
 
 `options=` can also be specified as a `dict` of `value: text` entries.
 
@@ -108,7 +108,7 @@ This is the most concise way to pass options where labels differ from values.
 ![Screenshot](assets/screenshots/options_dict.png)
 
 
-## Selected
+## Mark options as selected
 
 Set `selected=True` to pre-select an option.
 
@@ -129,7 +129,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/options_selected.png)
 
 
-## Value
+## Set initial selection
 
 Set `value=` on the box to pre-select an option having that value.
 

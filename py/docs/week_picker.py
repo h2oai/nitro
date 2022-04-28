@@ -24,7 +24,7 @@ def week_basic(view: View):
     view(f'You picked {week}.')
 
 
-# ## Value
+# ## Set initial week
 # Set `value=` to pre-select a week.
 #
 # Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
@@ -34,28 +34,28 @@ def week_value(view: View):
     view(f'You picked {week}.')
 
 
-# ## Min
+# ## Set min date
 # Set `min=` to specify a minimum date.
 def week_min(view: View):
     week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01'))
     view(f'You picked {week}.')
 
 
-# ## Max
+# ## Set max date
 # Set `max=` to specify a maximum date.
 def week_max(view: View):
     week = view(box('Pick a week', mode='week', value='2021-10-10', max='2022-12-31'))
     view(f'You picked {week}.')
 
 
-# ## Min and Max
+# ## Combine min and max dates
 # Set both `min=` and `max=` to restrict selection between two dates.
 def week_min_max(view: View):
     week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {week}.')
 
 
-# ## Range
+# ## Set range
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.

@@ -131,7 +131,7 @@ def table_singleselect(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Set selected rows
+# ## Set initial selection
 # Set `value=` to pre-select one or more rows.
 def table_value(view: View):
     choices = view(box(
@@ -154,7 +154,7 @@ def table_value(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Select individual rows
+# ## Mark rows as selected
 # Alternatively, set `selected=True` on a row to pre-select the row.
 def table_selected(view: View):
     choices = view(box(

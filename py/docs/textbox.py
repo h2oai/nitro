@@ -26,7 +26,7 @@ def textbox_basic(view: View):
     view(f'You entered {x}.')
 
 
-# ## Value
+# ## Set initial value
 # Set `value=` to prefill the box with a value.
 #
 # `mode='text'` can be elided if `value=` is set.
@@ -35,28 +35,28 @@ def textbox_value(view: View):
     view(f'Your speed is {speed} km/h.')
 
 
-# ## Label
+# ## Set a label
 # Any text passed to `box()` is used as a label.
 def textbox_label(view: View):
     speed = view(box('Speed', value='60'))
     view(f'Your speed is {speed} km/h.')
 
 
-# ## Placeholder
+# ## Show placeholder text
 # Use `placeholder=` to show placeholder text inside the box.
 def textbox_placeholder(view: View):
     speed = view(box('Speed', placeholder='0 km/h'))
     view(f'Your speed is {speed} km/h.')
 
 
-# ## Required
+# ## Mark as required
 # Set `required=True` to indicate that input is required.
 def textbox_required(view: View):
     speed = view(box('Speed (km/h)', required=True))
     view(f'Your speed is {speed} km/h.')
 
 
-# ## Input Mask
+# ## Control input format
 # Set `mask=` to specify an input mask. An input mask is used to format the text field
 # for the expected entry.
 #
@@ -73,48 +73,48 @@ def textbox_mask(view: View):
 # - Use `*` to indicate a letter or number.
 # - Use a backslash to escape any character.
 
-# ## Icon
+# ## Show an icon
 # Set `icon=` to show an icon at the end of the box.
 def textbox_icon(view: View):
     phrase = view(box('Filter results containing:', icon='Filter'))
     view(f'You set a filter on `{phrase}`.')
 
 
-# ## Prefix
+# ## Set prefix text
 # Set `prefix=` to show a prefix at the start of the box.
 def textbox_prefix(view: View):
     website = view(box('Website', prefix='https://', value='example.com'))
     view(f'Your website is https://{website}.')
 
 
-# ## Suffix
+# ## Set suffix text
 # Set `suffix=` to show a suffix at the end of the box.
 def textbox_suffix(view: View):
     website = view(box('Website', suffix='.com', value='example'))
     view(f'Your website is {website}.com.')
 
 
-# ## Prefix and Suffix
+# ## Set both prefix and suffix texts
 # A textbox can show both a prefix and a suffix at the same time.
 def textbox_prefix_suffix(view: View):
     website = view(box('Website', prefix='https://', suffix='.com', value='example'))
     view(f'Your website is https://{website}.com.')
 
 
-# ## Error
+# ## Show an error message
 # Set `error=` to show an error message below the box.
 def textbox_error(view: View):
     speed = view(box('Speed (km/h)', error='Invalid input'))
 
 
-# ## Password
+# ## Accept a password
 # Set `password=True` when accepting passwords and other confidential inputs.
 def textbox_password(view: View):
     password = view(box('Password field', password=True))
     view(f'Your password `{password}` is not strong enough!')
 
 
-# ## Multiple lines
+# ## Enable multiple lines
 # Set `lines=` to show a multi-line text box (also called a *text area*).
 def textarea(view: View):
     bio = view(box('Bio:', lines=5))

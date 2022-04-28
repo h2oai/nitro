@@ -25,7 +25,7 @@ def image_basic(view: View):
 
 # Photo by [Ju Guan](https://unsplash.com/@guanju223?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
 
-# ## Resize
+# ## Set width and height
 # Images can be resized by setting `width=` or `height=` or both.
 #
 # - If only `width=` or only `height=` are set, the image is scaled proportionally.
@@ -38,7 +38,7 @@ def image_resize(view: View):
     )
 
 
-# ## Fit
+# ## Scale and clip images
 # Set `fit=` to control how the image should be resized to fit its box.
 #
 # - `fit='cover'` (default) scales and *clips* the image while preserving its aspect ratio.
@@ -59,7 +59,7 @@ def image_fit(view: View):
     )
 
 
-# ## Background
+# ## Use as background
 # If a box contains content, its image is used as a background.
 #
 # Set `fit=` to control how the background should be resized to fit the box.
@@ -77,7 +77,7 @@ def image_background(view: View):
     )
 
 
-# ## Pattern
+# ## Use as pattern
 # `image=` can also be set to a [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs)
 # with a [base64-encoded](https://en.wikipedia.org/wiki/Base64) image.
 #

@@ -28,7 +28,7 @@ def tag_picker_basic(view: View):
     view(f'You chose {tags}.')
 
 
-# ## Value
+# ## Set initial tags
 # Set `value=` to pre-select options having those values.
 def tag_picker_value(view: View):
     tags = view(box(
@@ -40,7 +40,7 @@ def tag_picker_value(view: View):
     view(f'You chose {tags}.')
 
 
-# ## Selected
+# ## Mark tags as selected
 # Set `selected=True` to pre-select one or more options.
 def tag_picker_selected(view: View):
     tags = view(box('Choose some tags', mode='tag', options=[

@@ -23,7 +23,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/multi_dropdown_basic.png)
 
 
-## Value
+## Set initial selection
 
 Set `value=` to pre-select options having those values.
 
@@ -43,7 +43,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/multi_dropdown_value.png)
 
 
-## Selected
+## Mark options as selected
 
 Alternatively, set `selected=True` to pre-select one or more options.
 

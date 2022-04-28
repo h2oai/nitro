@@ -44,7 +44,7 @@ def format_multiline_content(view: View):
     ''')
 
 
-# ## Show items at once
+# ## Show multiple items
 # Pass multiple arguments to `view()` to lay them out top to bottom.
 def display_multiple(view: View):
     view(
@@ -54,7 +54,7 @@ def display_multiple(view: View):
     )
 
 
-# ## Show items one at a time
+# ## Show multiple items, one at a time
 # Call `view()` multiple times to show items one at a time.
 #
 # The following example steps through three different pages.
@@ -94,7 +94,7 @@ def get_input(view: View):
 # Here, `view(box())` behaves similar to Python's built-in `input()` function.
 #
 
-# ## Get inputs one at a time
+# ## Get multiple inputs, one at a time
 # Call `view()` multiple times to prompt for a sequence of inputs, one at a time.
 #
 # The following example steps through three different pages.
@@ -107,7 +107,7 @@ def sequence_inputs(view: View):
     view(f'Hello, {first_name} {last_name}!')
 
 
-# ## Get inputs at once
+# ## Get multiple inputs at once
 # Pass multiple boxes to `view()` to prompt for inputs at once.
 #
 # When a view contains multiple boxes, the `view()` function returns multiple values, in order.

@@ -18,7 +18,7 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_basic.png)
 
 
-## Value
+## Set initial value
 
 Set `value=` to default the slider value.
 
@@ -32,7 +32,7 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_value.png)
 
 
-## Min
+## Set min value
 
 Set `min=` to specify a minimum value.
 
@@ -46,7 +46,7 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_min.png)
 
 
-## Max
+## Set max value
 
 Set `max=` to specify a maximum value.
 
@@ -60,7 +60,7 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_max.png)
 
 
-## Step
+## Set step
 
 Set `step=` to specify how much to increment or decrement by.
 
@@ -76,7 +76,7 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_step.png)
 
 
-## Precision
+## Set precision
 
 Set `precision=` to specify how many decimal places the value should be rounded to.
 
@@ -96,7 +96,7 @@ view(f'Your speed is {speed} m/s')
 ![Screenshot](assets/screenshots/slider_precision.png)
 
 
-## Min, Max, Step, Precision
+## Combine min, max, step, precision
 
 `min=`, `max=`, `step=` and `precision=` can be combined.
 
@@ -110,7 +110,7 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_range.png)
 
 
-## Range
+## Set range
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
@@ -126,7 +126,7 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_range_alt.png)
 
 
-## Range with step
+## Set range with step
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 
@@ -142,7 +142,7 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_range_alt_step.png)
 
 
-## Range with precision
+## Set range with precision
 
 Setting `range=` to a `(min, max, step, precision)` tuple is shorthand setting
 `min=`, `max=`, `step` and `precision` individually.
@@ -171,7 +171,7 @@ view(f'Your speed is {speed} m/s')
 ![Screenshot](assets/screenshots/slider_negative.png)
 
 
-## Fractional steps
+## Set fractional steps
 
 Steps can be fractional.
 

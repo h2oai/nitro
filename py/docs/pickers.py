@@ -39,7 +39,7 @@ def picker_basic(view: View):
 # The example above has 4 options, hence radio buttons are shown.
 
 
-# ## Buttons
+# ## Show buttons
 # Buttons are shown for up to 3 options.
 #
 # Set `mode='button'` to display buttons regardless of the number of options.
@@ -50,7 +50,7 @@ def picker_buttons(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Radio Buttons
+# ## Show radio buttons
 # Radio buttons is shown for 4-7 options.
 #
 # Set `mode='radio'` to display radio buttons regardless of the number of options.
@@ -61,7 +61,7 @@ def picker_radio(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Dropdown
+# ## Show a dropdown menu
 # A dropdown menu is shown for more than 7 options.
 #
 # Set `mode='menu'` to display a dropdown menu regardless of the number of options.
@@ -72,7 +72,7 @@ def picker_dropdown(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Dropdown List
+# ## Show a dropdown list
 # Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 #
 # By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
@@ -85,7 +85,7 @@ def picker_multiple_dropdown(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Checklist
+# ## Show a checklist
 # A checklist is shown for up to 7 options when `multiple=True`.
 #
 # Set `mode='check'` to display a checklist regardless of the number of options.
@@ -96,7 +96,7 @@ def picker_checklist(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Required
+# ## Mark as required
 # Set `required=True` to indicate that input is required.
 def picker_dropdown_required(view: View):
     choice = view(box('Choose a color', mode='menu', required=True, options=[
@@ -105,7 +105,7 @@ def picker_dropdown_required(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Error
+# ## Show an error message
 # Set `error=` to show an error message below the box.
 def picker_dropdown_error(view: View):
     choice = view(box('Choose a color', mode='menu', error='Invalid input', options=[

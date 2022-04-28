@@ -30,7 +30,7 @@ def radio_basic(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Value
+# ## Set initial selection
 # Set `value=` to pre-select an option having that value.
 def radio_value(view: View):
     choice = view(box('Choose a color', mode='radio', value='yellow', options=[
@@ -42,7 +42,7 @@ def radio_value(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Selected
+# ## Mark options as selected
 # Set `selected=True` to pre-select an option.
 def radio_selected(view: View):
     choice = view(box('Choose a color', mode='radio', options=[
@@ -54,8 +54,8 @@ def radio_selected(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Icons
-# Set `icon=` to show graphical options.
+# ## Show pictorial options
+# Set `icon=` to show pictorial options.
 def radio_icon(view: View):
     choice = view(box('Choose a chart type', mode='radio', options=[
         option('area', 'Area', icon='AreaChart', selected=True),

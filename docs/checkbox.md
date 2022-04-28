@@ -16,7 +16,7 @@ view(f'Keep me signed in: {keep_signed_in}.')
 ![Screenshot](assets/screenshots/checkbox_basic.png)
 
 
-## Value
+## Set initial value
 
 Set `value=True` to pre-select the checkbox.
 

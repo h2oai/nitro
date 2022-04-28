@@ -26,35 +26,35 @@ def rating_basic(view: View):
     view(f'Your rating was {stars} stars.')
 
 
-# ## Value
+# ## Set initial rating
 # Set `value=` to specify a default value.
 def rating_value(view: View):
     stars = view(box('Rate your experience', mode='rating', value=3))
     view(f'Your rating was {stars} stars.')
 
 
-# ## Min
+# ## Allow zero stars
 # Set `min=0` to allow zero stars.
 def rating_min(view: View):
     stars = view(box('Rate your experience', mode='rating', min=0))
     view(f'Your rating was {stars} stars.')
 
 
-# ## Max
+# ## Set maximum number of stars
 # Set `max=` to increase the number of stars displayed.
 def rating_max(view: View):
     stars = view(box('Rate your experience', mode='rating', value=3, max=10))
     view(f'Your rating was {stars} stars.')
 
 
-# ## Min and max
+# ## Combine min and max stars
 # `min=` and `max=` can be combined.
 def rating_min_max(view: View):
     stars = view(box('Rate your experience', mode='rating', value=3, min=0, max=10))
     view(f'Your rating was {stars} stars.')
 
 
-# ## Range
+# ## Set range
 # Set `range=` to a `(min, max)` tuple to control min/max stars.
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.

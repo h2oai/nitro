@@ -61,7 +61,7 @@ def markdown_basic(view: View):
 
 # Any uniform indentation is automatically ignored.
 
-# ## Links as inputs
+# ## Handle clicks on links
 # Local links in markdown content behave just like any other input.
 #
 # Clicking on a local link returns the name of the link.
@@ -77,7 +77,7 @@ def markdown_links(view: View):
     view(f'You clicked on {choice}.')
 
 
-# ## Tables
+# ## Show tables
 # Draw tables using `---` and `|`.
 #
 # - Use three or more hyphens (`---`) to create each column’s header.
@@ -111,7 +111,7 @@ def markdown_table(view: View):
     ''')
 
 
-# ## Tables from lists
+# ## Create tables from lists
 # It's often easier to construct tables from lists of things, as shown below.
 def show_table(view: View):
     view(make_table([
@@ -133,7 +133,7 @@ def make_table(rows):
     return '\n'.join([make_table_row(row) for row in rows])
 
 
-# ## Syntax highlighting
+# ## Syntax highlighting in code blocks
 # Code blocks in Markdown support syntax highlighting for 180+ languages using [highlight.js](https://highlightjs.org/).
 #
 # To enable syntax highlighting, suffix the language to the opening triple-backticks.

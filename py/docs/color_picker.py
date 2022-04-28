@@ -29,8 +29,8 @@ def color_basic(view: View):
     view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
 
 
-# ## Value
-# Set `value=` to pre-select a color.
+# ## Set initial color
+# Set `value=` to set the initial color.
 #
 # A color value can be:
 #

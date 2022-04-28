@@ -39,7 +39,7 @@ def options_basic(view: View):
     view(f'You chose {choice}.')
 
 
-# ## From sequence
+# ## Create options from a sequence
 # If `options` is a sequence (tuple, set or list), the elements of the sequence are used as options.
 def options_sequence(view: View):
     choice = view(box('Choose a color', options=[
@@ -48,7 +48,7 @@ def options_sequence(view: View):
     view(f'You chose {choice}.')
 
 
-# ## From string
+# ## Create options from a string
 # If `options=` is set to a string, each word in the string is used as an option.
 def options_string(view: View):
     choice = view(box('Choose a color', options='green yellow orange red'))
@@ -57,7 +57,7 @@ def options_string(view: View):
 
 # In other words, `'green yellow orange red'` is shorthand for `['green', 'yellow', 'orange', 'red']`.
 
-# ## From tuples
+# ## Create options from tuples
 # `options=` can also be specified as a sequence of `(value, text)` tuples.
 def options_tuples(view: View):
     choice = view(box('Choose a color', options=[
@@ -71,7 +71,7 @@ def options_tuples(view: View):
 
 # Here, `(value, text)` is shorthand for `option(value, text)`.
 
-# ## From dictionary
+# ## Create options from a dictionary
 # `options=` can also be specified as a `dict` of `value: text` entries.
 def options_dict(view: View):
     choice = view(box('Choose a color', options=dict(
@@ -85,7 +85,7 @@ def options_dict(view: View):
 
 # This is the most concise way to pass options where labels differ from values.
 
-# ## Selected
+# ## Mark options as selected
 # Set `selected=True` to pre-select an option.
 #
 # Another way to pre-select an option is to set `value=` on the box, as shown in the next example.
@@ -99,7 +99,7 @@ def options_selected(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Value
+# ## Set initial selection
 # Set `value=` on the box to pre-select an option having that value.
 #
 # Another way to pre-select an option is to set `selected=True` on the option, as shown in the previous example.

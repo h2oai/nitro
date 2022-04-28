@@ -27,7 +27,7 @@ view(f'You chose {color}.')
 ![Screenshot](assets/screenshots/palette_basic.png)
 
 
-## Value
+## Set initial color
 
 Set `value=` to pre-select an option having that color value.
 
@@ -48,7 +48,7 @@ view(f'You chose {color}.')
 ![Screenshot](assets/screenshots/palette_value.png)
 
 
-## Selected
+## Mark colors as selected
 
 Alternatively, set `selected=True` to pre-select a color in the palette.
 

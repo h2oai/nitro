@@ -2,7 +2,7 @@
 
 
 
-## Setting a theme
+## Set initial theme
 
 Pass `theme=` when creating the app's `View()`.
 
@@ -37,7 +37,7 @@ nitro = View(main, title='My App', caption='v1.0', theme=my_theme)
 
 
 
-## Theme switching
+## Switch theme dynamically
 
 Use `view.set(theme=)` to change the theme dynamically.
 
@@ -112,7 +112,7 @@ while True:
 ![Screenshot](assets/screenshots/theme_dark_mode.png)
 
 
-## Color variables
+## Use color variables
 
 *Color variables* are pre-defined, named colors that match the app's theme.
 
@@ -197,7 +197,7 @@ view(
 ![Screenshot](assets/screenshots/theme_colors.png)
 
 
-## Sample themes
+## Some sample themes
 
 This example provides some sample themes that you can use in your own app.
 

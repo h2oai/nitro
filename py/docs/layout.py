@@ -27,7 +27,7 @@ def layout_basic(view: View):
     )
 
 
-# ## Rows
+# ## Lay out horizontally
 # Use `row()` to lay out multiple items horizontally, left to right.
 #
 # By default, items take up equal amounts of space, with a `10px` gap between the items.
@@ -49,7 +49,7 @@ def layout_row_alt(view: View):
     )
 
 
-# ## Columns
+# ## Lay out vertically
 # Use `col()` to lay out multiple items vertically, top to bottom.
 #
 # The example shows one row split into three columns containing three rows each.
@@ -75,7 +75,7 @@ def layout_col(view: View):
     )
 
 
-# ## Tile
+# ## Control tiling
 # Set `tile=` to control how items inside a view, row, or column are tiled along the main axis.
 #
 # - The main axis for a row is horizontal, starting at the left, and ending at the right.
@@ -113,7 +113,7 @@ def layout_tile(view: View):
     )
 
 
-# ## Cross Tile
+# ## Control cross tiling
 # Set `cross_tile=` to control how items inside a view, row, or column are tiled along the cross axis.
 #
 # - The cross axis for a row is vertical. starting at the top, and ending at the bottom
@@ -141,7 +141,7 @@ def layout_cross_tile(view: View):
     )
 
 
-# ## Gap
+# ## Control spacing
 # Set `gap=` to control the spacing between items. The default gap is `10` or `'10px'`.
 def layout_gap(view: View):
     view(
@@ -152,7 +152,7 @@ def layout_gap(view: View):
     )
 
 
-# ## Wrap
+# ## Control wrapping
 # Set `wrap=` to control how items are wrapped inside a view, row, or column.
 #
 # `wrap=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, `stretch`, or `normal`.
@@ -187,7 +187,7 @@ def layout_wrap(view: View):
     )
 
 
-# ## Grow and Shrink
+# ## Grow or shrink some items
 # Set `grow=` or `shrink=` to specify what amount of the available space the item should take up
 # inside a view, row, or column.
 #
@@ -252,7 +252,7 @@ def layout_grow_shrink(view: View):
     )
 
 
-# ## Vertical Alignment
+# ## Center content vertically
 # Use `tile='center'` to center content vertically inside a box.
 #
 # The following example centers content both horizontally and vertically.

@@ -20,7 +20,7 @@ view(f'You chose {tags}.')
 ![Screenshot](assets/screenshots/tag_picker_basic.png)
 
 
-## Value
+## Set initial tags
 
 Set `value=` to pre-select options having those values.
 
@@ -39,7 +39,7 @@ view(f'You chose {tags}.')
 ![Screenshot](assets/screenshots/tag_picker_value.png)
 
 
-## Selected
+## Mark tags as selected
 
 Set `selected=True` to pre-select one or more options.
 

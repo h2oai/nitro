@@ -2,7 +2,7 @@
 
 
 
-## Background Color
+## Set background color
 
 Set `background=` to apply a background color.
 
@@ -28,7 +28,7 @@ view(
 ![Screenshot](assets/screenshots/styling_background.png)
 
 
-## Text Color
+## Set text color
 
 Set `color=` to change the text color.
 
@@ -49,7 +49,7 @@ view(
 ![Screenshot](assets/screenshots/styling_color.png)
 
 
-## Border Color
+## Set border color
 
 Set `border=` to add a border.
 
@@ -72,7 +72,7 @@ view(
 ![Screenshot](assets/screenshots/styling_border.png)
 
 
-## Align Text
+## Set text alignment
 
 Set `align=` to `left`, `right`, `center` or `justify` to align text.
 
@@ -97,7 +97,7 @@ view(
 ![Screenshot](assets/screenshots/styling_align.png)
 
 
-## Sizing
+## Set width and height
 
 Nitro provides extensive control over how items are sized and spaced, using `width`, `height`, `margin`, `padding`,
 and `gap`.
@@ -140,7 +140,7 @@ view(
 ![Screenshot](assets/screenshots/styling_size.png)
 
 
-## Margin
+## Set margins
 
 Set `margin=` to add a margin around each item.
 
@@ -176,7 +176,7 @@ view(col(*[row(b, border='#000', padding=0) for b in boxes]))
 ![Screenshot](assets/screenshots/styling_margin.png)
 
 
-## Padding
+## Set padding
 
 Set `padding=` to control the padding (inset) inside each item.
 

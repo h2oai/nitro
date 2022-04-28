@@ -28,7 +28,7 @@ def dropdown_basic(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Value
+# ## Set initial selection
 # Set `value=` to pre-select an option having that value.
 def dropdown_value(view: View):
     choice = view(box('Choose a color', mode='menu', value='yellow', options=[
@@ -40,7 +40,7 @@ def dropdown_value(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Selected
+# ## Mark options as selected
 # Set `selected=True` to pre-select an option.
 def dropdown_selected(view: View):
     choice = view(box('Choose a color', mode='menu', options=[
@@ -52,7 +52,7 @@ def dropdown_selected(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Grouped
+# ## Group options
 # Options can have sub-options. This is useful for grouping options into categories.
 #
 # `mode=menu` is implied if options are grouped.
@@ -72,7 +72,7 @@ def dropdown_grouped(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Editable
+# ## Enable arbitrary input
 # Set `editable=True` to allow arbitrary input in addition to the presented options.
 #
 # `mode=menu` is implied if `editable=True`.

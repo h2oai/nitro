@@ -151,7 +151,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/table_singleselect.png)
 
 
-## Set selected rows
+## Set initial selection
 
 Set `value=` to pre-select one or more rows.
 
@@ -181,7 +181,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/table_value.png)
 
 
-## Select individual rows
+## Mark rows as selected
 
 Alternatively, set `selected=True` on a row to pre-select the row.
 

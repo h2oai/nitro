@@ -22,7 +22,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/radio_basic.png)
 
 
-## Value
+## Set initial selection
 
 Set `value=` to pre-select an option having that value.
 
@@ -41,7 +41,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/radio_value.png)
 
 
-## Selected
+## Mark options as selected
 
 Set `selected=True` to pre-select an option.
 
@@ -60,9 +60,9 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/radio_selected.png)
 
 
-## Icons
+## Show pictorial options
 
-Set `icon=` to show graphical options.
+Set `icon=` to show pictorial options.
 
 
 ```py

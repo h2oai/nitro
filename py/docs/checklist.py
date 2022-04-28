@@ -30,7 +30,7 @@ def checklist_basic(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Value
+# ## Set initial selection
 # Set `value=` to pre-select options having those values.
 def checklist_value(view: View):
     choices = view(box(
@@ -42,7 +42,7 @@ def checklist_value(view: View):
     view(f'You chose {choices}.')
 
 
-# ## Selected
+# ## Mark options as checked
 # Alternatively, set `selected=True` to pre-select one or more options.
 def checklist_selected(view: View):
     choices = view(box(

@@ -22,7 +22,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/checklist_basic.png)
 
 
-## Value
+## Set initial selection
 
 Set `value=` to pre-select options having those values.
 
@@ -41,7 +41,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/checklist_value.png)
 
 
-## Selected
+## Mark options as checked
 
 Alternatively, set `selected=True` to pre-select one or more options.
 

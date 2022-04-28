@@ -28,7 +28,7 @@ def buttons_basic(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Shorthand
+# ## Shorthand notation
 # Most often, it doesn't make sense to show a text prompt above a set of buttons.
 #
 # In such cases, `box(mode='button', options=X)` can be shortened to `box(X)`.
@@ -71,7 +71,7 @@ def buttons_shorthand_alt(view: View):
     )))
 
 
-# ## Selected
+# ## Mark button as primary
 # By default, the first button is displayed as the primary action in the sequence.
 #
 # To select a different button as primary, set `selected=True`.
@@ -87,7 +87,7 @@ def buttons_selected(view: View):
     view(f'You chose to update {choice}.')
 
 
-# ## Value
+# ## Select primary button
 # Alternatively, Set `value=` to mark a button as *primary*.
 def buttons_value(view: View):
     choice = view(
@@ -101,7 +101,7 @@ def buttons_value(view: View):
     view(f'You chose to update {choice}.')
 
 
-# ## Values
+# ## Select multiple primary buttons
 # If `value=` is set to a sequence, all buttons with those values are marked as *primary*.
 def buttons_values(view: View):
     choice = view(
@@ -115,7 +115,7 @@ def buttons_values(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Split Buttons
+# ## Add a menu
 # Sub-options inside options are shown as split buttons.
 def buttons_split(view: View):
     choice = view(
@@ -131,7 +131,7 @@ def buttons_split(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Primary Split Buttons
+# ## Add a menu to a primary button
 # Sub-options work for primary buttons, too.
 def buttons_selected_split(view: View):
     choice = view(
@@ -147,7 +147,7 @@ def buttons_selected_split(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Caption
+# ## Set a caption
 # Set `caption=` to describe buttons.
 def buttons_caption(view: View):
     choice = view(
@@ -160,7 +160,7 @@ def buttons_caption(view: View):
     view(f'You chose {choice}.')
 
 
-# ## Layout
+# ## Lay out buttons vertically
 # By default, buttons are arranged row-wise. Set `row=False` to arrange them column-wise.
 def buttons_layout(view: View):
     choice = view(

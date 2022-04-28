@@ -18,7 +18,7 @@ Photo by [Ju Guan](https://unsplash.com/@guanju223?utm_source=unsplash&utm_mediu
 ![Screenshot](assets/screenshots/image_basic.png)
 
 
-## Resize
+## Set width and height
 
 Images can be resized by setting `width=` or `height=` or both.
 
@@ -38,7 +38,7 @@ view(
 ![Screenshot](assets/screenshots/image_resize.png)
 
 
-## Fit
+## Scale and clip images
 
 Set `fit=` to control how the image should be resized to fit its box.
 
@@ -66,7 +66,7 @@ view(
 ![Screenshot](assets/screenshots/image_fit.png)
 
 
-## Background
+## Use as background
 
 If a box contains content, its image is used as a background.
 
@@ -91,7 +91,7 @@ view(
 ![Screenshot](assets/screenshots/image_background.png)
 
 
-## Pattern
+## Use as pattern
 
 `image=` can also be set to a [Data URI](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs)
 with a [base64-encoded](https://en.wikipedia.org/wiki/Base64) image.

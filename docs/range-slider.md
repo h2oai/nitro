@@ -18,7 +18,7 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ![Screenshot](assets/screenshots/range_slider_basic.png)
 
 
-## Min
+## Set min value
 
 Set `min=` to specify a minimum value.
 
@@ -32,7 +32,7 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ![Screenshot](assets/screenshots/range_slider_min.png)
 
 
-## Max
+## Set max value
 
 Set `max=` to specify a maximum value.
 
@@ -46,7 +46,7 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ![Screenshot](assets/screenshots/range_slider_max.png)
 
 
-## Step
+## Set step
 
 Set `step=` to specify how much to increment or decrement by.
 
@@ -62,7 +62,7 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ![Screenshot](assets/screenshots/range_slider_step.png)
 
 
-## Precision
+## Set precision
 
 Set `precision=` to specify how many decimal places the value should be rounded to.
 
@@ -81,7 +81,7 @@ view(f'Your speed ranges between {start} and {end} m/s')
 ![Screenshot](assets/screenshots/range_slider_precision.png)
 
 
-## Min, Max, Step, Precision
+## Combine min, max, step, precision
 
 `min=`, `max=`, `step=` and `precision=` can be combined.
 
@@ -95,7 +95,7 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ![Screenshot](assets/screenshots/range_slider_range.png)
 
 
-## Range
+## Set range
 
 Set `range=` to a `(min, max)` tuple to restrict numeric inputs between two values.
 
@@ -111,7 +111,7 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ![Screenshot](assets/screenshots/range_slider_range_alt.png)
 
 
-## Range with step
+## Set range with step
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 
@@ -127,7 +127,7 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ![Screenshot](assets/screenshots/range_slider_range_alt_step.png)
 
 
-## Range with precision
+## Set range with precision
 
 Set `range=` to a `(min, max, step)` tuple to increment/decrement by steps other than `1`.
 Setting `range=` to a `(min, max, step, precision)` tuple is shorthand for setting
@@ -143,7 +143,7 @@ view(f'Your speed ranges between {start} and {end} m/s')
 ![Screenshot](assets/screenshots/range_slider_range_alt_precision.png)
 
 
-## Zero-crossing range
+## Use zero-crossing range
 
 Ranges can cross zero.
 
@@ -157,7 +157,7 @@ view(f'Your speed ranges between {start} and {end} m/s')
 ![Screenshot](assets/screenshots/range_slider_negative.png)
 
 
-## Fractional steps
+## Set fractional steps
 
 Steps can be fractional.
 

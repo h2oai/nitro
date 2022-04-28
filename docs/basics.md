@@ -51,7 +51,7 @@ The King said, very gravely:
 ![Screenshot](assets/screenshots/format_multiline_content.png)
 
 
-## Show items at once
+## Show multiple items
 
 Pass multiple arguments to `view()` to lay them out top to bottom.
 
@@ -68,7 +68,7 @@ view(
 ![Screenshot](assets/screenshots/display_multiple.png)
 
 
-## Show items one at a time
+## Show multiple items, one at a time
 
 Call `view()` multiple times to show items one at a time.
 
@@ -129,7 +129,7 @@ Here, `view(box())` behaves similar to Python's built-in `input()` function.
 ![Screenshot](assets/screenshots/get_input.png)
 
 
-## Get inputs one at a time
+## Get multiple inputs, one at a time
 
 Call `view()` multiple times to prompt for a sequence of inputs, one at a time.
 
@@ -149,7 +149,7 @@ view(f'Hello, {first_name} {last_name}!')
 ![Screenshot](assets/screenshots/sequence_inputs.png)
 
 
-## Get inputs at once
+## Get multiple inputs at once
 
 Pass multiple boxes to `view()` to prompt for inputs at once.
 

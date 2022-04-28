@@ -24,7 +24,7 @@ def month_basic(view: View):
     view(f'You picked {month}.')
 
 
-# ## Value
+# ## Set initial month
 # Set `value=` to pre-select a month.
 #
 # Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
@@ -34,28 +34,28 @@ def month_value(view: View):
     view(f'You picked {month}.')
 
 
-# ## Min
+# ## Set min date
 # Set `min=` to specify a minimum date.
 def month_min(view: View):
     month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01'))
     view(f'You picked {month}.')
 
 
-# ## Max
+# ## Set max date
 # Set `max=` to specify a maximum date.
 def month_max(view: View):
     month = view(box('Pick a month', mode='month', value='2021-10-10', max='2022-12-31'))
     view(f'You picked {month}.')
 
 
-# ## Min and Max
+# ## Combine min and max dates
 # Set both `min=` and `max=` to restrict selection between two dates.
 def month_min_max(view: View):
     month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {month}.')
 
 
-# ## Range
+# ## Set range
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.

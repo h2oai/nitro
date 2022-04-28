@@ -24,21 +24,7 @@ def date_basic(view: View):
     view(f'You picked {date}.')
 
 
-# ## Placeholder
-# Set `placeholder=` to show placeholder text.
-def date_placeholder(view: View):
-    date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
-    view(f'You picked {date}.')
-
-
-# ## Required
-# Set `required=True` to indicate that input is required.
-def date_required(view: View):
-    date = view(box('Pick a date', mode='date', required=True))
-    view(f'You picked {date}.')
-
-
-# ## Value
+# ## Set initial date
 # Set `value=` to pre-select a date.
 #
 # Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
@@ -48,31 +34,45 @@ def date_value(view: View):
     view(f'You picked {date}.')
 
 
-# ## Min
+# ## Set placeholder text
+# Set `placeholder=` to show placeholder text.
+def date_placeholder(view: View):
+    date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
+    view(f'You picked {date}.')
+
+
+# ## Set min date
 # Set `min=` to specify a minimum date.
 def date_min(view: View):
     date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01'))
     view(f'You picked {date}.')
 
 
-# ## Max
+# ## Set max date
 # Set `max=` to specify a maximum date.
 def date_max(view: View):
     date = view(box('Pick a date', mode='date', value='2021-10-10', max='2022-12-31'))
     view(f'You picked {date}.')
 
 
-# ## Min and Max
+# ## Combine min and max date
 # Set both `min=` and `max=` to restrict selection between two dates.
 def date_min_max(view: View):
     date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {date}.')
 
 
-# ## Range
+# ## Set range
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.
 def date_range(view: View):
     date = view(box('Pick a date', mode='date', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
+    view(f'You picked {date}.')
+
+
+# ## Mark as required
+# Set `required=True` to indicate that input is required.
+def date_required(view: View):
+    date = view(box('Pick a date', mode='date', required=True))
     view(f'You picked {date}.')

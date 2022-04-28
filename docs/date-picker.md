@@ -16,35 +16,7 @@ view(f'You picked {date}.')
 ![Screenshot](assets/screenshots/date_basic.png)
 
 
-## Placeholder
-
-Set `placeholder=` to show placeholder text.
-
-
-```py
-date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
-view(f'You picked {date}.')
-```
-
-
-![Screenshot](assets/screenshots/date_placeholder.png)
-
-
-## Required
-
-Set `required=True` to indicate that input is required.
-
-
-```py
-date = view(box('Pick a date', mode='date', required=True))
-view(f'You picked {date}.')
-```
-
-
-![Screenshot](assets/screenshots/date_required.png)
-
-
-## Value
+## Set initial date
 
 Set `value=` to pre-select a date.
 
@@ -61,7 +33,21 @@ view(f'You picked {date}.')
 ![Screenshot](assets/screenshots/date_value.png)
 
 
-## Min
+## Set placeholder text
+
+Set `placeholder=` to show placeholder text.
+
+
+```py
+date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
+view(f'You picked {date}.')
+```
+
+
+![Screenshot](assets/screenshots/date_placeholder.png)
+
+
+## Set min date
 
 Set `min=` to specify a minimum date.
 
@@ -75,7 +61,7 @@ view(f'You picked {date}.')
 ![Screenshot](assets/screenshots/date_min.png)
 
 
-## Max
+## Set max date
 
 Set `max=` to specify a maximum date.
 
@@ -89,7 +75,7 @@ view(f'You picked {date}.')
 ![Screenshot](assets/screenshots/date_max.png)
 
 
-## Min and Max
+## Combine min and max date
 
 Set both `min=` and `max=` to restrict selection between two dates.
 
@@ -103,7 +89,7 @@ view(f'You picked {date}.')
 ![Screenshot](assets/screenshots/date_min_max.png)
 
 
-## Range
+## Set range
 
 Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 
@@ -117,3 +103,17 @@ view(f'You picked {date}.')
 
 
 ![Screenshot](assets/screenshots/date_range.png)
+
+
+## Mark as required
+
+Set `required=True` to indicate that input is required.
+
+
+```py
+date = view(box('Pick a date', mode='date', required=True))
+view(f'You picked {date}.')
+```
+
+
+![Screenshot](assets/screenshots/date_required.png)

@@ -20,7 +20,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/dropdown_basic.png)
 
 
-## Value
+## Set initial selection
 
 Set `value=` to pre-select an option having that value.
 
@@ -39,7 +39,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/dropdown_value.png)
 
 
-## Selected
+## Mark options as selected
 
 Set `selected=True` to pre-select an option.
 
@@ -58,7 +58,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/dropdown_selected.png)
 
 
-## Grouped
+## Group options
 
 Options can have sub-options. This is useful for grouping options into categories.
 
@@ -85,7 +85,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/dropdown_grouped.png)
 
 
-## Editable
+## Enable arbitrary input
 
 Set `editable=True` to allow arbitrary input in addition to the presented options.
 

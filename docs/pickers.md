@@ -31,7 +31,7 @@ The example above has 4 options, hence radio buttons are shown.
 ![Screenshot](assets/screenshots/picker_basic.png)
 
 
-## Buttons
+## Show buttons
 
 Buttons are shown for up to 3 options.
 
@@ -49,7 +49,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/picker_buttons.png)
 
 
-## Radio Buttons
+## Show radio buttons
 
 Radio buttons is shown for 4-7 options.
 
@@ -67,7 +67,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/picker_radio.png)
 
 
-## Dropdown
+## Show a dropdown menu
 
 A dropdown menu is shown for more than 7 options.
 
@@ -85,7 +85,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/picker_dropdown.png)
 
 
-## Dropdown List
+## Show a dropdown list
 
 Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
 
@@ -105,7 +105,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/picker_multiple_dropdown.png)
 
 
-## Checklist
+## Show a checklist
 
 A checklist is shown for up to 7 options when `multiple=True`.
 
@@ -123,7 +123,7 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/picker_checklist.png)
 
 
-## Required
+## Mark as required
 
 Set `required=True` to indicate that input is required.
 
@@ -139,7 +139,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/picker_dropdown_required.png)
 
 
-## Error
+## Show an error message
 
 Set `error=` to show an error message below the box.
 

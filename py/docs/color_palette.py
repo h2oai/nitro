@@ -35,7 +35,7 @@ def palette_basic(view: View):
     view(f'You chose {color}.')
 
 
-# ## Value
+# ## Set initial color
 # Set `value=` to pre-select an option having that color value.
 def palette_value(view: View):
     color = view(box('Choose a color', mode='color', value='#0000ff', options=[
@@ -49,7 +49,7 @@ def palette_value(view: View):
     view(f'You chose {color}.')
 
 
-# ## Selected
+# ## Mark colors as selected
 # Alternatively, set `selected=True` to pre-select a color in the palette.
 def palette_selected(view: View):
     color = view(box('Choose a color', mode='color', options=[

@@ -16,7 +16,7 @@ view(f'Alarm set for {time}.')
 ![Screenshot](assets/screenshots/time_basic.png)
 
 
-## With seconds
+## Enable seconds
 
 Include seconds in the `value` to show a seconds component.
 
@@ -30,7 +30,7 @@ view(f'Alarm set for {time}.')
 ![Screenshot](assets/screenshots/time_seconds.png)
 
 
-## Hour only
+## Show hours only
 
 Exclude minutes and seconds from the `value` to show only the hour component.
 
@@ -44,7 +44,7 @@ view(f'Alarm set for {time}.')
 ![Screenshot](assets/screenshots/time_hour.png)
 
 
-## 24-hour clock
+## Show 24-hour clock
 
 Exclude `AM` or `PM` from the `value` to accept input in military time.
 
@@ -58,7 +58,7 @@ view(f'Alarm set for {time}.')
 ![Screenshot](assets/screenshots/time_24.png)
 
 
-## 24-hour clock, with seconds
+## Show 24-hour clock, with seconds
 
 Include seconds in the `value` to show a seconds component.
 
@@ -72,7 +72,7 @@ view(f'Alarm set for {time}.')
 ![Screenshot](assets/screenshots/time_24_seconds.png)
 
 
-## 24-hour clock, hour only
+## Show 24-hour clock, with hour only
 
 Exclude minutes and seconds from the `value` to show only the hour component.
 
