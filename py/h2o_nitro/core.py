@@ -89,20 +89,32 @@ def _clean(d: dict) -> dict:
 N = Union[int, float]
 V = Union[N, str]
 
+Length = Union[str, int, float]
+
+Sizing = Union[
+    Length,
+    Tuple[Length],
+    Tuple[Length, Length],
+    Tuple[Length, Length, Length],
+]
+
 
 class Header:
     def __init__(
             self,
             text: str,
             mode: Optional[str] = None,
+            width: Optional[Sizing] = None,
     ):
         self.text = text
         self.mode = mode
+        self.width = width
 
     def dump(self) -> dict:
         return _clean(dict(
             text=self.text,
             mode=self.mode,
+            width=self.width
         ))
 
 
@@ -178,15 +190,6 @@ Value = Union[
     V,
     Tuple[V, V],
     List[V],
-]
-
-Length = Union[str, int]
-
-Sizing = Union[
-    Length,
-    Tuple[Length],
-    Tuple[Length, Length],
-    Tuple[Length, Length, Length],
 ]
 
 

@@ -282,3 +282,32 @@ view(f'You chose {choice}.')
 
 
 ![Screenshot](assets/screenshots/table_multilevel.png)
+
+
+## Column Width
+
+Set `width=` to set the minimum width of the column.
+
+To set both minimum and maximum widths, set `width=` to a `(min, max)` tuple.
+
+
+```py
+view(box(
+    mode='table',
+    headers=[
+        header('Flavor'),
+        header('Super cheap!', width=100),
+        header('Extras', width=(200, 300)),
+    ],
+    options=[
+        option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+        option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+        option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+        option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+        option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+    ],
+))
+```
+
+
+![Screenshot](assets/screenshots/table_column_width.png)

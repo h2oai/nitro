@@ -14,7 +14,7 @@
 
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { B, Dict, isB, S, signal, U } from './core';
+import { B, Dict, isB, isN, S, signal, U } from './core';
 import { markdown } from './markdown';
 import { selectedsOf } from './options';
 import { Header, Option } from './protocol';
@@ -56,15 +56,47 @@ export const Table = make(({ context, box }: BoxProps) => {
       contentB([columns, rows])
     },
     columns = (headers ?? []).map((h, i): IColumn => {
+      const { text, width } = h
+
+      let
+        minWidth: U = 0,
+        maxWidth: U | undefined = undefined
+
+      if (width !== undefined) {
+        if (Array.isArray(width)) {
+          switch (width.length) {
+            case 1:
+              {
+                const [min] = width
+                if (isN(min)) minWidth = min
+                break
+              }
+            case 2:
+              {
+                const [min, max] = width
+                if (isN(min)) minWidth = min
+                if (isN(max)) maxWidth = max
+                break
+              }
+            case 3:
+              {
+                const [min, max, _] = width
+                if (isN(min)) minWidth = min
+                if (isN(max)) maxWidth = max
+                break
+              }
+          }
+        }
+      }
+
       return {
         key: `f${i}`,
-        name: h.text,
-        minWidth: 100, // TODO pick from width tuple
+        name: text,
+        minWidth,
+        maxWidth,
         fieldName: `f${i}`,
         isSorted: false,
         isSortedDescending: true,
-        // isRowHeader: i===0, 
-        // data: 'string', // TODO
         // iconName: '' // TODO
         // isIconOnly: true, // TODO
         onColumnClick,
@@ -154,7 +186,6 @@ export const Table = make(({ context, box }: BoxProps) => {
               const [__html, _] = markdown(text)
               return <span className='table-md' dangerouslySetInnerHTML={{ __html }} />
             }
-            break
         }
       }
       return <span>{text}</span>
