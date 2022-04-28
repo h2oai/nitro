@@ -15,16 +15,14 @@
 from h2o_nitro import View, box, row, col, option, header, lorem
 
 
-# # Table
+# # List
 
 # ## Basic
-# Call `box()` with `mode='table'` to show a table. A table can be a good substitute for a dropdown or dropdown list
-# when each item has several details that are better displayed in grid form.
-#
-# The return value the value of selected row.
-def table_basic(view: View):
-    x = view(box(
-        mode='table',
+# Call `box()` with `mode='list'` to show a list. A list can be a good substitute for a dropdown menu
+# when each item has several details that are better displayed in tabular form.
+def list_basic(view: View):
+    choice = view(box(
+        mode='list',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -38,38 +36,16 @@ def table_basic(view: View):
             option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
         ],
     ))
-    view(f'You chose {x}.')
-
-
-# ## Primary Column
-# By default, the first column's cells are clickable.
-# To set a different column as clickable, set `primary=True` on its header.
-def table_primary(view: View):
-    x = view(box(
-        mode='table',
-        headers=[
-            header('Flavor'),
-            header('Super cheap!', primary=True),
-            header('Extras'),
-        ],
-        options=[
-            option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
-            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
-            option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
-            option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
-            option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
-        ],
-    ))
-    view(f'You chose {x}.')
+    view(f'You chose {choice}.')
 
 
 # ## Multi-select
 # Set `multiple=True` to allow multiple rows to be selected.
 #
 # The return value is a collection of the values of the selected rows.
-def table_multiselect(view: View):
-    x = view(box(
-        mode='table',
+def list_multiselect(view: View):
+    choices = view(box(
+        mode='list',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -84,14 +60,14 @@ def table_multiselect(view: View):
         ],
         multiple=True,
     ))
-    view(f'You chose {x}.')
+    view(f'You chose {choices}.')
 
 
 # ## Value
-# Set `value=` to pre-select row.
-def table_value(view: View):
-    x = view(box(
-        mode='table',
+# Set `value=` to pre-select one or more rows.
+def list_value(view: View):
+    choices = view(box(
+        mode='list',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -107,14 +83,14 @@ def table_value(view: View):
         multiple=True,
         value=['vanilla', 'blueberry'],
     ))
-    view(f'You chose {x}.')
+    view(f'You chose {choices}.')
 
 
 # ## Selected
-# Alternatively, set `selected=True` on the row to pre-select the row.
-def table_selected(view: View):
-    x = view(box(
-        mode='table',
+# Alternatively, set `selected=True` on a row to pre-select the row.
+def list_selected(view: View):
+    choices = view(box(
+        mode='list',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -129,14 +105,14 @@ def table_selected(view: View):
         ],
         multiple=True,
     ))
-    view(f'You chose {x}.')
+    view(f'You chose {choices}.')
 
 
 # ## Grouped
 # To group rows, use nested options.
-def table_grouped(view: View):
-    x = view(box(
-        mode='table',
+def list_grouped(view: View):
+    choice = view(box(
+        mode='list',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -157,14 +133,14 @@ def table_grouped(view: View):
             ]),
         ],
     ))
-    view(f'You chose {x}.')
+    view(f'You chose {choice}.')
 
 
-# ## Multi-level
+# ## Multi-level Grouped
 # Rows can be nested at multiple levels.
-def table_grouped_multiple(view: View):
-    x = view(box(
-        mode='table',
+def list_multilevel(view: View):
+    choice = view(box(
+        mode='list',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -189,4 +165,49 @@ def table_grouped_multiple(view: View):
             ]),
         ],
     ))
-    view(f'You chose {x}.')
+    view(f'You chose {choice}.')
+
+
+# # Table
+
+# ## Basic
+# Call `box()` with `mode='table'` to show a table.
+def table_basic(view: View):
+    view(box(
+        mode='table',
+        headers=[
+            header('Flavor'),
+            header('Super cheap!'),
+            header('Extras'),
+        ],
+        options=[
+            option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+            option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+            option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+            option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+        ],
+    ))
+
+
+# ## Clickable columns
+# To make a column's cells clickable, set `mode='link'` on its header.
+#
+# If set, `view()` returns the `value` of the clicked row.
+def table_primary(view: View):
+    choice = view(box(
+        mode='table',
+        headers=[
+            header('Flavor', mode='link'),
+            header('Super cheap!'),
+            header('Extras'),
+        ],
+        options=[
+            option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+            option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+            option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+            option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+        ],
+    ))
+    view(f'You chose {choice}.')
