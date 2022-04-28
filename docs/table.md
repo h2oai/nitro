@@ -311,3 +311,31 @@ view(box(
 
 
 ![Screenshot](assets/screenshots/table_column_width.png)
+
+
+## Set header icon
+
+Set `icon=` to display an icon in the header instead of text.
+
+
+```py
+view(box(
+    mode='table',
+    headers=[
+        header('Flavor'),
+        header('Super cheap!', icon='Money'),
+        header('Extras'),
+    ],
+    options=[
+        option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+        option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+        option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+        option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+        option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+    ],
+))
+```
+
+
+![Screenshot](assets/screenshots/table_header_icon.png)
+

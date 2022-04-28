@@ -56,7 +56,10 @@ export const Table = make(({ context, box }: BoxProps) => {
       contentB([columns, rows])
     },
     columns = (headers ?? []).map((h, i): IColumn => {
-      const { text, width } = h
+      const
+        { text, icon, width, resizable, multiline } = h,
+        iconName = icon ?? undefined,
+        isIconOnly = icon ? true : false
 
       let
         minWidth: U = 0,
@@ -92,13 +95,14 @@ export const Table = make(({ context, box }: BoxProps) => {
       return {
         key: `f${i}`,
         name: text,
+        ariaLabel: text,
         minWidth,
         maxWidth,
         fieldName: `f${i}`,
         isSorted: false,
         isSortedDescending: true,
-        // iconName: '' // TODO
-        // isIconOnly: true, // TODO
+        iconName,
+        isIconOnly,
         onColumnClick,
         data: h,
       }

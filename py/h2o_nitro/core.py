@@ -103,18 +103,21 @@ class Header:
     def __init__(
             self,
             text: str,
+            icon: Optional[str] = None,
             mode: Optional[str] = None,
             width: Optional[Sizing] = None,
     ):
         self.text = text
+        self.icon = icon
         self.mode = mode
         self.width = width
 
     def dump(self) -> dict:
         return _clean(dict(
             text=self.text,
+            icon=self.icon,
             mode=self.mode,
-            width=self.width
+            width=self.width,
         ))
 
 

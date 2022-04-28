@@ -256,3 +256,24 @@ def table_column_width(view: View):
             option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
         ],
     ))
+
+
+# ## Set header icon
+# Set `icon=` to display an icon in the header instead of text.
+def table_header_icon(view: View):
+    view(box(
+        mode='table',
+        headers=[
+            header('Flavor'),
+            header('Super cheap!', icon='Money'),
+            header('Extras'),
+        ],
+        options=[
+            option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+            option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+            option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+            option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+            option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+        ],
+    ))
+
