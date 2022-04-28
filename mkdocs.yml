@@ -67,6 +67,8 @@ nav:
     - 'dropdown.md'
     - 'dropdown-list.md'
     - 'checklist.md'
+    - 'list.md'
+    - 'table.md'
     - 'slider.md'
     - 'range-slider.md'
     - 'time-picker.md'
@@ -78,7 +80,6 @@ nav:
     - 'color-picker.md'
     - 'color-palette.md'
     - 'rating.md'
-    - 'table.md'
     - 'theming.md'
     - 'advanced-layout.md'
     # End generated

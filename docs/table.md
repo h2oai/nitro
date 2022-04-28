@@ -4,14 +4,11 @@
 
 ## Basic
 
-Call `box()` with `mode='table'` to show a table. A table can be a good substitute for a dropdown or dropdown list
-when each item has several details that are better displayed in grid form.
-
-The return value the value of selected row.
+Call `box()` with `mode='table'` to show a table.
 
 
 ```py
-x = view(box(
+view(box(
     mode='table',
     headers=[
         header('Flavor'),
@@ -20,45 +17,43 @@ x = view(box(
     ],
     options=[
         option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
-        option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm.']),
+        option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
         option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
         option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
         option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
     ],
 ))
-view(f'You chose {x}.')
 ```
 
 
 ![Screenshot](assets/screenshots/table_basic.png)
 
 
-## Multi-select
+## Clickable columns
 
-Set `multiple=True` to allow multiple rows to be selected.
+To make a column's cells clickable, set `mode='link'` on its header.
 
-The return value is a collection of the values of the selected rows.
+If set, `view()` returns the `value` of the clicked row.
 
 
 ```py
-x = view(box(
+choice = view(box(
     mode='table',
-    multiple=True,
     headers=[
-        header('Flavor'),
+        header('Flavor', mode='link'),
         header('Super cheap!'),
         header('Extras'),
     ],
     options=[
         option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
-        option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm.']),
+        option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
         option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
         option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
         option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
     ],
 ))
-view(f'You chose {x}.')
+view(f'You chose {choice}.')
 ```
 
 
-![Screenshot](assets/screenshots/table_multiselect.png)
+![Screenshot](assets/screenshots/table_primary.png)
