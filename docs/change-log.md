@@ -17,6 +17,17 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.6.0
+
+Apr 28, 2022
+
+- Added
+    - Table component (`box mode='table'`) with selectable rows, grouping, sorting, column resizing, and markdown
+      support.
+
+- Fixed
+    - Don't show automatic *Continue* button if a toggle is present on the page.
+
 ## v0.5.0
 
 Apr 21, 2022
