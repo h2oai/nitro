@@ -106,7 +106,6 @@ You can always view the docs for the latest version at https://nitro.h2o.ai/.
 - [Dropdown](docs/dropdown.md)
 - [Dropdown List](docs/dropdown-list.md)
 - [Checklist](docs/checklist.md)
-- [List](docs/list.md)
 - [Table](docs/table.md)
 - [Slider](docs/slider.md)
 - [Range Slider](docs/range-slider.md)

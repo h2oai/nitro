@@ -14,7 +14,7 @@
 
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { B, Dict, S, signal, U } from './core';
+import { B, Dict, isB, S, signal, U } from './core';
 import { markdown } from './markdown';
 import { selectedsOf } from './options';
 import { Header, Option } from './protocol';
@@ -25,8 +25,8 @@ type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
 export const Table = make(({ context, box }: BoxProps) => {
   const
-    { mode, index, headers, options, multiple } = box,
-    isList = mode === 'list',
+    { index, headers, options, multiple } = box,
+    isList = isB(multiple),
     selecteds = selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.capture(index, Array.from(selectedValues)),

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
-import { B, xid } from './core';
+import { B, isB, xid } from './core';
 import { Box } from './protocol';
 import { Send } from './socket';
 import { newCaptureContext } from './ui';
@@ -42,6 +42,7 @@ const hasActions = (boxes: Box[]): B => { // recursive
         case 'toggle':
           return true
         case 'table':
+          if (isB(box.multiple)) return true
           if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
       }
     }
