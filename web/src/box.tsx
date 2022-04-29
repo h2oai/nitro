@@ -25,6 +25,7 @@ import { DatePicker } from './date_picker';
 import { Dropdown } from './dropdown';
 import { Droplist } from './droplist';
 import { Rating } from './rating';
+import { Separator } from './separator';
 import { Slider } from './slider';
 import { Spinbox } from './spinbox';
 import { Table } from './table';
@@ -80,6 +81,8 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
       return <Textbox context={context} box={box} />
     case 'time':
       return <TimePicker context={context} box={box} />
+    case 'separator':
+      return <Separator context={context} box={box} />
   }
   return null
 }
