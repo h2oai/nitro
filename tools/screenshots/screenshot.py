@@ -22,6 +22,7 @@ with sync_playwright() as p:
         if not name.endswith('_noop'):
             print(f'Capturing {name}...')
             page.locator(f'[data-jump={name}]').click()
+            page.wait_for_timeout(1000)
             page.locator('[data-name=output]').screenshot(path=str(output_dir / f'{name}.png'))
             page.locator('[data-name=contents]').click()
     browser.close()
