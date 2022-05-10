@@ -12,51 +12,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Dialog, DialogType } from '@fluentui/react';
 import React from 'react';
 import { B, isB, signal, xid } from './core';
 import { Box } from './protocol';
 import { Send } from './socket';
 import { make, newCaptureContext } from './ui';
 import { Zone } from './zone';
-import { DefaultButton, Dialog, DialogFooter, DialogType, PrimaryButton } from '@fluentui/react';
 
-
-const continueButton: Box = {
-  xid: xid(),
-  mode: 'button',
-  index: -1, //don't capture
-  options: [{ value: 'continue', text: 'Continue' }]
-}
-
-const hasActions = (boxes: Box[]): B => { // recursive
-  for (const box of boxes) {
-    if (box.items) {
-      if (hasActions(box.items)) return true
-    } else {
-      const { mode } = box
-      switch (mode) {
-        case 'button':
-          if (box.options.length) return true
-          break
-        case 'md':
-          if (box.index >= 0) return true
-          break
-        case 'toggle':
-          return true
-        case 'table':
-          if (isB(box.multiple)) return true
-          if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
+const
+  continueButton: Box = {
+    xid: xid(),
+    mode: 'button',
+    index: -1, //don't capture
+    options: [{ value: 'continue', text: 'Continue' }]
+  },
+  hasActions = (boxes: Box[]): B => { // recursive
+    for (const box of boxes) {
+      if (box.items) {
+        if (hasActions(box.items)) return true
+      } else {
+        const { mode } = box
+        switch (mode) {
+          case 'button':
+            if (box.options.length) return true
+            break
+          case 'md':
+            if (box.index >= 0) return true
+            break
+          case 'toggle':
+            return true
+          case 'table':
+            if (isB(box.multiple)) return true
+            if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
+        }
       }
     }
-  }
-  return false
-}
+    return false
+  },
+
+  makeContinuable = (boxes: Box[]): Box[] => hasActions(boxes) ? boxes : [...boxes, continueButton]
+
 
 export const Body = (props: { send: Send, boxes: Box[] }) => {
   const
-    original = props.boxes,
-    canContinue = hasActions(original),
-    boxes: Box[] = canContinue ? original : [...original, continueButton],
+    boxes: Box[] = makeContinuable(props.boxes),
     context = newCaptureContext(props.send, [])
   return (
     <div className='main'>
@@ -68,15 +68,11 @@ export const Body = (props: { send: Send, boxes: Box[] }) => {
 export const Popup = make((props: { send: Send, boxes: Box[] }) => {
   const
     hiddenB = signal(false),
-    original = props.boxes,
-    canContinue = hasActions(original),
-    boxes: Box[] = canContinue ? original : [...original, continueButton],
+    boxes: Box[] = makeContinuable(props.boxes),
     context = newCaptureContext(props.send, []),
     styles = { main: { maxWidth: 450 } },
     hide = () => {
       hiddenB(true)
-      context.capture(0, true)
-      context.submit()
     },
     render = () => {
       const
@@ -99,10 +95,6 @@ export const Popup = make((props: { send: Send, boxes: Box[] }) => {
           hidden={hidden}
         >
           <Zone context={context} boxes={boxes} box={{}} />
-          <DialogFooter>
-            <PrimaryButton onClick={hide} text='Save' />
-            <DefaultButton onClick={hide} text='Cancel' />
-          </DialogFooter>
         </Dialog >
       )
     }

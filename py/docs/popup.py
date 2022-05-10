@@ -29,3 +29,19 @@ def popup_basic(view: View):
 def popup_title(view: View):
     view(box(['Show a popup']))
     view('Call us now for free donuts!', title='Wait!', popup=True)
+
+
+# ## Customize buttons
+# If the popup's body contains a set of buttons, they're used as the popup's dismiss buttons. Common uses for such
+# buttons are to accept, cancel or close a popup.
+def popup_buttons(view: View):
+    view(box(['Show a popup']))
+    response = view(
+        box('Call us now for free donuts!'),
+        box(dict(yes='Yes, now!', no='Maybe later')),
+        title='Wait!', popup=True,
+    )
+    if response == 'yes':
+        view('Your donuts are on the way!')
+    else:
+        view('No donuts for you.')
