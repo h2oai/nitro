@@ -22,7 +22,8 @@ import { defaultScheme, loadScheme } from './theme'
 export const newClient = (endpoint: S) => {
   let _socket: Socket | null = null
   const
-    boxes: Box[] = [],
+    body: Box[] = [],
+    popup: Box[] = [],
     titleB = signal('H2O Nitro'),
     captionB = signal('v0.1.0'),
     menuB = signal<Option[]>([]),
@@ -44,7 +45,8 @@ export const newClient = (endpoint: S) => {
     menuB,
     navB,
     schemeB,
-    boxes,
+    body,
+    popup,
     socket,
   }
 }

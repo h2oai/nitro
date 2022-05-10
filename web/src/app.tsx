@@ -14,7 +14,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Body } from './body';
+import { Body, Popup } from './body';
 import { Client } from './client';
 import { isN, newIncr, S, signal, U, xid } from './core';
 import { Header } from './header';
@@ -95,14 +95,21 @@ export const App = make(({ client }: { client: Client }) => {
                 {
                   const { d: box, p: position } = msg
                   box.xid = xid()
-                  const { boxes } = client
-                  if (isN(position) && position >= 0 && position < boxes.length) {
-                    boxes[position] = box
+                  const { body, popup } = client
+                  if (box.popup) {
+                    popup.length = 0
+                    popup.push(sanitizeBox(box))
+                    reIndex(popup, newIncr())
                   } else {
-                    boxes.length = 0
-                    boxes.push(sanitizeBox(box))
+                    if (isN(position) && position >= 0 && position < body.length) { // XXX not used
+                      body[position] = box
+                    } else {
+                      popup.length = 0
+                      body.length = 0
+                      body.push(sanitizeBox(box))
+                    }
+                    reIndex(body, newIncr())
                   }
-                  reIndex(boxes, newIncr())
                   stateB({ t: AppStateT.Connected, socket, client })
                 }
                 break
@@ -180,7 +187,8 @@ export const App = make(({ client }: { client: Client }) => {
               <div className='art' />
               <div className='page'>
                 <Header send={state.socket.send} client={client} />
-                <Body send={state.socket.send} boxes={client.boxes} />
+                <Body send={state.socket.send} boxes={client.body} />
+                {client.popup.length ? <Popup send={state.socket.send} boxes={client.popup} /> : <></>}
               </div>
             </div>
           )

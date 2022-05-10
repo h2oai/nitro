@@ -235,6 +235,8 @@ class Box:
             headers: Optional[Headers] = None,
             items: Optional[Items] = None,
             row: Optional[bool] = None,
+            title: Optional[str] = None,
+            popup: Optional[bool] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -287,6 +289,8 @@ class Box:
         self.headers = headers
         self.items = items
         self.row = row
+        self.title = title
+        self.popup = popup
         self.tile = tile
         self.cross_tile = cross_tile
         self.wrap = wrap
@@ -331,6 +335,8 @@ class Box:
             headers=_dump(self.headers),
             items=_dump(self.items),
             row=self.row,
+            title=self.title,
+            popup=self.popup,
             tile=self.tile,
             cross_tile=self.cross_tile,
             wrap=self.wrap,
@@ -646,6 +652,8 @@ class View(_View):
             overwrite=True,
             position: Optional[int] = None,
             row: Optional[bool] = None,
+            title: Optional[str] = None,
+            popup: Optional[bool] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -668,6 +676,8 @@ class View(_View):
             b = Box(
                 items=items,
                 row=row,
+                title=title,
+                popup=popup,
                 tile=tile,
                 cross_tile=cross_tile,
                 wrap=wrap,
@@ -765,6 +775,8 @@ class AsyncView(_View):
             overwrite=True,
             position: Optional[int] = None,
             row: Optional[bool] = None,
+            title: Optional[str] = None,
+            popup: Optional[bool] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -787,6 +799,8 @@ class AsyncView(_View):
             b = Box(
                 items=items,
                 row=row,
+                title=title,
+                popup=popup,
                 tile=tile,
                 cross_tile=cross_tile,
                 wrap=wrap,

@@ -83,6 +83,8 @@ export type Box = {
   headers?: Header[]
   items?: Box[]
   row?: B
+  title?: S
+  popup?: B
   tile?: S
   cross_tile?: S
   wrap?: S

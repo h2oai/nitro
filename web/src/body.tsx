@@ -13,11 +13,13 @@
 // limitations under the License.
 
 import React from 'react';
-import { B, isB, xid } from './core';
+import { B, isB, signal, xid } from './core';
 import { Box } from './protocol';
 import { Send } from './socket';
-import { newCaptureContext } from './ui';
+import { make, newCaptureContext } from './ui';
 import { Zone } from './zone';
+import { DefaultButton, Dialog, DialogFooter, DialogType, PrimaryButton } from '@fluentui/react';
+
 
 const continueButton: Box = {
   xid: xid(),
@@ -62,3 +64,47 @@ export const Body = (props: { send: Send, boxes: Box[] }) => {
     </div>
   )
 }
+
+export const Popup = make((props: { send: Send, boxes: Box[] }) => {
+  const
+    hiddenB = signal(false),
+    original = props.boxes,
+    canContinue = hasActions(original),
+    boxes: Box[] = canContinue ? original : [...original, continueButton],
+    context = newCaptureContext(props.send, []),
+    styles = { main: { maxWidth: 450 } },
+    hide = () => {
+      hiddenB(true)
+      context.capture(0, true)
+      context.submit()
+    },
+    render = () => {
+      const
+        { title } = boxes[0], // popups have exactly one box.
+        hidden = hiddenB()
+
+      return (
+        <Dialog
+          dialogContentProps={{
+            type: DialogType.normal, // TODO largeheader
+            title: title ?? 'Alert',
+            closeButtonAriaLabel: 'Close',
+          }}
+          modalProps={{
+            isBlocking: false,
+            styles,
+            // TODO dragOptions
+          }}
+          onDismiss={hide}
+          hidden={hidden}
+        >
+          <Zone context={context} boxes={boxes} box={{}} />
+          <DialogFooter>
+            <PrimaryButton onClick={hide} text='Save' />
+            <DefaultButton onClick={hide} text='Cancel' />
+          </DialogFooter>
+        </Dialog >
+      )
+    }
+  return { render, hiddenB }
+})

@@ -40,9 +40,16 @@ TOC
 
 
 def view_output(view: View, docs, *args, **kwargs):
-    if len(args):
-        return view(*docs, col(*args, name='output', padding=20, border='$accent', **kwargs))
-    return view(*docs)  # example has no output
+    if len(args) == 0:
+        # example has no output
+        return view(*docs)
+
+    if 'popup' in kwargs:
+        # show as-is
+        return view(*args, **kwargs)
+
+    # show with docs
+    return view(*docs, col(*args, name='output', padding=20, border='$accent', **kwargs))
 
 
 def main(view: View):

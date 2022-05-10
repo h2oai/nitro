@@ -56,6 +56,7 @@ nav:
     - 'images.md'
     - 'layout.md'
     - 'forms.md'
+    - 'popups.md'
     - 'textbox.md'
     - 'spinbox.md'
     - 'checkbox.md'

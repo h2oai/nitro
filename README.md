@@ -95,6 +95,7 @@ You can always view the docs for the latest version at https://nitro.h2o.ai/.
 - [Images](docs/images.md)
 - [Layout](docs/layout.md)
 - [Forms](docs/forms.md)
+- [Popups](docs/popups.md)
 - [Textbox](docs/textbox.md)
 - [Spinbox](docs/spinbox.md)
 - [Checkbox](docs/checkbox.md)
