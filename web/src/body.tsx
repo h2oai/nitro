@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dialog, DialogType } from '@fluentui/react';
+import { ContextualMenu, Dialog, DialogType, IModalProps } from '@fluentui/react';
 import React from 'react';
 import { B, isB, signal, xid } from './core';
 import { Box } from './protocol';
@@ -64,16 +64,22 @@ export const Body = (props: { send: Send, boxes: Box[] }) => {
     </div>
   )
 }
+const modalProps: IModalProps = {
+  isBlocking: false,
+  dragOptions: {
+    menu: ContextualMenu,
+    moveMenuItemText: 'Move',
+    closeMenuItemText: 'Close',
+    keepInBounds: true,
+  },
+  styles: { main: { maxWidth: 450 } },
+}
 
 export const Popup = make((props: { send: Send, boxes: Box[] }) => {
   const
     hiddenB = signal(false),
     boxes: Box[] = makeContinuable(props.boxes),
     context = newCaptureContext(props.send, []),
-    styles = { main: { maxWidth: 450 } },
-    hide = () => {
-      hiddenB(true)
-    },
     render = () => {
       const
         { title } = boxes[0], // popups have exactly one box.
@@ -86,12 +92,7 @@ export const Popup = make((props: { send: Send, boxes: Box[] }) => {
             title: title ?? 'Alert',
             closeButtonAriaLabel: 'Close',
           }}
-          modalProps={{
-            isBlocking: false,
-            styles,
-            // TODO dragOptions
-          }}
-          onDismiss={hide}
+          modalProps={modalProps}
           hidden={hidden}
         >
           <Zone context={context} boxes={boxes} box={{}} />
