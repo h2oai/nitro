@@ -70,7 +70,9 @@ export type Setting = {
   theme?: Theme
 }
 
-export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle' | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color' | 'rating' | 'table' | 'separator'
+export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
+  | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color'
+  | 'rating' | 'table' | 'separator' | 'file'
 
 export type Box = {
   xid: S
@@ -113,6 +115,7 @@ export type Box = {
   suffix?: S
   // format?: S // TODO: displayed-value format string for spinbutton, slider
   placeholder?: S
+  path?: S
   error?: S
   lines?: U
   multiple?: B

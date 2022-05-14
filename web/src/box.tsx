@@ -24,6 +24,7 @@ import { ComboBox } from './combobox';
 import { DatePicker } from './date_picker';
 import { Dropdown } from './dropdown';
 import { Droplist } from './droplist';
+import { FileUpload } from './file_upload';
 import { Rating } from './rating';
 import { Separator } from './separator';
 import { Slider } from './slider';
@@ -83,6 +84,8 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
       return <TimePicker context={context} box={box} />
     case 'separator':
       return <Separator context={context} box={box} />
+    case 'file':
+      return <FileUpload context={context} box={box} />
   }
   return null
 }

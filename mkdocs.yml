@@ -80,6 +80,7 @@ nav:
     - 'color-picker.md'
     - 'color-palette.md'
     - 'rating.md'
+    - 'file-upload.md'
     - 'separator.md'
     - 'theming.md'
     - 'advanced-layout.md'

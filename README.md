@@ -119,6 +119,7 @@ You can always view the docs for the latest version at https://nitro.h2o.ai/.
 - [Color Picker](docs/color-picker.md)
 - [Color Palette](docs/color-palette.md)
 - [Rating](docs/rating.md)
+- [File Upload](docs/file-upload.md)
 - [Separator](docs/separator.md)
 - [Theming](docs/theming.md)
 - [Advanced Layout](docs/advanced-layout.md)

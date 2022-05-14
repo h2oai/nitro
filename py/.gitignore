@@ -134,3 +134,4 @@ dmypy.json
 # Web Root
 /h2o_nitro/www
 /h2o_nitro/docs
+/file_uploads

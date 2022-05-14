@@ -11,11 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import json
+import os
+from pathlib import Path
 from h2o_nitro import web_directory, View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \
     __version__ as version
 import simple_websocket
 from flask import Flask, request, send_from_directory
+from werkzeug.utils import secure_filename
 
 # EXAMPLES
 
@@ -71,11 +74,29 @@ nitro = View(
 )
 
 app = Flask(__name__, static_folder=web_directory, static_url_path='')
+UPLOAD_DIR = './file_uploads'
+Path(UPLOAD_DIR).mkdir(exist_ok=True)
 
 
 @app.route('/')
 def home_page():
     return send_from_directory(web_directory, 'index.html')
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return 'Missing files part', 400
+    files = request.files.getlist('file')
+    filenames = []
+    for file in files:
+        if file.filename == '':
+            return 'Empty file', 400
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_DIR, filename))
+            filenames.append(filename)
+    return json.dumps(dict(files=filenames))
 
 
 @app.route('/nitro', websocket=True)

@@ -50,9 +50,7 @@ const
     }
     return false
   },
-
   makeContinuable = (boxes: Box[]): Box[] => hasActions(boxes) ? boxes : [...boxes, continueButton]
-
 
 export const Body = (props: { send: Send, boxes: Box[] }) => {
   const
