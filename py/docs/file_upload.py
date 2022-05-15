@@ -28,9 +28,22 @@ from h2o_nitro import View, box, row, col, option, lorem
 # is expected to process the files and return a JSON response containing a string
 # array named `files`. This array is returned as-is by `view()` to your Nitro
 # application code.
-#
-# If the file upload handler path is different from `/upload`, say `/foo`, set `path=`.
-# For example, `box('Upload some documents', mode='file', path='/foo')`.
 def file_upload_basic(view: View):
-    filenames = view(box('Upload some documents', mode='file'))
+    filename = view(box('Upload a document', mode='file'))
+    view(f'You uploaded {filename}.')
+
+
+# ## Allow multiple files
+# Set `multiple=True` to allow uploading multiple files.
+def file_upload_multiple(view: View):
+    filenames = view(box('Upload some documents', mode='file', multiple=True))
     view(f'You uploaded {filenames}.')
+
+
+# ## Set upload path
+# Set `path=` to set the path to upload files to.
+#
+# This is useful if your app's file upload handler path is different from `/upload` (the default),
+def file_upload_path(view: View):
+    filename = view(box('Upload a document', mode='file', path='/upload'))
+    view(f'You uploaded {filename}.')
