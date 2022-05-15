@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { loadTheme } from '@fluentui/react'
-import { S, on, signal } from './core'
+import { on, S, signal } from './core'
 import { Box, Option } from './protocol'
 import { connect, Socket, SocketEvent } from './socket'
 import { defaultScheme, loadScheme } from './theme'

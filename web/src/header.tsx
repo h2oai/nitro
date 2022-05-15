@@ -19,7 +19,7 @@ import styled from 'styled-components';
 import { Client } from './client';
 import { signal, V } from './core';
 import { toContextualMenuItem } from './options';
-import { Setting, MsgType, Option } from './protocol';
+import { MsgType, Option } from './protocol';
 import { Send } from './socket';
 import { make } from './ui';
 

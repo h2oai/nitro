@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
-import { B, Dict, Disposable, isSignal, on, V } from './core';
+import { B, Dict, Disposable, isSignal, on } from './core';
 import { Box, Input, MsgType } from './protocol';
 import { Send } from './socket';
 

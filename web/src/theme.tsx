@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { BaseSlots, createTheme, getColorFromString, hsl2rgb, hsv2hex, hsv2hsl, IColor, isDark, loadTheme, Theme, ThemeGenerator, themeRulesStandardCreator } from '@fluentui/react';
+import { BaseSlots, createTheme, getColorFromString, hsv2hsl, IColor, isDark, loadTheme, Theme, ThemeGenerator, themeRulesStandardCreator } from '@fluentui/react';
 import { Dict, S, U } from './core';
 
 export type Scheme = {

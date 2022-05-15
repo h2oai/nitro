@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { DefaultButton, FontIcon, Icon, Label, MessageBar, MessageBarType, PrimaryButton, ProgressIndicator } from '@fluentui/react';
-import { BrowserScreenShotIcon } from '@fluentui/react-icons-mdl2';
-import { getSplitButtonVerticalDividerClassNames } from '@fluentui/react/lib/components/ContextualMenu/ContextualMenu.classNames';
+import { FontIcon, Label, MessageBar, MessageBarType, ProgressIndicator } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
-import { B, F, on, S, signal, Signal, U, xid } from './core';
+import { F, S, signal, Signal, xid } from './core';
 import { BoxProps, make } from './ui';
 
 const Container = styled.div`
