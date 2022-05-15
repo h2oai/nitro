@@ -30,13 +30,19 @@ Nitro brings that same level of simplicity to authoring web applications:
 ```py
 from h2o_nitro import View, box
 
+
 def main(view: View):
     name = view(box('What is your name?', value='Boaty McBoatface'))
     feel = view(box(f'How do you feel today, {name}?', value='intrigued'))
     view(f'What a coincidence, {name}, I feel {feel}, too!')
 ```
 
-![Nitro](assets/images/app-basic.gif)
+![Hello World app](assets/images/app-basic.gif)
+
+And here's a more elaborate example in [just 7 Python statements](https://github.com/h2oai/nitro/blob/main/py/h2o_nitro/templates/samples/recruitment/app.py).
+Yes, you read that right - 7 pages built using 7 statements!
+
+![Recruitment app](assets/images/app-recruitment.gif)
 
 ## Status
 

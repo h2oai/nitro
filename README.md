@@ -36,7 +36,12 @@ def main(view: View):
     view(f'What a coincidence, {name}, I feel {feel}, too!')
 ```
 
-![Nitro](docs/assets/images/app-basic.gif)
+![Hello World app](docs/assets/images/app-basic.gif)
+
+And here's a more elaborate example in [just 7 Python statements](https://github.com/h2oai/nitro/blob/main/py/h2o_nitro/templates/samples/recruitment/app.py).
+Yes, you read that right - 7 pages built using 7 statements!
+
+![Recruitment app](docs/assets/images/app-recruitment.gif)
 
 ## Status
 
