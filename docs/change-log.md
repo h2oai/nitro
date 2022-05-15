@@ -17,6 +17,14 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.7.0
+
+May 15, 2022
+
+- Added
+  - Support for modal dialogs. Use `view(popup=True)` to pop-up content using a dialog.
+  - File upload component (`box mode='file'`) with support for multiple file uploads and progress tracking.
+
 ## v0.6.0
 
 Apr 28, 2022
