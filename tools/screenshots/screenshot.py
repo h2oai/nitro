@@ -1,7 +1,7 @@
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-url = 'http://localhost:3000'
+url = 'http://localhost:5000'
 output_dir = Path('docs') / 'assets' / 'screenshots'
 
 output_dir.mkdir(exist_ok=True)
