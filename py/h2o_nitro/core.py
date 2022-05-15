@@ -264,6 +264,7 @@ class Box:
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
             placeholder: Optional[str] = None,
+            path: Optional[str] = None,
             error: Optional[str] = None,
             lines: Optional[int] = None,
             multiple: Optional[bool] = None,
@@ -318,6 +319,7 @@ class Box:
         self.prefix = prefix
         self.suffix = suffix
         self.placeholder = placeholder
+        self.path = path
         self.error = error
         self.lines = lines
         self.multiple = multiple
@@ -364,6 +366,7 @@ class Box:
             prefix=self.prefix,
             suffix=self.suffix,
             placeholder=self.placeholder,
+            path=self.path,
             error=self.error,
             lines=self.lines,
             multiple=self.multiple,
