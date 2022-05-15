@@ -129,9 +129,12 @@ type Uploadable = {
 
 export const FileUpload = make(({ context, box }: BoxProps) => {
   const
-    { index, text, multiple, path } = box,
+    { index, text, path } = box,
+    multiple = box.multiple ? true : false,
+    label = multiple ? 'Drag files here, or' : 'Drag a file here, or',
     inputID = xid(),
     itemsB = signal<Uploadable[]>([]),
+    warningB = signal(''),
     uploadKeys: S[] = [],
     upload = (files: File[]) => {
       const uploadables = files.map((file): Uploadable => {
@@ -140,15 +143,22 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
           errorB = signal('')
         return { key: xid(), label: file.name, file, progressB, errorB }
       })
+
       itemsB([...itemsB(), ...uploadables])
+      warningB('')
+
       setTimeout(() => {
         uploadables.forEach(({ file, progressB, errorB }) => {
           doUpload(path ?? '/upload', file, progressB, r => {
             switch (r.t) {
               case UploadResultT.Success:
                 progressB(1)
-                uploadKeys.push(r.key)
-                context.capture(index, uploadKeys)
+                if (multiple) {
+                  uploadKeys.push(r.key)
+                  context.capture(index, uploadKeys)
+                } else {
+                  context.capture(index, r.key)
+                }
                 break
               case UploadResultT.Failure:
                 errorB(r.error)
@@ -169,6 +179,10 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
       const rawFiles = e.dataTransfer.files
       if (!rawFiles.length) return
       const files = Array.from(rawFiles)
+      if (!multiple && files.length != 1) {
+        warningB(`You dropped ${files.length} files here, but only one file is allowed.`)
+        return
+      }
       upload(files)
     },
     onDrag = (e: React.DragEvent<HTMLFormElement>) => {
@@ -176,9 +190,12 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
       e.stopPropagation()
     },
     render = () => {
-      const items = itemsB().map(({ key, label, progressB, errorB }) => (
-        <FileItem key={key} label={label} progressB={progressB} errorB={errorB} />
-      ))
+      const
+        warning = warningB(),
+        items = itemsB().map(({ key, label, progressB, errorB }) => (
+          <FileItem key={key} label={label} progressB={progressB} errorB={errorB} />
+        ))
+
       return (
         <Container>
           <form
@@ -190,10 +207,11 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
             onDrop={onDrop}
           >
             <Label>{text}</Label>
+            {warning ? <MessageBar messageBarType={MessageBarType.severeWarning}>{warning}</MessageBar> : <></>}
             <FileList>{items}</FileList>
             <FileDropZone>
               <input id={inputID} type='file' onChange={onChange} multiple={multiple} style={{ opacity: 0 }} />
-              <FileDropZoneLabel>Drag files here, or</FileDropZoneLabel>
+              <FileDropZoneLabel>{label}</FileDropZoneLabel>
               <FileInputLabel htmlFor={inputID}>Browse...</FileInputLabel>
             </FileDropZone>
           </form>
@@ -201,7 +219,9 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
       )
     }
 
-  return { render, itemsB }
+  context.capture(index, multiple ? [] : null)
+
+  return { render, itemsB, warningB }
 })
 
 
