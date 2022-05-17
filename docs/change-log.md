@@ -22,8 +22,8 @@ fixes are provided for 1 year.
 May 15, 2022
 
 - Added
-  - Support for modal dialogs. Use `view(popup=True)` to pop-up content using a dialog.
-  - File upload component (`box mode='file'`) with support for multiple file uploads and progress tracking.
+    - Support for modal dialogs. Use `view(popup=True)` to pop-up content using a dialog.
+    - File upload component (`box mode='file'`) with support for multiple file uploads and progress tracking.
 
 ## v0.6.0
 
