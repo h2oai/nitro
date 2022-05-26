@@ -5,7 +5,6 @@ purge: ## Purge previous build
 
 .PHONY: build
 build: purge docs ## Build wheel and docs
-	rm -rf h2o_nitro/www && cp -r ../web/build h2o_nitro/www
 	./venv/bin/python setup.py bdist_wheel
 
 setup: clean ## Install dependencies
