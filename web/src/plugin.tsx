@@ -33,6 +33,7 @@ const
   installScript = ({ source, type, asynchronous, cross_origin, referrer_policy, integrity }: Script) => {
     const status = installedScripts[source]
     if (status === ScriptState.Installed || status === ScriptState.Installing) return
+    installedScripts[source] = ScriptState.Installing
     const e = document.createElement('script')
     e.type = 'text/javascript'
     e.src = source
@@ -42,7 +43,7 @@ const
     if (referrer_policy) e.referrerPolicy = referrer_policy
     if (integrity) e.integrity = integrity
     e.addEventListener('load', () => {
-      installedScripts[source] = ScriptState.Installed // mark as loaded
+      installedScripts[source] = ScriptState.Installed
     })
     document.body.appendChild(e)
   },
@@ -77,37 +78,36 @@ const
     }
     installScripts(plugin, scripts)
   },
-  waitFor = (timeout: U, interval: U, test: () => B, done: () => void, fail: () => void) => {
-    const maxTries = timeout / interval
-    let tries = 0
+  waitFor = (timeout: U, interval: U, ok: () => B, pass: () => void, fail: () => void) => {
+    let elapsed = 0
     const timer = setInterval(() => {
-      if (test()) {
+      if (ok()) {
         clearInterval(timer)
-        done()
+        pass()
       } else {
-        tries++
-        if (tries > maxTries) {
+        elapsed += interval // approx
+        if (elapsed > timeout) {
           clearInterval(timer)
           fail()
         }
       }
     })
   },
-  areScriptsInstalled = () => Object.values(installedScripts).every(s => s === ScriptState.Installed),
-  waitForScriptInstallation = (callback: () => void) => {
-    waitFor(5000, 10, areScriptsInstalled, callback, () => console.error('One or more scripts failed to load.'))
+  areScriptsInstalled = () => Object.values(installedScripts).every(state => state === ScriptState.Installed),
+  waitForScriptInstallation = (pass: () => void) => {
+    waitFor(10000, 10, areScriptsInstalled, pass, () => console.error('One or more scripts failed to load.'))
   },
-  getModule = (name: S, callback: (m: Module) => void) => {
+  loadModule = (name: S, onload: (m: Module) => void) => {
     const module = installedModules[name]
     if (!module) {
       console.error(`Plugin module "${name}" not found.`)
       return
     }
     if (module.ready) {
-      callback(module)
+      onload(module)
       return
     }
-    waitFor(5000, 10, () => module.ready, () => callback(module), () => console.error(`Timed out waiting for plugin "${name}" to load.`))
+    waitFor(10000, 10, () => module.ready, () => onload(module), () => console.error(`Timed out waiting for plugin "${name}" to load.`))
   }
 
 export const
@@ -124,7 +124,7 @@ export const
     })
   },
   execPlugin = (name: S, method: S, context: Context, element: Element, data?: any) => {
-    getModule(name, module => {
+    loadModule(name, module => {
       const f = module.exports[method]
       if (f) {
         if (element) {
