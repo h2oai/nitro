@@ -19,6 +19,7 @@ import { Client } from './client';
 import { isN, newIncr, S, signal, U, xid } from './core';
 import { Header } from './header';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
+import { installPlugins } from './plugin';
 import { Msg, MsgType } from './protocol';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { defaultScheme, Scheme } from './theme';
@@ -117,7 +118,7 @@ export const App = make(({ client }: { client: Client }) => {
                 {
                   const
                     { d: conf } = msg,
-                    { title, caption, menu, nav, theme } = conf
+                    { title, caption, menu, nav, theme, plugins } = conf
 
                   if (title) client.titleB(title)
                   if (caption) client.captionB(caption)
@@ -136,6 +137,7 @@ export const App = make(({ client }: { client: Client }) => {
                       }
                     client.schemeB(scheme)
                   }
+                  if (plugins) installPlugins(plugins)
 
                   const state = stateB()
                   if (state.t === AppStateT.Connected) {

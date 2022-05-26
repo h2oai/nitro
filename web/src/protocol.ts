@@ -62,12 +62,27 @@ export type Theme = {
   accent_color_name?: S
 }
 
+export type Plugin = {
+  name: S
+  scripts: Script[]
+}
+
+export type Script = {
+  source: S
+  type?: S
+  asynchronous?: B
+  cross_origin?: S
+  referrer_policy?: S
+  integrity?: S
+}
+
 export type Setting = {
   title?: S,
   caption?: S,
   menu?: Option[]
   nav?: Option[]
   theme?: Theme
+  plugins?: Plugin[]
 }
 
 export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
@@ -84,6 +99,7 @@ export type Box = {
   options: Option[]
   headers?: Header[]
   items?: Box[]
+  data?: any
   row?: B
   title?: S
   popup?: B

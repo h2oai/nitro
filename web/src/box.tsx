@@ -25,6 +25,7 @@ import { DatePicker } from './date_picker';
 import { Dropdown } from './dropdown';
 import { Droplist } from './droplist';
 import { FileUpload } from './file_upload';
+import { PluginBox } from './plugin';
 import { Rating } from './rating';
 import { Separator } from './separator';
 import { Slider } from './slider';
@@ -87,5 +88,8 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     case 'file':
       return <FileUpload context={context} box={box} />
   }
+
+  if (mode?.startsWith('plugin:')) return <PluginBox context={context} box={box} />
+
   return null
 }

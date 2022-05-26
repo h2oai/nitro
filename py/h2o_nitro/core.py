@@ -14,7 +14,7 @@
 
 import random
 from pathlib import Path
-from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable
+from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable, Iterable
 from collections import OrderedDict
 import msgpack
 from enum import Enum, IntEnum
@@ -224,6 +224,46 @@ class Theme:
         )
 
 
+class Script:
+    def __init__(
+            self,
+            source: str,
+            type: Optional[str] = None,
+            asynchronous: Optional[bool] = None,
+            cross_origin: Optional[str] = None,
+            referrer_policy: Optional[str] = None,
+            integrity: Optional[str] = None
+    ):
+        self.source = source
+        self.type = type
+        self.asynchronous = asynchronous
+        self.cross_origin = cross_origin
+        self.referrer_policy = referrer_policy
+        self.integrity = integrity
+
+    def dump(self) -> dict:
+        return _clean(dict(
+            source=self.source,
+            type=self.type,
+            asynchronous=self.asynchronous,
+            cross_origin=self.cross_origin,
+            referrer_policy=self.referrer_policy,
+            integrity=self.integrity
+        ))
+
+
+class Plugin:
+    def __init__(self, name: str, scripts: Optional[Iterable[Script]] = None):
+        self.name = name
+        self.scripts = scripts
+
+    def dump(self) -> dict:
+        return dict(
+            name=self.name,
+            scripts=_dump(self.scripts),
+        )
+
+
 class Box:
     def __init__(
             self,
@@ -234,6 +274,7 @@ class Box:
             options: Optional[Options] = None,
             headers: Optional[Headers] = None,
             items: Optional[Items] = None,
+            data: Optional[dict] = None,
             row: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
@@ -289,6 +330,7 @@ class Box:
         self.options = opts
         self.headers = headers
         self.items = items
+        self.data = data
         self.row = row
         self.title = title
         self.popup = popup
@@ -336,6 +378,7 @@ class Box:
             options=_dump(self.options),
             headers=_dump(self.headers),
             items=_dump(self.items),
+            data=_dump(self.data),
             row=self.row,
             title=self.title,
             popup=self.popup,
@@ -526,6 +569,7 @@ def _marshal_set(
         menu: Optional[Sequence[Option]] = None,
         nav: Optional[Sequence[Option]] = None,
         theme: Optional[Theme] = None,
+        plugins: Optional[Iterable[Plugin]] = None,
 ) -> dict:
     return _marshal(dict(t=_MsgType.Set, d=_clean(dict(
         title=title,
@@ -533,6 +577,7 @@ def _marshal_set(
         menu=_dump(menu),
         nav=_dump(nav),
         theme=_dump(theme),
+        plugins=_dump(plugins),
     ))))
 
 
@@ -548,6 +593,7 @@ class _View:
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
+            plugins: Optional[Iterable[Plugin]] = None,
     ):
         self._delegate = delegate
         self.context = context or {}
@@ -555,9 +601,10 @@ class _View:
         self._recv = recv
         self._title = title
         self._caption = caption
-        self._menu = menu or []
-        self._nav = nav or []
+        self._menu = menu
+        self._nav = nav
         self._theme = theme
+        self._plugins = plugins
 
         self._delegates: Dict[str, Callable] = dict()
         _collect_delegates(self._delegates, self._menu)
@@ -571,6 +618,7 @@ class _View:
             menu=_dump(self._menu),
             nav=_dump(self._nav),
             theme=_dump(self._theme),
+            plugins=_dump(self._plugins),
         )
 
     def __getitem__(self, key):
@@ -598,8 +646,9 @@ class View(_View):
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
+            plugins: Optional[Iterable[Plugin]] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme, plugins)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
@@ -612,6 +661,7 @@ class View(_View):
             self._menu,
             self._nav,
             self._theme,
+            self._plugins,
         )._run()
 
     def _run(self):
@@ -721,8 +771,9 @@ class AsyncView(_View):
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
+            plugins: Optional[Iterable[Plugin]] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme, plugins)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
@@ -735,6 +786,7 @@ class AsyncView(_View):
             self._menu,
             self._nav,
             self._theme,
+            self._plugins,
         )._run()
 
     async def _run(self):
