@@ -17,9 +17,16 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.8.0
+
+May 26, 2022
+
+- Added
+    - Plugin / extension mechanism for loading and using third-party front-end/back-end libraries.
+
 ## v0.7.1
 
-May 15, 2022
+May 23, 2022
 
 - Changed
     - Import static assets relative to `index.html` instead of `/`.
