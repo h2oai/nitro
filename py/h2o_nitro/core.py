@@ -607,8 +607,8 @@ class _View:
         self._plugins = plugins
 
         self._delegates: Dict[str, Callable] = dict()
-        _collect_delegates(self._delegates, self._menu)
-        _collect_delegates(self._delegates, self._nav)
+        _collect_delegates(self._delegates, self._menu or [])
+        _collect_delegates(self._delegates, self._nav or [])
 
     def _join(self, msg):
         # XXX handle join msg
