@@ -12,7 +12,6 @@ setup-web: ## Install dependencies for web
 .PHONY: web
 web: ## Build web
 	cd web && npm run build
-	rm -rf py/h2o_nitro/www && cp -r web/build py/h2o_nitro/www
 
 clean-web: ## Clean web dependencies
 	cd web && rm -rf build node_modules
