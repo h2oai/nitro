@@ -91,7 +91,7 @@ const
           fail()
         }
       }
-    })
+    }, interval)
   },
   areScriptsInstalled = () => Object.values(installedScripts).every(state => state === ScriptState.Installed),
   waitForScriptInstallation = (pass: () => void) => {

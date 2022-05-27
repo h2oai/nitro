@@ -48,6 +48,7 @@ markdown_extensions:
 nav:
   - Introduction: 'index.md'
   - 'install.md'
+  - 'plugins.md'
   # Begin generated
   - Guide:
     - 'basics.md'
@@ -85,5 +86,7 @@ nav:
     - 'theming.md'
     - 'advanced-layout.md'
     # End generated
+  - Advanced:
+      - 'writing-plugins.md'
   - Meta:
       - 'change-log.md'
