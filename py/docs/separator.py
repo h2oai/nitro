@@ -18,13 +18,14 @@ from h2o_nitro import View, box, row, col, option, lorem
 # # Separator
 
 # ## Basic
-# Call `box()` with `mode='number'` to show a box with increment/decrement buttons.
-# (also called a *spinbox*).
+# Call `box()` with `mode='separator'` to show a separator.
 def separator_basic(view: View):
     view(box('Donuts', mode='separator'))
 
 
 # ## Set text alignment
+# A separator's label is centered by default.
+# Set `align=` to left- or right-align the label.
 def separator_align(view: View):
     view(
         box('Left-aligned', mode='separator', align='left'),

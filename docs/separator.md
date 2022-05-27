@@ -4,8 +4,7 @@
 
 ## Basic
 
-Call `box()` with `mode='number'` to show a box with increment/decrement buttons.
-(also called a *spinbox*).
+Call `box()` with `mode='separator'` to show a separator.
 
 
 ```py
@@ -17,6 +16,10 @@ view(box('Donuts', mode='separator'))
 
 
 ## Set text alignment
+
+A separator's label is centered by default.
+Set `align=` to left- or right-align the label.
+
 
 ```py
 view(
