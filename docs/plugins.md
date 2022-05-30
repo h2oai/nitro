@@ -10,7 +10,7 @@ desktop apps.
 - [h2o-nitro-bokeh](https://github.com/h2oai/nitro-bokeh)
     - Use [Bokeh](https://docs.bokeh.org/en/latest/) visualizations in Nitro apps.
 - [h2o-nitro-matplotlib](https://github.com/h2oai/nitro-matplotlib)
-    - Use [Matplotlib](https://matplotlib.org/stable/index.html) visualizations in Nitro apps.
+    - Use [Matplotlib](https://matplotlib.org/stable/index.html) and [Seaborn](https://seaborn.pydata.org/) visualizations in Nitro apps.
 
 ## Writing plugins
 
