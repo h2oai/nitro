@@ -17,6 +17,13 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.8.3
+
+May 30, 2022
+
+- Changed
+    - (Perf) Load a plugin's scripts sequentially; load plugins in parallel.
+
 ## v0.8.2
 
 May 26, 2022
