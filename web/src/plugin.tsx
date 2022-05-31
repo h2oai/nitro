@@ -17,23 +17,44 @@ import { B, Dict, gensym, S, U, xid } from "./core";
 import { Plugin, Script } from './protocol';
 import { BoxProps, Context, make } from './ui';
 
-enum ScriptState { NotInstalled, Installing, Installed }
+type Go = (error: S | null) => void
 
 type Module = {
-  id: S
-  ctors: S[]
+  plugin: Plugin
+  imports: Script[]
+  sources: Source[]
   exports: any
-  ready: B
+}
+
+type Source = {
+  ctor: S
+  code: S
+}
+
+function sequence<X, Y>(xs: X[], f: (x: X, go: Go) => void, go: Go) {
+  const
+    q = xs.slice().reverse(),
+    next = () => {
+      const x = q.pop()
+      if (x) {
+        f(x, e => {
+          if (e) {
+            go(e)
+          } else {
+            next()
+          }
+        })
+      } else {
+        go(null)
+      }
+    }
+  next()
 }
 
 const
-  nextPluginID = gensym('nitroplug_'),
-  installedModules: Dict<Module> = {}, // global
-  installedScripts: Dict<ScriptState> = {}, // global
-  installScript = ({ source, type, asynchronous, cross_origin, referrer_policy, integrity }: Script) => {
-    const status = installedScripts[source]
-    if (status === ScriptState.Installed || status === ScriptState.Installing) return
-    installedScripts[source] = ScriptState.Installing
+  modules: Dict<Module> = {},
+  installScript = (script: Script, go: Go) => {
+    const { source, type, asynchronous, cross_origin, referrer_policy, integrity } = script
     const e = document.createElement('script')
     e.type = 'text/javascript'
     e.src = source
@@ -42,84 +63,48 @@ const
     if (cross_origin) e.crossOrigin = cross_origin
     if (referrer_policy) e.referrerPolicy = referrer_policy
     if (integrity) e.integrity = integrity
-    e.addEventListener('load', () => {
-      installedScripts[source] = ScriptState.Installed
-    })
+    e.addEventListener('load', () => go(null))
     document.body.appendChild(e)
   },
-  wrapSource = (name: S, source: S) => `function ${name}(exports){${source}}`,
-  inlineScript = (name: S, { source }: Script) => {
+  installSource = ({ ctor, code }: Source, go: Go) => {
     const e = document.createElement('script')
     e.type = 'text/javascript'
     // HTML5 specifies that a <script> tag inserted with innerHTML should not execute.
     // See https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML#security_considerations
     // See https://www.w3.org/TR/2008/WD-html5-20080610/dom.html#innerhtml0
-    e.appendChild(document.createTextNode(wrapSource(name, source)))
+    e.appendChild(document.createTextNode(`function ${ctor}(exports){${code}}`))
     document.body.appendChild(e)
+    go(null)
   },
-  installScripts = (plugin: Module, scripts: Script[]) => {
-    const nextScriptID = gensym(plugin.id + '_')
-    for (const script of scripts) {
-      if (script.type === 'inline') {
-        const ctor = nextScriptID()
-        inlineScript(ctor, script)
-        plugin.ctors.push(ctor)
-      } else {
-        installScript(script)
-      }
-    }
-  },
-  installPlugin = ({ name, scripts }: Plugin) => {
-    const plugin = installedModules[name] = {
-      id: nextPluginID(),
-      ctors: [],
-      exports: {},
-      ready: false,
-    }
-    installScripts(plugin, scripts)
-  },
-  waitFor = (timeout: U, interval: U, ok: () => B, pass: () => void, fail: () => void) => {
-    let elapsed = 0
-    const timer = setInterval(() => {
-      if (ok()) {
-        clearInterval(timer)
-        pass()
-      } else {
-        elapsed += interval // approx
-        if (elapsed > timeout) {
-          clearInterval(timer)
-          fail()
-        }
-      }
-    }, interval)
-  },
-  areScriptsInstalled = () => Object.values(installedScripts).every(state => state === ScriptState.Installed),
-  waitForScriptInstallation = (pass: () => void) => {
-    waitFor(10000, 10, areScriptsInstalled, pass, () => console.error('One or more scripts failed to load.'))
-  },
-  loadModule = (name: S, onload: (m: Module) => void) => {
-    const module = installedModules[name]
-    if (!module) {
-      console.error(`Plugin module "${name}" not found.`)
-      return
-    }
-    if (module.ready) {
-      onload(module)
-      return
-    }
-    waitFor(10000, 10, () => module.ready, () => onload(module), () => console.error(`Timed out waiting for plugin "${name}" to load.`))
-  }
+  installModule = (module: Module, go: Go) => {
+    const
+      { plugin, imports, sources, exports } = module,
+      nextCtor = gensym(plugin.name + '_')
 
-export const
-  installPlugins = (plugins: Plugin[]) => {
-    plugins.forEach(installPlugin)
-    waitForScriptInstallation(() => {
-      Object.values(installedModules).forEach(module => {
-        module.ctors.forEach(ctor => {
+    for (const script of plugin.scripts) {
+      if (script.type === 'inline') {
+        sources.push({ ctor: nextCtor(), code: script.source })
+      } else {
+        imports.push(script)
+      }
+    }
+    // imported scripts first, in order
+    sequence(imports, installScript, e => {
+      if (e) {
+        go(e)
+        return
+      }
+      // local scripts next, in order
+      sequence(sources, installSource, e => {
+        if (e) {
+          go(e)
+          return
+        }
+        for (const { ctor } of sources) {
           const f = (window as any)[ctor]
-          if (f) f(module.exports)
-        })
-        module.ready = true
+          if (f) f(exports)
+        }
+        go(null)
       })
     })
   },
@@ -135,6 +120,53 @@ export const
       } else {
         console.error(`No exported function named "${method}" in plugin "${name}".`)
       }
+    })
+  },
+  waitFor = (timeout: U, interval: U, test: () => B, pass: () => void, fail: () => void) => {
+    let elapsed = 0
+    const timer = setInterval(() => {
+      if (test()) {
+        clearInterval(timer)
+        pass()
+      } else {
+        elapsed += interval // approx
+        if (elapsed > timeout) {
+          clearInterval(timer)
+          fail()
+        }
+      }
+    }, interval)
+  },
+  loadModule = (name: S, onLoad: (m: Module) => void) => {
+    const module = modules[name]
+    if (module) {
+      onLoad(module)
+      return
+    }
+    waitFor(
+      10000, 10,
+      () => modules[name] ? true : false,
+      () => onLoad(modules[name]),
+      () => console.error(`Timed out waiting for plugin "${name}" to load.`),
+    )
+  }
+
+export const
+  installPlugins = (plugins: Plugin[]) => {
+    plugins.forEach(plugin => { // parallel
+      const module: Module = {
+        plugin,
+        imports: [],
+        sources: [],
+        exports: {},
+      }
+      installModule(module, e => {
+        if (e) {
+          console.error(e)
+          return
+        }
+        modules[plugin.name] = module
+      })
     })
   },
   PluginBox = make(({ context, box }: BoxProps) => {
