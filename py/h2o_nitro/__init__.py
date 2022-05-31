@@ -15,4 +15,4 @@
 from .core import View, AsyncView, Box, BoxArrange, BoxAlign, Option, Theme, box, option, header, row, col, \
     ProtocolError, ContextSwitchError, RemoteError, web_directory, lorem, Plugin, Script
 
-__version__ = "0.8.2"
+__version__ = "0.8.3"
