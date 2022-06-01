@@ -17,6 +17,13 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.8.4
+
+Jun 01, 2022
+
+- Fixed
+    - Wrap code blocks properly when lang is not provided.
+
 ## v0.8.3
 
 May 30, 2022
