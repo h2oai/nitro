@@ -66,7 +66,8 @@ const micromarkReplacements: Dict<S> = {
 export const
   highlight = (html: S) => html
     .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
-      return hljs.highlight(revertMicromarkEncodings(code), { language }).value
+      const src = hljs.highlight(revertMicromarkEncodings(code), { language }).value
+      return `<code>${src}</code>`
     }),
   isFootnoteLink = (s: S) => s.startsWith('user-content'), // gfm-footnote default
   markdown = (text: S): [S, B] => {

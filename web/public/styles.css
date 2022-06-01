@@ -107,6 +107,15 @@ body {
     overflow: auto;
 }
 
+.md pre code {
+    /* Revert ".md code" styling. The markdown-rendering puts code blocks in "pre code". */
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    font-size: 100%;
+}
+
 .md hr {
     border: 0;
     border-top: 0.1rem solid var(--neutral-tertiary);
