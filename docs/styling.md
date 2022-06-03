@@ -11,10 +11,7 @@ A padding is automatically applied if not specified.
 
 
 ```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
+text = lorem(3)
 view(
     box(text, background='#e63946'),
     box(text, background='#f1faee'),
@@ -34,10 +31,7 @@ Set `color=` to change the text color.
 
 
 ```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
+text = lorem(3)
 view(
     box(text, color='#e63946'),
     box(text, color='#457b9d'),
@@ -57,10 +51,7 @@ A padding is automatically applied if not specified.
 
 
 ```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
+text = lorem(3)
 view(
     box(text, border='#e63946'),
     box(text, border='#457b9d'),
@@ -72,16 +63,42 @@ view(
 ![Screenshot](assets/screenshots/styling_border.png)
 
 
+## Set each border color
+
+Top, right, bottom, left colors can be controlled independently, and are specified
+as `'top right bottom left'` strings.
+
+- `'x'` is shorthand for `'x x x x'`.
+- `'x y'` is shorthand for `'x y x y'`.
+- `'x y z'` is shorthand for `'x y z y'`.
+
+Use the color `'transparent'` to make a border invisible.
+
+For example `red transparent red transparent` shows a red border on the top and bottom,
+and no border on the sides.
+
+
+```py
+text = lorem(3)
+view(
+    box(text, border='red'),
+    box(text, border='red transparent'),
+    box(text, border='transparent red'),
+    box(text, border='transparent transparent transparent red'),
+)
+```
+
+
+![Screenshot](assets/screenshots/styling_each_border.png)
+
+
 ## Set text alignment
 
 Set `align=` to `left`, `right`, `center` or `justify` to align text.
 
 
 ```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
+text = lorem(3)
 view(
     row(
         box(text, align='left'),
@@ -125,7 +142,7 @@ These parameters can be specified as either integers or strings.
 
 
 ```py
-text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+text = lorem(1)
 view(
     box(text, width=200, background='#eee'),  # interpreted as '200px'
     box(text, width='250px', background='#eee'),
@@ -153,10 +170,7 @@ as `'top right bottom left'` strings.
 
 
 ```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
+text = lorem(2)
 boxes = [
     # Uniform 20px margin
     box(text, margin='20px', background='#eee'),
@@ -189,10 +203,7 @@ as `'top right bottom left'` strings.
 
 
 ```py
-text = '''
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-'''
+text = lorem(2)
 view(
     col(
         # Uniform 20px padding
@@ -211,3 +222,22 @@ view(
 
 
 ![Screenshot](assets/screenshots/styling_padding.png)
+
+
+## Style lists
+
+Setting borders individually is useful for styling lists.
+
+In this example, we apply a top border to each list item.
+
+
+```py
+boxes = [box(lorem(2), border='purple transparent transparent') for _ in range(25)]
+view(
+    *boxes,
+    height='400px',
+)
+```
+
+
+![Screenshot](assets/screenshots/styling_lists.png)

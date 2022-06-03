@@ -23,10 +23,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # The text color is automatically changed to a contrasting color if not specified.
 # A padding is automatically applied if not specified.
 def styling_background(view: View):
-    text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    '''
+    text = lorem(3)
     view(
         box(text, background='#e63946'),
         box(text, background='#f1faee'),
@@ -39,10 +36,7 @@ def styling_background(view: View):
 # ## Set text color
 # Set `color=` to change the text color.
 def styling_color(view: View):
-    text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    '''
+    text = lorem(3)
     view(
         box(text, color='#e63946'),
         box(text, color='#457b9d'),
@@ -55,10 +49,7 @@ def styling_color(view: View):
 #
 # A padding is automatically applied if not specified.
 def styling_border(view: View):
-    text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    '''
+    text = lorem(3)
     view(
         box(text, border='#e63946'),
         box(text, border='#457b9d'),
@@ -66,13 +57,32 @@ def styling_border(view: View):
     )
 
 
+# ## Set each border color
+# Top, right, bottom, left colors can be controlled independently, and are specified
+# as `'top right bottom left'` strings.
+#
+# - `'x'` is shorthand for `'x x x x'`.
+# - `'x y'` is shorthand for `'x y x y'`.
+# - `'x y z'` is shorthand for `'x y z y'`.
+#
+# Use the color `'transparent'` to make a border invisible.
+#
+# For example `red transparent red transparent` shows a red border on the top and bottom,
+# and no border on the sides.
+def styling_each_border(view: View):
+    text = lorem(3)
+    view(
+        box(text, border='red'),
+        box(text, border='red transparent'),
+        box(text, border='transparent red'),
+        box(text, border='transparent transparent transparent red'),
+    )
+
+
 # ## Set text alignment
 # Set `align=` to `left`, `right`, `center` or `justify` to align text.
 def styling_align(view: View):
-    text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    '''
+    text = lorem(3)
     view(
         row(
             box(text, align='left'),
@@ -110,7 +120,7 @@ def styling_align(view: View):
 #     - `rem`: The font size of the page.
 
 def styling_size(view: View):
-    text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+    text = lorem(1)
     view(
         box(text, width=200, background='#eee'),  # interpreted as '200px'
         box(text, width='250px', background='#eee'),
@@ -131,10 +141,7 @@ def styling_size(view: View):
 # - `'x y'` is shorthand for `'x y x y'`.
 # - `'x y z'` is shorthand for `'x y z y'`.
 def styling_margin(view: View):
-    text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    '''
+    text = lorem(2)
     boxes = [
         # Uniform 20px margin
         box(text, margin='20px', background='#eee'),
@@ -160,10 +167,7 @@ def styling_margin(view: View):
 # - `'x y'` is shorthand for `'x y x y'`.
 # - `'x y z'` is shorthand for `'x y z y'`.
 def styling_padding(view: View):
-    text = '''
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
-    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    '''
+    text = lorem(2)
     view(
         col(
             # Uniform 20px padding
@@ -177,4 +181,16 @@ def styling_padding(view: View):
             # 0px top, 100px right, 30px bottom, 200px left padding
             box(text, padding='0px 100px 30px 200px', background='#eee'),
         )
+    )
+
+
+# ## Style lists
+# Setting borders individually is useful for styling lists.
+#
+# In this example, we apply a top border to each list item.
+def styling_lists(view: View):
+    boxes = [box(lorem(2), border='purple transparent transparent') for _ in range(25)]
+    view(
+        *boxes,
+        height='400px',
     )
