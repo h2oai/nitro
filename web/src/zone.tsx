@@ -110,6 +110,8 @@ const computeStyle = (box: Partial<Box>) => {
     }
   }
 
+  if (width !== undefined || height !== undefined) css.overflow = 'auto'
+
   if (margin !== undefined) css.margin = translate(margin)
   if (padding !== undefined) css.padding = translate(padding)
 
@@ -158,7 +160,7 @@ const computeStyle = (box: Partial<Box>) => {
     css.borderColor = translate(border)
   }
 
-  if ((border || background || css.backgroundImage) && padding === undefined) {
+  if (padding === undefined && (border || background || css.backgroundImage)) {
     css.padding = '1rem'
   }
 
