@@ -84,6 +84,35 @@ view(
 ![Screenshot](assets/screenshots/layout_col.png)
 
 
+## Control scrolling
+
+Set `height=` or `width=` on a `row()` or `col()` to constrain size.
+Scrollbars automatically show up if their contents don't fit.
+
+
+```py
+list1 = [box(lorem()) for _ in range(50)]
+list2 = [box(lorem()) for _ in range(50)]
+view(
+    "### Scroll together",
+    row(
+        '',
+        col(*list1),
+        col(*list2),
+        height='500px',
+    ),
+    "### Scroll independently",
+    row(
+        col(*list1, height='500px'),
+        col(*list2, height='500px'),
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/layout_nest.png)
+
+
 ## Control tiling
 
 Set `tile=` to control how items inside a view, row, or column are tiled along the main axis.
