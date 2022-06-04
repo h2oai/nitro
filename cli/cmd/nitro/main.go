@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -87,6 +88,8 @@ func writeFile(slashPath, data string) error {
 }
 
 func downloadFile(url, slashPath string) (string, error) {
+	fmt.Printf("Downloading %s\n", url)
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return "", fmt.Errorf("error creating HTTP request: %v", err)
@@ -113,8 +116,7 @@ func downloadFile(url, slashPath string) (string, error) {
 	}
 
 	if _, err := os.Stat(relPath); err == nil {
-		// XXX prompt for rename
-		fmt.Printf("Download skipped: %q\n", relPath)
+		fmt.Printf("Download skipped: %q already exists.\n", relPath)
 		return relPath, nil
 	}
 
@@ -229,9 +231,14 @@ func newPythonEnv(vars []string) (*Env, error) {
 		return nil, err
 	}
 
-	// Run python -m venv venv
-	if err := execCommand(exe, []string{"-m", "venv", "venv"}, nil); err != nil {
-		return nil, fmt.Errorf("error initializing virtual environment: %v", err)
+	if _, err := os.Stat("venv"); err == nil {
+		fmt.Println("Virtual environment already available.")
+	} else {
+		fmt.Printf("Creating virtual environment using %q\n", exe)
+		// Run python -m venv venv
+		if err := execCommand(exe, []string{"-m", "venv", "venv"}, nil); err != nil {
+			return nil, fmt.Errorf("error initializing virtual environment: %v", err)
+		}
 	}
 
 	// Use sandboxed python for future commands
@@ -242,6 +249,12 @@ func newPythonEnv(vars []string) (*Env, error) {
 	} else {
 		// ./venv/bin/python
 		vexe = filepath.Join("venv", "bin", "python")
+	}
+
+	if _, err := os.Stat(vexe); err == nil {
+		fmt.Printf("Found %q\n", vexe)
+	} else {
+		return nil, fmt.Errorf("could not find Python executable at %q", vexe)
 	}
 
 	return &Env{vars, func(name string) string {
@@ -272,18 +285,20 @@ func (env *Env) Set(name, value string) {
 }
 
 func execCommand(name string, args, env []string) error {
+	fmt.Printf("Running %s %v\n", name, args)
 	cmd := exec.Command(name, args...)
 	cmd.Env = env
 
 	output, err := cmd.CombinedOutput()
-	fmt.Println(string(output)) // TODO only show if error or verbose
 	if err != nil {
+		fmt.Println(string(output))
 		return fmt.Errorf("error executing %q %v: %v", name, args, err)
 	}
 	return nil
 }
 
 func startCommand(name string, args, env []string) error {
+	fmt.Printf("Starting %s %v\n", name, args)
 	cmd := exec.Command(name, args...)
 	cmd.Env = env
 	cmd.Stdout = os.Stdout
@@ -367,7 +382,8 @@ func run(url string) error {
 }
 
 func main() {
-	url := "https://gist.githubusercontent.com/lo5/d982e34b7684d4a1135d2bb7c06e6b99/raw/7251fdd3a2f283cfaa66a0c9c5768a374bb1a0ee/app.py"
+	flag.Parse()
+	url := flag.Arg(1)
 	if err := run(url); err != nil {
 		fmt.Println(err)
 	}
