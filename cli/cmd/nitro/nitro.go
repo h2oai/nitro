@@ -408,24 +408,30 @@ func isURL(urlPath string) bool {
 	return true
 }
 
-func run(urlPath string, start, verbose bool) error {
-	var mainFilePath string
+func getOrLocateMainFile(urlPath string) (string, error) {
 	if isURL(urlPath) {
 		relPath, err := downloadFile(urlPath, "")
 		if err != nil {
-			return fmt.Errorf("error downloading main file: %v", err)
+			return "", fmt.Errorf("error downloading main file: %v", err)
 		}
-		mainFilePath = relPath
+		return relPath, nil
+	}
+
+	if _, err := os.Stat(urlPath); err == nil {
+		dir := filepath.Dir(urlPath)
+		if dir != "." {
+			return "", fmt.Errorf("expected main file to be %q, got %q", filepath.Base(urlPath), urlPath)
+		}
+		return urlPath, nil
 	} else {
-		if _, err := os.Stat(urlPath); err == nil {
-			dir := filepath.Dir(urlPath)
-			if dir != "." {
-				return fmt.Errorf("expected main file to be %q, got %q", filepath.Base(urlPath), urlPath)
-			}
-			mainFilePath = urlPath
-		} else {
-			return fmt.Errorf("error locating main file: %v", err)
-		}
+		return "", fmt.Errorf("error locating main file: %v", err)
+	}
+}
+
+func run(urlPath string, start, verbose bool) error {
+	mainFilePath, err := getOrLocateMainFile(urlPath)
+	if err != nil {
+		return err
 	}
 
 	code, err := readFile(mainFilePath)
