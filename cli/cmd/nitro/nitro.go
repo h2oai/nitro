@@ -152,7 +152,7 @@ func downloadFile(urlPath, slashPath string) (string, error) {
 	relPathDir := filepath.Dir(relPath)
 	if relPathDir != "." && relPathDir != "/" {
 		if err := os.MkdirAll(relPathDir, 0750); err != nil {
-			return "", fmt.Errorf("error creating desination directory %q: %v", relPathDir, err)
+			return "", fmt.Errorf("error creating destination directory %q: %v", relPathDir, err)
 		}
 	}
 
@@ -263,7 +263,7 @@ func newPythonEnv(vars []string, verbose bool) (*Env, error) {
 	if _, err := os.Stat("venv"); err == nil {
 		fmt.Println("Virtual environment already available.")
 	} else {
-		fmt.Printf("Creating virtual environment using %q\n", exe)
+		fmt.Printf("Creating virtual environment using %q...\n", exe)
 		// Run python -m venv venv
 		if err := execCommand(exe, []string{"-m", "venv", "venv"}, nil, verbose); err != nil {
 			return nil, fmt.Errorf("error initializing virtual environment: %v", err)
@@ -284,6 +284,11 @@ func newPythonEnv(vars []string, verbose bool) (*Env, error) {
 		fmt.Printf("Found %q\n", vexe)
 	} else {
 		return nil, fmt.Errorf("could not find Python executable at %q", vexe)
+	}
+
+	fmt.Println("Bootstrapping pip...")
+	if err := execCommand(vexe, []string{"-m", "ensurepip", "--upgrade"}, nil, verbose); err != nil {
+		return nil, fmt.Errorf("error bootstrapping pip: %v", err)
 	}
 
 	return &Env{vars, func(name string) string {
@@ -392,6 +397,8 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 			if err := startCommand(env.translate(name), args, env.vars); err != nil {
 				return fmt.Errorf("START failed: %v", err)
 			}
+		default:
+			return fmt.Errorf("unknown command %q", command.t)
 		}
 	}
 
@@ -459,7 +466,7 @@ func run(urlPath string, start, verbose bool) error {
 func main() {
 	var (
 		rootFlagSet  = flag.NewFlagSet("nitro", flag.ExitOnError)
-		verbose      = rootFlagSet.Bool("v", false, "print verbose output")
+		verbose      = rootFlagSet.Bool("verbose", false, "print verbose output")
 		runFlagSet   = flag.NewFlagSet("nitro run", flag.ExitOnError)
 		cloneFlagSet = flag.NewFlagSet("nitro clone", flag.ExitOnError)
 	)
@@ -467,7 +474,7 @@ func main() {
 	runCmd := &ffcli.Command{
 		Name:       "run",
 		ShortUsage: "nitro [flags] run URL",
-		ShortHelp:  "Download, setup and run a program",
+		ShortHelp:  "Fetch, set up and run a program.",
 		FlagSet:    runFlagSet,
 		Exec: func(_ context.Context, args []string) error {
 			if n := len(args); n != 1 {
@@ -480,7 +487,7 @@ func main() {
 	cloneCmd := &ffcli.Command{
 		Name:       "clone",
 		ShortUsage: "nitro [flags] clone URL",
-		ShortHelp:  "Download and setup a program.",
+		ShortHelp:  "Fetch and set up a program.",
 		LongHelp:   "Same as 'nitro run', but skips any START commands during boot.",
 		FlagSet:    cloneFlagSet,
 		Exec: func(_ context.Context, args []string) error {
