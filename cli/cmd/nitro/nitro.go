@@ -89,6 +89,32 @@ func writeFile(slashPath, data string) error {
 	return nil
 }
 
+func showFile(slashPath string) error {
+	relPath, err := resolvePathSafe(slashPath)
+	if err != nil {
+		return err
+	}
+	file, err := os.Open(relPath)
+	if err != nil {
+		return fmt.Errorf("error reading file %q: %v", relPath, err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	n := 0
+	for scanner.Scan() {
+		n++
+		if n > 256 { // Roughly four pages on a HD-sized terminal.
+			fmt.Println("--- truncated ---")
+			break
+		}
+		fmt.Println(scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("error scanning file %q: %v", relPath, err)
+	}
+	return nil
+}
+
 func downloadFile(url, slashPath string) (string, error) {
 	fmt.Printf("Downloading %s\n", url)
 
@@ -325,6 +351,16 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 			}
 			name, value := args[0], args[1]
 			env.Set(name, value)
+		case "ECHO":
+			fmt.Println(strings.Join(args, " "))
+		case "SHOW":
+			if len(args) != 1 {
+				return fmt.Errorf("SHOW failed: want %q, got %#v", "SHOW file-path", args)
+			}
+			localPath := args[0]
+			if err := showFile(localPath); err != nil {
+				return fmt.Errorf("SHOW failed: %v", err)
+			}
 		case "GET":
 			var url, localPath string
 			if len(args) == 1 {
