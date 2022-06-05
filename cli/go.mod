@@ -6,3 +6,5 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
 )
+
+require github.com/peterbourgon/ff/v3 v3.1.2

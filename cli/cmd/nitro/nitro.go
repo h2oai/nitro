@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"errors"
 	"flag"
 	"fmt"
@@ -18,6 +19,7 @@ import (
 
 	humanize "github.com/dustin/go-humanize"
 	"github.com/google/shlex"
+	"github.com/peterbourgon/ff/v3/ffcli"
 )
 
 func containsDotDot(v string) bool {
@@ -225,7 +227,7 @@ func findPythonExecutable() (string, error) {
 	return "", fmt.Errorf("python executable not found (tried %v)", pythonCandidates)
 }
 
-func newPythonEnv(vars []string) (*Env, error) {
+func newPythonEnv(vars []string, verbose bool) (*Env, error) {
 	exe, err := findPythonExecutable()
 	if err != nil {
 		return nil, err
@@ -236,7 +238,7 @@ func newPythonEnv(vars []string) (*Env, error) {
 	} else {
 		fmt.Printf("Creating virtual environment using %q\n", exe)
 		// Run python -m venv venv
-		if err := execCommand(exe, []string{"-m", "venv", "venv"}, nil); err != nil {
+		if err := execCommand(exe, []string{"-m", "venv", "venv"}, nil, verbose); err != nil {
 			return nil, fmt.Errorf("error initializing virtual environment: %v", err)
 		}
 	}
@@ -270,12 +272,12 @@ type Env struct {
 	translate func(string) string
 }
 
-func newEnv(file string) (*Env, error) {
+func newEnv(file string, verbose bool) (*Env, error) {
 	vars := os.Environ()
 	lang := filepath.Ext(file)
 	switch lang {
 	case ".py":
-		return newPythonEnv(vars)
+		return newPythonEnv(vars, verbose)
 	}
 	return nil, fmt.Errorf("unsupported file type %q", lang)
 }
@@ -284,14 +286,17 @@ func (env *Env) Set(name, value string) {
 	env.vars = append(env.vars, name+"="+value)
 }
 
-func execCommand(name string, args, env []string) error {
+func execCommand(name string, args, env []string, verbose bool) error {
 	fmt.Printf("Running %s %v\n", name, args)
 	cmd := exec.Command(name, args...)
 	cmd.Env = env
 
 	output, err := cmd.CombinedOutput()
-	if err != nil {
+
+	if verbose || err != nil {
 		fmt.Println(string(output))
+	}
+	if err != nil {
 		return fmt.Errorf("error executing %q %v: %v", name, args, err)
 	}
 	return nil
@@ -310,7 +315,7 @@ func startCommand(name string, args, env []string) error {
 	return nil
 }
 
-func interpret(env *Env, commands []Command) error {
+func interpret(env *Env, commands []Command, start, verbose bool) error {
 	for _, command := range commands {
 		args := command.args
 		switch command.t {
@@ -339,10 +344,13 @@ func interpret(env *Env, commands []Command) error {
 			}
 		case "RUN":
 			name, args := args[0], args[1:]
-			if err := execCommand(env.translate(name), args, env.vars); err != nil {
+			if err := execCommand(env.translate(name), args, env.vars, verbose); err != nil {
 				return fmt.Errorf("RUN failed: %v", err)
 			}
 		case "START":
+			if !start {
+				continue
+			}
 			name, args := args[0], args[1:]
 			if err := startCommand(env.translate(name), args, env.vars); err != nil {
 				return fmt.Errorf("START failed: %v", err)
@@ -353,7 +361,7 @@ func interpret(env *Env, commands []Command) error {
 	return nil
 }
 
-func run(url string) error {
+func run(url string, start, verbose bool) error {
 	mainFilePath, err := downloadFile(url, "")
 	if err != nil {
 		return fmt.Errorf("error downloading main file: %v", err)
@@ -369,12 +377,12 @@ func run(url string) error {
 		return fmt.Errorf("error parsing header: %v", err)
 	}
 
-	env, err := newEnv(mainFilePath)
+	env, err := newEnv(mainFilePath, verbose)
 	if err != nil {
 		return fmt.Errorf("error initializing environment: %v", err)
 	}
 
-	if err := interpret(env, commands); err != nil {
+	if err := interpret(env, commands, start, verbose); err != nil {
 		return err
 	}
 
@@ -382,9 +390,52 @@ func run(url string) error {
 }
 
 func main() {
-	flag.Parse()
-	url := flag.Arg(1)
-	if err := run(url); err != nil {
-		fmt.Println(err)
+	var (
+		rootFlagSet  = flag.NewFlagSet("nitro", flag.ExitOnError)
+		verbose      = rootFlagSet.Bool("v", false, "print verbose output")
+		runFlagSet   = flag.NewFlagSet("nitro run", flag.ExitOnError)
+		cloneFlagSet = flag.NewFlagSet("nitro clone", flag.ExitOnError)
+	)
+
+	runCmd := &ffcli.Command{
+		Name:       "run",
+		ShortUsage: "nitro [flags] run URL",
+		ShortHelp:  "Download, setup and run a program",
+		FlagSet:    runFlagSet,
+		Exec: func(_ context.Context, args []string) error {
+			if n := len(args); n != 1 {
+				return flag.ErrHelp
+			}
+			return run(args[0], true, *verbose)
+		},
 	}
+
+	cloneCmd := &ffcli.Command{
+		Name:       "clone",
+		ShortUsage: "nitro [flags] clone URL",
+		ShortHelp:  "Download and setup a program.",
+		LongHelp:   "Same as 'nitro run', but skips any START commands during boot.",
+		FlagSet:    cloneFlagSet,
+		Exec: func(_ context.Context, args []string) error {
+			if n := len(args); n != 1 {
+				return flag.ErrHelp
+			}
+			return run(args[0], false, *verbose)
+		},
+	}
+
+	rootCmd := &ffcli.Command{
+		ShortUsage:  "nitro [flags] <subcommand>",
+		FlagSet:     rootFlagSet,
+		Subcommands: []*ffcli.Command{runCmd, cloneCmd},
+		Exec: func(context.Context, []string) error {
+			return flag.ErrHelp
+		},
+	}
+
+	if err := rootCmd.ParseAndRun(context.Background(), os.Args[1:]); err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
 }
