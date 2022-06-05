@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path"
@@ -115,10 +116,10 @@ func showFile(slashPath string) error {
 	return nil
 }
 
-func downloadFile(url, slashPath string) (string, error) {
-	fmt.Printf("Downloading %s\n", url)
+func downloadFile(urlPath, slashPath string) (string, error) {
+	fmt.Printf("Downloading %s\n", urlPath)
 
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", urlPath, nil)
 	if err != nil {
 		return "", fmt.Errorf("error creating HTTP request: %v", err)
 	}
@@ -138,7 +139,7 @@ func downloadFile(url, slashPath string) (string, error) {
 	if destIsDir {
 		if baseName == "" {
 			// TODO inspect Content-Disposition instead of bailing out?
-			return "", fmt.Errorf("could not determine file name from url %q", url)
+			return "", fmt.Errorf("could not determine file name from url %q", urlPath)
 		}
 		relPath = filepath.Join(relPath, baseName)
 	}
@@ -362,15 +363,15 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 				return fmt.Errorf("SHOW failed: %v", err)
 			}
 		case "GET":
-			var url, localPath string
+			var urlPath, localPath string
 			if len(args) == 1 {
-				url = args[0]
+				urlPath = args[0]
 			} else if len(args) == 2 {
-				url, localPath = args[0], args[1]
+				urlPath, localPath = args[0], args[1]
 			} else {
 				return fmt.Errorf("GET failed: want %q, got %#v", "GET remote-url [local-path]", args)
 			}
-			if _, err := downloadFile(url, localPath); err != nil {
+			if _, err := downloadFile(urlPath, localPath); err != nil {
 				return fmt.Errorf("GET failed: %v", err)
 			}
 		case "FILE":
@@ -397,10 +398,34 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 	return nil
 }
 
-func run(url string, start, verbose bool) error {
-	mainFilePath, err := downloadFile(url, "")
-	if err != nil {
-		return fmt.Errorf("error downloading main file: %v", err)
+func isURL(urlPath string) bool {
+	if _, err := url.ParseRequestURI(urlPath); err != nil {
+		return false
+	}
+	if u, err := url.Parse(urlPath); err != nil || u.Scheme == "" || u.Host == "" {
+		return false
+	}
+	return true
+}
+
+func run(urlPath string, start, verbose bool) error {
+	var mainFilePath string
+	if isURL(urlPath) {
+		relPath, err := downloadFile(urlPath, "")
+		if err != nil {
+			return fmt.Errorf("error downloading main file: %v", err)
+		}
+		mainFilePath = relPath
+	} else {
+		if _, err := os.Stat(urlPath); err == nil {
+			dir := filepath.Dir(urlPath)
+			if dir != "." {
+				return fmt.Errorf("expected main file to be %q, got %q", filepath.Base(urlPath), urlPath)
+			}
+			mainFilePath = urlPath
+		} else {
+			return fmt.Errorf("error locating main file: %v", err)
+		}
 	}
 
 	code, err := readFile(mainFilePath)
