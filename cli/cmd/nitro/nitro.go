@@ -156,17 +156,17 @@ func downloadFile(urlPath, slashPath string) (string, error) {
 		}
 	}
 
-	out, err := os.Create(relPath)
-	if err != nil {
-		return "", fmt.Errorf("error creating file %q: %v", relPath, err)
-	}
-	defer out.Close()
-
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("error making HTTP request: %v", err)
 	}
 	defer res.Body.Close()
+
+	out, err := os.Create(relPath)
+	if err != nil {
+		return "", fmt.Errorf("error creating file %q: %v", relPath, err)
+	}
+	defer out.Close()
 
 	n, err := io.Copy(out, res.Body)
 	if err != nil {
