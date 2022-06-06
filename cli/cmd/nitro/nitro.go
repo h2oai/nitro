@@ -354,7 +354,7 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 			continue
 		case "ENV":
 			if len(args) != 2 {
-				return fmt.Errorf("ENV failed: want %q, got %#v", "ENV name value", args)
+				return fmt.Errorf("ENV: want %q, got %#v", "ENV name value", args)
 			}
 			name, value := args[0], args[1]
 			env.vars = append(env.vars, name+"="+value)
@@ -366,11 +366,11 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 			}
 			localPath := args[0]
 			if err := showFile(localPath); err != nil {
-				return fmt.Errorf("SHOW failed: %v", err)
+				return fmt.Errorf("SHOW: %v", err)
 			}
 		case "FROM":
 			if len(args) != 1 {
-				return fmt.Errorf("FROM failed: want %q, got %#v", "FROM url", args)
+				return fmt.Errorf("FROM: want %q, got %#v", "FROM base-url", args)
 			}
 			u, err := url.Parse(args[0])
 			if err != nil {
@@ -384,7 +384,7 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 			} else if len(args) == 2 {
 				urlPath, localPath = args[0], args[1]
 			} else {
-				return fmt.Errorf("GET failed: want %q, got %#v", "GET remote-url [local-path]", args)
+				return fmt.Errorf("GET: want %q, got %#v", "GET remote-url [local-path]", args)
 			}
 			if env.baseURL != nil && !isURL(urlPath) {
 				rel, err := url.Parse(urlPath)
@@ -395,17 +395,17 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 				urlPath = abs.String()
 			}
 			if _, err := downloadFile(urlPath, localPath); err != nil {
-				return fmt.Errorf("GET failed: %v", err)
+				return fmt.Errorf("GET: %v", err)
 			}
 		case "FILE":
 			localPath, contents := args[0], args[1]
 			if err := writeFile(localPath, contents); err != nil {
-				return fmt.Errorf("FILE failed: %v", err)
+				return fmt.Errorf("FILE: %v", err)
 			}
 		case "RUN":
 			name, args := args[0], args[1:]
 			if err := execCommand(env.translate(name), args, env.vars, verbose); err != nil {
-				return fmt.Errorf("RUN failed: %v", err)
+				return fmt.Errorf("RUN: %v", err)
 			}
 		case "START":
 			if !start {
@@ -413,7 +413,7 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 			}
 			name, args := args[0], args[1:]
 			if err := startCommand(env.translate(name), args, env.vars); err != nil {
-				return fmt.Errorf("START failed: %v", err)
+				return fmt.Errorf("START: %v", err)
 			}
 		default:
 			return fmt.Errorf("unknown command %q", command.t)
