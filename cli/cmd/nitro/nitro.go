@@ -350,6 +350,8 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 	for _, command := range commands {
 		args := command.args
 		switch command.t {
+		case "#":
+			continue
 		case "ENV":
 			if len(args) != 2 {
 				return fmt.Errorf("ENV failed: want %q, got %#v", "ENV name value", args)
