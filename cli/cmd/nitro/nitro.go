@@ -179,7 +179,7 @@ func downloadFile(urlPath, slashPath string) (string, error) {
 }
 
 var (
-	headerRegex      = regexp.MustCompile(`(?s)#\s*-{3,}\s*\n(.+?)\n\s*#\s*-{3,}\s*`)
+	headerRegex      = regexp.MustCompile(`(?s)#\s*={3,}\s*\n(.+?)\n\s*#\s*={3,}\s*`)
 	commentRegex     = regexp.MustCompile(`^\s*#\s?`)
 	errNoHeaderFound = errors.New("no header found")
 	errUnexpectedEOF = errors.New("unexpected end of file reading header")
