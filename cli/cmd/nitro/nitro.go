@@ -270,7 +270,7 @@ func newPythonEnv(vars []string, verbose bool) (*Env, error) {
 		}
 	}
 
-	// Use sandboxed python for future commands
+	// Use sandboxed python from this point on.
 	var vexe string
 	if runtime.GOOS == "windows" {
 		// .\venv\Scripts\python.exe
@@ -291,15 +291,18 @@ func newPythonEnv(vars []string, verbose bool) (*Env, error) {
 		return nil, fmt.Errorf("error bootstrapping pip: %v", err)
 	}
 
-	return &Env{vars, func(name string) string {
-		if name == "python" {
-			return vexe
-		}
-		return name
-	}}, nil
+	return &Env{
+		vars: vars,
+		translate: func(name string) string {
+			if name == "python" {
+				return vexe
+			}
+			return name
+		}}, nil
 }
 
 type Env struct {
+	baseURL   *url.URL
 	vars      []string
 	translate func(string) string
 }
@@ -312,10 +315,6 @@ func newEnv(file string, verbose bool) (*Env, error) {
 		return newPythonEnv(vars, verbose)
 	}
 	return nil, fmt.Errorf("unsupported file type %q", lang)
-}
-
-func (env *Env) Set(name, value string) {
-	env.vars = append(env.vars, name+"="+value)
 }
 
 func execCommand(name string, args, env []string, verbose bool) error {
@@ -356,17 +355,26 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 				return fmt.Errorf("ENV failed: want %q, got %#v", "ENV name value", args)
 			}
 			name, value := args[0], args[1]
-			env.Set(name, value)
+			env.vars = append(env.vars, name+"="+value)
 		case "ECHO":
 			fmt.Println(strings.Join(args, " "))
 		case "SHOW":
 			if len(args) != 1 {
-				return fmt.Errorf("SHOW failed: want %q, got %#v", "SHOW file-path", args)
+				return fmt.Errorf("SHOW: want %q, got %#v", "SHOW file-path", args)
 			}
 			localPath := args[0]
 			if err := showFile(localPath); err != nil {
 				return fmt.Errorf("SHOW failed: %v", err)
 			}
+		case "FROM":
+			if len(args) != 1 {
+				return fmt.Errorf("FROM failed: want %q, got %#v", "FROM url", args)
+			}
+			u, err := url.Parse(args[0])
+			if err != nil {
+				return fmt.Errorf("FROM: failed parsing URL: %v", err)
+			}
+			env.baseURL = u
 		case "GET":
 			var urlPath, localPath string
 			if len(args) == 1 {
@@ -375,6 +383,14 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 				urlPath, localPath = args[0], args[1]
 			} else {
 				return fmt.Errorf("GET failed: want %q, got %#v", "GET remote-url [local-path]", args)
+			}
+			if env.baseURL != nil && !isURL(urlPath) {
+				rel, err := url.Parse(urlPath)
+				if err != nil {
+					return fmt.Errorf("GET: failed parsing URL: %v", err)
+				}
+				abs := env.baseURL.ResolveReference(rel)
+				urlPath = abs.String()
 			}
 			if _, err := downloadFile(urlPath, localPath); err != nil {
 				return fmt.Errorf("GET failed: %v", err)
