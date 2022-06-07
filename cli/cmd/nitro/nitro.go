@@ -356,7 +356,7 @@ func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
 	if _, err := os.Stat("venv"); err == nil {
 		fmt.Println("Virtual environment already available.")
 	} else {
-		fmt.Printf("Creating virtual environment using %q...\n", conf.python)
+		fmt.Printf("Creating virtual environment using %q ...\n", conf.python)
 		// Run python -m venv venv
 		if err := execCommand(conf.python, []string{"-m", "venv", "venv"}, nil, conf.verbose); err != nil {
 			return nil, fmt.Errorf("error initializing virtual environment: %v", err)
@@ -374,12 +374,12 @@ func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
 	}
 
 	if _, err := os.Stat(vexe); err == nil {
-		fmt.Printf("Found %q\n", vexe)
+		fmt.Printf("Found %q in virtual environment.\n", vexe)
 	} else {
 		return nil, fmt.Errorf("could not find Python executable at %q", vexe)
 	}
 
-	fmt.Println("Bootstrapping pip...")
+	fmt.Println("Bootstrapping pip ...")
 	if err := execCommand(vexe, []string{"-m", "ensurepip", "--upgrade"}, nil, conf.verbose); err != nil {
 		return nil, fmt.Errorf("error bootstrapping pip: %v", err)
 	}
@@ -411,7 +411,7 @@ func newEnv(conf *Conf, file string) (*Env, error) {
 }
 
 func execCommand(name string, args, env []string, verbose bool) error {
-	fmt.Printf("Running %s %v\n", name, args)
+	fmt.Printf("Running %s %v ...\n", name, args)
 	cmd := exec.Command(name, args...)
 	cmd.Env = env
 
@@ -427,7 +427,7 @@ func execCommand(name string, args, env []string, verbose bool) error {
 }
 
 func startCommand(name string, args, env []string) error {
-	fmt.Printf("Starting %s %v\n", name, args)
+	fmt.Printf("Starting %s %v ...\n", name, args)
 	cmd := exec.Command(name, args...)
 	cmd.Env = env
 	cmd.Stdout = os.Stdout
