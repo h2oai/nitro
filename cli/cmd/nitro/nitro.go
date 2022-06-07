@@ -21,6 +21,7 @@ import (
 	humanize "github.com/dustin/go-humanize"
 	"github.com/google/shlex"
 	"github.com/peterbourgon/ff/v3/ffcli"
+	"gopkg.in/yaml.v3"
 )
 
 func containsDotDot(v string) bool {
@@ -179,66 +180,155 @@ func downloadFile(urlPath, slashPath string) (string, error) {
 }
 
 var (
-	headerRegex      = regexp.MustCompile(`(?s)#\s*={3,}\s*\n(.+?)\n\s*#\s*={3,}\s*`)
-	commentRegex     = regexp.MustCompile(`^\s*#\s?`)
-	errNoHeaderFound = errors.New("no header found")
-	errUnexpectedEOF = errors.New("unexpected end of file reading header")
+	commentRegex            = regexp.MustCompile(`^\s*#\s?`)
+	breakRegex              = regexp.MustCompile(`\\\s*$`)
+	headerRegex             = regexp.MustCompile(`^\s*#\s*={3,}\s*$`)
+	setupRegex              = regexp.MustCompile(`(?i)^\s*SETUP\s*:\s*$`)
+	pythonCandidates        = []string{"python3", "python"}
+	pythonWindowsCandidates = []string{"py", "python3", "python"}
+	errNoHeaderFound        = errors.New("no header found")
+	errUnexpectedEOF        = errors.New("unexpected end of file reading header")
+	nl                      = []byte{'\n'}
 )
+
+type Header struct {
+	meta     map[string]interface{}
+	commands []Command
+}
 
 type Command struct {
 	t    string
 	args []string
 }
 
-func parseHeader(code []byte) ([]Command, error) {
-	match := headerRegex.FindSubmatch(code)
-	if len(match) < 2 {
-		return nil, errNoHeaderFound
-	}
+type Line struct {
+	text []byte
+	n    int // line number
+}
 
-	var commands []Command
-	buffering := false
-	scanner := bufio.NewScanner(bytes.NewReader(match[1]))
+func parseHeader(code []byte) (Header, error) {
+	var (
+		header Header
+		yml    [][]byte
+		script []Line
+	)
+
+	inHeader, inSetup := false, false
+	n := 0
+	scanner := bufio.NewScanner(bytes.NewReader(code))
 	for scanner.Scan() {
-		line := string(commentRegex.ReplaceAll(scanner.Bytes(), nil))
-		tokens, err := shlex.Split(line)
-		if err != nil {
-			return nil, fmt.Errorf("error parsing line: %v", err)
-		}
-		if len(tokens) == 0 {
+		n++
+		text := scanner.Bytes()
+		if headerRegex.Match(text) {
+			if inHeader {
+				break
+			}
+			inHeader = true
 			continue
 		}
-		cmd, args := strings.ToUpper(tokens[0]), tokens[1:]
-		if cmd == "FILE" {
-			if len(args) != 2 {
-				return nil, fmt.Errorf("FILE: want %q, got %q", "FILE target-path eof-marker", line)
-			}
-			var buffer []string
-			buffering = true
-			eofMarker := args[1]
-			for buffering && scanner.Scan() {
-				line := string(commentRegex.ReplaceAll(scanner.Bytes(), nil))
-				if strings.TrimSpace(line) == eofMarker {
-					line = ""
-					buffering = false
-					break
-				}
-				buffer = append(buffer, line)
-			}
-			args[1] = strings.Join(buffer, "\n")
+		if !inHeader {
+			continue
 		}
-		commands = append(commands, Command{cmd, args})
+		if !commentRegex.Match(text) {
+			if len(bytes.TrimSpace(text)) == 0 { // empty lines OK
+				continue
+			}
+			return header, errUnexpectedEOF
+		}
+
+		text = commentRegex.ReplaceAll(text, nil)
+
+		if setupRegex.Match(text) {
+			if inSetup {
+				return header, fmt.Errorf("unexpected %q in header on line %d", text, n)
+			}
+			inSetup = true
+			continue
+		}
+
+		if inSetup {
+			script = append(script, Line{text, n})
+		} else {
+			yml = append(yml, text)
+		}
 	}
-	if buffering {
+
+	script = joinBrokenLines(script)
+
+	meta := make(map[string]interface{})
+	if err := yaml.Unmarshal(bytes.Join(yml, nl), meta); err != nil {
+		return header, fmt.Errorf("error parsing header YAML: %v", err)
+	}
+
+	commands, err := parseCommands(script)
+	if err != nil {
+		return header, err
+	}
+
+	header.meta = meta
+	header.commands = commands
+
+	return header, nil
+
+}
+
+func joinBrokenLines(lines []Line) []Line {
+	var joined []Line
+	join := false
+	for i, line := range lines {
+		if join && i > 0 {
+			lines[i-1].text = append(lines[i-1].text, breakRegex.ReplaceAll(line.text, nil)...)
+		} else {
+			joined = append(joined, line)
+		}
+		join = breakRegex.Match(line.text)
+	}
+	return joined
+}
+
+func parseCommands(lines []Line) ([]Command, error) {
+	var (
+		commands  []Command
+		buffer    []string
+		eofMarker string
+	)
+
+	for _, line := range lines {
+		if eofMarker == "" {
+			tokens, err := shlex.Split(string(line.text))
+			if err != nil {
+				return nil, fmt.Errorf("error parsing line: %v", err)
+			}
+			if len(tokens) == 0 {
+				continue
+			}
+			cmd, args := strings.ToUpper(tokens[0]), tokens[1:]
+			if cmd == "FILE" {
+				if len(args) != 2 {
+					return nil, fmt.Errorf("FILE: want %q, got %q", "FILE target-path eof-marker", line.text)
+				}
+				eofMarker = args[1]
+			}
+			commands = append(commands, Command{cmd, args})
+		} else {
+			text := string(line.text)
+			if strings.TrimSpace(text) == eofMarker {
+				text = ""
+				cmd := commands[len(commands)-1]
+				cmd.args[1] = strings.Join(append(buffer, ""), "\n")
+				commands[len(commands)-1] = cmd
+				buffer = nil
+				eofMarker = ""
+			} else {
+				buffer = append(buffer, text)
+			}
+		}
+	}
+	if eofMarker != "" {
 		return nil, errUnexpectedEOF
 	}
 	return commands, nil
 }
-
-var (
-	pythonCandidates        = []string{"python3", "python"}
-	pythonWindowsCandidates = []string{"py", "python3", "python"}
-)
 
 func findPythonExecutable() (string, error) {
 	candidates := pythonCandidates
@@ -464,9 +554,13 @@ func run(urlPath string, start, verbose bool) error {
 		return fmt.Errorf("error reading main file: %v", err)
 	}
 
-	commands, err := parseHeader(code)
+	header, err := parseHeader(code)
 	if err != nil {
 		return fmt.Errorf("error parsing header: %v", err)
+	}
+
+	if len(header.commands) == 0 {
+		return errNoHeaderFound
 	}
 
 	env, err := newEnv(mainFilePath, verbose)
@@ -474,7 +568,7 @@ func run(urlPath string, start, verbose bool) error {
 		return fmt.Errorf("error initializing environment: %v", err)
 	}
 
-	if err := interpret(env, commands, start, verbose); err != nil {
+	if err := interpret(env, header.commands, start, verbose); err != nil {
 		return err
 	}
 
