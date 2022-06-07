@@ -61,7 +61,7 @@ func resolvePathSafe(slashPath string) (string, error) {
 
 	cwd, err := os.Getwd()
 	if err != nil {
-		panic(fmt.Sprintf("could not determine current working directory: %v", err))
+		return "", fmt.Errorf("could not determine current working directory: %v", err)
 	}
 
 	if err := isDirNested(cwd, relPath); err != nil {
@@ -535,15 +535,70 @@ func getOrLocateMainFile(urlPath string) (string, error) {
 		return relPath, nil
 	}
 
-	if _, err := os.Stat(urlPath); err == nil {
-		dir := filepath.Dir(urlPath)
-		if dir != "." {
-			return "", fmt.Errorf("expected main file to be %q, got %q", filepath.Base(urlPath), urlPath)
-		}
-		return urlPath, nil
-	} else {
+	absSrcPath, err := filepath.Abs(urlPath)
+	if err != nil {
+		return "", fmt.Errorf("error finding absolute path to main file: %v", err)
+	}
+
+	srcPathStat, err := os.Stat(absSrcPath)
+	if err != nil {
 		return "", fmt.Errorf("error locating main file: %v", err)
 	}
+
+	if !srcPathStat.Mode().IsRegular() {
+		return "", fmt.Errorf("error: not a regular file: %q", absSrcPath)
+	}
+
+	absSrcDir := filepath.Dir(absSrcPath)
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		return "", fmt.Errorf("could not determine current working directory: %v", err)
+	}
+
+	if absSrcDir == cwd {
+		return absSrcPath, nil
+	}
+
+	dstPath := filepath.Base(absSrcPath)
+
+	if _, err := os.Stat(dstPath); err == nil {
+		fmt.Printf("Copy skipped: %q already exists.\n", dstPath)
+		return dstPath, nil
+	}
+
+	fmt.Printf("Copying %q to %q\n", absSrcPath, dstPath)
+
+	if err := copyFile(absSrcPath, dstPath); err != nil {
+		return "", fmt.Errorf("error copying main file: %v", err)
+	}
+
+	return dstPath, nil
+}
+
+func copyFile(srcPath, dstPath string) error {
+	src, err := os.Open(srcPath)
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	dst, err := os.Create(dstPath)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		cerr := dst.Close()
+		if err == nil {
+			err = cerr
+		}
+	}()
+
+	if _, err = io.Copy(dst, src); err != nil {
+		return err
+	}
+	err = dst.Sync()
+	return err
 }
 
 func run(conf *Conf, urlPath string) error {
