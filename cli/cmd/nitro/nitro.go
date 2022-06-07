@@ -344,18 +344,21 @@ func findPythonExecutable() (string, error) {
 	return "", fmt.Errorf("python executable not found (tried %v)", pythonCandidates)
 }
 
-func newPythonEnv(vars []string, verbose bool) (*Env, error) {
-	exe, err := findPythonExecutable()
-	if err != nil {
-		return nil, err
+func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
+	if conf.python == "" {
+		python, err := findPythonExecutable()
+		if err != nil {
+			return nil, err
+		}
+		conf.python = python
 	}
 
 	if _, err := os.Stat("venv"); err == nil {
 		fmt.Println("Virtual environment already available.")
 	} else {
-		fmt.Printf("Creating virtual environment using %q...\n", exe)
+		fmt.Printf("Creating virtual environment using %q...\n", conf.python)
 		// Run python -m venv venv
-		if err := execCommand(exe, []string{"-m", "venv", "venv"}, nil, verbose); err != nil {
+		if err := execCommand(conf.python, []string{"-m", "venv", "venv"}, nil, conf.verbose); err != nil {
 			return nil, fmt.Errorf("error initializing virtual environment: %v", err)
 		}
 	}
@@ -377,7 +380,7 @@ func newPythonEnv(vars []string, verbose bool) (*Env, error) {
 	}
 
 	fmt.Println("Bootstrapping pip...")
-	if err := execCommand(vexe, []string{"-m", "ensurepip", "--upgrade"}, nil, verbose); err != nil {
+	if err := execCommand(vexe, []string{"-m", "ensurepip", "--upgrade"}, nil, conf.verbose); err != nil {
 		return nil, fmt.Errorf("error bootstrapping pip: %v", err)
 	}
 
@@ -397,12 +400,12 @@ type Env struct {
 	translate func(string) string
 }
 
-func newEnv(file string, verbose bool) (*Env, error) {
+func newEnv(conf *Conf, file string) (*Env, error) {
 	vars := os.Environ()
 	lang := filepath.Ext(file)
 	switch lang {
 	case ".py":
-		return newPythonEnv(vars, verbose)
+		return newPythonEnv(conf, vars)
 	}
 	return nil, fmt.Errorf("unsupported file type %q", lang)
 }
@@ -436,7 +439,7 @@ func startCommand(name string, args, env []string) error {
 	return nil
 }
 
-func interpret(env *Env, commands []Command, start, verbose bool) error {
+func interpret(conf *Conf, env *Env, commands []Command) error {
 	for _, command := range commands {
 		args := command.args
 		switch command.t {
@@ -494,11 +497,11 @@ func interpret(env *Env, commands []Command, start, verbose bool) error {
 			}
 		case "RUN":
 			name, args := args[0], args[1:]
-			if err := execCommand(env.translate(name), args, env.vars, verbose); err != nil {
+			if err := execCommand(env.translate(name), args, env.vars, conf.verbose); err != nil {
 				return fmt.Errorf("RUN: %v", err)
 			}
 		case "START":
-			if !start {
+			if !conf.start {
 				continue
 			}
 			name, args := args[0], args[1:]
@@ -543,7 +546,7 @@ func getOrLocateMainFile(urlPath string) (string, error) {
 	}
 }
 
-func run(urlPath string, start, verbose bool) error {
+func run(conf *Conf, urlPath string) error {
 	mainFilePath, err := getOrLocateMainFile(urlPath)
 	if err != nil {
 		return err
@@ -563,25 +566,32 @@ func run(urlPath string, start, verbose bool) error {
 		return errNoHeaderFound
 	}
 
-	env, err := newEnv(mainFilePath, verbose)
+	env, err := newEnv(conf, mainFilePath)
 	if err != nil {
 		return fmt.Errorf("error initializing environment: %v", err)
 	}
 
-	if err := interpret(env, header.commands, start, verbose); err != nil {
+	if err := interpret(conf, env, header.commands); err != nil {
 		return err
 	}
 
 	return nil
 }
 
+type Conf struct {
+	verbose bool
+	start   bool
+	python  string
+}
+
 func main() {
-	var (
-		rootFlagSet  = flag.NewFlagSet("nitro", flag.ExitOnError)
-		verbose      = rootFlagSet.Bool("verbose", false, "print verbose output")
-		runFlagSet   = flag.NewFlagSet("nitro run", flag.ExitOnError)
-		cloneFlagSet = flag.NewFlagSet("nitro clone", flag.ExitOnError)
-	)
+	var conf Conf
+
+	rootFlagSet := flag.NewFlagSet("nitro", flag.ExitOnError)
+	rootFlagSet.BoolVar(&conf.verbose, "verbose", false, "print verbose output")
+	rootFlagSet.StringVar(&conf.python, "python", "", "path to the Python executable")
+	runFlagSet := flag.NewFlagSet("nitro run", flag.ExitOnError)
+	cloneFlagSet := flag.NewFlagSet("nitro clone", flag.ExitOnError)
 
 	runCmd := &ffcli.Command{
 		Name:       "run",
@@ -592,7 +602,8 @@ func main() {
 			if n := len(args); n != 1 {
 				return flag.ErrHelp
 			}
-			return run(args[0], true, *verbose)
+			conf.start = true
+			return run(&conf, args[0])
 		},
 	}
 
@@ -606,7 +617,7 @@ func main() {
 			if n := len(args); n != 1 {
 				return flag.ErrHelp
 			}
-			return run(args[0], false, *verbose)
+			return run(&conf, args[0])
 		},
 	}
 
