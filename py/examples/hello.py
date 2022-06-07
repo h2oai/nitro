@@ -1,8 +1,28 @@
+# ===
+# About: Basic Hello World app using Flask
+# Author: Prithvi Prabhu <prithvi.prabhu@gmail.com>
+# License: Apache-2.0
+# Source: https://github.com/h2oai/nitro/py/examples
+# Keywords: [basic, flask]
+#
+# Setup:
+# FILE requirements.txt EOF
+# flask
+# simple-websocket
+# h2o-nitro
+# EOF
+# RUN python -m pip install -r requirements.txt
+#
+# ENV FLASK_APP hello.py
+# ENV FLASK_ENV development
+# START python -m flask run
+# ===
 import simple_websocket
 from flask import Flask, request, send_from_directory
-from h2o_nitro import web_directory
 
-from h2o_nitro import  View, box
+# ┌───────────────  Nitro app starts here ───────────────┐
+
+from h2o_nitro import View, box, web_directory
 
 
 def main(view: View):
@@ -13,6 +33,7 @@ def main(view: View):
 
 nitro = View(main, title='Hello Nitro!', caption='v1.0')
 
+# └─────────────── Nitro app ends here ───────────────┘
 
 app = Flask(__name__, static_folder=web_directory, static_url_path='')
 

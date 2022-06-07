@@ -1,11 +1,27 @@
+# ===
+# About: Basic Hello World app using Tornado
+# Author: Prithvi Prabhu <prithvi.prabhu@gmail.com>
+# License: Apache-2.0
+# Source: https://github.com/h2oai/nitro/py/examples
+# Keywords: [basic, tornado]
+#
+# Setup:
+# FILE requirements.txt EOF
+# tornado
+# h2o-nitro
+# EOF
+# RUN python -m pip install -r requirements.txt
+# ECHO Access your app at https://localhost:5000
+# START python hello_tornado.py
+# ===
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
 import tornado.queues
-from h2o_nitro import web_directory
 
+# ┌───────────────  Nitro app starts here ───────────────┐
 
-from h2o_nitro import AsyncView as View, box
+from h2o_nitro import AsyncView as View, box, web_directory
 
 
 async def main(view: View):
@@ -16,6 +32,8 @@ async def main(view: View):
 
 nitro = View(main, title='Hello Nitro!', caption='v1.0')
 
+
+# └─────────────── Nitro app ends here ───────────────┘
 
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
@@ -45,8 +63,9 @@ app = tornado.web.Application(
     [
         (r"/", RootHandler),
         (r"/nitro", WebSocketHandler),
+        (r"/(.*)", tornado.web.StaticFileHandler, dict(path=web_directory)),
     ],
-    static_path=f'{web_directory}/static',
+    debug=True,
 )
 
 if __name__ == "__main__":

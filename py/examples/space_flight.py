@@ -1,9 +1,30 @@
+# ===
+# About: Space flight job application
+# Author: Prithvi Prabhu <prithvi.prabhu@gmail.com>
+# License: Apache-2.0
+# Source: https://github.com/h2oai/nitro/py/examples
+# Keywords: [flask, wizard]
+#
+# Setup:
+# FILE requirements.txt EOF
+# flask
+# simple-websocket
+# h2o-nitro
+# EOF
+# RUN python -m pip install -r requirements.txt
+#
+# ENV FLASK_APP space_flight.py
+# ENV FLASK_ENV development
+# START python -m flask run
+# ===
+
 import simple_websocket
 from flask import Flask, request, send_from_directory
-from h2o_nitro import web_directory
-
 from datetime import datetime, timedelta
-from h2o_nitro import  View, box, option, row, col
+
+# ┌───────────────  Nitro app starts here ───────────────┐
+
+from h2o_nitro import web_directory, View, box, option, row, col
 
 
 # The job application workflow. Spans seven pages.
@@ -216,6 +237,7 @@ nitro = View(
         option(about, 'About'),
     ])
 
+# └─────────────── Nitro app ends here ───────────────┘
 
 app = Flask(__name__, static_folder=web_directory, static_url_path='')
 
