@@ -1,4 +1,0 @@
-uvicorn
-starlette
-websockets
-h2o-nitro

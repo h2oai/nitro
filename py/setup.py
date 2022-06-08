@@ -40,9 +40,6 @@ setup(
         "click",
         "msgpack>=1.0",
     ],
-    extras_require={
-        'flask': ['flask', 'simple-websocket']
-    },
     include_package_data=True,
     license_files=('LICENSE',),
     classifiers=[
@@ -69,8 +66,5 @@ setup(
         "Source": "https://github.com/h2oai/nitro",
         "Issues": "https://github.com/h2oai/nitro/issues",
         "Changelog": "https://nitro.h2o.ai/change-log/",
-    },
-    entry_points={
-        'console_scripts': ["nitro = h2o_nitro.cli:main"]
     },
 )
