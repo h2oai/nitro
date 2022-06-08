@@ -57,10 +57,6 @@ serve-docs: # Launch docs in development mode
 release: # Tag and release on Github
 	git tag v$(VERSION)
 	git push origin && git push origin --tags
-	gh release create v$(VERSION) \
-		py/dist/h2o_nitro-$(VERSION)-py3-none-any.whl \
-		--prerelease \
-		--notes "[Change Log](https://nitro.h2o.ai/change-log/)"
 
 publish-py: ## Publish wheel to PyPI
 	cd py && $(MAKE) publish
