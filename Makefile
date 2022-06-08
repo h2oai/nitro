@@ -43,6 +43,7 @@ setup-screenshots: # Set up screenshot automation tooling
 	mkdir -p tools/screenshots && cd tools/screenshots && python3 -m venv venv
 	cd tools/screenshots && ./venv/bin/python -m pip install --upgrade pip
 	cd tools/screenshots && ./venv/bin/python -m pip install -r requirements.txt
+	cd tools/screenshots && ./venv/bin/playwright install
 
 screenshots: # Capture screenshots for docs
 	./tools/screenshots/venv/bin/python tools/screenshots/screenshot.py
