@@ -222,9 +222,8 @@ def write_tour(groups: List[Group]):
         replace('    # TOPIC_MAP', build_topic_map(groups)). \
         replace('TOC', build_toc(groups)). \
         replace('        # MENU', build_menu(groups))
-    tour_dir = Path('h2o_nitro') / 'docs'
-    tour_dir.mkdir(exist_ok=True)
-    (tour_dir / 'docs.py').write_text(tour)
+
+    (docs_dir / 'docs.py').write_text(tour)
 
 
 def write_example(p: Printer, e: Example):
