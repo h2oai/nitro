@@ -17,6 +17,19 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.9.0
+
+Jun 07, 2022
+
+- Added
+    - `nitro` command line program, shipped separately from Python wheel.
+    - `nitro run` command to download, set up, and run any Nitro app hosted on the world wide web.
+    - `nitro clone` command to download and set up Nitro apps.
+- Fixed
+    - Don't overflow box contents if `width` or `height` is set.
+- Removed
+    - Python-based CLI (`nitro create`, `nitro list`, `nitro docs` superceded by `nitro run`).
+
 ## v0.8.4
 
 Jun 01, 2022
