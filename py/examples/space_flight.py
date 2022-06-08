@@ -12,7 +12,6 @@
 # h2o-nitro
 # EOF
 # RUN python -m pip install -r requirements.txt
-#
 # ENV FLASK_APP space_flight.py
 # ENV FLASK_ENV development
 # START python -m flask run
