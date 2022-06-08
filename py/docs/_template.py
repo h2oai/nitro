@@ -11,6 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# ===
+# About: H2O Nitro Live Documentation
+# Author: Prithvi Prabhu <prithvi.prabhu@gmail.com>
+# License: Apache-2.0
+# Source: https://nitro.h2o.ai/docs.py
+#
+# Setup:
+# FILE requirements.txt EOF
+# flask
+# simple-websocket
+# h2o-nitro
+# EOF
+# RUN python -m pip install -r requirements.txt
+# START python docs.py
+# ===
+
 import json
 import os
 from pathlib import Path
