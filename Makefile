@@ -57,6 +57,7 @@ serve-docs: # Launch docs in development mode
 release: # Tag and release on Github
 	git tag v$(VERSION)
 	git push origin && git push origin --tags
+	cd cli && goreleaser release --rm-dist
 
 publish-py: ## Publish wheel to PyPI
 	cd py && $(MAKE) publish
