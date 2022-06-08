@@ -42,9 +42,13 @@ And here's a more elaborate example with seven pages in [seven Python statements
 
 ## Vision
 
-**One language, one codebase, multiple screens.** 
-  - Write your app in Python, R, Julia, or Go. 
+**One language, one codebase, multiple screens.**
+  - Write your app in Python, R, Julia, or Go.
   - Access it from six different platforms: web, iOS, Android, Linux, macOS, and Windows.
+
+## Get started
+
+Go to https://nitro.h2o.ai/install/
 
 ## Status
 

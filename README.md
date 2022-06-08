@@ -6,9 +6,7 @@ Nitro (N<sub>2</sub>O) is the simplest way to build web apps using Python. No fr
 
 ## Philosophy
 
-Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`.
-
-*Code:*
+Recall how simple it is to author interactive command line applications using Python's built-in `input()` and `print()`:
 
 ```py
 def main():
@@ -16,8 +14,6 @@ def main():
     feel = input(f'How do you feel today, {name}?')
     print(f'What a coincidence, {name}, I feel {feel}, too!')
 ```
-
-*Output:*
 
 ```
 > What is your name?
@@ -27,9 +23,7 @@ def main():
 > What a coincidence, Boaty McBoatface, I feel intrigued, too!
 ```
 
-Nitro brings that same level of simplicity to authoring web applications.
-
-*Code:*
+Nitro brings that same level of simplicity to authoring web applications:
 
 ```py
 from h2o_nitro import View, box
@@ -40,22 +34,21 @@ def main(view: View):
     view(f'What a coincidence, {name}, I feel {feel}, too!')
 ```
 
-*Output:*
-
 ![Hello World app](docs/assets/images/app-basic.gif)
 
-And here's a more elaborate example in [just seven Python statements](https://github.com/h2oai/nitro/blob/main/py/h2o_nitro/templates/samples/recruitment/app.py).
-Yes, you read that right - seven pages built using seven statements!
-
-*Output:*
+And here's a more elaborate example with seven pages in [seven Python statements](https://github.com/h2oai/nitro/blob/main/py/examples/space_flight.py):
 
 ![Recruitment app](docs/assets/images/app-recruitment.gif)
 
 ## Vision
 
-- **Write once, run anywhere.** Build apps for mobile (iOS, Android), desktop (Linux, OSX, Windows) and the web from one
-  codebase, using one language.
-- **Write less, do more.** Code is a liability. Less code = less bugs.
+**One language, one codebase, multiple screens.**
+  - Write your app in Python, R, Julia, or Go.
+  - Access it from six different platforms: web, iOS, Android, Linux, macOS, and Windows.
+
+## Get started
+
+Go to https://nitro.h2o.ai/install/
 
 ## Status
 
@@ -64,7 +57,7 @@ Yes, you read that right - seven pages built using seven statements!
 Critical missing features include data visualization, back-button (history) support, internationalization and localization.
 
 The API is mostly stable, but expect minor changes while we ship support for at least one other 
-language (R, Go, Typescript, C#, Java planned), and compile apps to mobile or desktop.
+language (R, Julia, Go, Typescript, C#, Java planned), and compile apps to mobile or desktop.
 
 ## Features
 
@@ -100,44 +93,3 @@ use Nitro.
 - **API.** Wave's API is *dashboard-oriented*, and has several features that make it easy to develop and deploy
   real-time analytics and dashboards easily. Nitro's API is *page-flow-oriented*, and makes it radically simple to
   author sophisticated workflows and wizards without dealing with callback functions and request handlers.
-
-
-## Guide
-
-You can always view the docs for the latest version at https://nitro.h2o.ai/.
-
-- [Getting started](docs/install.md)
-- [Basics](docs/basics.md)
-- [Markdown](docs/markdown.md)
-- [Styling](docs/styling.md)
-- [Images](docs/images.md)
-- [Layout](docs/layout.md)
-- [Forms](docs/forms.md)
-- [Popups](docs/popups.md)
-- [Textbox](docs/textbox.md)
-- [Spinbox](docs/spinbox.md)
-- [Checkbox](docs/checkbox.md)
-- [Toggle](docs/toggle.md)
-- [Pickers](docs/pickers.md)
-- [Options](docs/options.md)
-- [Buttons](docs/buttons.md)
-- [Radio Buttons](docs/radio-buttons.md)
-- [Dropdown](docs/dropdown.md)
-- [Dropdown List](docs/dropdown-list.md)
-- [Checklist](docs/checklist.md)
-- [Table](docs/table.md)
-- [Slider](docs/slider.md)
-- [Range Slider](docs/range-slider.md)
-- [Time Picker](docs/time-picker.md)
-- [Date Picker](docs/date-picker.md)
-- [Calendar](docs/calendar.md)
-- [Week Picker](docs/week-picker.md)
-- [Month Picker](docs/month-picker.md)
-- [Tag Picker](docs/tag-picker.md)
-- [Color Picker](docs/color-picker.md)
-- [Color Palette](docs/color-palette.md)
-- [Rating](docs/rating.md)
-- [File Upload](docs/file-upload.md)
-- [Separator](docs/separator.md)
-- [Theming](docs/theming.md)
-- [Advanced Layout](docs/advanced-layout.md)
