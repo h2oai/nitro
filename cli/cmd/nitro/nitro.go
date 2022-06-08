@@ -24,6 +24,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func containsDotDot(v string) bool {
 	if !strings.Contains(v, "..") {
 		return false
@@ -648,6 +654,16 @@ func main() {
 	runFlagSet := flag.NewFlagSet("nitro run", flag.ExitOnError)
 	cloneFlagSet := flag.NewFlagSet("nitro clone", flag.ExitOnError)
 
+	versionCmd := &ffcli.Command{
+		Name:       "version",
+		ShortUsage: "nitro version",
+		ShortHelp:  "Display version information and exit.",
+		Exec: func(_ context.Context, args []string) error {
+			fmt.Printf("H2O Nitro v%s %s/%s %s\n", version, runtime.GOOS, runtime.GOARCH, date)
+			return nil
+		},
+	}
+
 	runCmd := &ffcli.Command{
 		Name:       "run",
 		ShortUsage: "nitro [flags] run URL",
@@ -677,9 +693,13 @@ func main() {
 	}
 
 	rootCmd := &ffcli.Command{
-		ShortUsage:  "nitro [flags] <subcommand>",
-		FlagSet:     rootFlagSet,
-		Subcommands: []*ffcli.Command{runCmd, cloneCmd},
+		ShortUsage: "nitro [flags] <subcommand>",
+		FlagSet:    rootFlagSet,
+		Subcommands: []*ffcli.Command{
+			versionCmd,
+			runCmd,
+			cloneCmd,
+		},
 		Exec: func(context.Context, []string) error {
 			return flag.ErrHelp
 		},
