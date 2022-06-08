@@ -685,9 +685,9 @@ func run(conf *Conf, urlPath string) error {
 }
 
 type Conf struct {
-	verbose bool
-	start   bool
-	executable  string
+	verbose    bool
+	start      bool
+	executable string
 }
 
 func main() {
