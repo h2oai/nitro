@@ -2,8 +2,9 @@
 
 Plugins add new capabilities to Nitro. They're easy to install, too - simply `pip install` the plugin.
 
-**Warning.** Plugins use Javascript, and are only supported for web apps. Avoid using plugins if you're targeting mobile or
-desktop apps.
+!!! warning
+    Plugins use Javascript, and are only supported for web apps. 
+    Avoid using plugins if you're targeting mobile or desktop apps.
 
 ## Available plugins
 

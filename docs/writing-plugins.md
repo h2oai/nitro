@@ -4,17 +4,20 @@ Plugins can load third-party or custom Javascript into Nitro's user interface, a
 Nitro's `box()` function that can allow an app to render and interact with new kinds of components, like visualizations,
 graphics, tables, and so on.
 
-**Warning: This is an experimental feature. API is subject to change.**
+!!! warning 
+    This is an experimental feature. API is subject to change.
 
 ## Write a plugin
 
 Writing your own plugin is easy if you know Javascript, HTML, CSS and a bit of client-server programming.
 
-There are two parts to a plugin: *client-side* (user interface) and *server-side*.
+There are two parts to a plugin: *client-side* (the part that executes in the web browser) and *server-side*
+(the part that executes on the server).
 
 - The *client-side* can dynamically import Javascript files and source code into the browser.
-- The *server-side* consists of plain Python functions that invoke the imported Javascript to render components and
-  handle inputs from the components.
+- The *server-side* consists of plain Python code that can do two things:
+    - Invoke the imported Javascript to render components, and
+    - Handle inputs or events from these components.
 
 Writing the client-side part is simply a matter of providing a list of Javascript files and/or source code to import:
 
@@ -25,7 +28,9 @@ from h2o_nitro import Plugin, Script
 
 custom_javascript = '''
 exports.show_count = (context, element, data) => {
-    // read "data" (an object) and render the component inside the HTML element "element".
+    // 'data' is a dictionary-like object whose fields
+    //   hold values sent by Python. 
+    // 'element' is the HTML element for the box.
     element.innerText = data.unicorn_count
 };
 '''

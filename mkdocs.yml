@@ -48,6 +48,7 @@ markdown_extensions:
 nav:
   - Introduction: 'index.md'
   - 'install.md'
+  - 'live-docs.md'
   - 'examples.md'
   - 'plugins.md'
   # Begin generated

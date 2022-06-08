@@ -1,20 +1,9 @@
 # Getting started
 
-The best way to get better at app development is to clone other apps and tinker with them.
+The best way to get better at programming is to clone other apps and tinker with them.
 [Read the source, Luke](https://blog.codinghorror.com/learn-to-read-the-source-luke/)!
 
-The `nitro` program makes it really easy to play with any Nitro app published on the world wide web.
-
-Once `nitro` is installed, you'll be able to execute this...
-
-```
-nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
-```
-
-...and `nitro` will fetch `hello.py`, create a virtual environment, set up its dependencies, download related files, and
-finally run the app for you.
-
-Simple and easy!
+The `nitro` program makes it really easy to play with any Nitro app published anywhere on the world wide web.
 
 ## Prerequisites
 
@@ -22,18 +11,12 @@ You will need Python 3.7 or later installed on your system.
 
 ## Installation
 
-1. Go to https://github.com/h2oai/nitro/releases.
+1. Go to [https://github.com/h2oai/nitro/releases](https://github.com/h2oai/nitro/releases).
 2. Download the appropriate archive for your platform.
 3. Extract the archive and move `nitro` or `nitro.exe` to a location that's in your `PATH`.
-4. Open a terminal window and run `nitro version` to verify if the `nitro` command is accessible.
 
-```
-nitro version 
-```
-
-```
-H2O Nitro 0.8.5 linux/amd64 2022-06-08T01:26:19Z
-```
+!!! success "Test your installation"
+    To verify if `nitro` is accessible, open a terminal window and run `nitro version`.
 
 ## Run an app
 
@@ -49,6 +32,13 @@ Run a "Hello World" app:
 ```bash
 nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
 ```
+
+The `nitro run` command does several things for you:
+
+- Creates a new virtual environment.
+- Ensures that a current version of `pip` is installed.
+- Installs all the libraries that `hello.py` needs.
+- Starts the app.
 
 ```txt
 Downloading https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
@@ -69,7 +59,8 @@ Starting venv/bin/python [-m flask run] ...
  * Debugger PIN: 140-120-041
 ```
 
-Go to http://localhost:5000/ and try it out!
+!!! success "Play with the app"
+    Go to [http://localhost:5000/](http://localhost:5000/).
 
 ## Edit the app
 
@@ -81,17 +72,16 @@ To see what `nitro run` just did, let's inspect the directory's contents. You sh
 - `hello.py`: The [app's source code](https://github.com/h2oai/nitro/blob/main/py/examples/hello.py).
 
 Open the directory in a Python editor, like [PyCharm](https://www.jetbrains.com/pycharm/)
-or [Visual Studio Code](https://code.visualstudio.com/).
+or [Visual Studio Code](https://code.visualstudio.com/). Then, make some change to `hello.py` and save. You should see 
+your browser reload and display your changes automatically!
 
-Then, make some change to `hello.py` and save.
-
-You should see your browser reload and display your changes automatically!
-
-Congratulations, you're all set to begin your journey with H2O Nitro!
+!!! tip
+    `nitro run` can run any Nitro app hosted anywhere on the world wide web, including [gists](https://gist.github.com/) 
+    and [snippets](https://gitlab.com/explore/snippets), which makes sharing your apps just as easy as running them.
 
 ## It's just Python!
 
-If you inspect `hello.py`, you'll see that it's just a plain Python file containing a
+If you inspect `hello.py`, you'll see that it's a plain Python file containing a
 simple [Flask](https://flask.palletsprojects.com/) app:
 
 ```py
@@ -133,24 +123,11 @@ python hello.py
 
 There's no magic here. Nitro apps are just plain Python programs.
 
-Nitro plugs into [Django](https://www.djangoproject.com/)
-, [Flask](https://flask.palletsprojects.com/), [Starlette](https://www.starlette.io/)
-, [Tornado](https://www.tornadoweb.org/), [Uvicorn](https://www.uvicorn.org/) and other popular frameworks. It can be
-integrated into your existing applications, too!
-
-## Live Docs
-
-Nitro has beautiful interactive documentation with live examples.
-
-The documentation itself is written using Nitro, which means you can fetch and run it just like any other Nitro app:
-
-```
-mkdir nitro_docs
-cd nitro_docs
-nitro run https://nitro.h2o.ai/docs.py
-```
-
-Play with the docs at http://localhost:4999/.
+!!! info
+    Nitro is a library, and plugs into [Django](https://www.djangoproject.com/)
+    , [Flask](https://flask.palletsprojects.com/), [Starlette](https://www.starlette.io/)
+    , [Tornado](https://www.tornadoweb.org/), [Uvicorn](https://www.uvicorn.org/) and other popular frameworks. 
+    It can be integrated into your existing applications, too!
 
 ## Upgrading
 
@@ -159,6 +136,7 @@ of `nitro`.
 
 ## Next steps
 
+- [Get the live docs](live-docs.md).
 - [Read the guide](basics.md).
 - [Try more examples](examples.md).
 
