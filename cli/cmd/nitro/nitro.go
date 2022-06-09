@@ -347,7 +347,7 @@ func findPythonExecutable() (string, error) {
 			return p, nil
 		}
 	}
-	return "", fmt.Errorf("python executable not found (tried %v)", pythonCandidates)
+	return "", fmt.Errorf("python executable not found (tried %v)", candidates)
 }
 
 func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
