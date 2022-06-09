@@ -48,8 +48,9 @@ const dedent = (block: S): S => {
   const indent = getSpaceIndentation(lines) || getTabIndentation(lines)
   return indent === 0
     ? block
-    // don't dedent empty lines
-    : lines.map(s => s.length > indent ? s.substring(indent) : s).join('\n')
+    : lines.map(s => s.length > indent ? s.substring(indent) : s) // don't dedent empty lines
+      .map(s => s.trimEnd()) // Workaround for a bug in micromark - trailing spaces trip up list rendering
+      .join('\n')
 }
 
 // Micromark encodes these chars inside <pre><code> blocks, which trips up highlight.js.
