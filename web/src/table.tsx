@@ -89,6 +89,8 @@ export const Table = make(({ context, box }: BoxProps) => {
                 break
               }
           }
+        } else {
+          minWidth = width as any
         }
       }
 
