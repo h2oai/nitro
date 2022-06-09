@@ -85,9 +85,11 @@ export type Setting = {
   plugins?: Plugin[]
 }
 
-export type BoxMode = 'none' | 'md' | 'image' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
+// *** Warning ***
+// If you add a new mode here, update heuristics.tsx to mark it as non-interactive (index=0) if applicable.
+export type BoxMode = 'none' | 'md' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
   | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color'
-  | 'rating' | 'table' | 'separator' | 'file'
+  | 'rating' | 'table' | 'file' | 'separator' | 'image'
 
 export type Box = {
   xid: S

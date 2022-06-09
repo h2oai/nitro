@@ -167,12 +167,20 @@ export const sanitizeBox = (box: Box): Box => {
     sanitizeRange(box)
     if (!box.mode) box.mode = determineMode(box)
 
-    if (box.mode === 'md') {
-      const [md, hasLinks] = markdown(box.text ?? '')
-      box.text = md
-      if (!hasLinks) {
-        box.index = -1 // don't capture
-      }
+    switch (box.mode) {
+      case 'md':
+        {
+          const [md, hasLinks] = markdown(box.text ?? '')
+          box.text = md
+          if (!hasLinks) {
+            box.index = -1 // don't capture
+          }
+        }
+        break
+      case 'separator':
+      case 'image':
+        box.index = -1
+        break
     }
   }
   return box
