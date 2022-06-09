@@ -45,9 +45,12 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
 nav:
   - Introduction: 'index.md'
   - 'install.md'
+  - 'cli.md'
   - 'live-docs.md'
   - 'examples.md'
   - 'plugins.md'
@@ -89,6 +92,7 @@ nav:
     - 'advanced-layout.md'
     # End generated
   - Advanced:
+      - 'nitrogen.md'
       - 'writing-plugins.md'
   - Meta:
       - 'change-log.md'
