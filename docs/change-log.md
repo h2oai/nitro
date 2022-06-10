@@ -17,13 +17,20 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.9.2
+
+Jun 09, 2022
+
+- Fixed
+    - Don't return values for non-interactive components (separator, image, plots)
+
 ## v0.9.1
 
 Jun 09, 2022
 
 - Fixed
     - Wonky markdown list rendering when there is trailing whitespace on line immediately following list.
-    - Respect column width on tables when a scalar value.
+    - Respect column width on tables when scalar.
 
 ## v0.9.0
 
