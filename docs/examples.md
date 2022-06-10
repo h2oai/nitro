@@ -15,35 +15,47 @@ It's easy to run these examples on your computer.
 
 ## Basic Examples
 
-**[Hello World using Flask](https://github.com/h2oai/nitro/blob/main/py/examples/hello.py)**
+### Hello World using Flask
 
 A simple app, using [Flask](https://flask.palletsprojects.com/).
 
-```
-nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
-```
+Source: https://github.com/h2oai/nitro/blob/main/py/examples/hello.py
 
-**[Hello World using Tornado](https://github.com/h2oai/nitro/blob/main/py/examples/hello_tornado.py)**
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
+    ```
+
+### Hello World using Tornado
 
 Same example as above, but using [Tornado](https://www.tornadoweb.org/en/stable/index.html).
 
-```
-nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello_tornado.py
-```
+Source: https://github.com/h2oai/nitro/blob/main/py/examples/hello_tornado.py
 
-**[Hello World using Starlette](https://github.com/h2oai/nitro/blob/main/py/examples/hello_starlette.py)**
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello_tornado.py
+    ```
+
+### Hello World using Starlette
 
 Same example as above, but using [Starlette](https://www.starlette.io/) and [Uvicorn](https://www.uvicorn.org/).
 
-```
-nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello_starlette.py
-```
+Source: https://github.com/h2oai/nitro/blob/main/py/examples/hello_starlette.py
 
-**[Apply for Space Flight](https://github.com/h2oai/nitro/blob/main/py/examples/space_flight.py)**
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello_starlette.py
+    ```
+
+### Apply for Space Flight
 
 A job application wizard. Seven pages in seven statements!
 
-```
-nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/space_flight.py
-```
+Source: https://github.com/h2oai/nitro/blob/main/py/examples/space_flight.py
+
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/space_flight.py
+    ```
 
