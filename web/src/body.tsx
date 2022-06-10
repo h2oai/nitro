@@ -55,7 +55,7 @@ const
 export const Body = (props: { send: Send, boxes: Box[] }) => {
   const
     boxes: Box[] = makeContinuable(props.boxes),
-    context = newCaptureContext(props.send, [])
+    context = newCaptureContext(props.send)
   return (
     <div className='main'>
       <Zone context={context} boxes={boxes} box={{}} />
@@ -77,7 +77,7 @@ export const Popup = make((props: { send: Send, boxes: Box[] }) => {
   const
     hiddenB = signal(false),
     boxes: Box[] = makeContinuable(props.boxes),
-    context = newCaptureContext(props.send, []),
+    context = newCaptureContext(props.send),
     render = () => {
       const
         { title } = boxes[0], // popups have exactly one box.

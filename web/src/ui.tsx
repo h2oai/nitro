@@ -17,11 +17,13 @@ import { B, Dict, Disposable, isSignal, on } from './core';
 import { Box, Input, MsgType } from './protocol';
 import { Send } from './socket';
 
-export const newCaptureContext = (send: Send, data: Array<Input | null>) => {
-  const capture = <T extends Input | null>(index: any, value: T) => {
-    if (index >= 0) data[index] = value
-  }
-  const submit = () => send({ t: MsgType.Input, d: data })
+export const newCaptureContext = (send: Send) => {
+  const
+    data: Array<Input | null> = [],
+    capture = <T extends Input | null>(index: any, value: T) => {
+      if (index >= 0) data[index] = value
+    },
+    submit = () => send({ t: MsgType.Input, d: data.filter(e => e !== undefined) })
   return { capture, submit }
 }
 
