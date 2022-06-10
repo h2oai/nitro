@@ -312,6 +312,7 @@ class Box:
             required: Optional[bool] = None,
             password: Optional[bool] = None,
             editable: Optional[bool] = None,
+            ignore: Optional[bool] = None,
     ):
         if isinstance(text, (tuple, set, list, dict, OrderedDict)):
             if options is not None:
@@ -368,6 +369,7 @@ class Box:
         self.required = required
         self.password = password
         self.editable = editable
+        self.ignore = ignore
 
     def dump(self) -> dict:
         return _clean(dict(
@@ -416,6 +418,7 @@ class Box:
             required=self.required,
             password=self.password,
             editable=self.editable,
+            ignore=self.ignore,
         ))
 
 

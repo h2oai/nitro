@@ -172,17 +172,18 @@ export const sanitizeBox = (box: Box): Box => {
         {
           const [md, hasLinks] = markdown(box.text ?? '')
           box.text = md
-          if (!hasLinks) {
-            box.index = -1 // don't capture
-          }
+          if (!hasLinks) box.index = -1 // don't capture
         }
         break
       case 'separator':
       case 'image':
-        box.index = -1
+        box.index = -1 // don't capture
         break
     }
+
+    if (box.ignore) box.index = -1 // don't capture
   }
+
   return box
 }
 
@@ -191,7 +192,7 @@ export const reIndex = (boxes: Box[], incr: Incr) => {
     if (box.items) {
       reIndex(box.items, incr)
     } else {
-      if (box.index >= 0) {
+      if (box.index >= 0) { // only set for interactive boxes, not containers.
         box.index = incr()
       }
     }

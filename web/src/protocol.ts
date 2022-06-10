@@ -93,7 +93,8 @@ export type BoxMode = 'none' | 'md' | 'button' | 'menu' | 'radio' | 'check' | 't
 
 export type Box = {
   xid: S
-  index: I // -1 = don't capture
+  index: I // front-end only -1 => don't capture
+  ignore?: B // true => don't capture
   text?: S
   name?: S
   mode?: BoxMode
