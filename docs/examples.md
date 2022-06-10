@@ -59,3 +59,48 @@ Source: https://github.com/h2oai/nitro/blob/main/py/examples/space_flight.py
     nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/space_flight.py
     ```
 
+## Data Visualization
+
+### Using Matplotlib
+
+How to use [Matplotlib](https://matplotlib.org/stable/index.html) in Nitro apps.
+
+Source: https://github.com/h2oai/nitro-matplotlib/blob/main/examples/matplotlib_basic.py
+
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro-matplotlib/main/examples/matplotlib_basic.py
+    ```
+
+### Using Seaborn
+
+How to use [Seaborn](https://seaborn.pydata.org/) in Nitro apps.
+
+Source: https://github.com/h2oai/nitro-matplotlib/blob/main/examples/seaborn_basic.py
+
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro-matplotlib/main/examples/seaborn_basic.py
+    ```
+
+### Using Bokeh
+
+How to use [Bokeh](https://docs.bokeh.org/en/latest/) in Nitro apps.
+
+Source: https://github.com/h2oai/nitro-bokeh/blob/main/examples/bokeh_basic.py
+
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro-bokeh/main/examples/bokeh_basic.py
+    ```
+
+### Using Altair
+
+How to use [Altair](https://altair-viz.github.io/index.html) in Nitro apps.
+
+Source: https://github.com/h2oai/nitro-altair/blob/main/examples/altair_basic.py
+
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro-altair/main/examples/altair_basic.py
+    ```
