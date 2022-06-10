@@ -43,7 +43,7 @@ const
           case 'toggle':
             return true
           case 'table':
-            if (isB(box.multiple)) return true
+            if (isB(box.multiple)) return false
             if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
         }
       }
