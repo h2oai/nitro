@@ -131,11 +131,14 @@ ECHO arguments...
 
 `ECHO` prints its arguments. 
 
-**Example.** Print "Hello World!"
+!!!example
 
-```
-ECHO Hello World!
-```
+    Print "Hello World!"
+
+    ```
+    ECHO Hello World!
+    ```
+
 ### FILE
 
 ```
@@ -152,15 +155,17 @@ eof-marker
 `file-path` must be relative and slash-separated (`path/to/file`, not `\path\to\file` or `/path/to/file`) for platform independence.
 The path is automatically translated to the correct format required by the target platform.
 
-**Example.** Write three lines to `requirements.txt`:
+!!!example
 
-```
-FILE requirements.txt EOF
-flask
-simple-websocket
-h2o-nitro
-EOF
-```
+    Write three lines to `requirements.txt`:
+
+    ```
+    FILE requirements.txt EOF
+    flask
+    simple-websocket
+    h2o-nitro
+    EOF
+    ```
 
 ### GET
 
@@ -176,23 +181,29 @@ like datasets, configuration files, images, or even other source files.
 If `file-path` is not provided, the filename is deduced from the URL. 
 If `file-path` is a directory (ends with a `/`), the filename is deduced from the URL and written to the directory.
 
-**Example.** Fetches a file and save it to `license.txt`:
+!!!example
 
-```
-GET https://raw.githubusercontent.com/path/to/license.txt
-```
+    Fetches a file and save it to `license.txt`:
 
-**Example.** Fetch a file and save it to `files/license.txt`:
+    ```
+    GET https://raw.githubusercontent.com/path/to/license.txt
+    ```
 
-```
-GET https://raw.githubusercontent.com/path/to/license.txt files/
-```
+!!!example
 
-**Example.** Fetch `license.txt` and save it to `files/app-license.txt`:
+    Fetch a file and save it to `files/license.txt`:
 
-```
-GET https://raw.githubusercontent.com/path/to/license.txt files/app-license.txt
-```
+    ```
+    GET https://raw.githubusercontent.com/path/to/license.txt files/
+    ```
+
+!!!example
+
+    Fetch `license.txt` and save it to `files/app-license.txt`:
+
+    ```
+    GET https://raw.githubusercontent.com/path/to/license.txt files/app-license.txt
+    ```
 
 ### FROM
 
@@ -204,22 +215,22 @@ FROM base-url
 
 The primary function of `FROM` is to simplify repetitive `GET` instructions.
 
-Before:
+!!!example "Before"
 
-```
-GET https://raw.githubusercontent.com/path/to/foo.txt
-GET https://raw.githubusercontent.com/path/to/bar.txt
-GET https://raw.githubusercontent.com/path/to/qux.txt
-```
+    ```
+    GET https://raw.githubusercontent.com/path/to/foo.txt
+    GET https://raw.githubusercontent.com/path/to/bar.txt
+    GET https://raw.githubusercontent.com/path/to/qux.txt
+    ```
 
-Improved:
+!!!example "Improved"
 
-```
-FROM https://raw.githubusercontent.com/path/to
-GET foo.txt
-GET bar.txt
-GET qux.txt
-```
+    ```
+    FROM https://raw.githubusercontent.com/path/to
+    GET foo.txt
+    GET bar.txt
+    GET qux.txt
+    ```
 
 
 ### SHOW
@@ -230,11 +241,13 @@ SHOW file-path
 
 `SHOW` prints the contents of a file, similar to `cat` on Unix or `type` on Windows.
 
-**Example.** Print the contents of `license.txt`
+!!!example
 
-```
-SHOW license.txt
-```
+    Print the contents of `license.txt`
+
+    ```
+    SHOW license.txt
+    ```
 
 ### ENV
 
@@ -244,12 +257,14 @@ ENV name value
 
 `ENV` sets the environment variable named `name` to value `value`.
 
-**Example.** Set `FLASK_APP=hello.py` and `FLASK_ENV=development`:
+!!!example
 
-```
-ENV FLASK_APP hello.py
-ENV FLASK_ENV development
-```
+    Set `FLASK_APP=hello.py` and `FLASK_ENV=development`:
+
+    ```
+    ENV FLASK_APP hello.py
+    ENV FLASK_ENV development
+    ```
 
 ### RUN
 
@@ -259,11 +274,13 @@ RUN command argument1 argument2 argument3 ...
 
 `RUN` executes a command. If an error is encountered or `-verbose` is set, it prints `STDERR` and `STDOUT`.
 
-**Example.** Run `python -m pip install -r requirements.txt`:
+!!!example
 
-```
-RUN python -m pip install -r requirements.txt
-```
+    Run `python -m pip install -r requirements.txt`:
+
+    ```
+    RUN python -m pip install -r requirements.txt
+    ```
 
 ### START
 
@@ -277,8 +294,10 @@ It is typically used for the final instruction in a file for launching long-runn
 like Flask, Tornado, Starlette, etc. where it's useful to inspect the command's output while running.
 
 
-**Example.** Run `python -m flask run`:
+!!!example
 
-```
-START python -m flask run
-```
+    Run `python -m flask run`:
+
+    ```
+    START python -m flask run
+    ```
