@@ -20,7 +20,7 @@ The `nitro` CLI (command line interface) makes it really easy to play with any N
 
 1. Go to [https://github.com/h2oai/nitro/releases](https://github.com/h2oai/nitro/releases).
 2. Download the appropriate archive for your platform.
-3. Extract the archive and move `nitro` or `nitro.exe` to a location that's in your `PATH`.
+3. Extract the archive and move `nitro` or `nitro.exe` to a location that's in your `PATH`. [Learn how to.](help.md#add-cli-to-path)
 
 !!! success "Test your installation"
     To verify if `nitro` is accessible, open a new terminal window and run `nitro version`.
