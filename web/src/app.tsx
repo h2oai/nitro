@@ -95,7 +95,6 @@ export const App = make(({ client }: { client: Client }) => {
               case MsgType.Update:
                 {
                   const { d: box, p: position } = msg
-                  box.xid = xid()
                   const { body, popup } = client
                   if (box.popup) {
                     popup.length = 0

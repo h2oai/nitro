@@ -39,7 +39,7 @@ class _MsgType(IntEnum):
     Set = 5
     Insert = 6
     Update = 7
-    Remove = 8
+    Remove = 8  # TODO unused
 
 
 _primitive = (bool, int, float, str)
@@ -315,6 +315,8 @@ class Box:
             editable: Optional[bool] = None,
             ignore: Optional[bool] = None,
     ):
+        self.xid = _xid()
+
         if isinstance(text, (tuple, set, list, dict, OrderedDict)):
             if options is not None:
                 raise ValueError('options= must not be set if first argument is a collection.')
@@ -374,6 +376,7 @@ class Box:
 
     def dump(self) -> dict:
         return _clean(dict(
+            xid=self.xid,
             text=self.text,
             name=self.name,
             mode=self.mode,
