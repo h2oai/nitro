@@ -112,11 +112,7 @@ const
     loadModule(name, module => {
       const f = module.exports[method]
       if (f) {
-        if (element) {
-          f(context, element, data)
-        } else {
-          f(context, data)
-        }
+        f(context, element, data)
       } else {
         console.error(`No exported function named "${method}" in plugin "${name}".`)
       }
