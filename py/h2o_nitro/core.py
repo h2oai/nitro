@@ -18,6 +18,7 @@ from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable, 
 from collections import OrderedDict
 import msgpack
 from enum import Enum, IntEnum
+from .version import __version__
 
 web_directory = str(Path(__file__).parent / 'www')
 
@@ -592,7 +593,7 @@ class _View:
             send: Optional[Callable] = None,
             recv: Optional[Callable] = None,
             title: str = 'H2O Nitro',
-            caption: str = 'v0.1.0',  # XXX show actual version
+            caption: str = f'v{__version__}',
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
