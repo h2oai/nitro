@@ -28,9 +28,12 @@ from h2o_nitro import Plugin, Script
 
 custom_javascript = '''
 exports.show_count = (context, element, data) => {
-    // 'data' is a dictionary-like object whose fields
+    // - 'context' is an object with two methods:
+    //   - 'context.record(value)' records the value of this box.
+    //   - 'context.submit()' submits all recorded values for the page.
+    // - 'element' is the box's HTML element.
+    // - 'data' is a dictionary-like object whose fields
     //   hold values sent by Python. 
-    // 'element' is the HTML element for the box.
     element.innerText = data.unicorn_count
 };
 '''
