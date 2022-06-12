@@ -76,16 +76,15 @@ const Warning = styled.div`
 `
 const Blocker = styled(Overlay)`
   z-index: 1000;
-`
-const Fader = styled(Blocker)`
   background-color: #000;
-  opacity: 0.8;
+  opacity: 0;
+  transition: opacity 0.3s
 `
 
 const Busy = make(({ timeout }: { timeout: U }) => {
   const
     visibleB = signal(false),
-    render = () => visibleB() ? <Fader><img src="busy32.gif" /></Fader> : <Blocker />
+    render = () => <Blocker style={{ opacity: visibleB() ? 0.5 : 0 }}><img src="busy32.gif" /></Blocker>
 
   setTimeout(() => { visibleB(true) }, timeout)
 
