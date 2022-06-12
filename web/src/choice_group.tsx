@@ -30,7 +30,7 @@ export const ChoiceGroup = make(({ box }: BoxProps) => {
     })),
     selectedKey = selected ? selected.value : (hasNoPrimary && options.length > 0) ? options[0].value : undefined,
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IChoiceGroupOption) => {
-      if (option) context.capture(option?.key)
+      if (option) context.record(option?.key)
     },
     render = () => {
       return (
@@ -45,7 +45,7 @@ export const ChoiceGroup = make(({ box }: BoxProps) => {
       )
     }
 
-  if (selectedKey) context.capture(selectedKey)
+  if (selectedKey) context.record(selectedKey)
 
   return { render }
 })

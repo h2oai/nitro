@@ -27,7 +27,7 @@ export const TagPicker = make(({ box }: BoxProps) => {
     selectedKeys = selectedOptions.map(o => String(o.value)),
     tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),
     selectedTags = tags.filter(tag => selectedKeys.includes(tag.key as S)),
-    capture = (tags: ITag[]) => context.capture(tags.map(tag => String(tag.key))),
+    capture = (tags: ITag[]) => context.record(tags.map(tag => String(tag.key))),
     listContainsTagList = (tag: ITag, tagList?: ITag[]) => (!tagList || !tagList.length || tagList.length === 0)
       ? false
       : tagList.some(compareTag => compareTag.key === tag.key),

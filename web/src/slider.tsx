@@ -26,7 +26,7 @@ export const Slider = make(({ box }: BoxProps) => {
     defaultValueMin = ranged ? valueFromRange(value[0], min, max, step) : 0,
     defaultValueMax = ranged ? valueFromRange(value[1], min, max, step) : 0,
     onChange = (v: U, range?: [U, U]) => {
-      context.capture(range ? range : v)
+      context.record(range ? range : v)
     },
     render = () => {
       const
@@ -58,11 +58,11 @@ export const Slider = make(({ box }: BoxProps) => {
 
   if (ranged) {
     if (defaultValueMin !== undefined && defaultValueMax !== undefined) {
-      context.capture([defaultValueMin, defaultValueMax])
+      context.record([defaultValueMin, defaultValueMax])
     }
   } else {
     if (defaultValue !== undefined) {
-      context.capture(defaultValue)
+      context.record(defaultValue)
     }
   }
 

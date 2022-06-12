@@ -24,7 +24,7 @@ export const Calendar = make(({ box }: BoxProps) => {
     defaultDate = toDate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date) => {
-      context.capture(dateToString(d ?? new Date()))
+      context.record(dateToString(d ?? new Date()))
     },
     render = () => {
       // TODO format string; aria-label
@@ -56,7 +56,7 @@ export const Calendar = make(({ box }: BoxProps) => {
       )
     }
 
-  context.capture(defaultValue)
+  context.record(defaultValue)
 
   return { render }
 })

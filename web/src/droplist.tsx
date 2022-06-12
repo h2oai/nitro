@@ -25,7 +25,7 @@ export const Droplist = make(({ box }: BoxProps) => {
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
     selectedKeys = selecteds.map(c => String(c.value)),
-    capture = () => context.capture(Array.from(selection)),
+    capture = () => context.record(Array.from(selection)),
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IDropdownOption) => {
       if (option) {
         const key = String(option.key)

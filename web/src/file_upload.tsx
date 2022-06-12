@@ -153,9 +153,9 @@ export const FileUpload = make(({ box }: BoxProps) => {
                 progressB(1)
                 if (multiple) {
                   uploadKeys.push(r.key)
-                  context.capture(uploadKeys)
+                  context.record(uploadKeys)
                 } else {
-                  context.capture(r.key)
+                  context.record(r.key)
                 }
                 break
               case UploadResultT.Failure:
@@ -217,7 +217,7 @@ export const FileUpload = make(({ box }: BoxProps) => {
       )
     }
 
-  context.capture(multiple ? [] : null)
+  context.record(multiple ? [] : null)
 
   return { render, itemsB, warningB }
 })

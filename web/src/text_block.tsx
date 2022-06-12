@@ -29,7 +29,7 @@ export const TextBlock = make(({ box }: BoxProps) => {
         const value = link.getAttribute('data-jump')
         if (value) {
           link.onclick = e => {
-            context.capture(value)
+            context.record(value)
             context.submit()
             e.preventDefault()
           }

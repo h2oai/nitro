@@ -24,7 +24,7 @@ export const Textbox = make(({ box }: BoxProps) => {
     onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
       v = v ?? (target as HTMLInputElement).value ?? value ?? ''
       // TODO live?
-      context.capture(v)
+      context.record(v)
     },
     render = () => {
       const
@@ -45,6 +45,6 @@ export const Textbox = make(({ box }: BoxProps) => {
             : <TextField {...field} iconProps={icon ? { iconName: icon } : undefined} prefix={prefix} suffix={suffix} />
     }
 
-  context.capture((value as any) ?? '')
+  context.record((value as any) ?? '')
   return { render }
 })

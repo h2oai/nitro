@@ -25,7 +25,7 @@ export const Rating = make(({ box }: BoxProps) => {
     defaultRating = toN(value) ?? (allowZeroStars ? 0 : 1),
     onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {
       if (rating === undefined) return
-      context.capture(rating)
+      context.record(rating)
     },
     render = () => {
       return (
@@ -41,7 +41,7 @@ export const Rating = make(({ box }: BoxProps) => {
       )
     }
 
-  context.capture(defaultRating)
+  context.record(defaultRating)
 
   return { render }
 })

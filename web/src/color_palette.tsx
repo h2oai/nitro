@@ -31,7 +31,7 @@ export const ColorPalette = make(({ box }: BoxProps) => {
       color: String(c.value),
     })),
     onChange = (_e: React.FormEvent<HTMLElement>, _id?: S, color?: S) => {
-      if (color) context.capture(color)
+      if (color) context.record(color)
     },
     render = () => {
       return (
@@ -48,7 +48,7 @@ export const ColorPalette = make(({ box }: BoxProps) => {
       )
     }
 
-  if (selected) context.capture(selected.value)
+  if (selected) context.record(selected.value)
 
   return { render }
 })

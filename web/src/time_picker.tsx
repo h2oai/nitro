@@ -47,7 +47,7 @@ export const TimePicker = make(({ box }: BoxProps) => {
   const
     { context, text, value } = box,
     clock = parseClock(String(value).toLowerCase()),
-    capture = () => context.capture(clockToString(clock)),
+    capture = () => context.record(clockToString(clock)),
     hide: IStackItemStyles = { root: { display: 'none' } },
     narrow: Partial<ISpinButtonStyles> = { labelWrapper: { marginBottom: -4 }, spinButtonWrapper: { width: 50 } },
     onHoursChange = (_: React.SyntheticEvent<HTMLElement>, value?: S): void => {

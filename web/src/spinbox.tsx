@@ -23,7 +23,7 @@ export const Spinbox = make(({ box }: BoxProps) => {
     defaultValue = valueFromRange(value, min, max, step),
     onChange = (_: React.SyntheticEvent<HTMLElement>, value?: string): void => {
       let v = isS(value) ? parseFloat(value) : NaN
-      if (!isNaN(v)) context.capture(v)
+      if (!isNaN(v)) context.record(v)
     },
     render = () => {
       return (
@@ -42,7 +42,7 @@ export const Spinbox = make(({ box }: BoxProps) => {
       )
     }
 
-  context.capture(defaultValue ?? 0)
+  context.record(defaultValue ?? 0)
 
   return { render }
 })

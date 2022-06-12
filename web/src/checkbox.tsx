@@ -25,7 +25,7 @@ export const Checkbox = make(({ box }: BoxProps) => {
   const
     { context, value, text } = box,
     onChecked = (checked?: B) => {
-      context.capture(checked ? true : false)
+      context.record(checked ? true : false)
     },
     render = () => {
       return (

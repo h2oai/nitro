@@ -17,35 +17,35 @@ import { B, Dict, Disposable, isSignal, on, S } from './core';
 import { Box, Input, InputValue, MsgType } from './protocol';
 import { Send } from './socket';
 
-export const newCaptureContext = (send: Send) => {
-  const
-    data: Array<Input> = [],
-    capture = (index: any, xid: S, value: InputValue) => {
-      if (index >= 0) data[index] = [xid, value]
-    },
-    submit = () => send({ t: MsgType.Input, d: data.filter(e => e !== undefined) }),
-    scoped = (index: any, xid: S): Context => ({
-      capture: (value: InputValue) => capture(index, xid, value),
-      submit,
-    })
-
-  return { capture, submit, scoped }
-}
-
 export type CaptureContext = {
   scoped(index: any, xid: S): Context
-  capture(index: any, xid: S, value: InputValue): void
+  record(index: any, xid: S, value: InputValue): void
   submit(): void
 }
 
 export type Context = {
-  capture(value: InputValue): void
+  record(value: InputValue): void
   submit(): void
 }
 
 export const noopContext: Context = {
-  capture: (_: InputValue) => { },
+  record: (_: InputValue) => { },
   submit: () => { }
+}
+
+export const newCaptureContext = (send: Send): CaptureContext => {
+  const
+    data: Array<Input> = [],
+    record = (index: any, xid: S, value: InputValue) => {
+      if (index >= 0) data[index] = [xid, value]
+    },
+    submit = () => send({ t: MsgType.Input, d: data.filter(e => e !== undefined) }),
+    scoped = (index: any, xid: S): Context => ({
+      record: (value: InputValue) => record(index, xid, value),
+      submit,
+    })
+
+  return { record, submit, scoped }
 }
 
 export type BoxProps = { box: Box }

@@ -24,7 +24,7 @@ export const ColorPicker = make(({ box }: BoxProps) => {
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
     colorToTuple = ({ r, g, b, a }: IRGB) => [r, g, b, a ?? 100],
-    capture = (color: IRGB) => context.capture(colorToTuple(color)),
+    capture = (color: IRGB) => context.record(colorToTuple(color)),
     onChange = (_: React.SyntheticEvent<HTMLElement>, color: IColor) => capture(color),
     render = () => {
       return (

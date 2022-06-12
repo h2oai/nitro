@@ -28,7 +28,7 @@ export const Checklist = make(({ box }: BoxProps) => {
     { context, text, options } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
-    capture = () => context.capture(Array.from(selection)),
+    capture = () => context.record(Array.from(selection)),
     onChecked = (value?: V, checked?: B) => {
       if (checked) {
         selection.add(String(value))

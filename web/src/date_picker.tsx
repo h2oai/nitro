@@ -25,7 +25,7 @@ export const DatePicker = make(({ box }: BoxProps) => {
     defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date | null) => {
       console.log('in select', d)
-      context.capture(dateToString(d ?? defaultDate))
+      context.record(dateToString(d ?? defaultDate))
     },
     render = () => {
       const
@@ -51,7 +51,7 @@ export const DatePicker = make(({ box }: BoxProps) => {
       )
     }
 
-  context.capture(defaultValue)
+  context.record(defaultValue)
 
   return { render }
 })

@@ -28,7 +28,7 @@ export const ComboBox = make(({ box }: BoxProps) => {
     initialValue = selected ? String(selected.value) : value ? String(value) : undefined,
     onChange = (_: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: N, value?: S) => {
       const v = option ? option.text : value
-      if (v) context.capture(v)
+      if (v) context.record(v)
     },
     render = () => {
       return (
@@ -46,6 +46,6 @@ export const ComboBox = make(({ box }: BoxProps) => {
         />
       )
     }
-  if (initialValue) context.capture(initialValue)
+  if (initialValue) context.record(initialValue)
   return { render }
 })

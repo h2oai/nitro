@@ -25,7 +25,7 @@ export const Toggle = make(({ box }: BoxProps) => {
   const
     { context, value, text } = box,
     onChecked = (checked?: B) => {
-      context.capture(checked ? true : false)
+      context.record(checked ? true : false)
       context.submit()
     },
     render = () => {
@@ -41,7 +41,7 @@ export const Toggle = make(({ box }: BoxProps) => {
       )
     }
 
-  context.capture(value ? true : false)
+  context.record(value ? true : false)
 
   return { render }
 })

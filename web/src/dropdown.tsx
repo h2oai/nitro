@@ -26,7 +26,7 @@ export const Dropdown = make(({ box }: BoxProps) => {
     items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
     selectedKey = selected ? selected.value : undefined,
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IDropdownOption) => {
-      if (option) context.capture(option.key)
+      if (option) context.record(option.key)
     },
     render = () => {
       return (
@@ -42,7 +42,7 @@ export const Dropdown = make(({ box }: BoxProps) => {
       )
     }
 
-  if (selected) context.capture(selected.value)
+  if (selected) context.record(selected.value)
 
   return { render }
 })
