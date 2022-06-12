@@ -19,7 +19,6 @@ import { Send } from './socket';
 
 export type ClientContext = {
   scoped(index: any, xid: S): Context
-  record(index: any, xid: S, value: InputValue): void
   commit(): void
   switch(value: V): void
 }
@@ -38,7 +37,6 @@ export const noopContext: Context = {
 
 export const noopClientContext: ClientContext = {
   scoped: () => noopContext,
-  record: noop,
   commit: noop,
   switch: noop,
 }
@@ -56,7 +54,7 @@ export const newClientContext = (xid: S, send: Send): ClientContext => {
       commit,
     })
 
-  return { record, commit, scoped, switch: change }
+  return { commit, scoped, switch: change }
 }
 
 export type BoxProps = { box: Box }
