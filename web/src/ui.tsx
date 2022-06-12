@@ -41,14 +41,20 @@ export const noopClientContext: ClientContext = {
   switch: noop,
 }
 
-export const newClientContext = (xid: S, send: Send): ClientContext => {
+export const newClientContext = (xid: S, send: Send, onBusy: () => void): ClientContext => {
   const
     data: Array<Input> = [],
     record = (index: any, xid: S, value: InputValue) => {
       if (index >= 0) data[index] = [xid, value]
     },
-    commit = () => send({ t: MsgType.Input, d: data.filter(e => e !== undefined) }),
-    change = (d: V) => send({ t: MsgType.Switch, d }),
+    commit = () => {
+      onBusy()
+      send({ t: MsgType.Input, d: data.filter(e => e !== undefined) })
+    },
+    change = (d: V) => {
+      onBusy()
+      send({ t: MsgType.Switch, d })
+    },
     scoped = (index: any, xid: S): Context => ({
       record: (value: InputValue) => record(index, xid, value),
       commit,

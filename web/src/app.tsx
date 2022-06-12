@@ -74,10 +74,35 @@ const Warning = styled.div`
   background-color: #fff3cd;
   border: 1px solid #ffecb5;
 `
+const Blocker = styled(Overlay)`
+  z-index: 1000;
+`
+const Fader = styled(Blocker)`
+  background-color: #000;
+  opacity: 0.8;
+`
+
+const Busy = make(({ timeout }: { timeout: U }) => {
+  const
+    visibleB = signal(false),
+    render = () => visibleB() ? <Fader><img src="busy32.gif" /></Fader> : <Blocker />
+
+  setTimeout(() => { visibleB(true) }, timeout)
+
+  return { render, visibleB }
+})
 
 export const App = make(({ client }: { client: Client }) => {
   const
     stateB = signal<AppState>({ t: AppStateT.Connecting }),
+    invalidate = (xid: S, socket: Socket) => {
+      client.busy = false
+      client.context = newClientContext(xid, socket.send, () => {
+        client.busy = true
+        stateB({ t: AppStateT.Connected, client })
+      })
+      stateB({ t: AppStateT.Connected, client })
+    },
     onMessage = (socket: Socket, e: SocketEvent) => {
       switch (e.t) {
         case SocketEventT.Connect:
@@ -109,8 +134,7 @@ export const App = make(({ client }: { client: Client }) => {
                     }
                     reIndex(body, newIncr())
                   }
-                  client.context = newClientContext(xid, socket.send)
-                  stateB({ t: AppStateT.Connected, client })
+                  invalidate(xid, socket)
                 }
                 break
               case MsgType.Set:
@@ -140,8 +164,7 @@ export const App = make(({ client }: { client: Client }) => {
 
                   const state = stateB()
                   if (state.t === AppStateT.Connected) {
-                    client.context = newClientContext(xid, socket.send)
-                    stateB({ t: AppStateT.Connected, client })
+                    invalidate(xid, socket)
                   }
                 }
                 break
@@ -184,16 +207,19 @@ export const App = make(({ client }: { client: Client }) => {
             </Overlay>
           )
         case AppStateT.Connected:
-          const { context, body, popup } = client
+          const { context, body, popup, busy } = client
           return (
-            <div className='view'>
-              <div className='art' />
-              <div className='page'>
-                <Header context={context} client={client} />
-                <Body context={context} boxes={body} />
-                {popup.length ? <Popup context={context} boxes={popup} /> : <></>}
+            <>
+              {busy && <Busy timeout={500} />}
+              <div className='view'>
+                <div className='art' />
+                <div className='page'>
+                  <Header client={client} />
+                  <Body context={context} boxes={body} />
+                  {popup.length ? <Popup context={context} boxes={popup} /> : <></>}
+                </div>
               </div>
-            </div>
+            </>
           )
       }
       return <div>Hello!</div>

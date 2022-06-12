@@ -50,6 +50,7 @@ export const newClient = (endpoint: S) => {
     popup,
     socket,
     context,
+    busy: true,
   }
 }
 

@@ -30,10 +30,10 @@ const MenuContainer = styled.div`
   align-items: center;
 `
 
-const Menu = make(({ context, options }: { context: ClientContext, options: Option[] }) => {
+const Menu = make(({ client, options }: { client: Client, options: Option[] }) => {
   const
     hasMenu = options.length > 0,
-    items = options.map(o => toContextualMenuItem(o, context.switch)),
+    items = options.map(o => toContextualMenuItem(o, v => client.context.switch(v))),
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = signal(false),
     showMenu = () => showMenuB(true),
@@ -68,9 +68,9 @@ const NavBarContainer = styled.div`
   justify-content: flex-end;
 `
 
-const NavBar = make(({ context, options }: { context: ClientContext, options: Option[] }) => {
+const NavBar = make(({ client, options }: { client: Client, options: Option[] }) => {
   const
-    items = options.map(o => toContextualMenuItem(o, context.switch)),
+    items = options.map(o => toContextualMenuItem(o, v => client.context.switch(v))),
     render = () => (
       <NavBarContainer>
         <CommandBar items={items} />
@@ -79,7 +79,7 @@ const NavBar = make(({ context, options }: { context: ClientContext, options: Op
   return { render }
 })
 
-export const Header = make(({ context, client }: { context: ClientContext, client: Client }) => {
+export const Header = make(({ client }: { client: Client }) => {
   const
     render = () => {
       const
@@ -90,10 +90,10 @@ export const Header = make(({ context, client }: { context: ClientContext, clien
 
       return (
         <div className='header'>
-          <Menu context={context} options={menu} />
+          <Menu client={client} options={menu} />
           <div className='title'>{title}</div>
           <div className='caption'>{caption}</div>
-          <NavBar context={context} options={nav} />
+          <NavBar client={client} options={nav} />
         </div>
       )
     }
