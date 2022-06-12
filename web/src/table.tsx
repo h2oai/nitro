@@ -23,13 +23,13 @@ import { BoxProps, make } from './ui';
 type TableRow = { key: S }
 type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
-export const Table = make(({ context, box }: BoxProps) => {
+export const Table = make(({ box }: BoxProps) => {
   const
-    { index, headers, options, multiple } = box,
+    { context, headers, options, multiple } = box,
     isList = isB(multiple),
     selecteds = selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),
-    capture = () => context.capture(index, Array.from(selectedValues)),
+    capture = () => context.capture(Array.from(selectedValues)),
     linkColumnIndex = headers ? headers.findIndex(h => h.mode === 'link') : -1,
     linkColumnKey = `f${linkColumnIndex}`,
     sortRows = (rows: TableRow[], key: S, descending?: B): TableRow[] => {
@@ -184,7 +184,7 @@ export const Table = make(({ context, box }: BoxProps) => {
         switch (h.mode) {
           case 'md':
             {
-              const [__html, _] = markdown(text)
+              const __html = markdown(text)[0]
               return <span className='table-md' dangerouslySetInnerHTML={{ __html }} />
             }
         }
@@ -199,7 +199,7 @@ export const Table = make(({ context, box }: BoxProps) => {
 
       // mode = 'table'
       const onClick = () => {
-        context.capture(index, row.key)
+        context.capture(row.key)
         context.submit()
       }
       return column.key === linkColumnKey

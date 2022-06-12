@@ -17,7 +17,7 @@ import React from 'react';
 import { B, isB, signal, xid } from './core';
 import { Box } from './protocol';
 import { Send } from './socket';
-import { make, newCaptureContext } from './ui';
+import { make, newCaptureContext, noopContext } from './ui';
 import { Zone } from './zone';
 
 const
@@ -25,7 +25,8 @@ const
     xid: xid(),
     mode: 'button',
     index: -1, //don't capture
-    options: [{ value: 'continue', text: 'Continue' }]
+    options: [{ value: 'continue', text: 'Continue' }],
+    context: noopContext
   },
   hasActions = (boxes: Box[]): B => { // recursive
     for (const box of boxes) {

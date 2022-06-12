@@ -18,14 +18,14 @@ import { dateToString, toDate } from './core';
 import { BoxProps, make } from './ui';
 
 
-export const DatePicker = make(({ context, box }: BoxProps) => {
+export const DatePicker = make(({ box }: BoxProps) => {
   const
-    { index, value } = box,
+    { context, value } = box,
     defaultDate = toDate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date | null) => {
       console.log('in select', d)
-      context.capture(index, dateToString(d ?? defaultDate))
+      context.capture(dateToString(d ?? defaultDate))
     },
     render = () => {
       const
@@ -51,7 +51,7 @@ export const DatePicker = make(({ context, box }: BoxProps) => {
       )
     }
 
-  context.capture(index, defaultValue)
+  context.capture(defaultValue)
 
   return { render }
 })

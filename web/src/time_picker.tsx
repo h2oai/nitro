@@ -43,11 +43,11 @@ const
     return c24 ? s : s + (pm ? 'PM' : 'AM')
   }
 
-export const TimePicker = make(({ context, box }: BoxProps) => {
+export const TimePicker = make(({ box }: BoxProps) => {
   const
-    { index, text, value } = box,
+    { context, text, value } = box,
     clock = parseClock(String(value).toLowerCase()),
-    capture = () => context.capture(index, clockToString(clock)),
+    capture = () => context.capture(clockToString(clock)),
     hide: IStackItemStyles = { root: { display: 'none' } },
     narrow: Partial<ISpinButtonStyles> = { labelWrapper: { marginBottom: -4 }, spinButtonWrapper: { width: 50 } },
     onHoursChange = (_: React.SyntheticEvent<HTMLElement>, value?: S): void => {

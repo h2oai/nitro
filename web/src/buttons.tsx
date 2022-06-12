@@ -19,9 +19,9 @@ import { Labeled } from './label';
 import { toContextualMenuProps } from './options';
 import { BoxProps, make } from './ui';
 
-export const Buttons = make(({ context, box }: BoxProps) => {
+export const Buttons = make(({ box }: BoxProps) => {
   const
-    { value, index } = box,
+    { context, value } = box,
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
@@ -35,7 +35,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
         capture = (value: V) => {
-          context.capture(index, value)
+          context.capture(value)
           context.submit()
         },
         hasNoPrimary = options.every(o => !isB(o.selected)),
@@ -66,7 +66,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
         </Labeled>
       )
     }
-  context.capture(index, null)
+  context.capture(null)
   return { render }
 })
 

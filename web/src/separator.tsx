@@ -16,7 +16,7 @@ import { Separator as FSeparator } from '@fluentui/react';
 import React from 'react';
 import { BoxProps } from './ui';
 
-export const Separator = ({ context, box }: BoxProps) => {
+export const Separator = ({ box }: BoxProps) => {
   const { text, align } = box
   return (
     <FSeparator alignContent={align === 'left' ? 'start' : align === 'right' ? 'end' : undefined} >{text}</FSeparator>

@@ -38,58 +38,58 @@ import { TimePicker } from './time_picker';
 import { Toggle } from './toggle';
 import { BoxProps } from './ui';
 
-export const XBox = ({ context, box }: BoxProps) => { // recursive 
+export const XBox = ({ box }: BoxProps) => { // recursive
   const { mode, options, editable, multiple } = box
   switch (mode) {
     case 'md':
-      return <TextBlock context={context} box={box} />
+      return <TextBlock box={box} />
     case 'button':
-      return <Buttons context={context} box={box} />
+      return <Buttons box={box} />
     case 'check':
       return options.length
-        ? <Checklist context={context} box={box} />
-        : <Checkbox context={context} box={box} />
+        ? <Checklist box={box} />
+        : <Checkbox box={box} />
     case 'toggle':
-      return <Toggle context={context} box={box} />
+      return <Toggle box={box} />
     case 'color':
       return options.length
-        ? <ColorPalette context={context} box={box} />
-        : <ColorPicker context={context} box={box} />
+        ? <ColorPalette box={box} />
+        : <ColorPicker box={box} />
     case 'date':
-      return <DatePicker context={context} box={box} />
+      return <DatePicker box={box} />
     case 'day':
     case 'month':
     case 'week':
-      return <Calendar context={context} box={box} />
+      return <Calendar box={box} />
     case 'menu':
       return editable
-        ? <ComboBox context={context} box={box} />
+        ? <ComboBox box={box} />
         : multiple
-          ? <Droplist context={context} box={box} />
-          : <Dropdown context={context} box={box} />
+          ? <Droplist box={box} />
+          : <Dropdown box={box} />
     case 'number':
-      return <Spinbox context={context} box={box} />
+      return <Spinbox box={box} />
     case 'radio':
-      return <ChoiceGroup context={context} box={box} />
+      return <ChoiceGroup box={box} />
     case 'range':
-      return <Slider context={context} box={box} />
+      return <Slider box={box} />
     case 'rating':
-      return <Rating context={context} box={box} />
+      return <Rating box={box} />
     case 'table':
-      return <Table context={context} box={box} />
+      return <Table box={box} />
     case 'tag':
-      return <TagPicker context={context} box={box} />
+      return <TagPicker box={box} />
     case 'text':
-      return <Textbox context={context} box={box} />
+      return <Textbox box={box} />
     case 'time':
-      return <TimePicker context={context} box={box} />
+      return <TimePicker box={box} />
     case 'separator':
-      return <Separator context={context} box={box} />
+      return <Separator box={box} />
     case 'file':
-      return <FileUpload context={context} box={box} />
+      return <FileUpload box={box} />
   }
 
-  if (mode?.startsWith('plugin:')) return <PluginBox context={context} box={box} />
+  if (mode?.startsWith('plugin:')) return <PluginBox box={box} />
 
   return null
 }

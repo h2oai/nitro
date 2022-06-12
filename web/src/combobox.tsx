@@ -18,9 +18,9 @@ import { N, S } from './core';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
 
-export const ComboBox = make(({ context, box }: BoxProps) => {
+export const ComboBox = make(({ box }: BoxProps) => {
   const
-    { index, value, text, placeholder, required, error, options } = box,
+    { context, value, text, placeholder, required, error, options } = box,
     items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
     selected = selectedOf(box),
     selectedKey = selected ? String(selected.value) : undefined,
@@ -28,7 +28,7 @@ export const ComboBox = make(({ context, box }: BoxProps) => {
     initialValue = selected ? String(selected.value) : value ? String(value) : undefined,
     onChange = (_: React.FormEvent<IComboBox>, option?: IComboBoxOption, _index?: N, value?: S) => {
       const v = option ? option.text : value
-      if (v) context.capture(index, v)
+      if (v) context.capture(v)
     },
     render = () => {
       return (
@@ -46,6 +46,6 @@ export const ComboBox = make(({ context, box }: BoxProps) => {
         />
       )
     }
-  if (initialValue) context.capture(index, initialValue)
+  if (initialValue) context.capture(initialValue)
   return { render }
 })

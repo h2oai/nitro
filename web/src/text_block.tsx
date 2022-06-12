@@ -15,11 +15,11 @@
 import React from 'react';
 import { BoxProps, make } from './ui';
 
-export const TextBlock = make(({ context, box }: BoxProps) => {
+export const TextBlock = make(({ box }: BoxProps) => {
   const
     ref = React.createRef<HTMLDivElement>(),
     update = () => {
-      const { index } = box
+      const { context, index } = box
       if (index < 0) return
 
       const el = ref.current
@@ -29,7 +29,7 @@ export const TextBlock = make(({ context, box }: BoxProps) => {
         const value = link.getAttribute('data-jump')
         if (value) {
           link.onclick = e => {
-            context.capture(index, value)
+            context.capture(value)
             context.submit()
             e.preventDefault()
           }

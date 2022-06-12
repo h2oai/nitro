@@ -18,13 +18,13 @@ import { dateToString, toDate } from './core';
 import { Labeled } from './label';
 import { BoxProps, make } from './ui';
 
-export const Calendar = make(({ context, box }: BoxProps) => {
+export const Calendar = make(({ box }: BoxProps) => {
   const
-    { index, value } = box,
+    { context, value } = box,
     defaultDate = toDate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
     onSelectDate = (d?: Date) => {
-      context.capture(index, dateToString(d ?? new Date()))
+      context.capture(dateToString(d ?? new Date()))
     },
     render = () => {
       // TODO format string; aria-label
@@ -56,7 +56,7 @@ export const Calendar = make(({ context, box }: BoxProps) => {
       )
     }
 
-  context.capture(index, defaultValue)
+  context.capture(defaultValue)
 
   return { render }
 })

@@ -125,9 +125,9 @@ type Uploadable = {
   errorB: Signal<S>
 }
 
-export const FileUpload = make(({ context, box }: BoxProps) => {
+export const FileUpload = make(({ box }: BoxProps) => {
   const
-    { index, text, path } = box,
+    { context, text, path } = box,
     multiple = box.multiple ? true : false,
     label = multiple ? 'Drag files here, or' : 'Drag a file here, or',
     inputID = xid(),
@@ -153,9 +153,9 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
                 progressB(1)
                 if (multiple) {
                   uploadKeys.push(r.key)
-                  context.capture(index, uploadKeys)
+                  context.capture(uploadKeys)
                 } else {
-                  context.capture(index, r.key)
+                  context.capture(r.key)
                 }
                 break
               case UploadResultT.Failure:
@@ -177,7 +177,7 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
       const rawFiles = e.dataTransfer.files
       if (!rawFiles.length) return
       const files = Array.from(rawFiles)
-      if (!multiple && files.length != 1) {
+      if (!multiple && files.length !== 1) {
         warningB(`You dropped ${files.length} files here, but only one file is allowed.`)
         return
       }
@@ -217,7 +217,7 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
       )
     }
 
-  context.capture(index, multiple ? [] : null)
+  context.capture(multiple ? [] : null)
 
   return { render, itemsB, warningB }
 })

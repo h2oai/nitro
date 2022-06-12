@@ -19,7 +19,7 @@ import { XBox } from './box';
 import { Dict, isS, S, xid } from './core';
 import { ImageBlock } from './image';
 import { Box } from './protocol';
-import { Context } from './ui';
+import { CaptureContext } from './ui';
 
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
@@ -184,7 +184,7 @@ const Container = styled.div`
   box-sizing: border-box;
 `
 
-export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], box: Partial<Box> }) => {
+export const Zone = ({ context, boxes, box }: { context: CaptureContext, boxes: Box[], box: Partial<Box> }) => {
   const
     children = boxes.map(box => {
       if (box.items) {
@@ -192,17 +192,20 @@ export const Zone = ({ context, boxes, box }: { context: Context, boxes: Box[], 
           <Zone key={xid()} data-name={box.name ?? undefined} context={context} boxes={box.items} box={box} />
         )
       }
+
       const style = computeStyle(box)
-      switch (box.mode) {
-        case 'image':
-          return <ImageBlock key={xid()} data-name={box.name ?? undefined} context={context} box={box} style={style} />
-        default:
-          return (
-            <Container key={xid()} data-name={box.name ?? undefined} style={style}>
-              <XBox key={box.xid} context={context} box={box} />
-            </Container>
-          )
+
+      if (box.mode === 'image') {
+        return <ImageBlock key={xid()} data-name={box.name ?? undefined} box={box} style={style} />
       }
+
+      box.context = context.scoped(box.index, box.xid)
+
+      return (
+        <Container key={xid()} data-name={box.name ?? undefined} style={style}>
+          <XBox key={box.xid} box={box} />
+        </Container>
+      )
     })
 
   return (

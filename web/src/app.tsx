@@ -16,7 +16,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Body, Popup } from './body';
 import { Client } from './client';
-import { isN, newIncr, S, signal, U, xid } from './core';
+import { isN, newIncr, S, signal, U } from './core';
 import { Header } from './header';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';

@@ -31,7 +31,7 @@ type Source = {
   code: S
 }
 
-function sequence<X, Y>(xs: X[], f: (x: X, go: Go) => void, go: Go) {
+function sequence<X>(xs: X[], f: (x: X, go: Go) => void, go: Go) {
   const
     q = xs.slice().reverse(),
     next = () => {
@@ -165,14 +165,14 @@ export const
       })
     })
   },
-  PluginBox = make(({ context, box }: BoxProps) => {
+  PluginBox = make(({ box }: BoxProps) => {
     const
       sig = (box.mode ?? ':.').split(':')[1],
       [plugin, method] = sig.split('.'),
       id = xid(),
       ref = React.createRef<HTMLDivElement>(),
       init = () => {
-        if (ref.current) execPlugin(plugin, method, context, ref.current, box.data)
+        if (ref.current) execPlugin(plugin, method, box.context, ref.current, box.data)
       },
       render = () => (<div id={id} ref={ref} />)
 

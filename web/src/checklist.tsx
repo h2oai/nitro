@@ -23,12 +23,12 @@ import { BoxProps, make } from './ui';
 const Container = styled.div`
   margin: 0.5rem 0;
 `
-export const Checklist = make(({ context, box }: BoxProps) => {
+export const Checklist = make(({ box }: BoxProps) => {
   const
-    { index, text, options } = box,
+    { context, text, options } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
-    capture = () => context.capture(index, Array.from(selection)),
+    capture = () => context.capture(Array.from(selection)),
     onChecked = (value?: V, checked?: B) => {
       if (checked) {
         selection.add(String(value))

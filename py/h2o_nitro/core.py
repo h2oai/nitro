@@ -560,9 +560,10 @@ def _interpret(msg, expected: int):
             if n == 0:
                 return
             elif n == 1:
-                return d[0]
+                return d[0][1]
             else:
-                return tuple(d)
+                # Convert list to tuple
+                return tuple([e[1] for e in d])
         if t == _MsgType.Join:
             d = msg.get('d')
             return d

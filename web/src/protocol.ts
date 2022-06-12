@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { B, I, N, Pair, S, Triple, U, V } from "./core"
+import { Context } from "./ui"
 
 export enum MsgType {
   Error = 1,
@@ -25,7 +26,8 @@ export enum MsgType {
   Remove,
 }
 
-export type Input = B | S | N | S[] | N[]
+export type InputValue = B | S | N | S[] | N[] | null
+export type Input = [S, InputValue]
 
 export type Msg = {
   t: MsgType.Error
@@ -38,7 +40,7 @@ export type Msg = {
   d: V
 } | {
   t: MsgType.Input, // XXX rename
-  d: Array<Input | null>
+  d: Array<Input>
 } | {
   t: MsgType.Set,
   d: Setting
@@ -94,6 +96,7 @@ export type BoxMode = 'none' | 'md' | 'button' | 'menu' | 'radio' | 'check' | 't
 export type Box = {
   xid: S
   index: I // front-end only -1 => don't capture
+  context: Context // front-end only
   ignore?: B // true => don't capture
   text?: S
   name?: S

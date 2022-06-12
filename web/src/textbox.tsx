@@ -18,13 +18,13 @@ import { isN, isS, S } from './core';
 import { BoxProps, make } from './ui';
 
 
-export const Textbox = make(({ context, box }: BoxProps) => {
+export const Textbox = make(({ box }: BoxProps) => {
   const
-    { index, text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = box,
+    { context, text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = box,
     onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
       v = v ?? (target as HTMLInputElement).value ?? value ?? ''
       // TODO live?
-      context.capture(index, v)
+      context.capture(v)
     },
     render = () => {
       const
@@ -45,6 +45,6 @@ export const Textbox = make(({ context, box }: BoxProps) => {
             : <TextField {...field} iconProps={icon ? { iconName: icon } : undefined} prefix={prefix} suffix={suffix} />
     }
 
-  context.capture(index, (value as any) ?? '')
+  context.capture((value as any) ?? '')
   return { render }
 })

@@ -14,16 +14,16 @@
 
 import { Position, SpinButton } from '@fluentui/react';
 import React from 'react';
-import { valueFromRange, isS, toN } from './core';
+import { isS, toN, valueFromRange } from './core';
 import { BoxProps, make } from './ui';
 
-export const Spinbox = make(({ context, box }: BoxProps) => {
+export const Spinbox = make(({ box }: BoxProps) => {
   const
-    { index, text, value, min, max, step, precision, placeholder } = box,
+    { context, text, value, min, max, step, precision, placeholder } = box,
     defaultValue = valueFromRange(value, min, max, step),
     onChange = (_: React.SyntheticEvent<HTMLElement>, value?: string): void => {
       let v = isS(value) ? parseFloat(value) : NaN
-      if (!isNaN(v)) context.capture(index, v)
+      if (!isNaN(v)) context.capture(v)
     },
     render = () => {
       return (
@@ -42,7 +42,7 @@ export const Spinbox = make(({ context, box }: BoxProps) => {
       )
     }
 
-  context.capture(index, defaultValue ?? 0)
+  context.capture(defaultValue ?? 0)
 
   return { render }
 })

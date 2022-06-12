@@ -13,23 +13,42 @@
 // limitations under the License.
 
 import React from 'react';
-import { B, Dict, Disposable, isSignal, on } from './core';
-import { Box, Input, MsgType } from './protocol';
+import { B, Dict, Disposable, isSignal, on, S } from './core';
+import { Box, Input, InputValue, MsgType } from './protocol';
 import { Send } from './socket';
 
 export const newCaptureContext = (send: Send) => {
   const
-    data: Array<Input | null> = [],
-    capture = <T extends Input | null>(index: any, value: T) => {
-      if (index >= 0) data[index] = value
+    data: Array<Input> = [],
+    capture = (index: any, xid: S, value: InputValue) => {
+      if (index >= 0) data[index] = [xid, value]
     },
-    submit = () => send({ t: MsgType.Input, d: data.filter(e => e !== undefined) })
-  return { capture, submit }
+    submit = () => send({ t: MsgType.Input, d: data.filter(e => e !== undefined) }),
+    scoped = (index: any, xid: S): Context => ({
+      capture: (value: InputValue) => capture(index, xid, value),
+      submit,
+    })
+
+  return { capture, submit, scoped }
 }
 
-export type Context = ReturnType<typeof newCaptureContext>
+export type CaptureContext = {
+  scoped(index: any, xid: S): Context
+  capture(index: any, xid: S, value: InputValue): void
+  submit(): void
+}
 
-export type BoxProps = { context: Context, box: Box }
+export type Context = {
+  capture(value: InputValue): void
+  submit(): void
+}
+
+export const noopContext: Context = {
+  capture: (_: InputValue) => { },
+  submit: () => { }
+}
+
+export type BoxProps = { box: Box }
 
 export type StyledBoxProps = BoxProps & { style: React.CSSProperties }
 interface Renderable {
