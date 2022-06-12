@@ -81,13 +81,6 @@ export const Table = make(({ context, box }: BoxProps) => {
                 if (isN(max)) maxWidth = max
                 break
               }
-            case 3:
-              {
-                const [min, max, _] = width
-                if (isN(min)) minWidth = min
-                if (isN(max)) maxWidth = max
-                break
-              }
           }
         } else {
           minWidth = width as any
