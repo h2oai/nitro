@@ -51,9 +51,9 @@ class RemoteError(Exception):
 
 
 class ContextSwitchError(Exception):
-    def __init__(self, target: str):
+    def __init__(self, key: str):
         super().__init__('Context switched')
-        self.target = target
+        self.key = key
 
 
 class InterruptError(Exception):
@@ -547,26 +547,33 @@ def _collect_delegates(d: Dict[str, Callable], options: Sequence[Option]):
 def _interpret(msg, expected: int):
     if isinstance(msg, dict):
         t = msg.get('t')
+
         if t == _MsgType.Error:
             code = msg.get('c')
             raise RemoteError(f'code {code}')
+
         if t == _MsgType.Switch:
-            raise ContextSwitchError(msg.get('d'))
+            key = msg.get('k')
+            raise ContextSwitchError(key)
+
         if (expected > -1) and t != expected:
             raise ProtocolError(f'unexpected message: want {expected}, got {t}')
+
         if t == _MsgType.Input:
-            d = msg.get('d')
-            n = len(d)
+            data = msg.get('d')
+            n = len(data)
             if n == 0:
                 return
             elif n == 1:
-                return d[0][1]
+                return data[0][1]
             else:
                 # Convert list to tuple
-                return tuple([e[1] for e in d])
+                return tuple([e[1] for e in data])
+
         if t == _MsgType.Join:
-            d = msg.get('d')
-            return d
+            data = msg.get('d')
+            return data
+
         raise ProtocolError(f'unknown message type {t}')
     raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
 
@@ -675,12 +682,12 @@ class View(_View):
     def _run(self):
         self._send(self._join(self._read(_MsgType.Join)))
 
-        target = None
+        key = None
         while True:
             try:
-                (self._delegate_for(target) if target else self._delegate)(self)
+                (self._delegate_for(key) if key else self._delegate)(self)
             except ContextSwitchError as e:
-                target = e.target
+                key = e.key
             except InterruptError:
                 return
 
@@ -800,12 +807,12 @@ class AsyncView(_View):
     async def _run(self):
         await self._send(self._join(await self._read(_MsgType.Join)))
 
-        target = None
+        key = None
         while True:
             try:
-                await (self._delegate_for(target) if target else self._delegate)(self)
+                await (self._delegate_for(key) if key else self._delegate)(self)
             except ContextSwitchError as e:
-                target = e.target
+                key = e.key
             except InterruptError:
                 return
 

@@ -37,7 +37,7 @@ export type Msg = {
   d: any // XXX formalize
 } | {
   t: MsgType.Switch,
-  d: V
+  k: V
 } | {
   t: MsgType.Input, // XXX rename
   d: Array<Input>

@@ -51,9 +51,9 @@ export const newClientContext = (xid: S, send: Send, onBusy: () => void): Client
       onBusy()
       send({ t: MsgType.Input, d: data.filter(e => e !== undefined) })
     },
-    change = (d: V) => {
+    change = (k: V) => {
       onBusy()
-      send({ t: MsgType.Switch, d })
+      send({ t: MsgType.Switch, k })
     },
     scoped = (index: any, xid: S): Context => ({
       record: (value: InputValue) => record(index, xid, value),
