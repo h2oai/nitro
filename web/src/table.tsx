@@ -200,7 +200,7 @@ export const Table = make(({ box }: BoxProps) => {
       // mode = 'table'
       const onClick = () => {
         context.record(row.key)
-        context.submit()
+        context.commit()
       }
       return column.key === linkColumnKey
         ? <Link href="" onClick={onClick}>{text}</Link>

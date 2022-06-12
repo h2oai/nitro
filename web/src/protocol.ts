@@ -43,13 +43,16 @@ export type Msg = {
   d: Array<Input>
 } | {
   t: MsgType.Set,
+  x: S
   d: Setting
 } | {
   t: MsgType.Insert
+  x: S
   d: Box
   p?: I
 } | {
   t: MsgType.Update
+  x: S
   d: Box
   p?: I
 } | {

@@ -16,8 +16,7 @@ import { ContextualMenu, Dialog, DialogType, IModalProps } from '@fluentui/react
 import React from 'react';
 import { B, isB, signal, xid } from './core';
 import { Box } from './protocol';
-import { Send } from './socket';
-import { make, newCaptureContext, noopContext } from './ui';
+import { ClientContext, make, noopContext } from './ui';
 import { Zone } from './zone';
 
 const
@@ -53,13 +52,11 @@ const
   },
   makeContinuable = (boxes: Box[]): Box[] => hasActions(boxes) ? boxes : [...boxes, continueButton]
 
-export const Body = (props: { send: Send, boxes: Box[] }) => {
-  const
-    boxes: Box[] = makeContinuable(props.boxes),
-    context = newCaptureContext(props.send)
+export const Body = (props: { context: ClientContext, boxes: Box[] }) => {
+  const boxes: Box[] = makeContinuable(props.boxes)
   return (
     <div className='main'>
-      <Zone context={context} boxes={boxes} box={{}} />
+      <Zone context={props.context} boxes={boxes} box={{}} />
     </div>
   )
 }
@@ -74,11 +71,10 @@ const modalProps: IModalProps = {
   styles: { main: { maxWidth: 450 } },
 }
 
-export const Popup = make((props: { send: Send, boxes: Box[] }) => {
+export const Popup = make((props: { context: ClientContext, boxes: Box[] }) => {
   const
     hiddenB = signal(false),
     boxes: Box[] = makeContinuable(props.boxes),
-    context = newCaptureContext(props.send),
     render = () => {
       const
         { title } = boxes[0], // popups have exactly one box.
@@ -94,7 +90,7 @@ export const Popup = make((props: { send: Send, boxes: Box[] }) => {
           modalProps={modalProps}
           hidden={hidden}
         >
-          <Zone context={context} boxes={boxes} box={{}} />
+          <Zone context={props.context} boxes={boxes} box={{}} />
         </Dialog >
       )
     }

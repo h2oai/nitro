@@ -19,7 +19,7 @@ import { XBox } from './box';
 import { Dict, isS, S, xid } from './core';
 import { ImageBlock } from './image';
 import { Box } from './protocol';
-import { CaptureContext } from './ui';
+import { ClientContext } from './ui';
 
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
@@ -184,7 +184,7 @@ const Container = styled.div`
   box-sizing: border-box;
 `
 
-export const Zone = ({ context, boxes, box }: { context: CaptureContext, boxes: Box[], box: Partial<Box> }) => {
+export const Zone = ({ context, boxes, box }: { context: ClientContext, boxes: Box[], box: Partial<Box> }) => {
   const
     children = boxes.map(box => {
       if (box.items) {

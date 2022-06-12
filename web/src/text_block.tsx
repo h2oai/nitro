@@ -30,7 +30,7 @@ export const TextBlock = make(({ box }: BoxProps) => {
         if (value) {
           link.onclick = e => {
             context.record(value)
-            context.submit()
+            context.commit()
             e.preventDefault()
           }
         }

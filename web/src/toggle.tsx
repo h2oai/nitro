@@ -26,7 +26,7 @@ export const Toggle = make(({ box }: BoxProps) => {
     { context, value, text } = box,
     onChecked = (checked?: B) => {
       context.record(checked ? true : false)
-      context.submit()
+      context.commit()
     },
     render = () => {
       return (

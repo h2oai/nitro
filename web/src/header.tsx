@@ -17,11 +17,10 @@ import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@flu
 import React from 'react';
 import styled from 'styled-components';
 import { Client } from './client';
-import { signal, V } from './core';
+import { signal } from './core';
 import { toContextualMenuItem } from './options';
-import { MsgType, Option } from './protocol';
-import { Send } from './socket';
-import { make } from './ui';
+import { Option } from './protocol';
+import { ClientContext, make } from './ui';
 
 const MenuContainer = styled.div`
   cursor: pointer;
@@ -31,13 +30,10 @@ const MenuContainer = styled.div`
   align-items: center;
 `
 
-const Menu = make(({ send, options }: { send: Send, options: Option[] }) => {
+const Menu = make(({ context, options }: { context: ClientContext, options: Option[] }) => {
   const
     hasMenu = options.length > 0,
-    switchTo = (v: V) => {
-      send({ t: MsgType.Switch, d: v })
-    },
-    items = options.map(o => toContextualMenuItem(o, switchTo)),
+    items = options.map(o => toContextualMenuItem(o, context.switch)),
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = signal(false),
     showMenu = () => showMenuB(true),
@@ -72,12 +68,9 @@ const NavBarContainer = styled.div`
   justify-content: flex-end;
 `
 
-const NavBar = make(({ send, options }: { send: Send, options: Option[] }) => {
+const NavBar = make(({ context, options }: { context: ClientContext, options: Option[] }) => {
   const
-    switchTo = (v: V) => {
-      send({ t: MsgType.Switch, d: v })
-    },
-    items = options.map(o => toContextualMenuItem(o, switchTo)),
+    items = options.map(o => toContextualMenuItem(o, context.switch)),
     render = () => (
       <NavBarContainer>
         <CommandBar items={items} />
@@ -86,7 +79,7 @@ const NavBar = make(({ send, options }: { send: Send, options: Option[] }) => {
   return { render }
 })
 
-export const Header = make(({ send, client }: { send: Send, client: Client }) => {
+export const Header = make(({ context, client }: { context: ClientContext, client: Client }) => {
   const
     render = () => {
       const
@@ -97,10 +90,10 @@ export const Header = make(({ send, client }: { send: Send, client: Client }) =>
 
       return (
         <div className='header'>
-          <Menu send={send} options={menu} />
+          <Menu context={context} options={menu} />
           <div className='title'>{title}</div>
           <div className='caption'>{caption}</div>
-          <NavBar send={send} options={nav} />
+          <NavBar context={context} options={nav} />
         </div>
       )
     }

@@ -16,6 +16,7 @@ import { on, S, signal } from './core'
 import { Box, Option } from './protocol'
 import { connect, Socket, SocketEvent } from './socket'
 import { defaultScheme, loadScheme } from './theme'
+import { noopClientContext } from './ui'
 
 
 export const newClient = (endpoint: S) => {
@@ -28,6 +29,7 @@ export const newClient = (endpoint: S) => {
     menuB = signal<Option[]>([]),
     navB = signal<Option[]>([]),
     schemeB = signal(defaultScheme),
+    context = noopClientContext,
     socket = (handle: (s: Socket, e: SocketEvent) => void): Socket => {
       if (_socket) return _socket
       return _socket = connect(endpoint, e => {
@@ -47,6 +49,7 @@ export const newClient = (endpoint: S) => {
     body,
     popup,
     socket,
+    context,
   }
 }
 

@@ -30,7 +30,7 @@ custom_javascript = '''
 exports.show_count = (context, element, data) => {
     // - 'context' is an object with two methods:
     //   - 'context.record(value)' records the value of this box.
-    //   - 'context.submit()' submits all recorded values for the page.
+    //   - 'context.commit()' commits all recorded values.
     // - 'element' is the box's HTML element.
     // - 'data' is a dictionary-like object whose fields
     //   hold values sent by Python. 

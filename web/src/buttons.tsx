@@ -36,7 +36,7 @@ export const Buttons = make(({ box }: BoxProps) => {
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
         capture = (value: V) => {
           context.record(value)
-          context.submit()
+          context.commit()
         },
         hasNoPrimary = options.every(o => !isB(o.selected)),
         buttons = options.map((o, i) => {

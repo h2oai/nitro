@@ -13,39 +13,50 @@
 // limitations under the License.
 
 import React from 'react';
-import { B, Dict, Disposable, isSignal, on, S } from './core';
+import { B, Dict, Disposable, isSignal, on, S, V } from './core';
 import { Box, Input, InputValue, MsgType } from './protocol';
 import { Send } from './socket';
 
-export type CaptureContext = {
+export type ClientContext = {
   scoped(index: any, xid: S): Context
   record(index: any, xid: S, value: InputValue): void
-  submit(): void
+  commit(): void
+  switch(value: V): void
 }
 
 export type Context = {
   record(value: InputValue): void
-  submit(): void
+  commit(): void
 }
+
+const noop = () => { }
 
 export const noopContext: Context = {
   record: (_: InputValue) => { },
-  submit: () => { }
+  commit: noop
 }
 
-export const newCaptureContext = (send: Send): CaptureContext => {
+export const noopClientContext: ClientContext = {
+  scoped: () => noopContext,
+  record: noop,
+  commit: noop,
+  switch: noop,
+}
+
+export const newClientContext = (xid: S, send: Send): ClientContext => {
   const
     data: Array<Input> = [],
     record = (index: any, xid: S, value: InputValue) => {
       if (index >= 0) data[index] = [xid, value]
     },
-    submit = () => send({ t: MsgType.Input, d: data.filter(e => e !== undefined) }),
+    commit = () => send({ t: MsgType.Input, d: data.filter(e => e !== undefined) }),
+    change = (d: V) => send({ t: MsgType.Switch, d }),
     scoped = (index: any, xid: S): Context => ({
       record: (value: InputValue) => record(index, xid, value),
-      submit,
+      commit,
     })
 
-  return { record, submit, scoped }
+  return { record, commit, scoped, switch: change }
 }
 
 export type BoxProps = { box: Box }

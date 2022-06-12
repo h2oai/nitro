@@ -23,7 +23,7 @@ import { installPlugins } from './plugin';
 import { Msg, MsgType } from './protocol';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { defaultScheme, Scheme } from './theme';
-import { make } from './ui';
+import { make, newClientContext } from './ui';
 
 enum AppStateT { Connecting, Disconnected, Invalid, Connected }
 
@@ -37,7 +37,6 @@ type AppState = {
   error: S
 } | {
   t: AppStateT.Connected
-  socket: Socket
   client: Client
 }
 
@@ -94,7 +93,7 @@ export const App = make(({ client }: { client: Client }) => {
                 break
               case MsgType.Update:
                 {
-                  const { d: box, p: position } = msg
+                  const { x: xid, d: box, p: position } = msg
                   const { body, popup } = client
                   if (box.popup) {
                     popup.length = 0
@@ -110,13 +109,14 @@ export const App = make(({ client }: { client: Client }) => {
                     }
                     reIndex(body, newIncr())
                   }
-                  stateB({ t: AppStateT.Connected, socket, client })
+                  client.context = newClientContext(xid, socket.send)
+                  stateB({ t: AppStateT.Connected, client })
                 }
                 break
               case MsgType.Set:
                 {
                   const
-                    { d: conf } = msg,
+                    { x: xid, d: conf } = msg,
                     { title, caption, menu, nav, theme, plugins } = conf
 
                   if (title) client.titleB(title)
@@ -140,7 +140,8 @@ export const App = make(({ client }: { client: Client }) => {
 
                   const state = stateB()
                   if (state.t === AppStateT.Connected) {
-                    stateB({ t: AppStateT.Connected, socket, client })
+                    client.context = newClientContext(xid, socket.send)
+                    stateB({ t: AppStateT.Connected, client })
                   }
                 }
                 break
@@ -183,13 +184,14 @@ export const App = make(({ client }: { client: Client }) => {
             </Overlay>
           )
         case AppStateT.Connected:
+          const { context, body, popup } = client
           return (
             <div className='view'>
               <div className='art' />
               <div className='page'>
-                <Header send={state.socket.send} client={client} />
-                <Body send={state.socket.send} boxes={client.body} />
-                {client.popup.length ? <Popup send={state.socket.send} boxes={client.popup} /> : <></>}
+                <Header context={context} client={client} />
+                <Body context={context} boxes={body} />
+                {popup.length ? <Popup context={context} boxes={popup} /> : <></>}
               </div>
             </div>
           )
