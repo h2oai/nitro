@@ -8,7 +8,7 @@ from setuptools import setup
 
 
 def get_version(package):
-    path = os.path.join(package, "__init__.py")
+    path = os.path.join(package, "version.py")
     init_py = open(path, "r", encoding="utf8").read()
     return re.search("__version__ = ['\"]([^'\"]+)['\"]", init_py).group(1)
 
