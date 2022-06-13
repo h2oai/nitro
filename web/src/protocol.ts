@@ -40,6 +40,7 @@ export type Msg = {
   k: V
 } | {
   t: MsgType.Input, // XXX rename
+  x: S
   d: Array<Input>
 } | {
   t: MsgType.Set,

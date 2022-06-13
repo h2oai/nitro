@@ -49,7 +49,7 @@ export const newClientContext = (xid: S, send: Send, onBusy: () => void): Client
     },
     commit = () => {
       onBusy()
-      send({ t: MsgType.Input, d: data.filter(e => e !== undefined) })
+      send({ t: MsgType.Input, x: xid, d: data.filter(e => e !== undefined) })
     },
     change = (k: V) => {
       onBusy()

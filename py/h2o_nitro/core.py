@@ -544,7 +544,7 @@ def _collect_delegates(d: Dict[str, Callable], options: Sequence[Option]):
             _collect_delegates(d, opt.options)
 
 
-def _interpret(msg, expected: int):
+def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
     if isinstance(msg, dict):
         t = msg.get('t')
 
@@ -556,11 +556,18 @@ def _interpret(msg, expected: int):
             key = msg.get('k')
             raise ContextSwitchError(key)
 
-        if (expected > -1) and t != expected:
-            raise ProtocolError(f'unexpected message: want {expected}, got {t}')
+        if (expected_type > -1) and t != expected_type:
+            raise ProtocolError(f'unexpected message: want {expected_type}, got {t}')
 
         if t == _MsgType.Input:
+            xid = msg.get('x')
+
+            if xid != expected_xid:
+                # TODO maintain skip list of used correlation IDs?
+                raise ProtocolError(f'unexpected message id: want {expected_xid}, got {xid}')
+
             data = msg.get('d')
+
             n = len(data)
             if n == 0:
                 return
@@ -586,14 +593,17 @@ def _marshal_set(
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
 ) -> dict:
-    return _marshal(dict(t=_MsgType.Set, d=_clean(dict(
-        title=title,
-        caption=caption,
-        menu=_dump(menu),
-        nav=_dump(nav),
-        theme=_dump(theme),
-        plugins=_dump(plugins),
-    ))))
+    return _marshal(dict(
+        t=_MsgType.Set,
+        x=_xid(),
+        d=_clean(dict(
+            title=title,
+            caption=caption,
+            menu=_dump(menu),
+            nav=_dump(nav),
+            theme=_dump(theme),
+            plugins=_dump(plugins),
+        ))))
 
 
 class _View:
@@ -691,10 +701,10 @@ class View(_View):
             except InterruptError:
                 return
 
-    def _read(self, expected: int):
+    def _read(self, expected: int, xid: Optional[str] = None):
         m = self._recv()
         if m:
-            return _interpret(_unmarshal(m), expected)
+            return _interpret(_unmarshal(m), expected, xid)
         raise InterruptError()
 
     def set(
@@ -740,6 +750,7 @@ class View(_View):
             image: Optional[str] = None,
             fit: Optional[str] = None,
     ):
+        xid = _xid()
         if len(items):
             b = Box(
                 items=items,
@@ -766,11 +777,12 @@ class View(_View):
             )
             self._send(_marshal(_clean(dict(
                 t=_MsgType.Update if overwrite else _MsgType.Insert,
+                x=xid,
                 d=b.dump(),
                 p=position,
             ))))
         if read:
-            res = self._read(_MsgType.Input)
+            res = self._read(_MsgType.Input, xid)
             return res
 
 
@@ -816,10 +828,10 @@ class AsyncView(_View):
             except InterruptError:
                 return
 
-    async def _read(self, expected: int):
+    async def _read(self, expected: int, xid: Optional[str] = None):
         m = await self._recv()
         if m:
-            return _interpret(_unmarshal(m), expected)
+            return _interpret(_unmarshal(m), expected, xid)
         raise InterruptError()
 
     async def set(
@@ -865,6 +877,7 @@ class AsyncView(_View):
             image: Optional[str] = None,
             fit: Optional[str] = None,
     ):
+        xid = _xid()
         if len(items):
             b = Box(
                 items=items,
@@ -891,11 +904,12 @@ class AsyncView(_View):
             )
             await self._send(_marshal(_clean(dict(
                 t=_MsgType.Update if overwrite else _MsgType.Insert,
+                x=xid,
                 d=b.dump(),
                 p=position,
             ))))
         if read:
-            return await self._read(_MsgType.Input)
+            return await self._read(_MsgType.Input, xid)
 
 
 _lorem = '''
