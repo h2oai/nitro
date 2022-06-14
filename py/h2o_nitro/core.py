@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Iterable
+from types import FunctionType
 import random
 from pathlib import Path
-from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Callable, Iterable
 from collections import OrderedDict
 import msgpack
 from enum import Enum, IntEnum
@@ -138,7 +139,7 @@ Headers = Union[
 class Option:
     def __init__(
             self,
-            value: Union[V, Callable],
+            value: Union[V, FunctionType],
             text: Optional[str] = None,
             name: Optional[str] = None,
             icon: Optional[str] = None,
@@ -146,8 +147,8 @@ class Option:
             selected: Optional[bool] = None,
             options: Optional['Options'] = None,
     ):
-        self.delegate = value if callable(value) else None
         self.value = value if self.delegate is None else _xid()
+        self.delegate = value if isinstance(value, FunctionType) else None
         self.text = text
         self.name = name
         self.icon = icon
@@ -534,7 +535,7 @@ def col(
     )
 
 
-def _collect_delegates(d: Dict[str, Callable], options: Sequence[Option]):
+def _collect_delegates(d: Dict[str, FunctionType], options: Sequence[Option]):
     for opt in options:
         if opt.delegate:
             d[opt.value] = opt.delegate
@@ -607,10 +608,10 @@ def _marshal_set(
 class _View:
     def __init__(
             self,
-            delegate: Callable,
+            delegate: FunctionType,
             context: any = None,
-            send: Optional[Callable] = None,
-            recv: Optional[Callable] = None,
+            send: Optional[FunctionType] = None,
+            recv: Optional[FunctionType] = None,
             title: str = 'H2O Nitro',
             caption: str = f'v{__version__}',
             menu: Optional[Sequence[Option]] = None,
@@ -629,7 +630,7 @@ class _View:
         self._theme = theme
         self._plugins = plugins
 
-        self._delegates: Dict[str, Callable] = dict()
+        self._delegates: Dict[str, FunctionType] = dict()
         _collect_delegates(self._delegates, self._menu or [])
         _collect_delegates(self._delegates, self._nav or [])
 
@@ -686,10 +687,10 @@ class Edit:
 class View(_View):
     def __init__(
             self,
-            delegate: Callable,
+            delegate: FunctionType,
             context: any = None,
-            send: Optional[Callable] = None,
-            recv: Optional[Callable] = None,
+            send: Optional[FunctionType] = None,
+            recv: Optional[FunctionType] = None,
             title: str = None,
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
@@ -699,7 +700,7 @@ class View(_View):
     ):
         super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme, plugins)
 
-    def serve(self, send: Callable, recv: Callable, context: any = None):
+    def serve(self, send: FunctionType, recv: FunctionType, context: any = None):
         View(
             self._delegate,
             context,
@@ -833,10 +834,10 @@ class View(_View):
 class AsyncView(_View):
     def __init__(
             self,
-            delegate: Callable,
+            delegate: FunctionType,
             context: any = None,
-            send: Optional[Callable] = None,
-            recv: Optional[Callable] = None,
+            send: Optional[FunctionType] = None,
+            recv: Optional[FunctionType] = None,
             title: str = None,
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
@@ -846,7 +847,7 @@ class AsyncView(_View):
     ):
         super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme, plugins)
 
-    async def serve(self, send: Callable, recv: Callable, context: any = None):
+    async def serve(self, send: FunctionType, recv: FunctionType, context: any = None):
         await AsyncView(
             self._delegate,
             context,
@@ -976,7 +977,7 @@ class AsyncView(_View):
             res = await self._read(_MsgType.Input, xid)
             return res
 
-
+# noinspection SpellCheckingInspection
 _lorem = '''
 lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna 
 aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat 
@@ -984,6 +985,7 @@ duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum
 '''
 
+# noinspection SpellCheckingInspection
 _lorems = set([w.strip() for w in _lorem.split(' ')])
 
 
