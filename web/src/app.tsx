@@ -40,13 +40,6 @@ type AppState = {
   client: Client
 }
 
-const hello: Msg = {
-  t: MsgType.Join,
-  d: {
-    language: window.navigator.language, // XXX formalize
-  }
-}
-
 const Overlay = styled.div`
   position: absolute;
   left: 0;
@@ -153,6 +146,11 @@ const queryBox = (boxes: Box[], name: S): [Box[], U] | null => {
   return null
 }
 
+const getHashbang = (): S | null => {
+  const h = window.location.hash
+  return (h && h.length > 2 && h.startsWith('#!')) ? h.substring(2) : null
+}
+
 export const App = make(({ client }: { client: Client }) => {
   const
     stateB = signal<AppState>({ t: AppStateT.Connecting }),
@@ -167,7 +165,13 @@ export const App = make(({ client }: { client: Client }) => {
     onMessage = (socket: Socket, e: SocketEvent) => {
       switch (e.t) {
         case SocketEventT.Connect:
-          if (socket) socket.send(hello)
+          if (socket) socket.send({
+            t: MsgType.Join,
+            d: {
+              hash: getHashbang(), // XXX formalize
+              language: window.navigator.language, // XXX formalize
+            }
+          })
           break
         case SocketEventT.Message:
           {
@@ -305,7 +309,7 @@ export const App = make(({ client }: { client: Client }) => {
                 }
                 break
               default:
-                stateB({ t: AppStateT.Invalid, error: 'unknown message type' })
+                stateB({ t: AppStateT.Invalid, error: `unknown message type: ${e.t}` })
                 break
             }
           }
@@ -319,6 +323,10 @@ export const App = make(({ client }: { client: Client }) => {
       }
     },
     init = () => {
+      window.addEventListener('hashchange', () => {
+        const hashbang = getHashbang()
+        if (hashbang) client.context.switch(hashbang)
+      })
       client.socket(onMessage)
     },
     render = () => {

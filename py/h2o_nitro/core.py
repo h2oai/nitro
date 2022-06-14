@@ -32,6 +32,10 @@ def _xid() -> str:
     return f'p{__xid}'
 
 
+def _qual_name_of(f: FunctionType) -> str:
+    return f'{f.__module__}.{f.__qualname__}'
+
+
 class _MsgType(IntEnum):
     Error = 1
     Join = 2
@@ -147,8 +151,12 @@ class Option:
             selected: Optional[bool] = None,
             options: Optional['Options'] = None,
     ):
-        self.value = value if self.delegate is None else _xid()
+        # If value is a function, use it as the delegate.
         self.delegate = value if isinstance(value, FunctionType) else None
+        # If value was a function, use one of these as the value:
+        # - option's name, if available.
+        # - function's name ("module_name.function_name")
+        self.value = value if self.delegate is None else name if name is not None else _qual_name_of(self.delegate)
         self.text = text
         self.name = name
         self.icon = icon
@@ -577,8 +585,7 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
                 return tuple([e[1] for e in data])
 
         if t == _MsgType.Join:
-            data = msg.get('d')
-            return data
+            return msg.get('d')
 
         raise ProtocolError(f'unknown message type {t}')
     raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
@@ -634,8 +641,7 @@ class _View:
         _collect_delegates(self._delegates, self._menu or [])
         _collect_delegates(self._delegates, self._nav or [])
 
-    def _join(self, msg):
-        # XXX handle join msg
+    def _ack(self):
         return _marshal_set(
             title=self._title,
             caption=self._caption,
@@ -715,9 +721,12 @@ class View(_View):
         )._run()
 
     def _run(self):
-        self._send(self._join(self._read(_MsgType.Join)))
+        # Handshake
+        syn = self._read(_MsgType.Join)
+        key = syn.get('hash')
+        self._send(self._ack())
 
-        key = None
+        # Event loop
         while True:
             try:
                 (self._delegate_for(key) if key else self._delegate)(self)
@@ -862,9 +871,12 @@ class AsyncView(_View):
         )._run()
 
     async def _run(self):
-        await self._send(self._join(await self._read(_MsgType.Join)))
+        # Handshake
+        syn = await self._read(_MsgType.Join)
+        key = syn.get('hash')
+        await self._send(self._ack())
 
-        key = None
+        # Event loop
         while True:
             try:
                 await (self._delegate_for(key) if key else self._delegate)(self)
@@ -976,6 +988,7 @@ class AsyncView(_View):
         if read:
             res = await self._read(_MsgType.Input, xid)
             return res
+
 
 # noinspection SpellCheckingInspection
 _lorem = '''

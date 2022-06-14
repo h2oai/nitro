@@ -76,9 +76,10 @@ export const
     const md = micromark(dedent(text), opts)
     const hl = highlight(md)
       // Change <a href="#foo"> to <a data-jump="foo" href>
+      // Exclude hashbangs #!, which act as context switches.
       // Exclude footnote references.
       // We need the links to be rendered as such, but not affect the address bar.
-      .replaceAll(/href="#(.+?)"/g, (all, ref) => {
+      .replaceAll(/href="#([^!].+?)"/g, (all, ref) => {
         if (isFootnoteLink(ref)) return all
         hasLinks = true
         return `data-jump="${ref}" href`
