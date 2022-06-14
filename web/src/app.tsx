@@ -16,11 +16,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Body, Popup } from './body';
 import { Client } from './client';
-import { isN, newIncr, S, signal, U } from './core';
+import { isS, newIncr, S, signal, U } from './core';
 import { Header } from './header';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
-import { Msg, MsgType } from './protocol';
+import { Box, Edit, EditPosition, EditType, Msg, MsgType } from './protocol';
 import { Socket, SocketEvent, SocketEventT } from './socket';
 import { defaultScheme, Scheme } from './theme';
 import { make, newClientContext } from './ui';
@@ -84,12 +84,74 @@ const Blocker = styled(Overlay)`
 const Busy = make(({ timeout }: { timeout: U }) => {
   const
     visibleB = signal(false),
-    render = () => <Blocker style={{ opacity: visibleB() ? 0.5 : 0 }}><img src="busy32.gif" /></Blocker>
+    render = () => (
+      <Blocker style={{ opacity: visibleB() ? 0.5 : 0 }}>
+        <img alt='Busy' src="busy32.gif" />
+      </Blocker>
+    )
 
   setTimeout(() => { visibleB(true) }, timeout)
 
   return { render, visibleB }
 })
+
+type SanitizedEdit = {
+  t: EditType
+  p: EditPosition
+  s: S[]
+}
+
+const defaultEdit: SanitizedEdit = {
+  t: EditType.Update,
+  p: EditPosition.Inside,
+  s: [],
+}
+
+const sanitizeEdit = (e?: Edit): SanitizedEdit => {
+  if (!e) return defaultEdit
+  const { s } = e
+  const selector = Array.isArray(s) ? s : isS(s) ? [s] : []
+  return {
+    t: e.t,
+    p: e.p,
+    s: selector,
+  }
+}
+
+// depth-first, like querySelector()
+const queryContainer = (boxes: Box[], s: S[], i: U, imax: U): Box[] | null => {
+  if (s.length === 0) return boxes
+  const name = s[i]
+  for (const box of boxes) {
+    if (box.name === name) {
+      const { items } = box
+      if (items) {
+        if (i === imax) return items
+        const res = queryContainer(items, s, i + 1, imax)
+        if (res) return res
+      }
+    }
+    const { items } = box
+    if (items) {
+      const res = queryContainer(items, s, i, imax)
+      if (res) return res
+    }
+  }
+  return null
+}
+// depth-first, like querySelector()
+const queryBox = (boxes: Box[], name: S): [Box[], U] | null => {
+  for (let i = 0, n = boxes.length; i < n; i++) {
+    const box = boxes[i]
+    if (box.name === name) return [boxes, i]
+    const { items } = box
+    if (items) {
+      const res = queryBox(items, name)
+      if (res) return res
+    }
+  }
+  return null
+}
 
 export const App = make(({ client }: { client: Client }) => {
   const
@@ -115,21 +177,96 @@ export const App = make(({ client }: { client: Client }) => {
                 const { e: error } = msg
                 stateB({ t: AppStateT.Invalid, error })
                 break
-              case MsgType.Update:
+              case MsgType.Output:
                 {
-                  const { x: xid, d: box, p: position } = msg
+                  const { x: xid, d: data, e: rawEdit } = msg
+                  const box = sanitizeBox(data)
+                  const boxes = box.items ?? []
                   const { body, popup } = client
+                  const root = body[0]?.items ?? []
                   if (box.popup) {
                     popup.length = 0
-                    popup.push(sanitizeBox(box))
+                    popup.push(box)
                     reIndex(popup, newIncr())
                   } else {
-                    if (isN(position) && position >= 0 && position < body.length) { // XXX not used
-                      body[position] = box
+                    popup.length = 0 // clear any existing popup
+
+                    const edit = sanitizeEdit(rawEdit)
+
+                    if (edit.p === EditPosition.Inside) {
+                      const parent = queryContainer(root, edit.s, 0, edit.s.length - 1)
+                      if (parent) {
+                        switch (edit.t) {
+                          case EditType.Update:
+                            if (parent === root) {
+                              // Default case: clobber body
+                              body.length = 0
+                              body.push(box)
+                            } else {
+                              parent.length = 0
+                              parent.push(box)
+                            }
+                            break
+                          case EditType.Insert:
+                            parent.push(...boxes)
+                            break
+                          case EditType.Remove:
+                            parent.length = 0
+                            break
+                        }
+                      }
                     } else {
-                      popup.length = 0
-                      body.length = 0
-                      body.push(sanitizeBox(box))
+                      const container = edit.s.length > 1 ? queryContainer(root, edit.s, 0, edit.s.length - 2) : root
+                      if (container) {
+                        const target = queryBox(container, edit.s[edit.s.length - 1])
+                        if (target) {
+                          const [parent, i] = target
+                          switch (edit.t) {
+                            case EditType.Update:
+                              switch (edit.p) {
+                                case EditPosition.Before:
+                                  if (i - boxes.length < 0) {
+                                    parent.splice(0, i, ...boxes)
+                                  } else {
+                                    parent.splice(i - boxes.length, boxes.length, ...boxes)
+                                  }
+                                  break
+                                case EditPosition.At:
+                                  parent.splice(i, boxes.length, ...boxes)
+                                  break
+                                case EditPosition.After:
+                                  parent.splice(i + 1, boxes.length, ...boxes)
+                                  break
+                              }
+                              break
+                            case EditType.Insert:
+                              switch (edit.p) {
+                                // "before" and "at" mean the same, otherwise gets unintuitive
+                                case EditPosition.Before:
+                                case EditPosition.At:
+                                  parent.splice(i, 0, ...boxes)
+                                  break
+                                case EditPosition.After:
+                                  parent.splice(i + 1, 0, ...boxes)
+                                  break
+                              }
+                              break
+                            case EditType.Remove:
+                              switch (edit.p) {
+                                case EditPosition.Before:
+                                  parent.splice(0, i)
+                                  break
+                                case EditPosition.At:
+                                  parent.splice(i, 1)
+                                  break
+                                case EditPosition.After:
+                                  parent.splice(i + 1, parent.length - i)
+                                  break
+                              }
+                              break
+                          }
+                        }
+                      }
                     }
                     reIndex(body, newIncr())
                   }

@@ -36,10 +36,8 @@ class _MsgType(IntEnum):
     Join = 2
     Switch = 3
     Input = 4
-    Set = 5
-    Insert = 6
-    Update = 7
-    Remove = 8  # TODO unused
+    Output = 5
+    Set = 6
 
 
 _primitive = (bool, int, float, str)
@@ -659,6 +657,32 @@ class _View:
         return d
 
 
+Selector = Union[str, Iterable[str]]
+
+
+class EditType(IntEnum):
+    Insert = 1
+    Update = 2
+    Remove = 3
+
+
+class EditPositionType(IntEnum):
+    Inside = 1
+    At = 2
+    Before = 3
+    After = 4
+
+
+class Edit:
+    def __init__(self, type: EditType, position: EditPositionType, selector: Optional[Selector] = None):
+        self.t = type
+        self.p = position
+        self.s = selector
+
+    def dump(self) -> dict:
+        return _clean(dict(t=self.t, p=self.p, s=self.s))
+
+
 class View(_View):
     def __init__(
             self,
@@ -727,8 +751,12 @@ class View(_View):
             self,
             *items: Item,
             read=True,
-            overwrite=True,
-            position: Optional[int] = None,
+            insert=False,
+            remove=False,
+            inside: Optional[Selector] = None,
+            at: Optional[Selector] = None,
+            after: Optional[Selector] = None,
+            before: Optional[Selector] = None,
             row: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
@@ -751,36 +779,52 @@ class View(_View):
             fit: Optional[str] = None,
     ):
         xid = _xid()
-        if len(items):
-            b = Box(
-                items=items,
-                row=row,
-                title=title,
-                popup=popup,
-                tile=tile,
-                cross_tile=cross_tile,
-                wrap=wrap,
-                gap=gap,
-                grow=grow,
-                shrink=shrink,
-                basis=basis,
-                align=align,
-                width=width,
-                height=height,
-                margin=margin,
-                padding=padding,
-                color=color,
-                background=background,
-                border=border,
-                image=image,
-                fit=fit,
-            )
-            self._send(_marshal(_clean(dict(
-                t=_MsgType.Update if overwrite else _MsgType.Insert,
-                x=xid,
-                d=b.dump(),
-                p=position,
-            ))))
+        b = Box(
+            items=items,
+            row=row,
+            title=title,
+            popup=popup,
+            tile=tile,
+            cross_tile=cross_tile,
+            wrap=wrap,
+            gap=gap,
+            grow=grow,
+            shrink=shrink,
+            basis=basis,
+            align=align,
+            width=width,
+            height=height,
+            margin=margin,
+            padding=padding,
+            color=color,
+            background=background,
+            border=border,
+            image=image,
+            fit=fit,
+        )
+
+        edit_type = EditType.Insert if insert else EditType.Remove if remove else EditType.Update
+
+        if inside:
+            edit = Edit(edit_type, EditPositionType.Inside, inside)
+        elif at:
+            edit = Edit(edit_type, EditPositionType.At, at)
+        elif before:
+            edit = Edit(edit_type, EditPositionType.Before, before)
+        elif after:
+            edit = Edit(edit_type, EditPositionType.After, after)
+        elif edit_type != EditType.Update:
+            edit = Edit(edit_type, EditPositionType.Inside)
+        else:
+            edit = None
+
+        self._send(_marshal(_clean(dict(
+            t=_MsgType.Output,
+            x=xid,
+            d=b.dump(),
+            e=edit.dump() if edit else None,
+        ))))
+
         if read:
             res = self._read(_MsgType.Input, xid)
             return res
@@ -854,8 +898,12 @@ class AsyncView(_View):
             self,
             *items: Item,
             read=True,
-            overwrite=True,
-            position: Optional[int] = None,
+            insert=False,
+            remove=False,
+            inside: Optional[Selector] = None,
+            at: Optional[Selector] = None,
+            after: Optional[Selector] = None,
+            before: Optional[Selector] = None,
             row: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
@@ -878,38 +926,55 @@ class AsyncView(_View):
             fit: Optional[str] = None,
     ):
         xid = _xid()
-        if len(items):
-            b = Box(
-                items=items,
-                row=row,
-                title=title,
-                popup=popup,
-                tile=tile,
-                cross_tile=cross_tile,
-                wrap=wrap,
-                gap=gap,
-                grow=grow,
-                shrink=shrink,
-                basis=basis,
-                align=align,
-                width=width,
-                height=height,
-                margin=margin,
-                padding=padding,
-                color=color,
-                background=background,
-                border=border,
-                image=image,
-                fit=fit,
-            )
-            await self._send(_marshal(_clean(dict(
-                t=_MsgType.Update if overwrite else _MsgType.Insert,
-                x=xid,
-                d=b.dump(),
-                p=position,
-            ))))
+        b = Box(
+            items=items,
+            row=row,
+            title=title,
+            popup=popup,
+            tile=tile,
+            cross_tile=cross_tile,
+            wrap=wrap,
+            gap=gap,
+            grow=grow,
+            shrink=shrink,
+            basis=basis,
+            align=align,
+            width=width,
+            height=height,
+            margin=margin,
+            padding=padding,
+            color=color,
+            background=background,
+            border=border,
+            image=image,
+            fit=fit,
+        )
+
+        edit_type = EditType.Insert if insert else EditType.Remove if remove else EditType.Update
+
+        if inside:
+            edit = Edit(edit_type, EditPositionType.Inside, inside)
+        elif at:
+            edit = Edit(edit_type, EditPositionType.At, at)
+        elif before:
+            edit = Edit(edit_type, EditPositionType.Before, before)
+        elif after:
+            edit = Edit(edit_type, EditPositionType.After, after)
+        elif edit_type != EditType.Update:
+            edit = Edit(edit_type, EditPositionType.Inside)
+        else:
+            edit = None
+
+        await self._send(_marshal(_clean(dict(
+            t=_MsgType.Output,
+            x=xid,
+            d=b.dump(),
+            e=edit.dump() if edit else None,
+        ))))
+
         if read:
-            return await self._read(_MsgType.Input, xid)
+            res = await self._read(_MsgType.Input, xid)
+            return res
 
 
 _lorem = '''

@@ -17,13 +17,11 @@ import { Context } from "./ui"
 
 export enum MsgType {
   Error = 1,
-  Join,
-  Switch,
-  Input,
-  Set,
-  Insert,
-  Update,
-  Remove,
+  Join, // client -> server, initiate connection
+  Switch, // client -> server, context switch
+  Input, // client -> server, commit input
+  Output, // server -> client, display output
+  Set, // server -> client, set attributes
 }
 
 export type InputValue = B | S | N | S[] | N[] | null
@@ -39,26 +37,28 @@ export type Msg = {
   t: MsgType.Switch,
   k: V
 } | {
-  t: MsgType.Input, // XXX rename
+  t: MsgType.Input,
   x: S
   d: Array<Input>
+} | {
+  t: MsgType.Output
+  x: S
+  d: Box
+  e?: Edit
 } | {
   t: MsgType.Set,
   x: S
   d: Setting
-} | {
-  t: MsgType.Insert
-  x: S
-  d: Box
-  p?: I
-} | {
-  t: MsgType.Update
-  x: S
-  d: Box
-  p?: I
-} | {
-  t: MsgType.Remove
-  d: Box
+}
+
+export enum EditType { Insert = 1, Update, Remove }
+
+export enum EditPosition { Inside = 1, At, Before, After }
+
+export type Edit = {
+  t: EditType
+  p: EditPosition
+  s?: S | S[] // selector
 }
 
 export type Theme = {
