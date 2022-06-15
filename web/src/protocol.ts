@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, I, N, Pair, S, Triple, U, V } from "./core"
+import { B, Dict, I, N, Pair, S, Triple, U, V } from "./core"
 import { Context } from "./ui"
 
 export enum MsgType {
@@ -32,19 +32,22 @@ export type Msg = {
   e: S
 } | {
   t: MsgType.Join
-  d: any // XXX formalize
+  m?: S // method
+  p?: Dict<S> // params
+  d?: any // XXX formalize
 } | {
   t: MsgType.Switch,
-  k: V
+  m: S // method
+  p?: Dict<S> // params
 } | {
   t: MsgType.Input,
-  x: S
-  d: Array<Input>
+  x: S // correlation id
+  d: Array<Input> // inputs
 } | {
   t: MsgType.Output
-  x: S
-  d: Box
-  e?: Edit
+  x: S // correlation id
+  d: Box // root view
+  e?: Edit // edit command
 } | {
   t: MsgType.Set,
   x: S
@@ -82,6 +85,8 @@ export type Script = {
   integrity?: S
 }
 
+export type DisplayMode = 'normal' | 'chromeless'
+
 export type Setting = {
   title?: S,
   caption?: S,
@@ -89,6 +94,7 @@ export type Setting = {
   nav?: Option[]
   theme?: Theme
   plugins?: Plugin[]
+  mode?: DisplayMode
 }
 
 // *** Warning ***

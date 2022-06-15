@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional, Sequence, Set, Tuple, List, Dict, Union, Iterable
+from typing import Callable, Optional, Sequence, Set, Tuple, List, Dict, Union, Iterable
 from types import FunctionType
 import random
 from pathlib import Path
@@ -54,9 +54,9 @@ class RemoteError(Exception):
 
 
 class ContextSwitchError(Exception):
-    def __init__(self, key: str):
+    def __init__(self, method: str):
         super().__init__('Context switched')
-        self.key = key
+        self.method = method
 
 
 class InterruptError(Exception):
@@ -143,7 +143,7 @@ Headers = Union[
 class Option:
     def __init__(
             self,
-            value: Union[V, FunctionType],
+            value: Union[V, Callable],
             text: Optional[str] = None,
             name: Optional[str] = None,
             icon: Optional[str] = None,
@@ -543,7 +543,9 @@ def col(
     )
 
 
-def _collect_delegates(d: Dict[str, FunctionType], options: Sequence[Option]):
+def _collect_delegates(d: Dict[str, FunctionType], options: Optional[Sequence[Option]] = None):
+    if options is None:
+        return
     for opt in options:
         if opt.delegate:
             d[opt.value] = opt.delegate
@@ -560,8 +562,8 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
             raise RemoteError(f'code {code}')
 
         if t == _MsgType.Switch:
-            key = msg.get('k')
-            raise ContextSwitchError(key)
+            method = msg.get('m')
+            raise ContextSwitchError(method)
 
         if (expected_type > -1) and t != expected_type:
             raise ProtocolError(f'unexpected message: want {expected_type}, got {t}')
@@ -585,7 +587,10 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
                 return tuple([e[1] for e in data])
 
         if t == _MsgType.Join:
-            return msg.get('d')
+            method = msg.get('m')
+            params = msg.get('p')
+            mode = params.get('mode') if params else None
+            return method, mode
 
         raise ProtocolError(f'unknown message type {t}')
     raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
@@ -598,6 +603,7 @@ def _marshal_set(
         nav: Optional[Sequence[Option]] = None,
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
+        mode: Optional[str] = None,
 ) -> dict:
     return _marshal(dict(
         t=_MsgType.Set,
@@ -609,20 +615,22 @@ def _marshal_set(
             nav=_dump(nav),
             theme=_dump(theme),
             plugins=_dump(plugins),
+            mode=mode,
         ))))
 
 
 class _View:
     def __init__(
             self,
-            delegate: FunctionType,
+            delegate: Callable,
             context: any = None,
-            send: Optional[FunctionType] = None,
-            recv: Optional[FunctionType] = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
             title: str = 'H2O Nitro',
             caption: str = f'v{__version__}',
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
     ):
@@ -634,14 +642,16 @@ class _View:
         self._caption = caption
         self._menu = menu
         self._nav = nav
+        self._routes = routes
         self._theme = theme
         self._plugins = plugins
 
         self._delegates: Dict[str, FunctionType] = dict()
-        _collect_delegates(self._delegates, self._menu or [])
-        _collect_delegates(self._delegates, self._nav or [])
+        _collect_delegates(self._delegates, self._menu)
+        _collect_delegates(self._delegates, self._nav)
+        _collect_delegates(self._delegates, self._routes)
 
-    def _ack(self):
+    def _ack(self, mode: Optional[str] = None):
         return _marshal_set(
             title=self._title,
             caption=self._caption,
@@ -649,6 +659,7 @@ class _View:
             nav=_dump(self._nav),
             theme=_dump(self._theme),
             plugins=_dump(self._plugins),
+            mode=mode,
         )
 
     def __getitem__(self, key):
@@ -660,7 +671,7 @@ class _View:
     def _delegate_for(self, key: str):
         d = self._delegates.get(key)
         if d is None:
-            raise ProtocolError('Attempt to call unknown delegate')
+            raise ProtocolError(f'Attempt to call unknown delegate "{key}"')
         return d
 
 
@@ -693,45 +704,46 @@ class Edit:
 class View(_View):
     def __init__(
             self,
-            delegate: FunctionType,
+            delegate: Callable,
             context: any = None,
-            send: Optional[FunctionType] = None,
-            recv: Optional[FunctionType] = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
             title: str = None,
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme, plugins)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins)
 
-    def serve(self, send: FunctionType, recv: FunctionType, context: any = None):
+    def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
-            self._delegate,
-            context,
-            send,
-            recv,
-            self._title,
-            self._caption,
-            self._menu,
-            self._nav,
-            self._theme,
-            self._plugins,
+            delegate=self._delegate,
+            context=context,
+            send=send,
+            recv=recv,
+            title=self._title,
+            caption=self._caption,
+            menu=self._menu,
+            nav=self._nav,
+            routes=self._routes,
+            theme=self._theme,
+            plugins=self._plugins,
         )._run()
 
     def _run(self):
         # Handshake
-        syn = self._read(_MsgType.Join)
-        key = syn.get('hash')
-        self._send(self._ack())
+        method, mode = self._read(_MsgType.Join)
+        self._send(self._ack(mode))
 
         # Event loop
         while True:
             try:
-                (self._delegate_for(key) if key else self._delegate)(self)
+                (self._delegate_for(method) if method else self._delegate)(self)
             except ContextSwitchError as e:
-                key = e.key
+                method = e.method
             except InterruptError:
                 return
 
@@ -843,45 +855,46 @@ class View(_View):
 class AsyncView(_View):
     def __init__(
             self,
-            delegate: FunctionType,
+            delegate: Callable,
             context: any = None,
-            send: Optional[FunctionType] = None,
-            recv: Optional[FunctionType] = None,
+            send: Optional[Callable] = None,
+            recv: Optional[Callable] = None,
             title: str = None,
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, theme, plugins)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins)
 
-    async def serve(self, send: FunctionType, recv: FunctionType, context: any = None):
+    async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
-            self._delegate,
-            context,
-            send,
-            recv,
-            self._title,
-            self._caption,
-            self._menu,
-            self._nav,
-            self._theme,
-            self._plugins,
+            delegate=self._delegate,
+            context=context,
+            send=send,
+            recv=recv,
+            title=self._title,
+            caption=self._caption,
+            menu=self._menu,
+            nav=self._nav,
+            routes=self._routes,
+            theme=self._theme,
+            plugins=self._plugins,
         )._run()
 
     async def _run(self):
         # Handshake
-        syn = await self._read(_MsgType.Join)
-        key = syn.get('hash')
-        await self._send(self._ack())
+        method, mode = await self._read(_MsgType.Join)
+        await self._send(self._ack(mode))
 
         # Event loop
         while True:
             try:
-                await (self._delegate_for(key) if key else self._delegate)(self)
+                await (self._delegate_for(method) if method else self._delegate)(self)
             except ContextSwitchError as e:
-                key = e.key
+                method = e.method
             except InterruptError:
                 return
 

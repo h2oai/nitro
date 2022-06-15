@@ -20,7 +20,7 @@ import { Client } from './client';
 import { signal } from './core';
 import { toContextualMenuItem } from './options';
 import { Option } from './protocol';
-import { ClientContext, make } from './ui';
+import { make } from './ui';
 
 const MenuContainer = styled.div`
   cursor: pointer;

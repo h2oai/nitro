@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { on, S, signal } from './core'
-import { Box, Option } from './protocol'
+import { Box, DisplayMode, Option } from './protocol'
 import { connect, Socket, SocketEvent } from './socket'
 import { defaultScheme, loadScheme } from './theme'
 import { noopClientContext } from './ui'
@@ -29,6 +29,7 @@ export const newClient = (endpoint: S) => {
     menuB = signal<Option[]>([]),
     navB = signal<Option[]>([]),
     schemeB = signal(defaultScheme),
+    modeB = signal<DisplayMode>('normal'),
     context = noopClientContext,
     socket = (handle: (s: Socket, e: SocketEvent) => void): Socket => {
       if (_socket) return _socket
@@ -46,6 +47,7 @@ export const newClient = (endpoint: S) => {
     menuB,
     navB,
     schemeB,
+    modeB,
     body,
     popup,
     socket,

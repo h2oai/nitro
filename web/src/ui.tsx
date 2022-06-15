@@ -20,7 +20,7 @@ import { Send } from './socket';
 export type ClientContext = {
   scoped(index: any, xid: S): Context
   commit(): void
-  switch(value: V): void
+  switch(method: S, params?: Dict<S>): void
 }
 
 export type Context = {
@@ -51,9 +51,9 @@ export const newClientContext = (xid: S, send: Send, onBusy: () => void): Client
       onBusy()
       send({ t: MsgType.Input, x: xid, d: data.filter(e => e !== undefined) })
     },
-    change = (k: V) => {
+    change = (m: S, p?: Dict<S>) => {
       onBusy()
-      send({ t: MsgType.Switch, k })
+      send({ t: MsgType.Switch, m, p })
     },
     scoped = (index: any, xid: S): Context => ({
       record: (value: InputValue) => record(index, xid, value),

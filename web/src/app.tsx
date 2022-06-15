@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
 import styled from 'styled-components';
 import { Body, Popup } from './body';
 import { Client } from './client';
-import { isS, newIncr, S, signal, U } from './core';
+import { Dict, isS, newIncr, S, signal, U } from './core';
 import { Header } from './header';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
@@ -146,9 +145,30 @@ const queryBox = (boxes: Box[], name: S): [Box[], U] | null => {
   return null
 }
 
-const getHashbang = (): S | null => {
+type HashRPC = {
+  method: S
+  params?: Dict<S>
+}
+
+const getHashRPC = (): HashRPC | null => {
   const h = window.location.hash
-  return (h && h.length > 2 && h.startsWith('#!')) ? h.substring(2) : null
+  if (h && h.length > 2 && h.startsWith('#!')) {
+    const
+      [method, q] = h.substring(2).split('?'),
+      params: Dict<S> = {}
+    let n = 0
+    if (q) {
+      for (const kv of q.split('&')) {
+        const [k, v] = kv.split('=')
+        if (k && v) {
+          params[k] = decodeURIComponent(v)
+          n++
+        }
+      }
+    }
+    return n > 0 ? { method, params } : { method }
+  }
+  return null
 }
 
 export const App = make(({ client }: { client: Client }) => {
@@ -165,13 +185,17 @@ export const App = make(({ client }: { client: Client }) => {
     onMessage = (socket: Socket, e: SocketEvent) => {
       switch (e.t) {
         case SocketEventT.Connect:
-          if (socket) socket.send({
-            t: MsgType.Join,
-            d: {
-              hash: getHashbang(), // XXX formalize
-              language: window.navigator.language, // XXX formalize
+          if (socket) {
+            const
+              join: Msg = { t: MsgType.Join },
+              rpc = getHashRPC()
+            if (rpc) {
+              const { method, params } = rpc
+              if (method) join.m = method
+              if (params) join.p = params
             }
-          })
+            socket.send(join)
+          }
           break
         case SocketEventT.Message:
           {
@@ -281,7 +305,7 @@ export const App = make(({ client }: { client: Client }) => {
                 {
                   const
                     { x: xid, d: conf } = msg,
-                    { title, caption, menu, nav, theme, plugins } = conf
+                    { title, caption, menu, nav, theme, plugins, mode } = conf
 
                   if (title) client.titleB(title)
                   if (caption) client.captionB(caption)
@@ -300,6 +324,7 @@ export const App = make(({ client }: { client: Client }) => {
                       }
                     client.schemeB(scheme)
                   }
+                  if (mode) client.modeB(mode)
                   if (plugins) installPlugins(plugins)
 
                   const state = stateB()
@@ -324,8 +349,11 @@ export const App = make(({ client }: { client: Client }) => {
     },
     init = () => {
       window.addEventListener('hashchange', () => {
-        const hashbang = getHashbang()
-        if (hashbang) client.context.switch(hashbang)
+        const hashbang = getHashRPC()
+        if (hashbang) {
+          const { method, params } = hashbang
+          client.context.switch(method, params)
+        }
       })
       client.socket(onMessage)
     },
@@ -351,14 +379,17 @@ export const App = make(({ client }: { client: Client }) => {
             </Overlay>
           )
         case AppStateT.Connected:
-          const { context, body, popup, busy } = client
+          const
+            { context, body, popup, busy, modeB } = client,
+            isChromeless = modeB() === 'chromeless'
+
           return (
             <>
               {busy && <Busy timeout={500} />}
               <div className='view'>
-                <div className='art' />
+                {!isChromeless && <div className='art' />}
                 <div className='page'>
-                  <Header client={client} />
+                  {!isChromeless && <Header client={client} />}
                   <Body context={context} boxes={body} />
                   {popup.length ? <Popup context={context} boxes={popup} /> : <></>}
                 </div>
