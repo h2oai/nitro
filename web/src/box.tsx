@@ -37,6 +37,7 @@ import { TextBlock } from './text_block';
 import { TimePicker } from './time_picker';
 import { Toggle } from './toggle';
 import { BoxProps } from './ui';
+import { WebView } from './webview';
 
 export const XBox = ({ box }: BoxProps) => { // recursive
   const { mode, options, editable, multiple } = box
@@ -61,6 +62,8 @@ export const XBox = ({ box }: BoxProps) => { // recursive
     case 'month':
     case 'week':
       return <Calendar box={box} />
+    case 'file':
+      return <FileUpload box={box} />
     case 'menu':
       return editable
         ? <ComboBox box={box} />
@@ -75,6 +78,8 @@ export const XBox = ({ box }: BoxProps) => { // recursive
       return <Slider box={box} />
     case 'rating':
       return <Rating box={box} />
+    case 'separator':
+      return <Separator box={box} />
     case 'table':
       return <Table box={box} />
     case 'tag':
@@ -83,10 +88,9 @@ export const XBox = ({ box }: BoxProps) => { // recursive
       return <Textbox box={box} />
     case 'time':
       return <TimePicker box={box} />
-    case 'separator':
-      return <Separator box={box} />
-    case 'file':
-      return <FileUpload box={box} />
+    case 'web':
+      return <WebView box={box} />
+
   }
 
   if (mode?.startsWith('plugin:')) return <PluginBox box={box} />

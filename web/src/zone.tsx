@@ -41,6 +41,7 @@ const computeStyle = (box: Partial<Box>) => {
     { mode, row, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis } = box,
     isRow = row ? true : false,
     css: React.CSSProperties = {
+      position: 'relative',
       flexDirection: row ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       gap: gap ?? '1rem',

@@ -95,7 +95,7 @@ export type Setting = {
 // If you add a new mode here, update heuristics.tsx to mark it as non-interactive (index=0) if applicable.
 export type BoxMode = 'none' | 'md' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
   | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color'
-  | 'rating' | 'table' | 'file' | 'separator' | 'image'
+  | 'rating' | 'table' | 'file' | 'separator' | 'image' | 'web'
 
 export type Box = {
   xid: S
@@ -141,7 +141,7 @@ export type Box = {
   suffix?: S
   // format?: S // TODO: displayed-value format string for spinbutton, slider
   placeholder?: S
-  path?: S // file upload path
+  path?: S // file upload path or web view path
   error?: S
   lines?: U
   multiple?: B

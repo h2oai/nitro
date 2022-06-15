@@ -178,6 +178,7 @@ export const sanitizeBox = (box: Box): Box => {
         break
       case 'separator':
       case 'image':
+      case 'web':
         box.index = -1 // don't capture
         break
     }
