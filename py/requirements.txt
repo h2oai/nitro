@@ -1,9 +1,8 @@
 setuptools
 wheel
 twine
-click==8.0.4
-flake8==4.0.1
-Flask==2.0.3
-msgpack==1.0.3
-pytest==7.0.1
-simple-websocket==0.5.1
+flake8
+pytest
+Flask
+msgpack
+simple-websocket
