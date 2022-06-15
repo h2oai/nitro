@@ -59,19 +59,6 @@ TOC
 '''
 
 
-def view_output(view: View, docs, *args, **kwargs):
-    if len(args) == 0:
-        # example has no output
-        return view(*docs)
-
-    if 'popup' in kwargs:
-        # show as-is
-        return view(*args, **kwargs)
-
-    # show with docs
-    return view(*docs, col(*args, name='output', padding=20, border='$accent', **kwargs))
-
-
 def main(view: View):
     topic = view(table_of_contents)
     topics[topic](view)
@@ -88,6 +75,9 @@ nitro = View(
     nav=[
         option(main, 'Contents', name='contents'),
     ],
+    routes=[
+        # ROUTES
+    ]
 )
 
 app = Flask(__name__, static_folder=web_directory, static_url_path='')

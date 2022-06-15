@@ -57,6 +57,10 @@ def quote_newlines(line: str) -> str:
     return line.replace('\\n', '\\\\n')
 
 
+def doc_func_of(name: str) -> str:
+    return f'show_doc_{name}'
+
+
 def remove_def_if_only_def(lines: List[str]) -> List[str]:
     n = 0
     for line in lines:
@@ -172,14 +176,20 @@ def build_funcs(groups: List[Group]) -> str:
 
             if not e.name.endswith('_noop'):
                 p("    '### Output',")
+                p()
+                p(f"    box(mode='web', path='/#!docs.{e.name}?mode=chromeless', height='600px'),")
 
             p(')')
+            p()
+            p()
+            p(f'def {doc_func_of(e.name)}(view: View):')
+            p(f'    view(*{doc_var})')
             p()
             for block in e.blocks:
                 if isinstance(block, Code):
                     p()
                     for line in block.lines:
-                        p(line.replace('view(', f'view_output(view, {doc_var}, '))
+                        p(line)
                     p()
     return str(p)
 
@@ -188,7 +198,8 @@ def build_topic_map(groups: List[Group]) -> str:
     p = Printer().indent()
     for g in groups:
         for e in g.examples:
-            p(f'{e.name}={e.name},')
+            f = doc_func_of(e.name)
+            p(f'{f}={f},')
 
     return str(p)
 
@@ -200,19 +211,27 @@ def build_toc(groups: List[Group]) -> str:
         p(f'### {g.title}')
         p()
         for e in g.examples:
-            p(f'- [{e.title}](#{e.name})')
+            p(f'- [{e.title}](#!docs.{doc_func_of(e.name)})')
     return str(p)
 
 
 def build_menu(groups: List[Group]) -> str:
     p = Printer().indent().indent()
     for g in groups:
-        p(f'option(main, "{g.title}", icon="TextDocument", options=[')
+        p(f'option("{g.title}", "{g.title}", icon="TextDocument", options=[')
         p.indent()
         for e in g.examples:
-            p(f'option({e.name}, "{e.title}", icon="TextDocument"),')
+            p(f'option({doc_func_of(e.name)}, "{e.title}", icon="TextDocument"),')
         p.dedent()
         p(']),')
+    return str(p)
+
+
+def build_routes(groups: List[Group]) -> str:
+    p = Printer().indent().indent()
+    for g in groups:
+        for e in g.examples:
+            p(f'option({e.name}),')
     return str(p)
 
 
@@ -221,7 +240,8 @@ def write_tour(groups: List[Group]):
         replace('# EXAMPLES', build_funcs(groups)). \
         replace('    # TOPIC_MAP', build_topic_map(groups)). \
         replace('TOC', build_toc(groups)). \
-        replace('        # MENU', build_menu(groups))
+        replace('        # MENU', build_menu(groups)). \
+        replace('        # ROUTES', build_routes(groups))
 
     (docs_dir / 'docs.py').write_text(tour)
 
