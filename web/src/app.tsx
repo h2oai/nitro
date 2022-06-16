@@ -362,9 +362,7 @@ export const App = make(({ client }: { client: Client }) => {
       switch (state.t) {
         case AppStateT.Connecting:
           return (
-            <Overlay>
-              <Warning>Connecting...</Warning>
-            </Overlay>
+            <Busy timeout={100} />
           )
         case AppStateT.Disconnected:
           return (
