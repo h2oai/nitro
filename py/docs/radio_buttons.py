@@ -23,7 +23,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # `mode=` can be elided when there are 4-7 options.
 #
 # The first option is automatically selected.
-def radio_basic(view: View):
+def radio_basic(view: View):  # height 4
     choice = view(box('Choose a color', mode='radio', options=[
         'blue', 'green', 'yellow', 'orange', 'red', 'black'
     ]))
@@ -32,7 +32,7 @@ def radio_basic(view: View):
 
 # ## Set initial selection
 # Set `value=` to pre-select an option having that value.
-def radio_value(view: View):
+def radio_value(view: View):  # height 3
     choice = view(box('Choose a color', mode='radio', value='yellow', options=[
         option('green', 'Green'),
         option('yellow', 'Yellow'),
@@ -44,7 +44,7 @@ def radio_value(view: View):
 
 # ## Mark options as selected
 # Set `selected=True` to pre-select an option.
-def radio_selected(view: View):
+def radio_selected(view: View):  # height 3
     choice = view(box('Choose a color', mode='radio', options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),
@@ -56,7 +56,7 @@ def radio_selected(view: View):
 
 # ## Show pictorial options
 # Set `icon=` to show pictorial options.
-def radio_icon(view: View):
+def radio_icon(view: View):  # height 3
     choice = view(box('Choose a chart type', mode='radio', options=[
         option('area', 'Area', icon='AreaChart', selected=True),
         option('bar', 'Bar', icon='BarChartHorizontal'),
@@ -66,5 +66,3 @@ def radio_icon(view: View):
         option('donut', 'Donut', icon='DonutChart'),
     ]))
     view(f'You chose {choice}.')
-
-

@@ -19,7 +19,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # Set `mode='week'` to show a week picker.
-def week_basic(view: View):
+def week_basic(view: View):  # height 4
     week = view(box('Pick a week', mode='week'))
     view(f'You picked {week}.')
 
@@ -29,28 +29,28 @@ def week_basic(view: View):
 #
 # Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
 # Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
-def week_value(view: View):
+def week_value(view: View):  # height 4
     week = view(box('Pick a week', mode='week', value='2021-10-10'))
     view(f'You picked {week}.')
 
 
 # ## Set min date
 # Set `min=` to specify a minimum date.
-def week_min(view: View):
+def week_min(view: View):  # height 4
     week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01'))
     view(f'You picked {week}.')
 
 
 # ## Set max date
 # Set `max=` to specify a maximum date.
-def week_max(view: View):
+def week_max(view: View):  # height 4
     week = view(box('Pick a week', mode='week', value='2021-10-10', max='2022-12-31'))
     view(f'You picked {week}.')
 
 
 # ## Combine min and max dates
 # Set both `min=` and `max=` to restrict selection between two dates.
-def week_min_max(view: View):
+def week_min_max(view: View):  # height 4
     week = view(box('Pick a week', mode='week', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {week}.')
 
@@ -59,6 +59,6 @@ def week_min_max(view: View):
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.
-def week_range(view: View):
+def week_range(view: View):  # height 4
     week = view(box('Pick a week', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {week}.')

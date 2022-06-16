@@ -21,7 +21,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Set `mode='button'` to show buttons.
 #
 # `mode=` can be elided when there are 1-3 options.
-def buttons_basic(view: View):
+def buttons_basic(view: View):  # height 1
     choice = view(box('Choose a color', mode='button', options=[
         'auto', 'yellow', 'orange', 'red',
     ]))
@@ -34,7 +34,7 @@ def buttons_basic(view: View):
 # In such cases, `box(mode='button', options=X)` can be shortened to `box(X)`.
 #
 # In other words, if the first argument to `box()` is a sequence of options, then `mode='button'` is implied.
-def buttons_shorthand(view: View):
+def buttons_shorthand(view: View):  # height 1
     # Longer
     choice = view(box(mode='button', options=['auto', 'yellow', 'orange', 'red']))
 
@@ -45,7 +45,7 @@ def buttons_shorthand(view: View):
 
 
 # `options` can be a sequence of options, a sequence of tuples, or a dictionary. The following forms are equivalent:
-def buttons_shorthand_alt(view: View):
+def buttons_shorthand_alt(view: View):  # height 2
     # Longer
     choice = view(box([
         option('auto', 'Automatic'),
@@ -75,7 +75,7 @@ def buttons_shorthand_alt(view: View):
 # By default, the first button is displayed as the primary action in the sequence.
 #
 # To select a different button as primary, set `selected=True`.
-def buttons_selected(view: View):
+def buttons_selected(view: View):  # height 2
     choice = view(
         'Updates are available!',
         box([
@@ -89,7 +89,7 @@ def buttons_selected(view: View):
 
 # ## Select primary button
 # Alternatively, Set `value=` to mark a button as *primary*.
-def buttons_value(view: View):
+def buttons_value(view: View):  # height 2
     choice = view(
         'Updates are available!',
         box(dict(
@@ -103,7 +103,7 @@ def buttons_value(view: View):
 
 # ## Select multiple primary buttons
 # If `value=` is set to a sequence, all buttons with those values are marked as *primary*.
-def buttons_values(view: View):
+def buttons_values(view: View):  # height 2
     choice = view(
         'Sign me up!',
         box(dict(
@@ -117,7 +117,7 @@ def buttons_values(view: View):
 
 # ## Add a menu
 # Sub-options inside options are shown as split buttons.
-def buttons_split(view: View):
+def buttons_split(view: View):  # height 2
     choice = view(
         'Send fresh donuts every day?',
         box([
@@ -133,7 +133,7 @@ def buttons_split(view: View):
 
 # ## Add a menu to a primary button
 # Sub-options work for primary buttons, too.
-def buttons_selected_split(view: View):
+def buttons_selected_split(view: View):  # height 2
     choice = view(
         'Send fresh donuts every day?',
         box([
@@ -149,7 +149,7 @@ def buttons_selected_split(view: View):
 
 # ## Set a caption
 # Set `caption=` to describe buttons.
-def buttons_caption(view: View):
+def buttons_caption(view: View):  # height 2
     choice = view(
         'Send fresh donuts every day?',
         box([
@@ -162,7 +162,7 @@ def buttons_caption(view: View):
 
 # ## Lay out buttons vertically
 # By default, buttons are arranged row-wise. Set `row=False` to arrange them column-wise.
-def buttons_layout(view: View):
+def buttons_layout(view: View):  # height 3
     choice = view(
         'Choose a color:',
         box([

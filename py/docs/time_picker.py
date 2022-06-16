@@ -19,41 +19,41 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # Set `mode='time'` to show a time picker.
-def time_basic(view: View):
+def time_basic(view: View):  # height 2
     time = view(box('Set alarm for:', mode='time', value='3:04PM'))
     view(f'Alarm set for {time}.')
 
 
 # ## Enable seconds
 # Include seconds in the `value` to show a seconds component.
-def time_seconds(view: View):
+def time_seconds(view: View):  # height 2
     time = view(box('Set alarm for:', mode='time', value='3:04:05PM'))
     view(f'Alarm set for {time}.')
 
 
 # ## Show hours only
 # Exclude minutes and seconds from the `value` to show only the hour component.
-def time_hour(view: View):
+def time_hour(view: View):  # height 2
     time = view(box('Set alarm for:', mode='time', value='3PM'))
     view(f'Alarm set for {time}.')
 
 
 # ## Show 24-hour clock
 # Exclude `AM` or `PM` from the `value` to accept input in military time.
-def time_24(view: View):
+def time_24(view: View):  # height 2
     time = view(box('Set alarm for:', mode='time', value='15:04'))
     view(f'Alarm set for {time}.')
 
 
 # ## Show 24-hour clock, with seconds
 # Include seconds in the `value` to show a seconds component.
-def time_24_seconds(view: View):
+def time_24_seconds(view: View):  # height 2
     time = view(box('Set alarm for:', mode='time', value='15:04:05'))
     view(f'Alarm set for {time}.')
 
 
 # ## Show 24-hour clock, with hour only
 # Exclude minutes and seconds from the `value` to show only the hour component.
-def time_24_hour(view: View):
+def time_24_hour(view: View):  # height 2
     time = view(box('Set alarm for:', mode='time', value='15'))
     view(f'Alarm set for {time}.')

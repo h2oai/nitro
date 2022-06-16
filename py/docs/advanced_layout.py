@@ -15,13 +15,19 @@
 from h2o_nitro import View, box, row, col, option, lorem
 
 
-# # Advanced Layout
+# # Advanced
+
+# ## Embedding Web Pages
+# Set `mode='web'` to embed external web pages.
+def embed_iframe(view: View):
+    view(box(mode='web', path='https://example.com'))
+
 
 # ## An Album
 # A simple layout for photo galleries or portfolios.
 #
 # Inspired by the [Bootstrap Album](https://getbootstrap.com/docs/4.0/examples/album/).
-def layout_album(view: View):
+def layout_album(view: View):  # height 11
     cards = [make_album_card(lorem(1), i) for i in range(9)]
 
     view(

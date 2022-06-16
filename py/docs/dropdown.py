@@ -21,7 +21,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Set `mode='menu'` to show a dropdown menu.
 #
 # `mode=` can be elided when there are more than 7 options.
-def dropdown_basic(view: View):
+def dropdown_basic(view: View):  # height 2
     choice = view(box('Choose a color', mode='menu', options=[
         'yellow', 'orange', 'red', 'black'
     ]))
@@ -30,7 +30,7 @@ def dropdown_basic(view: View):
 
 # ## Set initial selection
 # Set `value=` to pre-select an option having that value.
-def dropdown_value(view: View):
+def dropdown_value(view: View):  # height 2
     choice = view(box('Choose a color', mode='menu', value='yellow', options=[
         option('green', 'Green'),
         option('yellow', 'Yellow'),
@@ -42,7 +42,7 @@ def dropdown_value(view: View):
 
 # ## Mark options as selected
 # Set `selected=True` to pre-select an option.
-def dropdown_selected(view: View):
+def dropdown_selected(view: View):  # height 2
     choice = view(box('Choose a color', mode='menu', options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),
@@ -56,7 +56,7 @@ def dropdown_selected(view: View):
 # Options can have sub-options. This is useful for grouping options into categories.
 #
 # `mode=menu` is implied if options are grouped.
-def dropdown_grouped(view: View):
+def dropdown_grouped(view: View):  # height 2
     choice = view(box('Choose a color', options=[
         option('primary', 'Primary Colors', options=[
             option('red', 'Red'),
@@ -76,7 +76,7 @@ def dropdown_grouped(view: View):
 # Set `editable=True` to allow arbitrary input in addition to the presented options.
 #
 # `mode=menu` is implied if `editable=True`.
-def dropdown_editable(view: View):
+def dropdown_editable(view: View):  # height 2
     choice = view(box('Choose a color', editable=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))

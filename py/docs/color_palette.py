@@ -23,7 +23,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # The option's `value` must be a valid color in one of the formats described in the previous example.
 #
 # Unlike the Color Picker, the Color Palette returns the `value` of the chosen option, and not a `(r,g,b,a)` tuple.
-def palette_basic(view: View):
+def palette_basic(view: View):  # height 2
     color = view(box('Choose a color', mode='color', options=[
         option('#ff0000', 'Red'),
         option('#00ff00', 'Green'),
@@ -37,7 +37,7 @@ def palette_basic(view: View):
 
 # ## Set initial color
 # Set `value=` to pre-select an option having that color value.
-def palette_value(view: View):
+def palette_value(view: View):  # height 2
     color = view(box('Choose a color', mode='color', value='#0000ff', options=[
         option('#ff0000', 'Red'),
         option('#00ff00', 'Green'),
@@ -51,7 +51,7 @@ def palette_value(view: View):
 
 # ## Mark colors as selected
 # Alternatively, set `selected=True` to pre-select a color in the palette.
-def palette_selected(view: View):
+def palette_selected(view: View):  # height 2
     color = view(box('Choose a color', mode='color', options=[
         option('#ff0000', 'Red'),
         option('#00ff00', 'Green'),

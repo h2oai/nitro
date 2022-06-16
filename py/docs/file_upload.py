@@ -28,14 +28,14 @@ from h2o_nitro import View, box, row, col, option, lorem
 # is expected to process the files and return a JSON response containing a string
 # array named `files`. This array is returned as-is by `view()` to your Nitro
 # application code.
-def file_upload_basic(view: View):
+def file_upload_basic(view: View):  # height 4
     filename = view(box('Upload a document', mode='file'))
     view(f'You uploaded {filename}.')
 
 
 # ## Allow multiple files
 # Set `multiple=True` to allow uploading multiple files.
-def file_upload_multiple(view: View):
+def file_upload_multiple(view: View):  # height 4
     filenames = view(box('Upload some documents', mode='file', multiple=True))
     view(f'You uploaded {filenames}.')
 
@@ -44,6 +44,6 @@ def file_upload_multiple(view: View):
 # Set `path=` to set the path to upload files to.
 #
 # This is useful if your app's file upload handler path is different from `/upload` (the default),
-def file_upload_path(view: View):
+def file_upload_path(view: View):  # height 4
     filename = view(box('Upload a document', mode='file', path='/upload'))
     view(f'You uploaded {filename}.')

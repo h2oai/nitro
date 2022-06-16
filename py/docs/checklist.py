@@ -21,7 +21,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Set `mode='check'` to show a checklist
 #
 # `mode=` can be elided when there are 1-7 options.
-def checklist_basic(view: View):
+def checklist_basic(view: View):  # height 3
     choices = view(box(
         'Choose some colors',
         mode='check',
@@ -32,7 +32,7 @@ def checklist_basic(view: View):
 
 # ## Set initial selection
 # Set `value=` to pre-select options having those values.
-def checklist_value(view: View):
+def checklist_value(view: View):  # height 3
     choices = view(box(
         'Choose some colors',
         mode='check',
@@ -44,7 +44,7 @@ def checklist_value(view: View):
 
 # ## Mark options as checked
 # Alternatively, set `selected=True` to pre-select one or more options.
-def checklist_selected(view: View):
+def checklist_selected(view: View):  # height 3
     choices = view(box(
         'Choose some colors',
         mode='check',

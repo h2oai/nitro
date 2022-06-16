@@ -29,7 +29,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # If `text` is not provided, then the `value` is also used as the `text`.
 #
 # There are other, more concise ways to specify options, explained in later examples.
-def options_basic(view: View):
+def options_basic(view: View):  # height 3
     choice = view(box('Choose a color', options=[
         option('green', 'Green'),
         option('yellow', 'Yellow'),
@@ -41,7 +41,7 @@ def options_basic(view: View):
 
 # ## Create options from a sequence
 # If `options` is a sequence (tuple, set or list), the elements of the sequence are used as options.
-def options_sequence(view: View):
+def options_sequence(view: View):  # height 3
     choice = view(box('Choose a color', options=[
         'green', 'yellow', 'orange', 'red'
     ]))
@@ -50,7 +50,7 @@ def options_sequence(view: View):
 
 # ## Create options from a string
 # If `options=` is set to a string, each word in the string is used as an option.
-def options_string(view: View):
+def options_string(view: View):  # height 3
     choice = view(box('Choose a color', options='green yellow orange red'))
     view(f'You chose {choice}.')
 
@@ -59,7 +59,7 @@ def options_string(view: View):
 
 # ## Create options from tuples
 # `options=` can also be specified as a sequence of `(value, text)` tuples.
-def options_tuples(view: View):
+def options_tuples(view: View):  # height 3
     choice = view(box('Choose a color', options=[
         ('green', 'Green'),
         ('yellow', 'Yellow'),
@@ -73,7 +73,7 @@ def options_tuples(view: View):
 
 # ## Create options from a dictionary
 # `options=` can also be specified as a `dict` of `value: text` entries.
-def options_dict(view: View):
+def options_dict(view: View):  # height 3
     choice = view(box('Choose a color', options=dict(
         green='Green',
         yellow='Yellow',
@@ -89,7 +89,7 @@ def options_dict(view: View):
 # Set `selected=True` to pre-select an option.
 #
 # Another way to pre-select an option is to set `value=` on the box, as shown in the next example.
-def options_selected(view: View):
+def options_selected(view: View):  # height 3
     choice = view(box('Choose a color', options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),
@@ -103,7 +103,7 @@ def options_selected(view: View):
 # Set `value=` on the box to pre-select an option having that value.
 #
 # Another way to pre-select an option is to set `selected=True` on the option, as shown in the previous example.
-def options_value(view: View):
+def options_value(view: View):  # height 3
     choice = view(box('Choose a color', value='yellow', options=[
         option('green', 'Green'),
         option('yellow', 'Yellow'),
@@ -111,5 +111,3 @@ def options_value(view: View):
         option('red', 'Red'),
     ]))
     view(f'You chose {choice}.')
-
-

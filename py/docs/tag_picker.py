@@ -19,7 +19,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # Set `mode='tag'` to display a tag picker. `multiple=True` is implied.
-def tag_picker_basic(view: View):
+def tag_picker_basic(view: View):  # height 2
     tags = view(box(
         'Choose some tags',
         mode='tag',
@@ -30,7 +30,7 @@ def tag_picker_basic(view: View):
 
 # ## Set initial tags
 # Set `value=` to pre-select options having those values.
-def tag_picker_value(view: View):
+def tag_picker_value(view: View):  # height 2
     tags = view(box(
         'Choose some tags',
         mode='tag',
@@ -42,7 +42,7 @@ def tag_picker_value(view: View):
 
 # ## Mark tags as selected
 # Set `selected=True` to pre-select one or more options.
-def tag_picker_selected(view: View):
+def tag_picker_selected(view: View):  # height 2
     tags = view(box('Choose some tags', mode='tag', options=[
         option('violet', 'Violet'),
         option('indigo', 'Indigo'),

@@ -19,7 +19,7 @@ from h2o_nitro import View, box, row, col, option, header, lorem
 
 # ## Basic
 # Call `box()` with `mode='table'` to show a table.
-def table_basic(view: View):
+def table_basic(view: View):  # height 4
     view(box(
         mode='table',
         headers=[
@@ -41,7 +41,7 @@ def table_basic(view: View):
 # To make rows clickable, set `mode='link'` on a header.
 #
 # If set, `view()` returns the `value` of the clicked row.
-def table_clickable(view: View):
+def table_clickable(view: View):  # height 4
     choice = view(box(
         mode='table',
         headers=[
@@ -62,7 +62,7 @@ def table_clickable(view: View):
 
 # ## Use markdown in cells
 # By default, cells are interpreted as plain text. To interpret them as markdown, set `mode='md'` on the header.
-def table_markdown(view: View):
+def table_markdown(view: View):  # height 4
     choice = view(box(
         mode='table',
         headers=[
@@ -87,7 +87,7 @@ def table_markdown(view: View):
 # dropdown menu, especially useful when each item has multiple attributes.
 #
 # The return value is a collection of the values of the selected rows.
-def table_multiselect(view: View):
+def table_multiselect(view: View):  # height 4
     choices = view(box(
         mode='table',
         headers=[
@@ -111,7 +111,7 @@ def table_multiselect(view: View):
 # Set `multiple=False` to allow at most one row to be selected.
 #
 # The return value is the `value` of the selected row.
-def table_singleselect(view: View):
+def table_singleselect(view: View):  # height 4
     choice = view(box(
         mode='table',
         headers=[
@@ -133,7 +133,7 @@ def table_singleselect(view: View):
 
 # ## Set initial selection
 # Set `value=` to pre-select one or more rows.
-def table_value(view: View):
+def table_value(view: View):  # height 4
     choices = view(box(
         mode='table',
         headers=[
@@ -156,7 +156,7 @@ def table_value(view: View):
 
 # ## Mark rows as selected
 # Alternatively, set `selected=True` on a row to pre-select the row.
-def table_selected(view: View):
+def table_selected(view: View):  # height 4
     choices = view(box(
         mode='table',
         headers=[
@@ -178,7 +178,7 @@ def table_selected(view: View):
 
 # ## Group rows
 # To group rows, use nested options.
-def table_grouped(view: View):
+def table_grouped(view: View):  # height 7
     choice = view(box(
         mode='table',
         headers=[
@@ -206,7 +206,7 @@ def table_grouped(view: View):
 
 # ## Group rows at multiple levels
 # Rows can be nested at multiple levels.
-def table_multilevel(view: View):
+def table_multilevel(view: View):  # height 8
     choice = view(box(
         mode='table',
         headers=[
@@ -240,7 +240,7 @@ def table_multilevel(view: View):
 # Set `width=` to set the minimum width of the column.
 #
 # To set both minimum and maximum widths, set `width=` to a `(min, max)` tuple.
-def table_column_width(view: View):
+def table_column_width(view: View):  # height 4
     view(box(
         mode='table',
         headers=[
@@ -260,7 +260,7 @@ def table_column_width(view: View):
 
 # ## Set header icon
 # Set `icon=` to display an icon in the header instead of text.
-def table_header_icon(view: View):
+def table_header_icon(view: View):  # height 4
     view(box(
         mode='table',
         headers=[
@@ -280,7 +280,7 @@ def table_header_icon(view: View):
 
 # ## Disable column resizing
 # Set `resizable=False` to prevent a column from being resized.
-def table_header_resizable(view: View):
+def table_header_resizable(view: View):  # height 4
     view(box(
         mode='table',
         headers=[
@@ -300,7 +300,7 @@ def table_header_resizable(view: View):
 
 # ## Enable multiline cells
 # Set `Multiline=True` to allow multiline text in a column's cells
-def table_column_multiline(view: View):
+def table_column_multiline(view: View):  # height 4
     view(box(
         mode='table',
         headers=[

@@ -23,7 +23,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # The return value is a `(r, g, b, a)` tuple,
 # where `r`, `g`, `b` are integers between 0-255,
 # and `a` is an integer between 0-100%.
-def color_basic(view: View):
+def color_basic(view: View):  # height 6
     color = view(box('Choose a color', mode='color'))
     r, g, b, a = color
     view(f'You chose the color `rgba({r}, {g}, {b}, {a}%)`.')
@@ -46,6 +46,6 @@ def color_basic(view: View):
 # - `transparent` (same as `rgba(0,0,0,0)`)
 #
 # The return value, as in the previous example, is a `(r, g, b, a)` tuple.
-def color_value(view: View):
+def color_value(view: View):  # height 6
     color = view(box('Choose a color', mode='color', value='#a241e8'))
     view(f'You chose {color}.')

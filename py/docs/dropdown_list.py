@@ -21,7 +21,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Set `mode='menu'` with `multiple=True` to show a dropdown menu that allows multiple options to be selected.
 #
 # `mode=` can be elided when there are more than 7 options.
-def multi_dropdown_basic(view: View):
+def multi_dropdown_basic(view: View):  # height 2
     choices = view(box(
         'Choose some colors',
         mode='menu',
@@ -33,7 +33,7 @@ def multi_dropdown_basic(view: View):
 
 # ## Set initial selection
 # Set `value=` to pre-select options having those values.
-def multi_dropdown_value(view: View):
+def multi_dropdown_value(view: View):  # height 2
     choices = view(box(
         'Choose some colors',
         mode='menu',
@@ -46,7 +46,7 @@ def multi_dropdown_value(view: View):
 
 # ## Mark options as selected
 # Alternatively, set `selected=True` to pre-select one or more options.
-def multi_dropdown_selected(view: View):
+def multi_dropdown_selected(view: View):  # height 2
     choices = view(box(
         'Choose some colors',
         mode='menu',

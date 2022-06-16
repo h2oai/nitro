@@ -19,7 +19,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # Set `mode='month'` to show a month picker.
-def month_basic(view: View):
+def month_basic(view: View):  # height 4
     month = view(box('Pick a month', mode='month'))
     view(f'You picked {month}.')
 
@@ -29,28 +29,28 @@ def month_basic(view: View):
 #
 # Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
 # Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
-def month_value(view: View):
+def month_value(view: View):  # height 4
     month = view(box('Pick a month', mode='month', value='2021-10-10'))
     view(f'You picked {month}.')
 
 
 # ## Set min date
 # Set `min=` to specify a minimum date.
-def month_min(view: View):
+def month_min(view: View):  # height 4
     month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01'))
     view(f'You picked {month}.')
 
 
 # ## Set max date
 # Set `max=` to specify a maximum date.
-def month_max(view: View):
+def month_max(view: View):  # height 4
     month = view(box('Pick a month', mode='month', value='2021-10-10', max='2022-12-31'))
     view(f'You picked {month}.')
 
 
 # ## Combine min and max dates
 # Set both `min=` and `max=` to restrict selection between two dates.
-def month_min_max(view: View):
+def month_min_max(view: View):  # height 4
     month = view(box('Pick a month', mode='month', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {month}.')
 
@@ -59,6 +59,6 @@ def month_min_max(view: View):
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.
-def month_range(view: View):
+def month_range(view: View):  # height 4
     month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {month}.')

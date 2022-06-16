@@ -52,7 +52,7 @@ def theme_basic_noop(view: View):
 # Use `view.set(theme=)` to change the theme dynamically.
 #
 # This is useful when you want to allow the app's end-users to switch app's theme.
-def theme_switching(view: View):
+def theme_switching(view: View):  # height 2
     make_red = False
     while True:
         make_red, done = view(
@@ -82,7 +82,7 @@ def theme_switching(view: View):
 # ## Dark mode
 # A simple way to allow switching between dark and light modes is to exchange the `background_color` and
 # `foreground_color` in the theme, provided the `accent_color` works with both dark and light backgrounds.
-def theme_dark_mode(view: View):
+def theme_dark_mode(view: View):  # height 2
     dark_mode = False
     while True:
         dark_mode, done = view(
@@ -189,7 +189,7 @@ def theme_colors(view: View):
 
 # ## Some sample themes
 # This example provides some sample themes that you can use in your own app.
-def theme_samples(view: View):
+def theme_samples(view: View):  # height 11
     themes = [
         Theme(
             background_color='#fff',
