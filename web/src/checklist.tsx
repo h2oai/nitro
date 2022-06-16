@@ -21,7 +21,7 @@ import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
 const Container = styled.div`
-  margin: 0.5rem 0;
+  margin: 1rem 0;
 `
 export const Checklist = make(({ box }: BoxProps) => {
   const
