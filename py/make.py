@@ -93,6 +93,7 @@ Block = Union[Code, Comment]
 class Example:
     def __init__(self, title: str, name: str, blocks: List[Block], opts: dict):
         self.title = title
+        self.qualified_title = title
         self.name = name
         self.blocks = blocks
         self.opts = opts
@@ -161,11 +162,13 @@ def parse_example(src: str) -> Example:
 
 def index_examples(groups: List[Group]):
     examples = []
-    for group in groups:
-        examples.extend(group.examples)
+    for g in groups:
+        for e in g.examples:
+            e.qualified_title = f'{g.title} - {e.title}'
+        examples.extend(g.examples)
 
     k = len(examples)
-    for i in range(k):
+    for i in range(k - 1):
         e = examples[i]
         p, n = i - 1, i + 1
         if p >= 0:
@@ -198,7 +201,7 @@ def build_funcs(groups: List[Group]) -> str:
             p()
             p(f'{doc_var} = (')
             p('"""')
-            p(f'## {g.title} - {e.title}')
+            p(f'## {e.qualified_title}')
             for block in e.blocks:
                 if isinstance(block, Comment):
                     for line in block.lines:
@@ -212,12 +215,12 @@ def build_funcs(groups: List[Group]) -> str:
 
             if not e.name.endswith('_noop'):
                 p("    '### Preview',")
-                p(f"    box(mode='web', path='/#!docs.{e.name}?mode=chromeless', height='{e.opts.get('height', 600)}px', border='$neutral-secondary transparent transparent'),")
+                p(f"    box(mode='web', path='/#!docs.{e.name}?mode=chromeless', height='{int(e.opts.get('height', '6')) * 100}px', border='$neutral-secondary transparent transparent'),")
                 p(f"    row(")
                 if e.prev:
-                    p(f"        box('[🡠 {e.prev.title}](#!docs.show_doc_{e.prev.name})'),")
+                    p(f"        box('[🡠 {e.prev.qualified_title}](#!docs.show_doc_{e.prev.name})'),")
                 if e.next:
-                    p(f"        box('[{e.next.title} 🡢](#!docs.show_doc_{e.next.name})', align='right'),")
+                    p(f"        box('[{e.next.qualified_title} 🡢](#!docs.show_doc_{e.next.name})', align='right'),")
                 p(f"        border='$neutral-secondary transparent transparent',")
                 p(f"        margin='2em 0',")
                 p(f"        padding='1em 0',")
