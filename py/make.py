@@ -18,7 +18,6 @@
 #
 # Warning: Super-fragile, but gets the job done. Tread carefully.
 #
-
 from typing import Union, List, Optional
 import re
 from shlex import shlex
@@ -168,7 +167,7 @@ def index_examples(groups: List[Group]):
         examples.extend(g.examples)
 
     k = len(examples)
-    for i in range(k - 1):
+    for i in range(k):
         e = examples[i]
         p, n = i - 1, i + 1
         if p >= 0:
@@ -216,15 +215,16 @@ def build_funcs(groups: List[Group]) -> str:
             if not e.name.endswith('_noop'):
                 p("    '### Preview',")
                 p(f"    box(mode='web', path='/#!docs.{e.name}?mode=chromeless', height='{int(e.opts.get('height', '6')) * 100}px', border='$neutral-secondary transparent transparent'),")
-                p(f"    row(")
-                if e.prev:
-                    p(f"        box('[🡠 {e.prev.qualified_title}](#!docs.show_doc_{e.prev.name})'),")
-                if e.next:
-                    p(f"        box('[{e.next.qualified_title} 🡢](#!docs.show_doc_{e.next.name})', align='right'),")
-                p(f"        border='$neutral-secondary transparent transparent',")
-                p(f"        margin='2em 0',")
-                p(f"        padding='1em 0',")
-                p(f"    ),")
+
+            p(f"    row(")
+            if e.prev:
+                p(f"        box('[🡠 {e.prev.qualified_title}](#!docs.show_doc_{e.prev.name})'),")
+            if e.next:
+                p(f"        box('[{e.next.qualified_title} 🡢](#!docs.show_doc_{e.next.name})', align='right'),")
+            p(f"        border='$neutral-secondary transparent transparent',")
+            p(f"        margin='2em 0',")
+            p(f"        padding='1em 0',")
+            p(f"    ),")
 
             p(')')
             p()
