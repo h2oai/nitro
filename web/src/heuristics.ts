@@ -178,8 +178,13 @@ export const sanitizeBox = (box: Box): Box => {
         break
       case 'separator':
       case 'image':
+        box.index = -1 // don't capture
+        break
       case 'web':
         box.index = -1 // don't capture
+        // Set a height if missing, otherwise iframe won't flow.
+        // iframe widths are already set to 100% in webview.
+        if (!box.height) box.height = '400px'
         break
     }
 
