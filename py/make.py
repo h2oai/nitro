@@ -21,6 +21,7 @@
 
 from typing import Union, List, Optional
 import re
+from shlex import shlex
 from pathlib import Path
 
 
@@ -90,10 +91,11 @@ Block = Union[Code, Comment]
 
 
 class Example:
-    def __init__(self, title: str, name: str, blocks: List[Block]):
+    def __init__(self, title: str, name: str, blocks: List[Block], opts: dict):
         self.title = title
         self.name = name
         self.blocks = blocks
+        self.opts = opts
         self.prev: Optional[Example] = None
         self.next: Optional[Example] = None
 
@@ -104,6 +106,15 @@ class Group:
         self.title = title
         self.description = description
         self.examples = examples
+
+
+def pairwise(xs: list):
+    for i in range(0, len(xs), 2):
+        yield xs[i], xs[i + 1]
+
+
+def to_args(args: List[str]) -> dict:
+    return {k: v for k, v in pairwise(args)}
 
 
 def parse_example(src: str) -> Example:
@@ -133,15 +144,19 @@ def parse_example(src: str) -> Example:
     save()
 
     name = None
+    opts = None
     for block in blocks:
         if isinstance(block, Code):
-            name = re.match(r'^def\s+(\w+)', block.lines[0]).group(1)
+            line0 = block.lines[0]
+            name = re.match(r'^def\s+(\w+)', line0).group(1)
+            m = re.search(r'#(.+)$', line0)
+            opts = to_args(list(shlex(m.group(1), posix=True))) if m else {}
             break
 
     if name is None:
         raise ValueError('could not determine example name')
 
-    return Example(title, name, blocks)
+    return Example(title, name, blocks, opts)
 
 
 def index_examples(groups: List[Group]):
@@ -196,8 +211,8 @@ def build_funcs(groups: List[Group]) -> str:
             p('""",')
 
             if not e.name.endswith('_noop'):
-                p("    '### Output',")
-                p(f"    box(mode='web', path='/#!docs.{e.name}?mode=chromeless', height='600px'),")
+                p("    '### Preview',")
+                p(f"    box(mode='web', path='/#!docs.{e.name}?mode=chromeless', height='{e.opts.get('height', 600)}px', border='$neutral-secondary transparent transparent'),")
                 p(f"    row(")
                 if e.prev:
                     p(f"        box('[🡠 {e.prev.title}](#!docs.show_doc_{e.prev.name})'),")
