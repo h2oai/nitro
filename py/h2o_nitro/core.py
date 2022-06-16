@@ -284,6 +284,7 @@ class Box:
             items: Optional[Items] = None,
             data: Optional[dict] = None,
             row: Optional[bool] = None,
+            halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             tile: Optional[str] = None,
@@ -343,6 +344,7 @@ class Box:
         self.items = items
         self.data = data
         self.row = row
+        self.halt = halt
         self.title = title
         self.popup = popup
         self.tile = tile
@@ -393,6 +395,7 @@ class Box:
             items=_dump(self.items),
             data=_dump(self.data),
             row=self.row,
+            halt=self.halt,
             title=self.title,
             popup=self.popup,
             tile=self.tile,
@@ -780,6 +783,7 @@ class View(_View):
             after: Optional[Selector] = None,
             before: Optional[Selector] = None,
             row: Optional[bool] = None,
+            halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             tile: Optional[str] = None,
@@ -804,6 +808,7 @@ class View(_View):
         b = Box(
             items=items,
             row=row,
+            halt=halt,
             title=title,
             popup=popup,
             tile=tile,
@@ -931,6 +936,7 @@ class AsyncView(_View):
             after: Optional[Selector] = None,
             before: Optional[Selector] = None,
             row: Optional[bool] = None,
+            halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             tile: Optional[str] = None,
@@ -955,6 +961,7 @@ class AsyncView(_View):
         b = Box(
             items=items,
             row=row,
+            halt=halt,
             title=title,
             popup=popup,
             tile=tile,
