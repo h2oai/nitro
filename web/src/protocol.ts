@@ -117,6 +117,7 @@ export type Box = {
   items?: Box[]
   data?: any
   row?: B
+  halt?: B
   title?: S
   popup?: B
   tile?: S

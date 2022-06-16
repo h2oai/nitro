@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import { ContextualMenu, Dialog, DialogType, IModalProps } from '@fluentui/react';
-import React from 'react';
+import { Client } from './client';
 import { B, isB, signal, xid } from './core';
 import { Box } from './protocol';
-import { ClientContext, make, noopContext } from './ui';
+import { make, noopContext } from './ui';
 import { Zone } from './zone';
 
 const
@@ -29,6 +29,7 @@ const
   },
   hasActions = (boxes: Box[]): B => { // recursive
     for (const box of boxes) {
+      if (box.halt) return true
       if (box.items) {
         if (hasActions(box.items)) return true
       } else {
@@ -52,11 +53,11 @@ const
   },
   makeContinuable = (boxes: Box[]): Box[] => hasActions(boxes) ? boxes : [...boxes, continueButton]
 
-export const Body = (props: { context: ClientContext, boxes: Box[] }) => {
-  const boxes: Box[] = makeContinuable(props.boxes)
+export const Body = ({ client }: { client: Client }) => {
+  const boxes: Box[] = makeContinuable(client.body)
   return (
     <div className='main'>
-      <Zone context={props.context} boxes={boxes} box={{}} />
+      <Zone context={client.context} boxes={boxes} box={{}} />
     </div>
   )
 }
@@ -71,10 +72,10 @@ const modalProps: IModalProps = {
   styles: { main: { maxWidth: 450 } },
 }
 
-export const Popup = make((props: { context: ClientContext, boxes: Box[] }) => {
+export const Popup = make(({ client }: { client: Client }) => {
   const
     hiddenB = signal(false),
-    boxes: Box[] = makeContinuable(props.boxes),
+    boxes: Box[] = makeContinuable(client.popup),
     render = () => {
       const
         { title } = boxes[0], // popups have exactly one box.
@@ -90,7 +91,7 @@ export const Popup = make((props: { context: ClientContext, boxes: Box[] }) => {
           modalProps={modalProps}
           hidden={hidden}
         >
-          <Zone context={props.context} boxes={boxes} box={{}} />
+          <Zone context={client.context} boxes={boxes} box={{}} />
         </Dialog >
       )
     }

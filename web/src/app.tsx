@@ -380,7 +380,7 @@ export const App = make(({ client }: { client: Client }) => {
           )
         case AppStateT.Connected:
           const
-            { context, body, popup, busy, modeB } = client,
+            { popup, busy, modeB } = client,
             isChromeless = modeB() === 'chromeless'
 
           return (
@@ -390,8 +390,8 @@ export const App = make(({ client }: { client: Client }) => {
                 {!isChromeless && <div className='art' />}
                 <div className='page'>
                   {!isChromeless && <Header client={client} />}
-                  <Body context={context} boxes={body} />
-                  {popup.length ? <Popup context={context} boxes={popup} /> : <></>}
+                  <Body client={client} />
+                  {popup.length ? <Popup client={client} /> : <></>}
                 </div>
               </div>
             </>
