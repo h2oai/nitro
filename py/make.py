@@ -19,7 +19,7 @@
 # Warning: Super-fragile, but gets the job done. Tread carefully.
 #
 
-from typing import Union, List
+from typing import Union, List, Optional
 import re
 from pathlib import Path
 
@@ -94,6 +94,8 @@ class Example:
         self.title = title
         self.name = name
         self.blocks = blocks
+        self.prev: Optional[Example] = None
+        self.next: Optional[Example] = None
 
 
 class Group:
@@ -142,6 +144,21 @@ def parse_example(src: str) -> Example:
     return Example(title, name, blocks)
 
 
+def index_examples(groups: List[Group]):
+    examples = []
+    for group in groups:
+        examples.extend(group.examples)
+
+    k = len(examples)
+    for i in range(k):
+        e = examples[i]
+        p, n = i - 1, i + 1
+        if p >= 0:
+            e.prev = examples[p]
+        if n < k:
+            e.next = examples[n]
+
+
 def parse_groups(src: str) -> List[Group]:
     groups = []
     parts = src.split('# # ')[1:]
@@ -151,6 +168,10 @@ def parse_groups(src: str) -> List[Group]:
         title = header[0]
         description = '\n'.join(header[1:])
         groups.append(Group(title, description, [parse_example(x) for x in subparts[1:]]))
+
+    # Mark prev/next on each example
+    index_examples(groups)
+
     return groups
 
 
@@ -176,14 +197,22 @@ def build_funcs(groups: List[Group]) -> str:
 
             if not e.name.endswith('_noop'):
                 p("    '### Output',")
-                p()
                 p(f"    box(mode='web', path='/#!docs.{e.name}?mode=chromeless', height='600px'),")
+                p(f"    row(")
+                if e.prev:
+                    p(f"        box('[🡠 {e.prev.title}](#!docs.show_doc_{e.prev.name})'),")
+                if e.next:
+                    p(f"        box('[{e.next.title} 🡢](#!docs.show_doc_{e.next.name})', align='right'),")
+                p(f"        border='$neutral-secondary transparent transparent',")
+                p(f"        margin='2em 0',")
+                p(f"        padding='1em 0',")
+                p(f"    ),")
 
             p(')')
             p()
             p()
             p(f'def {doc_func_of(e.name)}(view: View):')
-            p(f'    view(*{doc_var})')
+            p(f'    view(*{doc_var}, halt=True)')
             p()
             for block in e.blocks:
                 if isinstance(block, Code):
