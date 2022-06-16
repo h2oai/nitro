@@ -35,7 +35,7 @@ def styling_background(view: View):
 
 # ## Set text color
 # Set `color=` to change the text color.
-def styling_color(view: View):
+def styling_color(view: View):  # height 4
     text = lorem(3)
     view(
         box(text, color='#e63946'),
@@ -48,7 +48,7 @@ def styling_color(view: View):
 # Set `border=` to add a border.
 #
 # A padding is automatically applied if not specified.
-def styling_border(view: View):
+def styling_border(view: View):  # height 4
     text = lorem(3)
     view(
         box(text, border='#e63946'),
@@ -69,7 +69,7 @@ def styling_border(view: View):
 #
 # For example `red transparent red transparent` shows a red border on the top and bottom,
 # and no border on the sides.
-def styling_each_border(view: View):
+def styling_each_border(view: View):  # height 5
     text = lorem(3)
     view(
         box(text, border='red'),
@@ -81,7 +81,7 @@ def styling_each_border(view: View):
 
 # ## Set text alignment
 # Set `align=` to `left`, `right`, `center` or `justify` to align text.
-def styling_align(view: View):
+def styling_align(view: View):  # height 4
     text = lorem(3)
     view(
         row(
@@ -119,7 +119,7 @@ def styling_align(view: View):
 #     - `em`: The font size of the element.
 #     - `rem`: The font size of the page.
 
-def styling_size(view: View):
+def styling_size(view: View):  # height 7
     text = lorem(1)
     view(
         box(text, width=200, background='#eee'),  # interpreted as '200px'
@@ -140,7 +140,7 @@ def styling_size(view: View):
 # - `'x'` is shorthand for `'x x x x'`.
 # - `'x y'` is shorthand for `'x y x y'`.
 # - `'x y z'` is shorthand for `'x y z y'`.
-def styling_margin(view: View):
+def styling_margin(view: View):  # height 7
     text = lorem(2)
     boxes = [
         # Uniform 20px margin

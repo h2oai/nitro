@@ -22,7 +22,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # checklists, dropdowns, color pickers, and so on.
 #
 # Set `options=` to create a picker.
-def picker_basic(view: View):
+def picker_basic(view: View):  # height 3
     choice = view(box('Choose a color', options=[
         'green', 'yellow', 'orange', 'red'
     ]))
@@ -43,7 +43,7 @@ def picker_basic(view: View):
 # Buttons are shown for up to 3 options.
 #
 # Set `mode='button'` to display buttons regardless of the number of options.
-def picker_buttons(view: View):
+def picker_buttons(view: View):  # height 1
     choice = view(box('Choose a color', options=[
         'yellow', 'orange', 'red'
     ]))
@@ -54,7 +54,7 @@ def picker_buttons(view: View):
 # Radio buttons is shown for 4-7 options.
 #
 # Set `mode='radio'` to display radio buttons regardless of the number of options.
-def picker_radio(view: View):
+def picker_radio(view: View):  # height 3
     choice = view(box('Choose a color', options=[
         'green', 'yellow', 'orange', 'red'
     ]))
@@ -65,7 +65,7 @@ def picker_radio(view: View):
 # A dropdown menu is shown for more than 7 options.
 #
 # Set `mode='menu'` to display a dropdown menu regardless of the number of options.
-def picker_dropdown(view: View):
+def picker_dropdown(view: View):  # height 2
     choice = view(box('Choose a color', options=[
         'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
     ]))
@@ -78,7 +78,7 @@ def picker_dropdown(view: View):
 # By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
 #
 # Set `mode='menu'` to display a dropdown menu regardless of the number of options.
-def picker_multiple_dropdown(view: View):
+def picker_multiple_dropdown(view: View):  # height 2
     choices = view(box('Choose some colors', multiple=True, options=[
         'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
     ]))
@@ -89,7 +89,7 @@ def picker_multiple_dropdown(view: View):
 # A checklist is shown for up to 7 options when `multiple=True`.
 #
 # Set `mode='check'` to display a checklist regardless of the number of options.
-def picker_checklist(view: View):
+def picker_checklist(view: View):  # height 3
     choices = view(box('Choose some colors', mode='check', multiple=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
@@ -98,7 +98,7 @@ def picker_checklist(view: View):
 
 # ## Mark as required
 # Set `required=True` to indicate that input is required.
-def picker_dropdown_required(view: View):
+def picker_dropdown_required(view: View):  # height 2
     choice = view(box('Choose a color', mode='menu', required=True, options=[
         'yellow', 'orange', 'red', 'black'
     ]))
@@ -107,7 +107,7 @@ def picker_dropdown_required(view: View):
 
 # ## Show an error message
 # Set `error=` to show an error message below the box.
-def picker_dropdown_error(view: View):
+def picker_dropdown_error(view: View):  # height 2
     choice = view(box('Choose a color', mode='menu', error='Invalid input', options=[
         'yellow', 'orange', 'red', 'black'
     ]))

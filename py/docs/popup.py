@@ -19,14 +19,14 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # Call `view()` with `popup=True` to show the view on a popup window.
-def popup_basic(view: View):
+def popup_basic(view: View):  # height 3
     view(box(['Show a popup']))
     view('Wait! Call us now for free donuts!', popup=True)
 
 
 # ## Set popup title
 # Set `title=` to set a title for the popup window.
-def popup_title(view: View):
+def popup_title(view: View):  # height 3
     view(box(['Show a popup']))
     view('Call us now for free donuts!', title='Wait!', popup=True)
 
@@ -34,7 +34,7 @@ def popup_title(view: View):
 # ## Customize buttons
 # If the popup's body contains a set of buttons, they're used as the popup's dismiss buttons. Common uses for such
 # buttons are to accept, cancel or close a popup.
-def popup_buttons(view: View):
+def popup_buttons(view: View):  # height 3
     view(box(['Show a popup']))
     response = view(
         box('Call us now for free donuts!'),

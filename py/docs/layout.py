@@ -18,8 +18,8 @@ from h2o_nitro import View, box, row, col, option, lorem
 # # Layout
 
 # ## Basics
-# By default each item passed to `view()` are laid out one below the other, with a 10px gap.
-def layout_basic(view: View):
+# By default each item passed to `view()` are laid out one below the other, with a `10px` gap.
+def layout_basic(view: View):  # height 3
     view(
         box(value='Top'),
         box(value='Middle'),
@@ -31,7 +31,7 @@ def layout_basic(view: View):
 # Use `row()` to lay out multiple items horizontally, left to right.
 #
 # By default, items take up equal amounts of space, with a `10px` gap between the items.
-def layout_row(view: View):
+def layout_row(view: View):  # height 2
     view(row(
         box(value='Left'),
         box(value='Center'),
@@ -53,7 +53,7 @@ def layout_row_alt(view: View):
 # Use `col()` to lay out multiple items vertically, top to bottom.
 #
 # The example shows one row split into three columns containing three rows each.
-def layout_col(view: View):
+def layout_col(view: View):  # height 3
     view(
         row(
             col(
@@ -78,7 +78,7 @@ def layout_col(view: View):
 # ## Control scrolling
 # Set `height=` or `width=` on a `row()` or `col()` to constrain size.
 # Scrollbars automatically show up if their contents don't fit.
-def layout_nest(view: View):
+def layout_nest(view: View):  # height 13
     list1 = [box(lorem()) for _ in range(50)]
     list2 = [box(lorem()) for _ in range(50)]
     view(
@@ -104,7 +104,7 @@ def layout_nest(view: View):
 # - The main axis for a column is vertical, starting at the top, and ending at the bottom
 #
 # `tile=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, `stretch`, or `normal`.
-def layout_tile(view: View):
+def layout_tile(view: View):  # height 7
     boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
     row_style = dict(background='#eee')
     view(
@@ -142,9 +142,9 @@ def layout_tile(view: View):
 # - The cross axis for a column is horizontal, starting at the left, and ending at the right.
 #
 # `cross_tile=` can be set to `start`, `center`, `end`, `stretch`, or `normal`.
-def layout_cross_tile(view: View):
+def layout_cross_tile(view: View):  # height 9
     boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
-    col_style = dict(height=200, background='#eee')
+    col_style = dict(height=150, background='#eee')
     view(
         # Pack items from the start.
         col(row(*boxes, cross_tile='start'), **col_style),
@@ -165,7 +165,7 @@ def layout_cross_tile(view: View):
 
 # ## Control spacing
 # Set `gap=` to control the spacing between items. The default gap is `10` or `'10px'`.
-def layout_gap(view: View):
+def layout_gap(view: View):  # height 3
     view(
         box(value='Top'),
         box(value='Middle'),
@@ -178,7 +178,7 @@ def layout_gap(view: View):
 # Set `wrap=` to control how items are wrapped inside a view, row, or column.
 #
 # `wrap=` can be set to `start`, `center`, `end`, `between`, `around`, `evenly`, `stretch`, or `normal`.
-def layout_wrap(view: View):
+def layout_wrap(view: View):  # height 23
     boxes = [box(text=f'{i + 1}', background='#666', width=150, height=50) for i in range(9)]
     row_style = dict(height=300, background='#eee')
     view(
@@ -221,7 +221,7 @@ def layout_wrap(view: View):
 # - `basis=0` means "distribute available space assuming that the initial size is zero".
 # - `basis='20px'` means "distribute available space assuming that the initial size is 20px".
 # - The default behavior (if `basis=` is not set) is to assume that the initial size is the size of the item's content.
-def layout_grow_shrink(view: View):
+def layout_grow_shrink(view: View):  # height 7
     box_style = dict(background='#666')
     row_style = dict(background='#eee')
     view(
@@ -278,7 +278,7 @@ def layout_grow_shrink(view: View):
 # Use `tile='center'` to center content vertically inside a box.
 #
 # The following example centers content both horizontally and vertically.
-def layout_vertical_alignment(view: View):
+def layout_vertical_alignment(view: View):  # height 5
     view(
         box(
             '# Donuts',

@@ -19,7 +19,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # To create a form, simply lay out all the inputs you need inside a view, then destructure the return value in order.
-def form_basic(view: View):
+def form_basic(view: View):  # height 3
     username, password, action = view(
         box('Username', value='someone@company.com'),
         box('Password', value='pa55w0rd', password=True),
@@ -31,7 +31,7 @@ def form_basic(view: View):
 # ## Horizontal
 # Wrap items with `row()` to lay them out left to right.
 # There is no change to the way the return values are destructured.
-def form_horizontal(view: View):
+def form_horizontal(view: View):  # height 2
     username, password, action = view(
         row(
             box('Username', value='someone@company.com'),
@@ -44,7 +44,7 @@ def form_horizontal(view: View):
 
 # ## Combined
 # Use `row()` and `col()` to mix and match how items are laid out. Destructure the return values in the same order.
-def form_combo(view: View):
+def form_combo(view: View):  # height 4
     first, last, addr1, addr2, city, state, zip, action = view(
         row(box('First name', value=''), box('Last name', value='')),
         box('Address line 1', value=''),
@@ -67,7 +67,7 @@ def form_combo(view: View):
 # ## Improved
 # Specify additional layout parameters like `width=`, `grow=`, etc. to get more control over
 # how items are laid out.
-def form_improved(view: View):
+def form_improved(view: View):  # height 5
     first, middle, last, addr1, addr2, city, state, zip, action = view(
         row(box('First name', value=''), box('M.I.', value='', width='10%'), box('Last name', value='')),
         box('Address line 1', value=''),

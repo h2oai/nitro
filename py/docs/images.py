@@ -30,7 +30,7 @@ def image_basic(view: View):
 #
 # - If only `width=` or only `height=` are set, the image is scaled proportionally.
 # - If both `width=`and`height=`are set, the image is stretched to fit, and might appear distorted.
-def image_resize(view: View):
+def image_resize(view: View):  # height 9
     view(
         box(image='sample.jpg', width=300),
         box(image='sample.jpg', height=200),
@@ -46,7 +46,7 @@ def image_resize(view: View):
 # - `fit='fill'` stretches the image to fit.
 # - `fit='none'` clips the image without resizing.
 # - `fit='scale-down'` behaves like either `contain` or `none`, whichever results in a smaller image.
-def image_fit(view: View):
+def image_fit(view: View):  # height 4
     style = dict(width=100, height=200)
     view(
         row(
@@ -63,7 +63,7 @@ def image_fit(view: View):
 # If a box contains content, its image is used as a background.
 #
 # Set `fit=` to control how the background should be resized to fit the box.
-def image_background(view: View):
+def image_background(view: View):  # height 4
     style = dict(width=100, height=200, color='white')
     view(
         row(
@@ -82,7 +82,7 @@ def image_background(view: View):
 # with a [base64-encoded](https://en.wikipedia.org/wiki/Base64) image.
 #
 # The example below uses `fit='none'` to repeat a small PNG tile horizontally and vertically to form a pattern.
-def image_background_pattern(view: View):
+def image_background_pattern(view: View):  # height 5
     view(box(
         '# Patterns!',
         image='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEUlEQVQIHWNggIBiEGUFxJUABisBJ85jLc8AAAAASUVORK5CYII=',

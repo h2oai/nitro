@@ -65,7 +65,7 @@ def markdown_basic(view: View):
 # Local links in markdown content behave just like any other input.
 #
 # Clicking on a local link returns the name of the link.
-def markdown_links(view: View):
+def markdown_links(view: View):  # height 3
     choice = view('''
     Pick a flavor:
     - [Vanilla](#vanilla)
@@ -85,7 +85,7 @@ def markdown_links(view: View):
 # - Use `:---` to left-align text.
 # - Use `:---:` to center text.
 # - Use `---:` to right-align text.
-def markdown_table(view: View):
+def markdown_table(view: View):  # height 9
     view('''
     
     ### Basic Tables
@@ -113,7 +113,7 @@ def markdown_table(view: View):
 
 # ## Create tables from lists
 # It's often easier to construct tables from lists of things, as shown below.
-def show_table(view: View):
+def show_table(view: View):  # height 5
     view(make_table([
         ['Flavor', 'Super cheap!'],
         ['Cinnamon Sugar', '$1.99'],

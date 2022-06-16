@@ -17,9 +17,10 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # # Basics
 
+
 # ## Hello World!
 # Call `view()` to show something on a page.
-def hello_world(view: View):
+def hello_world(view: View):  # height 2
     view('Hello World!')
 
 
@@ -29,13 +30,13 @@ def hello_world(view: View):
 # ## Formatting content
 # Strings passed to `view()` are interpreted as
 # [Markdown](https://github.github.com/gfm/)
-def format_content(view: View):
+def format_content(view: View):  # height 2
     view('_Less_ `code` means _less_ **bugs**.')
 
 
 # ## Show multiline content
 # Triple-quote strings to pass multiple lines of markdown.
-def format_multiline_content(view: View):
+def format_multiline_content(view: View):  # height 3
     view('''
     The King said, very gravely:
     - Begin at the beginning,
@@ -46,7 +47,7 @@ def format_multiline_content(view: View):
 
 # ## Show multiple items
 # Pass multiple arguments to `view()` to lay them out top to bottom.
-def display_multiple(view: View):
+def display_multiple(view: View):  # height 3
     view(
         'Begin at the beginning,',
         'And go on till you come to the end,',
@@ -58,7 +59,7 @@ def display_multiple(view: View):
 # Call `view()` multiple times to show items one at a time.
 #
 # The following example steps through three different pages.
-def sequence_views(view: View):
+def sequence_views(view: View):  # height 2
     view('Begin at the beginning,')
     view('And go on till you come to the end,')
     view('Then stop.')
@@ -68,7 +69,7 @@ def sequence_views(view: View):
 # To style text, put it in a `box()`, and style the box.
 #
 # `view(text)` is in fact shorthand for `view(box(text))`.
-def style_text(view: View):
+def style_text(view: View):  # height 4
     view(
         box('Hello World!', color='red', border='red'),
         box('Hello World!', color='white', background='red'),
@@ -84,7 +85,7 @@ def style_text(view: View):
 #
 # When a view contains an input field, the `view()` function returns its input value.
 #
-def get_input(view: View):
+def get_input(view: View):  # height 2
     # Display a textbox and assign the entered value to a variable.
     name = view(box('What is your name?', value='Boaty McBoatface'))
     # Print the entered value.
@@ -98,7 +99,7 @@ def get_input(view: View):
 # Call `view()` multiple times to prompt for a sequence of inputs, one at a time.
 #
 # The following example steps through three different pages.
-def sequence_inputs(view: View):
+def sequence_inputs(view: View):  # height 2
     # Prompt for first name.
     first_name = view(box('First name', value='Boaty'))
     # Prompt for last name.
@@ -111,7 +112,7 @@ def sequence_inputs(view: View):
 # Pass multiple boxes to `view()` to prompt for inputs at once.
 #
 # When a view contains multiple boxes, the `view()` function returns multiple values, in order.
-def accept_multiple_inputs(view: View):
+def accept_multiple_inputs(view: View):  # height 3
     # Prompt for first and last names.
     first_name, last_name = view(
         box('First name', value='Boaty'),
@@ -131,7 +132,7 @@ def accept_multiple_inputs(view: View):
 #
 # Notably, if you have built web applications before, notice the absence of callbacks, event handlers,
 # web request handlers, routing, etc.
-def dunk_your_donuts(view: View):
+def dunk_your_donuts(view: View):  # height 3
     # Our menu.
     menu = dict(
         Donut=['Plain', 'Glazed', 'Chocolate'],

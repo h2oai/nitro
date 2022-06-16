@@ -19,7 +19,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # Set `mode='check'` to show a checkbox.
-def checkbox_basic(view: View):
+def checkbox_basic(view: View):  # height 2
     keep_signed_in = view(box('Keep me signed in', mode='check'))
     view(f'Keep me signed in: {keep_signed_in}.')
 
@@ -28,7 +28,6 @@ def checkbox_basic(view: View):
 # Set `value=True` to pre-select the checkbox.
 #
 # The mode setting `mode='check'` is implied, and can be elided.
-def checkbox_value(view: View):
+def checkbox_value(view: View):  # height 2
     keep_signed_in = view(box('Keep me signed in', value=True))
     view(f'Keep me signed in: {keep_signed_in}.')
-

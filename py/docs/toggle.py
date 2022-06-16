@@ -26,7 +26,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Note that unlike a checkbox, a toggle returns its value immediately, much like a button.
 # This lets you handle the changed value immediately.
 # To keep the toggle displayed until the user is done, call `view()` inside a `while` loop.
-def toggle_basic(view: View):
+def toggle_basic(view: View):  # height 4
     glazed, sprinkles, hot, done = True, False, False, False
     while not done:
         glazed, sprinkles, hot, done = view(
