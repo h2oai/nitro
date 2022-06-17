@@ -17,6 +17,29 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.10.0
+
+Jun 17, 2022
+
+- Added
+    - **Editing.** Append, insert, overwrite or remove parts of the UI. Add selector syntax.
+    - **Chromeless mode.** Append `?mode=chromeless` to URL. Removes header, menu and nav.
+    - Automatically block/unblock UI when request is being processed.
+    - New webview (iframe) component (use boxes with `mode='web'`).
+    - Launch menu and nav workflows using `#!` location hashes.
+    - Specify additional `#!` location hashes via view `routes`.
+    - Disable automatic continue button by passing `halt=True` to `view()`.
+    - Add previous/next buttons to each page in livedocs.
+    - Improve communication / message exchange robustness and error reporting.
+- Changed
+    - Default app caption to package version.
+    - Improve checklist item spacing.
+    - Display livedocs examples in webviews. Improved interactivity.
+- Fixed
+    - Don't submit values from non-interactive components.
+    - Show automatic continue button if table is set to single- or multi- select mode.
+    - Grow non-rows inside containers to fit width.
+
 ## v0.9.2
 
 Jun 09, 2022
