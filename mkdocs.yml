@@ -63,6 +63,7 @@ nav:
     - 'images.md'
     - 'layout.md'
     - 'forms.md'
+    - 'editing.md'
     - 'popups.md'
     - 'textbox.md'
     - 'spinbox.md'
@@ -90,7 +91,7 @@ nav:
     - 'file-upload.md'
     - 'separator.md'
     - 'theming.md'
-    - 'advanced-layout.md'
+    - 'advanced.md'
     # End generated
   - Advanced:
       - 'nitrogen.md'
