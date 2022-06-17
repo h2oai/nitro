@@ -678,9 +678,6 @@ class _View:
         return d
 
 
-Selector = Union[str, Iterable[str]]
-
-
 class EditType(IntEnum):
     Insert = 1
     Update = 2
@@ -695,7 +692,7 @@ class EditPositionType(IntEnum):
 
 
 class Edit:
-    def __init__(self, type: EditType, position: EditPositionType, selector: Optional[Selector] = None):
+    def __init__(self, type: EditType, position: EditPositionType, selector: Optional[str] = None):
         self.t = type
         self.p = position
         self.s = selector
@@ -778,10 +775,10 @@ class View(_View):
             read=True,
             insert=False,
             remove=False,
-            inside: Optional[Selector] = None,
-            at: Optional[Selector] = None,
-            after: Optional[Selector] = None,
-            before: Optional[Selector] = None,
+            inside: Optional[str] = None,
+            at: Optional[str] = None,
+            after: Optional[str] = None,
+            before: Optional[str] = None,
             row: Optional[bool] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
@@ -931,10 +928,10 @@ class AsyncView(_View):
             read=True,
             insert=False,
             remove=False,
-            inside: Optional[Selector] = None,
-            at: Optional[Selector] = None,
-            after: Optional[Selector] = None,
-            before: Optional[Selector] = None,
+            inside: Optional[str] = None,
+            at: Optional[str] = None,
+            after: Optional[str] = None,
+            before: Optional[str] = None,
             row: Optional[bool] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,

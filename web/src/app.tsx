@@ -102,7 +102,7 @@ const defaultEdit: SanitizedEdit = {
 const sanitizeEdit = (e?: Edit): SanitizedEdit => {
   if (!e) return defaultEdit
   const { s } = e
-  const selector = Array.isArray(s) ? s : isS(s) ? [s] : []
+  const selector = isS(s) ? s.trim().split(/\s+/) : []
   return {
     t: e.t,
     p: e.p,
