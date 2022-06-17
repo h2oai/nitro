@@ -29,7 +29,8 @@ export type Input = [S, InputValue]
 
 export type Msg = {
   t: MsgType.Error
-  e: S
+  c: U // code
+  d: S // description
 } | {
   t: MsgType.Join
   m?: S // method

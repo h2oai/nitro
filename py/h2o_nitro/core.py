@@ -59,13 +59,16 @@ class ContextSwitchError(Exception):
         self.method = method
 
 
+class ProtocolError(Exception):
+    def __init__(self, code: int, description: str):
+        super().__init__(f'{description} (code {code})')
+        self.code = code
+        self.description = description
+
+
 class InterruptError(Exception):
     def __init__(self):
         super().__init__('Interrupted')
-
-
-class ProtocolError(Exception):
-    pass
 
 
 def _marshal(d: dict):
@@ -562,21 +565,22 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
 
         if t == _MsgType.Error:
             code = msg.get('c')
-            raise RemoteError(f'code {code}')
+            description = msg.get('d')
+            raise RemoteError(f'{description} (code {code})')
 
         if t == _MsgType.Switch:
             method = msg.get('m')
             raise ContextSwitchError(method)
 
         if (expected_type > -1) and t != expected_type:
-            raise ProtocolError(f'unexpected message: want {expected_type}, got {t}')
+            raise ProtocolError(400, f'unexpected message: want {expected_type}, got {t}')
 
         if t == _MsgType.Input:
             xid = msg.get('x')
 
             if xid != expected_xid:
                 # TODO maintain skip list of used correlation IDs?
-                raise ProtocolError(f'unexpected message id: want {expected_xid}, got {xid}')
+                raise ProtocolError(400, f'unexpected message id: want {expected_xid}, got {xid}')
 
             data = msg.get('d')
 
@@ -595,8 +599,12 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
             mode = params.get('mode') if params else None
             return method, mode
 
-        raise ProtocolError(f'unknown message type {t}')
-    raise ProtocolError(f'unknown message format: want dict, got {type(msg)}')
+        raise ProtocolError(400, f'unknown message type {t}')
+    raise ProtocolError(400, f'unknown message format: want dict, got {type(msg)}')
+
+
+def _marshal_error(code: int, description: str) -> dict:
+    return _marshal(dict(t=_MsgType.Error, c=code, d=description))
 
 
 def _marshal_set(
@@ -674,7 +682,7 @@ class _View:
     def _delegate_for(self, key: str):
         d = self._delegates.get(key)
         if d is None:
-            raise ProtocolError(f'Attempt to call unknown delegate "{key}"')
+            raise ProtocolError(404, f'Delegate not found: "{key}"')
         return d
 
 
@@ -742,8 +750,10 @@ class View(_View):
         while True:
             try:
                 (self._delegate_for(method) if method else self._delegate)(self)
-            except ContextSwitchError as e:
-                method = e.method
+            except ContextSwitchError as cse:
+                method = cse.method
+            except ProtocolError as pe:
+                self._send(_marshal_error(pe.code, pe.description))
             except InterruptError:
                 return
 
@@ -895,8 +905,10 @@ class AsyncView(_View):
         while True:
             try:
                 await (self._delegate_for(method) if method else self._delegate)(self)
-            except ContextSwitchError as e:
-                method = e.method
+            except ContextSwitchError as cse:
+                method = cse.method
+            except ProtocolError as pe:
+                await self._send(_marshal_error(pe.code, pe.description))
             except InterruptError:
                 return
 

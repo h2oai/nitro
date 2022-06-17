@@ -202,7 +202,7 @@ export const App = make(({ client }: { client: Client }) => {
             const msg = e.message
             switch (msg.t) {
               case MsgType.Error:
-                const { e: error } = msg
+                const { d: error } = msg
                 stateB({ t: AppStateT.Invalid, error })
                 break
               case MsgType.Output:
