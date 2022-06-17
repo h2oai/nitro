@@ -84,7 +84,6 @@ def layout_nest(view: View):  # height 13
     view(
         "### Scroll together",
         row(
-            '',
             col(*list1),
             col(*list2),
             height='500px',

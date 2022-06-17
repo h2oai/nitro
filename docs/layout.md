@@ -96,7 +96,6 @@ list2 = [box(lorem()) for _ in range(50)]
 view(
     "### Scroll together",
     row(
-        '',
         col(*list1),
         col(*list2),
         height='500px',

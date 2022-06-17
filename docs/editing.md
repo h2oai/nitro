@@ -2,20 +2,45 @@
 
 
 
-## Update
+## Overview
+
+By default, `view()` overwrites all boxes displayed by the previous `view()`,
+but you can also make `view()` selectively  append, update, insert or remove boxes.
+
+The following example uses `insert=` or `remove=` with `before=`, `at=` or `after=`
+to edit the view.
+
 
 ```py
+# Display some boxes:
 view(
     box('Blue 1', background='$blue', color='white'),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue 2', background='$blue', color='white', name='blue2'),
     box('Blue 3', background='$blue', color='white'),
 )
+
+# Append a box:
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
+    box('Appended', background='$lava', color='white'),
     insert=True,
 )
+
+# Insert a box before `blue2`:
+view(
+    box('Inserted', background='$lava', color='white'),
+    insert=True, before='blue2',
+)
+
+# Overwrite two boxes with three boxes after `blue2`:
+view(
+    box('Overwritten 1', background='$lava', color='white'),
+    box('Overwritten 2', background='$lava', color='white'),
+    box('Overwritten 3', background='$lava', color='white'),
+    after='blue2',
+)
+
+# Remove everything before `blue2`:
+view(remove=True, before='blue2')
 ```
 
 
@@ -275,6 +300,7 @@ view(
             box('Sky 2', background='$sky', color='black'),
             box('Sky 3', background='$sky', color='black'),
         ),
+        name='row1',
     ),
 )
 
