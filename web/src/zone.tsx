@@ -81,6 +81,7 @@ const computeStyle = (box: Partial<Box>) => {
       css.width = width
     }
   }
+
   if (height !== undefined) {
     if (Array.isArray(height)) {
       switch (height.length) {
@@ -169,7 +170,7 @@ const computeStyle = (box: Partial<Box>) => {
   if (grow !== undefined) css.flexGrow = grow
   if (shrink !== undefined) css.flexShrink = shrink
 
-  if (isRow && width === undefined && height === undefined && grow === undefined && shrink === undefined) {
+  if (!isRow && width === undefined && height === undefined && grow === undefined && shrink === undefined) {
     css.flexGrow = '1'
     if (basis === undefined) {
       // Default flex-basis to 0 to get more predictable grow/shrink behavior
