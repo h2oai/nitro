@@ -132,7 +132,7 @@ def accept_multiple_inputs(view: View):  # height 3
 #
 # Notably, if you have built web applications before, notice the absence of callbacks, event handlers,
 # web request handlers, routing, etc.
-def dunk_your_donuts(view: View):  # height 3
+def dunk_your_donuts(view: View):  # height 5
     # Our menu.
     menu = dict(
         Donut=['Plain', 'Glazed', 'Chocolate'],
@@ -140,11 +140,14 @@ def dunk_your_donuts(view: View):  # height 3
     )
 
     # Prompt for items.
-    items = view(box(
-        'What would you like to order today?',
-        options=list(menu.keys()),  # Menu item names.
-        multiple=True,  # Allow multiple selections.
-    ))
+    items = view(
+        '### What would you like to order today?',
+        box(
+            'Donuts, coffee, or both?',
+            options=list(menu.keys()),  # Menu item names.
+            multiple=True,  # Allow multiple selections.
+        ),
+    )
 
     if len(items) == 0:  # Nothing selected.
         view(f'Nothing to order? Goodbye!')
@@ -155,12 +158,15 @@ def dunk_your_donuts(view: View):  # height 3
 
     # Prompt for counts and flavors.
     for item in items:
-        count = view(box(f'How many orders of {item} would you like?', value=3))
+        count = view(
+            f'### How many orders of {item} would you like?',
+            box(f'{item} count', value=3),
+        )
         for i in range(count):
-            flavor = view(box(
-                f'Pick a flavor for {item} #{i + 1}',
-                options=menu[item],
-            ))
+            flavor = view(
+                f'### Pick a flavor for {item} #{i + 1}',
+                box(mode='radio', options=menu[item]),
+            )
             summary.append(f'1. {flavor} {item}')
 
     summary.append('\nThank you for your order!')
