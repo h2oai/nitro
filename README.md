@@ -46,6 +46,16 @@ And here's a more elaborate example with seven pages in [seven Python statements
   - Write your app in Python, R, Julia, or Go.
   - Access it from six different platforms: web, iOS, Android, Linux, macOS, and Windows.
 
+## Who is it for?
+
+Nitro is for you if:
+
+- You know Python.
+- You want to ship a browser-based application, but don't know or care about Javascript.
+- You want it to look beautiful, with a simple and friendly user experience.
+- You don't care about customizing the visual design too much.
+- **You want to write the least amount of code necessary, and ship fast!**
+
 ## Get started
 
 Go to https://nitro.h2o.ai/install/
