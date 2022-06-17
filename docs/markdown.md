@@ -124,7 +124,7 @@ It's often easier to construct tables from lists of things, as shown below.
 
 
 ```py
-def show_table(view: View):
+def show_table(view: View):  # height 5
     view(make_table([
         ['Flavor', 'Super cheap!'],
         ['Cinnamon Sugar', '$1.99'],

@@ -4,7 +4,7 @@
 
 ## Basics
 
-By default each item passed to `view()` are laid out one below the other, with a 10px gap.
+By default each item passed to `view()` are laid out one below the other, with a `10px` gap.
 
 
 ```py
@@ -170,7 +170,7 @@ Set `cross_tile=` to control how items inside a view, row, or column are tiled a
 
 ```py
 boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
-col_style = dict(height=200, background='#eee')
+col_style = dict(height=150, background='#eee')
 view(
     # Pack items from the start.
     col(row(*boxes, cross_tile='start'), **col_style),

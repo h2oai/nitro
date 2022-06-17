@@ -1,4 +1,4 @@
-# Advanced Layout
+# Advanced
 
 
 
@@ -23,7 +23,7 @@ Inspired by the [Bootstrap Album](https://getbootstrap.com/docs/4.0/examples/alb
 
 
 ```py
-def layout_album(view: View):
+def layout_album(view: View):  # height 11
     cards = [make_album_card(lorem(1), i) for i in range(9)]
 
     view(

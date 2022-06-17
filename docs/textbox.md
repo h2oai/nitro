@@ -195,8 +195,8 @@ view(f'**Bio:** {bio}')
 ```
 
 
-Note that `lines=` only controls the initial height of the textbox, and
-multi-line textboxes can be resized by the user.
+Note that multi-line textboxes can be resized by the user,
+and `lines=` only sets the initial height of the textbox.
 
 
 ![Screenshot](assets/screenshots/textarea.png)
