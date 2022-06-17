@@ -57,8 +57,8 @@ def quote_newlines(line: str) -> str:
     return line.replace('\\n', '\\\\n')
 
 
-def doc_func_of(name: str) -> str:
-    return f'show_doc_{name}'
+def doc_of(name: str) -> str:
+    return f'help_{name}'
 
 
 def remove_def_if_only_def(lines: List[str]) -> List[str]:
@@ -214,13 +214,13 @@ def build_funcs(groups: List[Group]) -> str:
 
             if not e.name.endswith('_noop'):
                 p("    '### Preview',")
-                p(f"    box(mode='web', path='/#!docs.{e.name}?mode=chromeless', height='{int(e.opts.get('height', '6')) * 100}px', border='$neutral-secondary transparent transparent'),")
+                p(f"    box(mode='web', name='output', path='/#!docs.{e.name}?mode=chromeless', height='{int(e.opts.get('height', '6')) * 100}px', border='$neutral-secondary transparent transparent'),")
 
             p(f"    row(")
             if e.prev:
-                p(f"        box('[🡠 {e.prev.qualified_title}](#!docs.show_doc_{e.prev.name})'),")
+                p(f"        box('[🡠 {e.prev.qualified_title}](#!docs.{doc_of(e.prev.name)})'),")
             if e.next:
-                p(f"        box('[{e.next.qualified_title} 🡢](#!docs.show_doc_{e.next.name})', align='right'),")
+                p(f"        box('[{e.next.qualified_title} 🡢](#!docs.{doc_of(e.next.name)})', align='right'),")
             p(f"        border='$neutral-secondary transparent transparent',")
             p(f"        margin='2em 0',")
             p(f"        padding='1em 0',")
@@ -229,7 +229,7 @@ def build_funcs(groups: List[Group]) -> str:
             p(')')
             p()
             p()
-            p(f'def {doc_func_of(e.name)}(view: View):')
+            p(f'def {doc_of(e.name)}(view: View):')
             p(f'    view(*{doc_var}, halt=True)')
             p()
             for block in e.blocks:
@@ -245,7 +245,7 @@ def build_topic_map(groups: List[Group]) -> str:
     p = Printer().indent()
     for g in groups:
         for e in g.examples:
-            f = doc_func_of(e.name)
+            f = doc_of(e.name)
             p(f'{f}={f},')
 
     return str(p)
@@ -258,7 +258,7 @@ def build_toc(groups: List[Group]) -> str:
         p(f'### {g.title}')
         p()
         for e in g.examples:
-            p(f'- [{e.title}](#!docs.{doc_func_of(e.name)})')
+            p(f'- [{e.title}](#!docs.{doc_of(e.name)})')
     return str(p)
 
 
@@ -268,7 +268,7 @@ def build_menu(groups: List[Group]) -> str:
         p(f'option("{g.title}", "{g.title}", icon="TextDocument", options=[')
         p.indent()
         for e in g.examples:
-            p(f'option({doc_func_of(e.name)}, "{e.title}", icon="TextDocument"),')
+            p(f'option({doc_of(e.name)}, "{e.title}", icon="TextDocument"),')
         p.dedent()
         p(']),')
     return str(p)
