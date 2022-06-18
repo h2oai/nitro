@@ -96,6 +96,7 @@ nav:
   - Advanced:
       - 'nitrogen.md'
       - 'writing-plugins.md'
+      - 'protocol.md'
   - Meta:
       - 'help.md'
       - 'change-log.md'
