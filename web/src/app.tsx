@@ -191,8 +191,8 @@ export const App = make(({ client }: { client: Client }) => {
               rpc = getHashRPC()
             if (rpc) {
               const { method, params } = rpc
-              if (method) join.m = method
-              if (params) join.p = params
+              if (method) join.method = method
+              if (params) join.params = params
             }
             socket.send(join)
           }
@@ -202,13 +202,13 @@ export const App = make(({ client }: { client: Client }) => {
             const msg = e.message
             switch (msg.t) {
               case MsgType.Error:
-                const { d: error } = msg
+                const { text: error } = msg
                 stateB({ t: AppStateT.Invalid, error })
                 break
               case MsgType.Output:
                 {
-                  const { x: xid, d: data, e: rawEdit } = msg
-                  const box = sanitizeBox(data)
+                  const { xid, box: rawBox, edit: rawEdit } = msg
+                  const box = sanitizeBox(rawBox)
                   const boxes = box.items ?? []
                   const { body, popup } = client
                   const root = body[0]?.items ?? []
@@ -304,8 +304,8 @@ export const App = make(({ client }: { client: Client }) => {
               case MsgType.Set:
                 {
                   const
-                    { x: xid, d: conf } = msg,
-                    { title, caption, menu, nav, theme, plugins, mode } = conf
+                    { xid, settings } = msg,
+                    { title, caption, menu, nav, theme, plugins, mode } = settings
 
                   if (title) client.titleB(title)
                   if (caption) client.captionB(caption)

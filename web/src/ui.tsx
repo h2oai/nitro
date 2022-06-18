@@ -49,11 +49,11 @@ export const newClientContext = (xid: S, send: Send, onBusy: () => void): Client
     },
     commit = () => {
       onBusy()
-      send({ t: MsgType.Input, x: xid, d: data.filter(e => e !== undefined) })
+      send({ t: MsgType.Input, xid, inputs: data.filter(e => e !== undefined) })
     },
     change = (m: S, p?: Dict<S>) => {
       onBusy()
-      send({ t: MsgType.Switch, m, p })
+      send({ t: MsgType.Switch, method: m, params: p })
     },
     scoped = (index: any, xid: S): Context => ({
       record: (value: InputValue) => record(index, xid, value),

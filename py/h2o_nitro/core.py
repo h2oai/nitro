@@ -60,10 +60,10 @@ class ContextSwitchError(Exception):
 
 
 class ProtocolError(Exception):
-    def __init__(self, code: int, description: str):
-        super().__init__(f'{description} (code {code})')
+    def __init__(self, code: int, text: str):
+        super().__init__(f'{text} (code {code})')
         self.code = code
-        self.description = description
+        self.text = text
 
 
 class InterruptError(Exception):
@@ -564,38 +564,38 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
         t = msg.get('t')
 
         if t == _MsgType.Error:
-            code = msg.get('c')
-            description = msg.get('d')
-            raise RemoteError(f'{description} (code {code})')
+            code = msg.get('code')
+            text = msg.get('text')
+            raise RemoteError(f'{text} (code {code})')
 
         if t == _MsgType.Switch:
-            method = msg.get('m')
+            method = msg.get('method')
             raise ContextSwitchError(method)
 
         if (expected_type > -1) and t != expected_type:
             raise ProtocolError(400, f'unexpected message: want {expected_type}, got {t}')
 
         if t == _MsgType.Input:
-            xid = msg.get('x')
+            xid = msg.get('xid')
 
             if xid != expected_xid:
                 # TODO maintain skip list of used correlation IDs?
                 raise ProtocolError(400, f'unexpected message id: want {expected_xid}, got {xid}')
 
-            data = msg.get('d')
+            inputs = msg.get('inputs')
 
-            n = len(data)
+            n = len(inputs)
             if n == 0:
                 return
             elif n == 1:
-                return data[0][1]
+                return inputs[0][1]
             else:
                 # Convert list to tuple
-                return tuple([e[1] for e in data])
+                return tuple([e[1] for e in inputs])
 
         if t == _MsgType.Join:
-            method = msg.get('m')
-            params = msg.get('p')
+            method = msg.get('method')
+            params = msg.get('params')
             mode = params.get('mode') if params else None
             return method, mode
 
@@ -603,8 +603,8 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
     raise ProtocolError(400, f'unknown message format: want dict, got {type(msg)}')
 
 
-def _marshal_error(code: int, description: str) -> dict:
-    return _marshal(dict(t=_MsgType.Error, c=code, d=description))
+def _marshal_error(code: int, text: str) -> dict:
+    return _marshal(dict(t=_MsgType.Error, code=code, text=text))
 
 
 def _marshal_set(
@@ -618,8 +618,8 @@ def _marshal_set(
 ) -> dict:
     return _marshal(dict(
         t=_MsgType.Set,
-        x=_xid(),
-        d=_clean(dict(
+        xid=_xid(),
+        settings=_clean(dict(
             title=title,
             caption=caption,
             menu=_dump(menu),
@@ -753,7 +753,7 @@ class View(_View):
             except ContextSwitchError as cse:
                 method = cse.method
             except ProtocolError as pe:
-                self._send(_marshal_error(pe.code, pe.description))
+                self._send(_marshal_error(pe.code, pe.text))
             except InterruptError:
                 return
 
@@ -854,9 +854,9 @@ class View(_View):
 
         self._send(_marshal(_clean(dict(
             t=_MsgType.Output,
-            x=xid,
-            d=b.dump(),
-            e=edit.dump() if edit else None,
+            xid=xid,
+            box=b.dump(),
+            edit=edit.dump() if edit else None,
         ))))
 
         if read:
@@ -908,7 +908,7 @@ class AsyncView(_View):
             except ContextSwitchError as cse:
                 method = cse.method
             except ProtocolError as pe:
-                await self._send(_marshal_error(pe.code, pe.description))
+                await self._send(_marshal_error(pe.code, pe.text))
             except InterruptError:
                 return
 
@@ -1009,9 +1009,9 @@ class AsyncView(_View):
 
         await self._send(_marshal(_clean(dict(
             t=_MsgType.Output,
-            x=xid,
-            d=b.dump(),
-            e=edit.dump() if edit else None,
+            xid=xid,
+            box=b.dump(),
+            edit=edit.dump() if edit else None,
         ))))
 
         if read:

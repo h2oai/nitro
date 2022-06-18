@@ -29,30 +29,30 @@ export type Input = [S, InputValue]
 
 export type Msg = {
   t: MsgType.Error
-  c: U // code
-  d: S // description
+  code: U // code
+  text: S // description
 } | {
   t: MsgType.Join
-  m?: S // method
-  p?: Dict<S> // params
+  method?: S // method
+  params?: Dict<S> // params
   d?: any // XXX formalize
 } | {
   t: MsgType.Switch,
-  m: S // method
-  p?: Dict<S> // params
+  method: S // method
+  params?: Dict<S> // params
 } | {
   t: MsgType.Input,
-  x: S // correlation id
-  d: Array<Input> // inputs
+  xid: S // correlation id
+  inputs: Array<Input> // inputs
 } | {
   t: MsgType.Output
-  x: S // correlation id
-  d: Box // root view
-  e?: Edit // edit command
+  xid: S // correlation id
+  box: Box // root view
+  edit?: Edit // edit command
 } | {
   t: MsgType.Set,
-  x: S
-  d: Setting
+  xid: S // TODO Remove?
+  settings: Settings
 }
 
 export enum EditType { Insert = 1, Update, Remove }
@@ -88,7 +88,7 @@ export type Script = {
 
 export type DisplayMode = 'normal' | 'chromeless'
 
-export type Setting = {
+export type Settings = {
   title?: S,
   caption?: S,
   menu?: Option[]
