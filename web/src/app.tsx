@@ -15,12 +15,11 @@
 import styled from 'styled-components';
 import { Body, Popup } from './body';
 import { Client } from './client';
-import { Dict, isS, newIncr, S, signal, U } from './core';
+import { Dict, isS, newIncr, S, Signal, signal, U } from './core';
 import { Header } from './header';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
-import { Box, Edit, EditPosition, EditType, Msg, MsgType } from './protocol';
-import { Socket, SocketEvent, SocketEventT } from './socket';
+import { Box, Edit, EditPosition, EditType, Message, MessageType, Server, ServerEvent, ServerEventT } from './protocol';
 import { defaultScheme, Scheme } from './theme';
 import { make, newClientContext } from './ui';
 
@@ -171,47 +170,47 @@ const getHashRPC = (): HashRPC | null => {
   return null
 }
 
-export const App = make(({ client }: { client: Client }) => {
+const wireUp = (client: Client, stateB: Signal<AppState>) => {
   const
-    stateB = signal<AppState>({ t: AppStateT.Connecting }),
-    invalidate = (xid: S, socket: Socket) => {
+    invalidate = (xid: S, server: Server) => {
       client.busy = false
-      client.context = newClientContext(xid, socket.send, () => {
+      client.context = newClientContext(xid, server, () => {
         client.busy = true
         stateB({ t: AppStateT.Connected, client })
       })
       stateB({ t: AppStateT.Connected, client })
     },
-    onMessage = (socket: Socket, e: SocketEvent) => {
+    onMessage = (server: Server, e: ServerEvent) => {
       switch (e.t) {
-        case SocketEventT.Connect:
-          if (socket) {
+        case ServerEventT.Connect:
+          if (server) {
             const
-              join: Msg = { t: MsgType.Join },
+              join: Message = { t: MessageType.Join },
               rpc = getHashRPC()
             if (rpc) {
               const { method, params } = rpc
               if (method) join.method = method
               if (params) join.params = params
             }
-            socket.send(join)
+            server.send(join)
           }
           break
-        case SocketEventT.Message:
+        case ServerEventT.Message:
           {
             const msg = e.message
             switch (msg.t) {
-              case MsgType.Error:
+              case MessageType.Error:
                 const { text: error } = msg
                 stateB({ t: AppStateT.Invalid, error })
                 break
-              case MsgType.Output:
+              case MessageType.Output:
                 {
-                  const { xid, box: rawBox, edit: rawEdit } = msg
-                  const box = sanitizeBox(rawBox)
-                  const boxes = box.items ?? []
-                  const { body, popup } = client
-                  const root = body[0]?.items ?? []
+                  const
+                    { xid, box: rawBox, edit: rawEdit } = msg,
+                    box = sanitizeBox(rawBox),
+                    boxes = box.items ?? [],
+                    { body, popup } = client,
+                    root = body[0]?.items ?? []
                   if (box.popup) {
                     popup.length = 0
                     popup.push(box)
@@ -298,10 +297,10 @@ export const App = make(({ client }: { client: Client }) => {
                     }
                     reIndex(body, newIncr())
                   }
-                  invalidate(xid, socket)
+                  invalidate(xid, server)
                 }
                 break
-              case MsgType.Set:
+              case MessageType.Set:
                 {
                   const
                     { xid, settings } = msg,
@@ -329,7 +328,7 @@ export const App = make(({ client }: { client: Client }) => {
 
                   const state = stateB()
                   if (state.t === AppStateT.Connected) {
-                    invalidate(xid, socket)
+                    invalidate(xid, server)
                   }
                 }
                 break
@@ -339,14 +338,21 @@ export const App = make(({ client }: { client: Client }) => {
             }
           }
           break
-        case SocketEventT.Disconnect:
+        case ServerEventT.Disconnect:
           stateB({ t: AppStateT.Disconnected, retry: e.retry })
           break
-        case SocketEventT.Error:
+        case ServerEventT.Error:
           stateB({ t: AppStateT.Invalid, error: String(e.error) })
           break
       }
-    },
+    }
+
+  client.socket(onMessage)
+}
+
+export const App = make(({ client }: { client: Client }) => {
+  const
+    stateB = signal<AppState>({ t: AppStateT.Connecting }),
     init = () => {
       window.addEventListener('hashchange', () => {
         const hashbang = getHashRPC()
@@ -355,7 +361,7 @@ export const App = make(({ client }: { client: Client }) => {
           client.context.switch(method, params)
         }
       })
-      client.socket(onMessage)
+      wireUp(client, stateB)
     },
     render = () => {
       const state = stateB()

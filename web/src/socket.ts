@@ -13,49 +13,22 @@
 // limitations under the License.
 
 import msgpack from '@ygoe/msgpack';
-import { defer, S, U } from "./core";
-import { Msg } from "./protocol";
+import { defer, S } from "./core";
+import { Message, Server, ServerEvent, ServerEventHandler, ServerEventT } from "./protocol";
 
-export enum SocketEventT {
-  Connect,
-  Disconnect,
-  Message,
-  Error,
-}
 
-export type SocketEvent = {
-  t: SocketEventT.Connect
-} | {
-  t: SocketEventT.Disconnect, retry: U
-} | {
-  t: SocketEventT.Error, error: any
-} | {
-  t: SocketEventT.Message, message: Msg
-}
+const
+  connectEvent: ServerEvent = { t: ServerEventT.Connect },
+  toSocketAddress = (path: S): S => {
+    const
+      { protocol, host } = window.location,
+      p = protocol === 'https:' ? 'wss' : 'ws'
+    return p + "://" + host + path
+  },
+  marshal = (data: any): Uint8Array => msgpack.serialize(data),
+  unmarshal = (d: Uint8Array): Message => msgpack.deserialize(d)
 
-export type Send = (message: Msg) => void
-
-export type Socket = {
-  send: Send
-  disconnect(): void
-}
-
-const connectEvent: SocketEvent = { t: SocketEventT.Connect }
-
-type SocketEventHandler = (e: SocketEvent) => void
-
-const toSocketAddress = (path: S): S => {
-  const
-    { protocol, host } = window.location,
-    p = protocol === 'https:' ? 'wss' : 'ws'
-  return p + "://" + host + path
-}
-
-const marshal = (data: any): Uint8Array => msgpack.serialize(data)
-
-const unmarshal = (d: Uint8Array): Msg => msgpack.deserialize(d)
-
-export const connect = (address: S, handle: SocketEventHandler): Socket => {
+export const connect = (address: S, handle: ServerEventHandler): Server => {
   let
     _socket: WebSocket | null = null,
     _backoff = 1
@@ -80,7 +53,7 @@ export const connect = (address: S, handle: SocketEventHandler): Socket => {
         _socket = null
         _backoff *= 2
         if (_backoff > 16) _backoff = 16
-        handle({ t: SocketEventT.Disconnect, retry: _backoff })
+        handle({ t: ServerEventT.Disconnect, retry: _backoff })
         window.setTimeout(retry, _backoff * 1000)
       }
       socket.onmessage = (e) => {
@@ -89,15 +62,15 @@ export const connect = (address: S, handle: SocketEventHandler): Socket => {
         try {
           const message = unmarshal(data)
           // console.log('recv', message)
-          handle({ t: SocketEventT.Message, message })
+          handle({ t: ServerEventT.Message, message })
         } catch (error) {
           console.error(error)
-          handle({ t: SocketEventT.Error, error })
+          handle({ t: ServerEventT.Error, error })
         }
       }
       socket.onerror = (error) => {
         console.error(error)
-        handle({ t: SocketEventT.Error, error })
+        handle({ t: ServerEventT.Error, error })
       }
     },
     send = (message: any) => {
@@ -109,5 +82,5 @@ export const connect = (address: S, handle: SocketEventHandler): Socket => {
 
   reconnect(toSocketAddress(address))
 
-  return { send, disconnect }
+  return { send, close: disconnect }
 }

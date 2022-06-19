@@ -13,9 +13,8 @@
 // limitations under the License.
 
 import React from 'react';
-import { B, Dict, Disposable, isSignal, on, S, V } from './core';
-import { Box, Input, InputValue, MsgType } from './protocol';
-import { Send } from './socket';
+import { B, Dict, Disposable, isSignal, on, S } from './core';
+import { Box, Input, InputValue, MessageType, Server } from './protocol';
 
 export type ClientContext = {
   scoped(index: any, xid: S): Context
@@ -41,7 +40,7 @@ export const noopClientContext: ClientContext = {
   switch: noop,
 }
 
-export const newClientContext = (xid: S, send: Send, onBusy: () => void): ClientContext => {
+export const newClientContext = (xid: S, server: Server, onBusy: () => void): ClientContext => {
   const
     data: Array<Input> = [],
     record = (index: any, xid: S, value: InputValue) => {
@@ -49,11 +48,11 @@ export const newClientContext = (xid: S, send: Send, onBusy: () => void): Client
     },
     commit = () => {
       onBusy()
-      send({ t: MsgType.Input, xid, inputs: data.filter(e => e !== undefined) })
+      server.send({ t: MessageType.Input, xid, inputs: data.filter(e => e !== undefined) })
     },
     change = (m: S, p?: Dict<S>) => {
       onBusy()
-      send({ t: MsgType.Switch, method: m, params: p })
+      server.send({ t: MessageType.Switch, method: m, params: p })
     },
     scoped = (index: any, xid: S): Context => ({
       record: (value: InputValue) => record(index, xid, value),

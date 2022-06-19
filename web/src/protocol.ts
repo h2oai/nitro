@@ -15,7 +15,31 @@
 import { B, Dict, I, N, Pair, S, Triple, U, V } from "./core"
 import { Context } from "./ui"
 
-export enum MsgType {
+export type Server = {
+  send(message: Message): void
+  close(): void
+}
+
+export enum ServerEventT {
+  Connect,
+  Disconnect,
+  Message,
+  Error,
+}
+
+export type ServerEvent = {
+  t: ServerEventT.Connect
+} | {
+  t: ServerEventT.Disconnect, retry: U
+} | {
+  t: ServerEventT.Error, error: any
+} | {
+  t: ServerEventT.Message, message: Message
+}
+
+export type ServerEventHandler = (e: ServerEvent) => void
+
+export enum MessageType {
   Error = 1,
   Join, // client -> server, initiate connection
   Switch, // client -> server, context switch
@@ -27,30 +51,30 @@ export enum MsgType {
 export type InputValue = B | S | N | S[] | N[] | null
 export type Input = [S, InputValue]
 
-export type Msg = {
-  t: MsgType.Error
+export type Message = {
+  t: MessageType.Error
   code: U // code
   text: S // description
 } | {
-  t: MsgType.Join
+  t: MessageType.Join
   method?: S // method
   params?: Dict<S> // params
   d?: any // XXX formalize
 } | {
-  t: MsgType.Switch,
+  t: MessageType.Switch,
   method: S // method
   params?: Dict<S> // params
 } | {
-  t: MsgType.Input,
+  t: MessageType.Input,
   xid: S // correlation id
   inputs: Array<Input> // inputs
 } | {
-  t: MsgType.Output
+  t: MessageType.Output
   xid: S // correlation id
   box: Box // root view
   edit?: Edit // edit command
 } | {
-  t: MsgType.Set,
+  t: MessageType.Set,
   xid: S // TODO Remove?
   settings: Settings
 }
