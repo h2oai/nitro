@@ -2,7 +2,14 @@
 
 Nitro (N<sub>2</sub>O) is the simplest way to build web apps using Python. No front-end experience required.
 
+**Currently a Work in Progress**. Follow [@CrunchingData](https://twitter.com/CrunchingData) for updates, or 
+use [Discord](https://discord.gg/6RUdk2CPgw) or [Discussions](https://github.com/h2oai/nitro/discussions) for help / ideas / suggestions.
+
 ![Nitro](docs/assets/banner.png)
+
+## Get started
+
+Go to https://nitro.h2o.ai/install/
 
 ## Philosophy
 
@@ -57,10 +64,6 @@ Nitro is for you if:
 - You don't care about customizing the visual design too much.
 - **You want to write the least amount of code necessary, and ship fast!**
 
-## Get started
-
-Go to https://nitro.h2o.ai/install/
-
 ## Status
 
 **H2O Nitro is experimental software. API is subject to change. Do not use in production.**
@@ -75,7 +78,7 @@ language (R, Julia, Go, Typescript, C#, Java planned), and compile apps to mobil
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
 - **Less Code.** Laser-focused on keeping application code simple, concise, and clear.
     - **Simplicity.** Page flow follows code flow.
-    - **Conciseness.** Lowest number of lines of code for expressing solutions to a given problem.
+    - **Brevity.** Lowest number of lines of code for expressing solutions to a given problem.
     - **Clarity.** Write apps without jumping through callbacks, request handlers, or event handlers.
 - **Minimal API.** Only three functions: `view()`, `box()`, `option()`, and optionally `row()` and `column()` for
   layout.
@@ -89,7 +92,9 @@ language (R, Julia, Go, Typescript, C#, Java planned), and compile apps to mobil
 - **Unix philosophy.** Tries to do one thing and do it well: display interactive user interfaces. Bring your own web
   app/server of choice and follow its recommendations for hosting, deployment, security, monitoring, metrics and data
   management.
-- **Extensively documented.** Run `nitro docs` to access interactive docs and 150+ live examples.
+- **Extensively documented.**
+  - See https://nitro.h2o.ai/ for documentation.
+  - Execute `nitro run https://nitro.h2o.ai/docs.py` to run interactive docs locally with 150+ live examples.
 
 ## Differences from H<sub>2</sub>O Wave
 
