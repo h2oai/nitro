@@ -19,15 +19,20 @@ import { App } from './app';
 import { newClient } from './client';
 import { icons } from './icons';
 import reportWebVitals from './reportWebVitals';
+import { newLocalServer, newSocketServer } from './socket';
 import { loadScheme } from './theme';
 
 registerIcons({ icons })
 
+const
+  defaultEndpoint = '/nitro',
+  root = document.getElementById('nitro'),
+  endpoint = root?.getAttribute('data-endpoint') ?? defaultEndpoint, // TODO document
+  server = endpoint === '@local' ? newLocalServer() : newSocketServer(endpoint),
+  client = newClient()
 
-const root = document.getElementById('nitro')
-const client = newClient(root?.getAttribute('data-endpoint') ?? '/nitro') // TODO document
 loadScheme(client.schemeB())
-ReactDOM.render(<App client={client} />, root);
+ReactDOM.render(<App server={server} client={client} />, root);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -18,6 +18,7 @@ import { Message, Server, ServerEvent, ServerEventHandler, ServerEventT } from "
 
 
 const
+  noopHandler: ServerEventHandler = () => { },
   connectEvent: ServerEvent = { t: ServerEventT.Connect },
   toSocketAddress = (path: S): S => {
     const
@@ -28,12 +29,25 @@ const
   marshal = (data: any): Uint8Array => msgpack.serialize(data),
   unmarshal = (d: Uint8Array): Message => msgpack.deserialize(d)
 
-export const connect = (address: S, handle: ServerEventHandler): Server => {
+export const newLocalServer = (): Server => {
+  const
+    connect = () => { },
+    send = () => { },
+    disconnect = () => { }
+  return { connect, send, disconnect }
+}
+
+export const newSocketServer = (address: S): Server => {
   let
     _socket: WebSocket | null = null,
-    _backoff = 1
+    _backoff = 1,
+    _handle = noopHandler
 
   const
+    connect = (handle: ServerEventHandler) => {
+      _handle = handle
+      reconnect(toSocketAddress(address))
+    },
     disconnect = () => {
       if (_socket) _socket.close()
     },
@@ -43,7 +57,7 @@ export const connect = (address: S, handle: ServerEventHandler): Server => {
       socket.binaryType = 'arraybuffer'
       socket.onopen = () => {
         _socket = socket
-        handle(connectEvent)
+        _handle(connectEvent)
         _backoff = 1
       }
       socket.onclose = (e) => {
@@ -53,7 +67,7 @@ export const connect = (address: S, handle: ServerEventHandler): Server => {
         _socket = null
         _backoff *= 2
         if (_backoff > 16) _backoff = 16
-        handle({ t: ServerEventT.Disconnect, retry: _backoff })
+        _handle({ t: ServerEventT.Disconnect, retry: _backoff })
         window.setTimeout(retry, _backoff * 1000)
       }
       socket.onmessage = (e) => {
@@ -62,25 +76,23 @@ export const connect = (address: S, handle: ServerEventHandler): Server => {
         try {
           const message = unmarshal(data)
           // console.log('recv', message)
-          handle({ t: ServerEventT.Message, message })
+          _handle({ t: ServerEventT.Message, message })
         } catch (error) {
           console.error(error)
-          handle({ t: ServerEventT.Error, error })
+          _handle({ t: ServerEventT.Error, error })
         }
       }
       socket.onerror = (error) => {
         console.error(error)
-        handle({ t: ServerEventT.Error, error })
+        _handle({ t: ServerEventT.Error, error })
       }
     },
-    send = (message: any) => {
+    send = (message: Message) => {
       // console.log('send', message)
       defer(0, () => {
         if (_socket && message) _socket.send(marshal(message))
       })
     }
 
-  reconnect(toSocketAddress(address))
-
-  return { send, close: disconnect }
+  return { connect, send, disconnect }
 }

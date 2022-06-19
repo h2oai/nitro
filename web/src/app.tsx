@@ -170,7 +170,7 @@ const getHashRPC = (): HashRPC | null => {
   return null
 }
 
-const wireUp = (client: Client, stateB: Signal<AppState>) => {
+const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>) => {
   const
     invalidate = (xid: S, server: Server) => {
       client.busy = false
@@ -180,7 +180,7 @@ const wireUp = (client: Client, stateB: Signal<AppState>) => {
       })
       stateB({ t: AppStateT.Connected, client })
     },
-    onMessage = (server: Server, e: ServerEvent) => {
+    handleEvent = (e: ServerEvent) => {
       switch (e.t) {
         case ServerEventT.Connect:
           if (server) {
@@ -347,10 +347,10 @@ const wireUp = (client: Client, stateB: Signal<AppState>) => {
       }
     }
 
-  client.socket(onMessage)
+  server.connect(handleEvent)
 }
 
-export const App = make(({ client }: { client: Client }) => {
+export const App = make(({ server, client }: { server: Server, client: Client }) => {
   const
     stateB = signal<AppState>({ t: AppStateT.Connecting }),
     init = () => {
@@ -361,7 +361,7 @@ export const App = make(({ client }: { client: Client }) => {
           client.context.switch(method, params)
         }
       })
-      wireUp(client, stateB)
+      runRenderLoop(server, client, stateB)
     },
     render = () => {
       const state = stateB()

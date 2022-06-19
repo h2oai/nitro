@@ -16,8 +16,9 @@ import { B, Dict, I, N, Pair, S, Triple, U, V } from "./core"
 import { Context } from "./ui"
 
 export type Server = {
+  connect(handler: ServerEventHandler): void
   send(message: Message): void
-  close(): void
+  disconnect(): void
 }
 
 export enum ServerEventT {
