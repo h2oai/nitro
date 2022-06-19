@@ -339,7 +339,7 @@ def write_docs_yaml(groups: List[Group]):
     yaml_path = Path('..') / 'mkdocs.yml'
     yaml = yaml_path.read_text()
     yaml_begin = yaml.split(yaml_separator_begin)[0].strip()
-    yaml_end = yaml.split(yaml_separator_end)[1].strip()
+    yaml_end = yaml.split(yaml_separator_end)[1].strip() + "\n"
 
     p(yaml_begin)
     p.indent()
