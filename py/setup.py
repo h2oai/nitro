@@ -37,7 +37,6 @@ setup(
     packages=get_packages("h2o_nitro"),
     python_requires=">=3.7",
     install_requires=[
-        "click",
         "msgpack>=1.0",
     ],
     include_package_data=True,
