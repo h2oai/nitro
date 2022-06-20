@@ -57,13 +57,9 @@ export const Slider = make(({ box }: BoxProps) => {
     }
 
   if (ranged) {
-    if (defaultValueMin !== undefined && defaultValueMax !== undefined) {
-      context.record([defaultValueMin, defaultValueMax])
-    }
+    context.record((defaultValueMin !== undefined && defaultValueMax !== undefined) ? [defaultValueMin, defaultValueMax] : null)
   } else {
-    if (defaultValue !== undefined) {
-      context.record(defaultValue)
-    }
+    context.record(defaultValue ?? null)
   }
 
   return { render }

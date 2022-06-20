@@ -48,7 +48,7 @@ export const ColorPalette = make(({ box }: BoxProps) => {
       )
     }
 
-  if (selected) context.record(selected.value)
+  context.record(selected ? selected.value : null)
 
   return { render }
 })

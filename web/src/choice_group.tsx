@@ -45,7 +45,7 @@ export const ChoiceGroup = make(({ box }: BoxProps) => {
       )
     }
 
-  if (selectedKey) context.record(selectedKey)
+  context.record(selectedKey ?? null)
 
   return { render }
 })

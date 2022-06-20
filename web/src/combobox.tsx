@@ -46,6 +46,8 @@ export const ComboBox = make(({ box }: BoxProps) => {
         />
       )
     }
-  if (initialValue) context.record(initialValue)
+
+  context.record(initialValue ?? null)
+
   return { render }
 })

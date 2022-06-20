@@ -39,7 +39,7 @@ export const ColorPicker = make(({ box }: BoxProps) => {
       )
     }
 
-  if (defaultColor) capture(defaultColor)
+  capture(defaultColor ?? { r: 0, g: 0, b: 0, a: 100 })
 
   return { render }
 })
