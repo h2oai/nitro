@@ -17,6 +17,16 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.10.1
+
+Jun 20, 2022
+
+- Changed
+    - Default color picker to null instead of black.
+    - Submit scalar values for single-select tables, not lists.
+- Fixed
+    - Make dropdown, combobox, choice group, color picker always submit default values.
+
 ## v0.10.0
 
 Jun 17, 2022
