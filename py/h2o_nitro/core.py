@@ -588,10 +588,10 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
             if n == 0:
                 return
             elif n == 1:
-                return inputs[0][1]
+                return _unwrap_input(inputs[0])
             else:
                 # Convert list to tuple
-                return tuple([e[1] for e in inputs])
+                return tuple([_unwrap_input(e) for e in inputs])
 
         if t == _MsgType.Join:
             method = msg.get('method')
@@ -601,6 +601,10 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
 
         raise ProtocolError(400, f'unknown message type {t}')
     raise ProtocolError(400, f'unknown message format: want dict, got {type(msg)}')
+
+
+def _unwrap_input(x):
+    return None if x is None else x[1]
 
 
 def _marshal_error(code: int, text: str) -> dict:
