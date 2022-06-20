@@ -29,7 +29,14 @@ export const Table = make(({ box }: BoxProps) => {
     isList = isB(multiple),
     selecteds = selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),
-    capture = () => context.record(Array.from(selectedValues)),
+    capture = () => {
+      if (isList) {
+        const vs = Array.from(selectedValues)
+        context.record(multiple ? vs : vs.length ? vs[0] : null)
+      } else {
+        context.record(null)
+      }
+    },
     linkColumnIndex = headers ? headers.findIndex(h => h.mode === 'link') : -1,
     linkColumnKey = `f${linkColumnIndex}`,
     sortRows = (rows: TableRow[], key: S, descending?: B): TableRow[] => {
@@ -227,6 +234,8 @@ export const Table = make(({ box }: BoxProps) => {
         />
       )
     }
+
+  capture()
 
   return { render, contentB }
 })
