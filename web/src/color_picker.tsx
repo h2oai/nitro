@@ -39,7 +39,7 @@ export const ColorPicker = make(({ box }: BoxProps) => {
       )
     }
 
-  capture(defaultColor ?? { r: 0, g: 0, b: 0, a: 100 })
+  context.record(defaultColor ? colorToTuple(defaultColor) : null)
 
   return { render }
 })
