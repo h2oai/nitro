@@ -42,13 +42,13 @@ export const noopClientContext: ClientContext = {
 
 export const newClientContext = (xid: S, server: Server, onBusy: () => void): ClientContext => {
   const
-    data: Array<Input> = [],
+    inputs: Array<Input> = [],
     record = (index: any, xid: S, value: InputValue) => {
-      if (index >= 0) data[index] = [xid, value]
+      if (index >= 0) inputs[index] = [xid, value]
     },
     commit = () => {
       onBusy()
-      server.send({ t: MessageType.Input, xid, inputs: data.filter(e => e !== undefined) })
+      server.send({ t: MessageType.Input, xid, inputs: inputs.slice() })
     },
     change = (m: S, p?: Dict<S>) => {
       onBusy()
