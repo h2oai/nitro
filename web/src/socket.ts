@@ -29,14 +29,6 @@ const
   marshal = (data: any): Uint8Array => msgpack.serialize(data),
   unmarshal = (d: Uint8Array): Message => msgpack.deserialize(d)
 
-export const newLocalServer = (): Server => {
-  const
-    connect = () => { },
-    send = () => { },
-    disconnect = () => { }
-  return { connect, send, disconnect }
-}
-
 export const newSocketServer = (address: S): Server => {
   let
     _socket: WebSocket | null = null,

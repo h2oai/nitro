@@ -19,16 +19,16 @@ import { App } from './app';
 import { newClient } from './client';
 import { icons } from './icons';
 import reportWebVitals from './reportWebVitals';
-import { newLocalServer, newSocketServer } from './socket';
+import { newSocketServer } from './socket';
+import { newLocalServer } from './nitride';
 import { loadScheme } from './theme';
 
 registerIcons({ icons })
 
 const
-  defaultEndpoint = '/nitro',
   root = document.getElementById('nitro'),
-  endpoint = root?.getAttribute('data-endpoint') ?? defaultEndpoint, // TODO document
-  server = endpoint === '@local' ? newLocalServer() : newSocketServer(endpoint),
+  endpoint = root?.getAttribute('data-endpoint'), // TODO document
+  server = endpoint ? newSocketServer(endpoint) : newLocalServer(),
   client = newClient()
 
 loadScheme(client.schemeB())
