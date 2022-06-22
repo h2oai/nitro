@@ -36,9 +36,7 @@ setup(
     author_email="prithvi.prabhu@gmail.com",
     packages=get_packages("h2o_nitride"),
     python_requires=">=3.7",
-    install_requires=[
-        "msgpack>=1.0",
-    ],
+    install_requires=[],
     include_package_data=True,
     license_files=('LICENSE',),
     classifiers=[
