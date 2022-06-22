@@ -8,8 +8,11 @@ build: purge clone ## Build wheel
 	./venv/bin/python setup.py bdist_wheel
 
 clone:
-	mkdir -p h2o_nitride
-	cp ../py/h2o_nitro/*.py h2o_nitride/
+	mkdir -p h2o_nitride && \
+		cp ../py/h2o_nitro/*.py h2o_nitride/ && \
+		cd h2o_nitride && \
+		sed -e 's/False/True/g' version.py > version.py.tmp && \
+		mv version.py.tmp version.py
 
 setup: clean clone ## Install dependencies
 	python3 -m venv venv
