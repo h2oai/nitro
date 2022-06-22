@@ -17,11 +17,31 @@ from types import FunctionType
 import random
 from pathlib import Path
 from collections import OrderedDict
-import msgpack
 from enum import Enum, IntEnum
-from .version import __version__
+from .version import __version__, __nitride__
 
 web_directory = str(Path(__file__).parent / 'www')
+
+if __nitride__:
+    import json
+
+
+    def _marshal(d: dict):
+        return json.dumps(d)
+
+
+    def _unmarshal(b) -> dict:
+        return json.loads(b)
+else:
+    import msgpack
+
+
+    def _marshal(d: dict):
+        return msgpack.packb(d)
+
+
+    def _unmarshal(b) -> dict:
+        return msgpack.unpackb(b)
 
 __xid = 0
 
@@ -69,14 +89,6 @@ class ProtocolError(Exception):
 class InterruptError(Exception):
     def __init__(self):
         super().__init__('Interrupted')
-
-
-def _marshal(d: dict):
-    return msgpack.packb(d)
-
-
-def _unmarshal(b) -> dict:
-    return msgpack.unpackb(b)
 
 
 def _dump(x):  # recursive
@@ -607,7 +619,7 @@ def _unwrap_input(x):
     return None if x is None else x[1]
 
 
-def _marshal_error(code: int, text: str) -> dict:
+def _marshal_error(code: int, text: str):
     return _marshal(dict(t=_MsgType.Error, code=code, text=text))
 
 
@@ -619,7 +631,7 @@ def _marshal_set(
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
         mode: Optional[str] = None,
-) -> dict:
+):
     return _marshal(dict(
         t=_MsgType.Set,
         xid=_xid(),
