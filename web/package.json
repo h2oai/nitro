@@ -19,6 +19,7 @@
     "@types/styled-components": "^5.1.20",
     "@ygoe/msgpack": "^1.0.3",
     "highlight.js": "^11.5.0",
+    "js-yaml": "^4.1.0",
     "micromark": "^3.0.10",
     "micromark-extension-gfm": "^2.0.1",
     "react": "^17.0.2",
@@ -51,5 +52,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.5"
   }
 }
