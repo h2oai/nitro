@@ -66,7 +66,7 @@ const micromarkReplacements: Dict<S> = {
 
 export const
   highlight = (html: S) => html
-    .replaceAll(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
+    .replace(/<code class="language-(.+?)">(.+?)<\/code>/gms, (_, language, code) => {
       const src = hljs.highlight(revertMicromarkEncodings(code), { language }).value
       return `<code>${src}</code>`
     }),
@@ -79,7 +79,7 @@ export const
       // Exclude hashbangs #!, which act as context switches.
       // Exclude footnote references.
       // We need the links to be rendered as such, but not affect the address bar.
-      .replaceAll(/href="#([^!].+?)"/g, (all, ref) => {
+      .replace(/href="#([^!].+?)"/g, (all, ref) => {
         if (isFootnoteLink(ref)) return all
         hasLinks = true
         return `data-jump="${ref}" href`
