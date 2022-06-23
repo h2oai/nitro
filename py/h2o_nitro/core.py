@@ -15,6 +15,8 @@
 from typing import Callable, Optional, Sequence, Set, Tuple, List, Dict, Union, Iterable
 from types import FunctionType
 import random
+import asyncio
+import collections
 from pathlib import Path
 from collections import OrderedDict
 from enum import Enum, IntEnum
@@ -1035,6 +1037,27 @@ class AsyncView(_View):
             return res
 
 
+class Duplex:
+    def __init__(self):
+        self._input = collections.deque()
+        self._output = collections.deque()
+
+    async def send(self, x):
+        self._output.append(x)
+
+    async def recv(self):
+        while True:
+            if len(self._input):
+                return self._input.popleft()
+            await asyncio.sleep(0.1)
+
+    def write(self, x):
+        self._input.append(x)
+
+    def read(self):
+        return self._output.popleft() if len(self._output) else None
+
+
 # noinspection SpellCheckingInspection
 _lorem = '''
 lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna 
@@ -1047,7 +1070,7 @@ excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserun
 _lorems = set([w.strip() for w in _lorem.split(' ')])
 
 
-def _sentence(min, max):
+def _sentence(min: int, max: int):
     return ' '.join(random.sample(_lorems, random.randint(min, max))).capitalize()
 
 
