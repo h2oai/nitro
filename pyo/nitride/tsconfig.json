@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "strict": true,
+        "lib": [
+            "WebWorker",
+            "ES6",
+        ],
+        "outDir": "build"
+    },
+    "include": [
+        "src/*"
+    ]
+}
