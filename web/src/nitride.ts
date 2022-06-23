@@ -2,10 +2,9 @@ import { B, isO, S } from "./core"
 import { Message, Server, ServerEvent, ServerEventHandler, ServerEventT } from "./protocol"
 import yaml from "js-yaml"
 
-// XXX USE PUBLISHED VERSION
 const
   defaultRuntime = 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js',
-  defaultBundle = 'h2o_nitride-0.10.1-py3-none-any.whl'
+  defaultBundle = 'h2o_nitride'
 
 type Conf = {
   language: S
