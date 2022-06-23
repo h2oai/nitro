@@ -1,16 +1,16 @@
 all: build
 
 purge: ## Purge previous build
-	rm -rf build dist h2o_nitride.egg-info h2o_nitride/www
+	rm -rf build dist h2o_nitro.egg-info
 
 .PHONY: build
 build: purge clone ## Build wheel
 	./venv/bin/python setup.py bdist_wheel
 
 clone:
-	mkdir -p h2o_nitride && \
-		cp ../py/h2o_nitro/*.py h2o_nitride/ && \
-		cd h2o_nitride && \
+	mkdir -p h2o_nitro && \
+		cp ../py/h2o_nitro/*.py h2o_nitro/ && \
+		cd h2o_nitro && \
 		sed -e 's/False/True/g' version.py > version.py.tmp && \
 		mv version.py.tmp version.py
 

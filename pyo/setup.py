@@ -27,14 +27,14 @@ def get_packages(package):
 
 setup(
     name="h2o_nitride",
-    version=get_version("h2o_nitride"),
+    version=get_version("h2o_nitro"),
     url="https://nitro.h2o.ai/",
     description="Nitride makes Nitro apps run entirely inside web browsers",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     author="Prithvi Prabhu",
     author_email="prithvi.prabhu@gmail.com",
-    packages=get_packages("h2o_nitride"),
+    packages=get_packages("h2o_nitro"),
     python_requires=">=3.7",
     install_requires=[],
     include_package_data=True,

@@ -1,4 +1,3 @@
-
 const pollInterval = 100
 
 let _poller = 0;
@@ -17,7 +16,7 @@ async def _nitro_download(url, filename):
 `;
 
 const launcher = `
-from h2o_nitride import Duplex as _Nitro_IO
+from h2o_nitro import Duplex as _Nitro_IO
 _nitro_io = _Nitro_IO()
 asyncio.create_task(nitro.serve(_nitro_io.send, _nitro_io.recv))
 print('🚀 Nitro launched! 🚀')
