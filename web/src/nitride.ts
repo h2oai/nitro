@@ -2,10 +2,16 @@ import { B, isO, S } from "./core"
 import { Message, Server, ServerEvent, ServerEventHandler, ServerEventT } from "./protocol"
 import yaml from "js-yaml"
 
+// XXX USE PUBLISHED VERSION
+const
+  defaultRuntime = 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js',
+  defaultBundle = 'h2o_nitride-0.10.1-py3-none-any.whl'
+
 type Conf = {
   language: S
   runtime: S
   packages: S[]
+  bundles: S[]
   autoload: B
   files: S[]
   entrypoint: S
@@ -22,6 +28,10 @@ type Command = {
 } | {
   t: CommandT.LoadProgram
   runtime: S
+  packages: S[]
+  bundles: S[]
+  files: S[]
+  entrypoint: S
   program: S
   autoload: B
 } | {
@@ -32,45 +42,15 @@ type Command = {
   t: CommandT.ModuleLoaded
 }
 
-const prelude = `
-import micropip
-await micropip.install('h2o_nitride-0.10.1-py3-none-any.whl') # XXX USE PUBLISHED VERSION
-`
-const spawn = `
-# XXX MOVE TO WHEEL
-import asyncio
-import collections
-
-class PollIO:
-    def __init__(self):
-        self._input = collections.deque()
-        self._output = collections.deque()
-    async def send(self, x):
-        self._output.append(x)
-    async def recv(self):
-        while True:
-            print('in recv')
-            if len(self._input):
-                return self._input.popleft()
-            await asyncio.sleep(0.1)
-    def write(self, x):
-        self._input.append(x)
-    def read(self):
-        return self._output.popleft() if len(self._output) else None
-
-_nitro_io = PollIO()
-print('starting to serve')
-asyncio.create_task(nitro.serve(_nitro_io.send, _nitro_io.recv))
-print('done serving')
-`
 const
   pythonConf: Conf = {
     language: 'python',
-    runtime: 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js',
+    runtime: defaultRuntime,
     packages: [],
-    autoload: false,
+    bundles: [],
     files: [],
     entrypoint: '',
+    autoload: false,
   },
   dedent = (code: S): S => {
     const
@@ -90,11 +70,11 @@ const
     .map(dedent),
   readConf = (): Conf => {
     const
-      el = document.querySelector<HTMLScriptElement>('script[type="text/nitro"]'),
-      conf = el?.textContent
-    if (conf) {
+      el = document.querySelector<HTMLScriptElement>('script[type="application/nitro"]'),
+      data = el?.textContent
+    if (data) {
       try {
-        const raw: any = yaml.load(conf)
+        const raw: any = yaml.load(data)
         if (isO(raw)) return { ...pythonConf, ...raw }
       } catch (e) {
         console.error(`Failed parsing Nitro configuration, using defaults instead: ${e}. .`)
@@ -128,8 +108,11 @@ export const newLocalServer = (): Server => {
             handle({ t: ServerEventT.Error, error: 'Unknown message received from worker.' })
         }
       }
-      const program = [prelude, ...scripts, spawn].join('\n\n')
-      const c: Command = { t: CommandT.LoadProgram, runtime: conf.runtime, program, autoload: conf.autoload }
+      const
+        program = scripts.join('\n\n'),
+        { runtime, packages, bundles, autoload, files, entrypoint } = conf,
+        c: Command = { t: CommandT.LoadProgram, runtime, packages, bundles, autoload, files, entrypoint, program }
+      c.bundles.unshift(defaultBundle)
       _worker.postMessage(c)
     },
     send = (message: Message) => {
