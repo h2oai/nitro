@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+
+This HTML file contains a sample Python app that runs entirely in your browser.
+The app is built with H2O Nitro: https://github.com/h2oai/nitro.
+
+To launch this application:
+1. Open a new terminal window.
+2. Change to the directory containing this HTML file.
+3. Start a local HTTP server, like this:
+
+$ python -m http.server 8000
+
+4. Navigate to http://localhost:8000/example_entrypoint.html
+-->
+
+<head>
+  <meta charset="utf-8" />
+  <title>Nitro</title>
+  <link rel="shortcut icon" href="./favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Slab:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
+    rel="stylesheet">
+  <link href="./styles.css" rel="stylesheet">
+  <link href="./static/css/main.css" rel="stylesheet">
+  <script defer="defer" src="./static/js/main.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!--
+    The YAML configuration in the "application/nitro" script tag below controls how to launch your application:
+  -->
+  <script type="application/nitro">
+    # The programming language to use:
+    #
+    language: python
+    #
+    # The Pyodide runtime to use for executing Python in the browser:
+    #
+    # runtime: https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js
+    #
+    # The pre-built packages to load from the Pyodide repository:
+    # (See https://pyodide.org/en/stable/usage/packages-in-pyodide.html)
+    #
+    # packages:
+    # - numpy
+    # - matplotlib
+    #
+    # Additional packages to load, if unavailable in the Pyodide repository:
+    # (Can be names of pure Python packages in PyPI, or paths to wheel files.)
+    #
+    # bundles:
+    # - altair
+    # - path/to/my/awesome_package-0.42.0-py3-none-any.whl
+    #
+    # Additional Python modules or files to copy into the Wasm virtual filesystem:
+    #
+    # files:
+    # - utils.py
+    # - path/to/something/else.py
+    #
+    # The main Python module to load and execute:
+    #
+    entrypoint: example_hello.py
+    #
+    # Whether the dependencies in the entrypoint module should be detected and loaded automatically:
+    #
+    # autoload: false
+  </script>
+</head>
+
+<body>
+  <!-- This message will be displayed if Javascript is disabled. -->
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+
+  <!-- The Nitro app will be rendered inside this tag: -->
+  <div id="nitro"></div>
+</body>
+
+</html>

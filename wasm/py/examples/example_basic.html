@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+
+This HTML file contains a sample Python app that runs entirely in your browser.
+The app is built with H2O Nitro: https://github.com/h2oai/nitro.
+
+To launch this application:
+1. Open a new terminal window.
+2. Change to the directory containing this HTML file.
+3. Start a local HTTP server, like this:
+
+$ python -m http.server 8000
+
+4. Navigate to http://localhost:8000/example_basic.html
+-->
+
+<head>
+  <meta charset="utf-8" />
+  <title>Nitro</title>
+  <link rel="shortcut icon" href="./favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Slab:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
+    rel="stylesheet">
+  <link href="./styles.css" rel="stylesheet">
+  <link href="./static/css/main.css" rel="stylesheet">
+  <script defer="defer" src="./static/js/main.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+  <!-- This message will be displayed if Javascript is disabled. -->
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+
+  <!-- The Nitro app will be rendered inside this tag: -->
+  <div id="nitro"></div>
+
+  <!--
+    Your application code goes inside "text/python" script tags.
+    You can add more "text/python" tags if you want.
+  -->
+  <script type="text/python">
+    from h2o_nitro import AsyncView as View, box
+
+    async def main(view: View):
+        name = await view(box('What is your name?', value='Boaty McBoatface'))
+        feel = await view(box(f'How do you feel today, {name}?', value='intrigued'))
+        await view(f'What a coincidence, {name}, I feel {feel}, too!')
+
+    nitro = View(main, title='Hello Nitro!', caption='v1.0')
+  </script>
+</body>
+
+</html>
