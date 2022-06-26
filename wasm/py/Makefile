@@ -12,6 +12,7 @@ build: purge ## Build everything
 		cp -R ../../web/build/ . && \
 		cp web/build/nitride.js build/. && \
 		cd build && \
+		rm -f image.png sample.jpg && \
 		zip -r ../dist/nitride-v$(VERSION).zip *
 
 purge: ## Purge previous build

@@ -22,6 +22,7 @@ import { installPlugins } from './plugin';
 import { Box, Edit, EditPosition, EditType, Message, MessageType, Server, ServerEvent, ServerEventT } from './protocol';
 import { defaultScheme, Scheme } from './theme';
 import { make, newClientContext } from './ui';
+import loadingAnimation from './loading.gif'
 
 enum AppStateT { Connecting, Disconnected, Invalid, Connected }
 
@@ -77,7 +78,7 @@ const Busy = make(({ timeout }: { timeout: U }) => {
     visibleB = signal(false),
     render = () => (
       <Blocker style={{ opacity: visibleB() ? 0.5 : 0 }}>
-        <img alt='Busy' src="busy32.gif" />
+        <img alt='Busy' src={loadingAnimation} />
       </Blocker>
     )
 
