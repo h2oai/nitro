@@ -1,3 +1,5 @@
+const defaultRuntime = 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js'
+
 type S = string
 type B = boolean
 
@@ -78,6 +80,8 @@ print('Please take a moment to ⭐ Nitro on Github: https://github.com/h2oai/nit
 async function init(command: Command) {
   if (command.t !== CommandT.LoadProgram) return
 
+  if (!command.runtime.length) command.runtime = defaultRuntime
+
   const { runtime, packages, bundles, autoload, files, entrypoint, program } = command
 
   console.log(`Loading runtime ${runtime}...`)
@@ -96,6 +100,16 @@ async function init(command: Command) {
 
   console.log('Executing prelude...')
   await pyodide.runPythonAsync(prelude)
+
+  let loadNitro = true
+  for (const bundle of bundles) {
+    if (bundle === 'h2o-nitro' || bundle === 'h2o_nitro' || bundle.indexOf('h2o_nitro-') >= 0) {
+      loadNitro = false
+      break
+    }
+  }
+
+  if (loadNitro) bundles.unshift('h2o_nitro')
 
   if (bundles.length) {
     const micropip = pyodide.globals.get('micropip')

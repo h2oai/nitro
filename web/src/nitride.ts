@@ -2,10 +2,6 @@ import { B, isO, S } from "./core"
 import { Message, Server, ServerEvent, ServerEventHandler, ServerEventT } from "./protocol"
 import yaml from "js-yaml"
 
-const
-  defaultRuntime = 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js',
-  defaultBundle = 'h2o_nitro'
-
 type Conf = {
   language: S
   runtime: S
@@ -44,7 +40,7 @@ type Command = {
 const
   pythonConf: Conf = {
     language: 'python',
-    runtime: defaultRuntime,
+    runtime: '',
     packages: [],
     bundles: [],
     files: [],
@@ -111,7 +107,6 @@ export const newLocalServer = (): Server => {
         program = scripts.join('\n\n'),
         { runtime, packages, bundles, autoload, files, entrypoint } = conf,
         c: Command = { t: CommandT.LoadProgram, runtime, packages, bundles, autoload, files, entrypoint, program }
-      c.bundles.unshift(defaultBundle)
       _worker.postMessage(c)
     },
     send = (message: Message) => {
