@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .core import View, AsyncView, Box, BoxArrange, BoxAlign, Option, Theme, box, option, header, row, col, \
-    ProtocolError, ContextSwitchError, RemoteError, lorem, Plugin, Script, Duplex
-
 from .version import __version__
+
+import pathlib
+
+web_directory = str(pathlib.Path(__file__).parent / 'www')

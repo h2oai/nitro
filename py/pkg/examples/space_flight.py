@@ -9,7 +9,7 @@
 # FILE requirements.txt EOF
 # flask
 # simple-websocket
-# h2o-nitro
+# h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
 # ENV FLASK_APP space_flight.py
@@ -23,7 +23,8 @@ from datetime import datetime, timedelta
 
 # ┌───────────────  Nitro app starts here ───────────────┐
 
-from h2o_nitro import web_directory, View, box, option, row, col
+from h2o_nitro import View, box, option, row, col
+from h2o_nitro_web import web_directory
 
 
 # The job application workflow. Spans seven pages.

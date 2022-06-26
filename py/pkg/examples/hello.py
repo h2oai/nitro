@@ -9,7 +9,7 @@
 # FILE requirements.txt EOF
 # flask
 # simple-websocket
-# h2o-nitro
+# h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
 # ENV FLASK_APP hello.py
@@ -21,7 +21,8 @@ from flask import Flask, request, send_from_directory
 
 # ┌───────────────  Nitro app starts here ───────────────┐
 
-from h2o_nitro import View, box, web_directory
+from h2o_nitro import View, box
+from h2o_nitro_web import web_directory
 
 
 def main(view: View):

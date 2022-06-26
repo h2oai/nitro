@@ -4,7 +4,7 @@ import yaml from "js-yaml"
 
 const
   defaultRuntime = 'https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js',
-  defaultBundle = 'h2o_nitride'
+  defaultBundle = 'h2o_nitro'
 
 type Conf = {
   language: S

@@ -8,7 +8,7 @@
 # Setup:
 # FILE requirements.txt EOF
 # tornado
-# h2o-nitro
+# h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
 # ECHO Access your app at https://localhost:5000
@@ -21,7 +21,8 @@ import tornado.queues
 
 # ┌───────────────  Nitro app starts here ───────────────┐
 
-from h2o_nitro import AsyncView as View, box, web_directory
+from h2o_nitro import AsyncView as View, box
+from h2o_nitro_web import web_directory
 
 
 async def main(view: View):

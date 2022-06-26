@@ -132,4 +132,4 @@ dmypy.json
 .idea/
 
 # Web Root
-/file_uploads
+/h2o_nitro_web/www

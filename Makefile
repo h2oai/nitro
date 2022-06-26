@@ -17,16 +17,19 @@ clean-web: ## Clean web dependencies
 	cd web && rm -rf build node_modules
 
 setup-py: ## Install dependencies for Python
-	cd py && $(MAKE) setup
+	cd py/web && $(MAKE) setup
+	cd py/pkg && $(MAKE) setup
 	cd wasm/py && $(MAKE) setup
 
 .PHONY: py
 py: ## Build Python
-	cd py && $(MAKE) build
+	cd py/web && $(MAKE) build
+	cd py/pkg && $(MAKE) build
 	cd wasm/py && $(MAKE) build
 
 clean-py: ## Clean Python dependencies
-	cd py && $(MAKE) clean
+	cd py/web && $(MAKE) clean
+	cd py/pkg && $(MAKE) clean
 	cd wasm/py && $(MAKE) clean
 
 setup-docs: ## Set up docs for development mode
@@ -36,7 +39,7 @@ setup-docs: ## Set up docs for development mode
 
 .PHONY: docs
 docs: docs-py ## Build docs
-	cd py && $(MAKE) docs
+	cd py/pkg && $(MAKE) docs
 	./tools/docs/venv/bin/mkdocs build
 
 clean-docs: ## Clean docs
@@ -63,7 +66,8 @@ release: # Tag and release on Github
 	cd cli && goreleaser release --rm-dist
 
 publish-py: ## Publish wheel to PyPI
-	cd py && $(MAKE) publish
+	cd py/web && $(MAKE) publish
+	cd py/pkg && $(MAKE) publish
 	cd wasm/py && $(MAKE) publish
 
 publish-docs: docs ## Publish docs
@@ -74,13 +78,13 @@ dev-web: # Launch front-end in development mode
 	cd web && npm start
 
 dev-py: # Launch backend in development mode
-	cd py && FLASK_APP=../docs/docs.py FLASK_ENV=development ./venv/bin/flask run
+	cd py/pkg && FLASK_APP=../docs/docs.py FLASK_ENV=development ./venv/bin/flask run
 
 dev-docs: # Rebuild docs.py when examples.py is changed
-	cd py && find docs | entr $(MAKE) docs
+	cd py/pkg && find docs | entr $(MAKE) docs
 
 docs-py: # Rebuild docs.py from examples.py
-	cd py && $(MAKE) docs
+	cd py/pkg && $(MAKE) docs
 
 help: ## List all make tasks
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

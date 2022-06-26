@@ -10,7 +10,7 @@
 # uvicorn
 # starlette
 # websockets
-# h2o-nitro
+# h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
 # START python -m uvicorn hello_starlette:app --reload --port 5000
@@ -23,7 +23,8 @@ from starlette.responses import FileResponse
 
 # ┌───────────────  Nitro app starts here ───────────────┐
 
-from h2o_nitro import AsyncView as View, box, web_directory
+from h2o_nitro import AsyncView as View, box
+from h2o_nitro_web import web_directory
 
 
 async def main(view: View):

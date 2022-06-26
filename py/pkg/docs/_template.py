@@ -22,7 +22,7 @@
 # FILE requirements.txt EOF
 # flask
 # simple-websocket
-# h2o-nitro
+# h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
 # START python docs.py
@@ -31,8 +31,9 @@
 import json
 import os
 from pathlib import Path
-from h2o_nitro import web_directory, View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \
+from h2o_nitro import View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \
     __version__ as version
+from h2o_nitro_web import web_directory
 import simple_websocket
 from flask import Flask, request, send_from_directory
 from werkzeug.utils import secure_filename

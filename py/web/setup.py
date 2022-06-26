@@ -25,26 +25,19 @@ def get_packages(package):
     ]
 
 
-version = get_version("h2o_nitro")
-
 setup(
-    name="h2o_nitro",
-    version=version,
+    name="h2o_nitro_web",
+    version=get_version("h2o_nitro_web"),
     url="https://nitro.h2o.ai/",
-    description="Build apps 10x faster. No front-end experience required.",
+    description="Web assets package for H2O Nitro apps.",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     author="Prithvi Prabhu",
     author_email="prithvi.prabhu@gmail.com",
-    packages=get_packages("h2o_nitro"),
+    packages=get_packages("h2o_nitro_web"),
     python_requires=">=3.7",
     install_requires=[],
-    extras_require=dict(
-        web=[
-            "msgpack>=1.0",
-            f"h2o_nitro_web=={version}",
-        ]
-    ),
+    include_package_data=True,
     license_files=('LICENSE',),
     classifiers=[
         'License :: OSI Approved :: Apache Software License',

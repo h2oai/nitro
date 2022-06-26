@@ -1,10 +1,12 @@
 all: build
 
 purge: ## Purge previous build
-	rm -rf build dist h2o_nitro.egg-info
+	rm -rf build dist h2o_nitro_web.egg-info h2o_nitro_web/www
 
 .PHONY: build
-build: purge docs ## Build wheel and docs
+build: purge ## Build wheel
+	cp ../pkg/h2o_nitro/version.py h2o_nitro_web/
+	cp -R ../../web/build h2o_nitro_web/www
 	./venv/bin/python setup.py bdist_wheel
 
 setup: clean ## Install dependencies
@@ -12,10 +14,6 @@ setup: clean ## Install dependencies
 	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install -r requirements.txt
 	./venv/bin/python -m pip install --editable .
-
-.PHONY: docs
-docs: ## Compile examples into readme, docs and tour
-	./venv/bin/python make.py
 
 publish: ## Publish wheel
 	./venv/bin/python -m twine upload dist/*

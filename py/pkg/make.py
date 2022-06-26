@@ -23,6 +23,7 @@ import re
 from shlex import shlex
 from pathlib import Path
 
+git_root = Path('..') / '..'
 
 class Printer:
     def __init__(self, indent='    '):
@@ -309,7 +310,7 @@ def write_example(p: Printer, e: Example):
             p()
 
 
-docs_dir = Path('..') / 'docs'
+docs_dir = git_root / 'docs'
 
 
 def write_docs(groups: List[Group]):
@@ -336,7 +337,7 @@ yaml_separator_end = '# End generated'
 def write_docs_yaml(groups: List[Group]):
     p = Printer('  ')
 
-    yaml_path = Path('..') / 'mkdocs.yml'
+    yaml_path = git_root / 'mkdocs.yml'
     yaml = yaml_path.read_text()
     yaml_begin = yaml.split(yaml_separator_begin)[0].strip()
     yaml_end = yaml.split(yaml_separator_end)[1].strip() + "\n"
@@ -358,7 +359,7 @@ def write_docs_yaml(groups: List[Group]):
 
 
 def write_readme():
-    (Path('..') / 'README.md').write_text((docs_dir / 'index.md').read_text().replace('assets/', 'docs/assets/'))
+    (git_root / 'README.md').write_text((docs_dir / 'index.md').read_text().replace('assets/', 'docs/assets/'))
 
 
 def count_examples(groups: List[Group]):

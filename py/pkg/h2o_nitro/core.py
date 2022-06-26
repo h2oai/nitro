@@ -17,24 +17,11 @@ from types import FunctionType
 import random
 import asyncio
 import collections
-from pathlib import Path
 from collections import OrderedDict
 from enum import Enum, IntEnum
-from .version import __version__, __nitride__
+from .version import __version__
 
-web_directory = str(Path(__file__).parent / 'www')
-
-if __nitride__:
-    import json
-
-
-    def _marshal(d: dict):
-        return json.dumps(d)
-
-
-    def _unmarshal(b) -> dict:
-        return json.loads(b)
-else:
+try:
     import msgpack
 
 
@@ -44,6 +31,17 @@ else:
 
     def _unmarshal(b) -> dict:
         return msgpack.unpackb(b)
+
+except:
+    import json
+
+
+    def _marshal(d: dict):
+        return json.dumps(d)
+
+
+    def _unmarshal(b) -> dict:
+        return json.loads(b)
 
 __xid = 0
 
