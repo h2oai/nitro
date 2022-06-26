@@ -3,7 +3,7 @@
 H2O Nitro can be installed from [PyPI](https://pypi.org/project/h2o-nitro/):
 
 ```
-pip install h2o-nitro
+pip install "h2o-nitro[web]"
 ```
 
 ## Prerequisites
