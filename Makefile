@@ -19,18 +19,18 @@ clean-web: ## Clean web dependencies
 setup-py: ## Install dependencies for Python
 	cd py/web && $(MAKE) setup
 	cd py/pkg && $(MAKE) setup
-	cd wasm/py && $(MAKE) setup
+	cd py/wasm && $(MAKE) setup
 
 .PHONY: py
 py: ## Build Python
 	cd py/web && $(MAKE) build
 	cd py/pkg && $(MAKE) build
-	cd wasm/py && $(MAKE) build
+	cd py/wasm && $(MAKE) build
 
 clean-py: ## Clean Python dependencies
 	cd py/web && $(MAKE) clean
 	cd py/pkg && $(MAKE) clean
-	cd wasm/py && $(MAKE) clean
+	cd py/wasm && $(MAKE) clean
 
 setup-docs: ## Set up docs for development mode
 	mkdir -p tools/docs && cd tools/docs && python3 -m venv venv
@@ -68,7 +68,7 @@ release: # Tag and release on Github
 publish-py: ## Publish wheel to PyPI
 	cd py/web && $(MAKE) publish
 	cd py/pkg && $(MAKE) publish
-	cd wasm/py && $(MAKE) publish
+	cd py/wasm && $(MAKE) publish
 
 publish-docs: docs ## Publish docs
 	aws s3 sync site s3://nitro.h2o.ai --delete
