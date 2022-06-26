@@ -1,5 +1,5 @@
 from h2o_nitro import AsyncView as View
-from example_bokeh_plugin import bokeh_plugin, bokeh_box
+from h2o_nitro_bokeh import bokeh_plugin, bokeh_box
 from example_bokeh_util import *
 
 

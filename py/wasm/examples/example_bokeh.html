@@ -52,14 +52,12 @@ $ python -m http.server 8000
     # Additional packages to load, if unavailable in the Pyodide repository:
     # (Can be names of pure Python packages in PyPI, or paths to wheel files.)
     #
-    # bundles:
-    # - altair
-    # - path/to/my/awesome_package-0.42.0-py3-none-any.whl
+    bundles:
+    - h2o-nitro-bokeh
     #
     # Additional Python modules or files to copy into the Wasm virtual filesystem:
     #
     files:
-    - example_bokeh_plugin.py
     - example_bokeh_util.py
     #
     # The main Python module to load and execute:
