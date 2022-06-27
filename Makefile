@@ -78,7 +78,7 @@ dev-web: # Launch front-end in development mode
 	cd web && npm start
 
 dev-py: # Launch backend in development mode
-	cd py/pkg && FLASK_APP=../docs/docs.py FLASK_ENV=development ./venv/bin/flask run
+	cd py/pkg && FLASK_APP=../../docs/docs.py FLASK_ENV=development ./venv/bin/flask run
 
 dev-docs: # Rebuild docs.py when examples.py is changed
 	cd py/pkg && find docs | entr $(MAKE) docs

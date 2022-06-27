@@ -12,6 +12,7 @@ setup: clean ## Install dependencies
 	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install -r requirements.txt
 	./venv/bin/python -m pip install --editable .
+	./venv/bin/python -m pip install --editable ../web
 
 .PHONY: docs
 docs: ## Compile examples into readme, docs and tour
