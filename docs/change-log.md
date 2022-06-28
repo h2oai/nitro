@@ -17,6 +17,35 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.11.0
+
+Jun 27, 2022
+
+### Upgrading
+
+**When upgrading from v0.10x to v0.11, use `pip install "h2o-nitro[web]"`.**
+
+The `h2o-nitro` package is now a smaller PyPI package (~13KB) designed to work
+in both web assembly (Wasm) and regular Python environments.
+The full `pip install "h2o-nitro[web]"` includes the UI assets required for developing web apps.
+
+- Added
+    - Apps now work entirely in-browser (via Pyodide).
+    - Ability to host and execute browser-local Python via a Wasm web-worker.
+    - Ability to execute Python code in a HTML file's script tag.
+    - Ability to dynamically load and execute external Python modules.
+    - Ability to dynamically load and copy external Python libraries.
+    - Ability to dynamically install Pyodide and PyPI packages.
+    - Starter bundles with examples for building HTML-based Nitro apps.
+- Changed
+    - Remove web assets from `h2o-nitro` PyPI package (~13KB).
+    - Publish separate `h2o-nitro-web` PyPI package with web assets.
+    - Remove android- and apple- icons from web assets.
+    - Use a single CSS file for all user-customizable style rules.
+- Fixed
+    - Don't auto-grow a column's items automatically.
+    - Front-end crash in older browsers caused by `String.replaceAll()`.
+
 ## v0.10.1
 
 Jun 20, 2022
