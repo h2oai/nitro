@@ -1,9 +1,12 @@
 # Nitro
 
-Nitro (N<sub>2</sub>O) is the simplest way to build web apps using Python. No front-end experience required.
+Nitro (N<sub>2</sub>O) is the simplest way to build web apps using Python. No Javascript/HTML/CSS coding.
 
-**Currently a Work in Progress**. Follow [@CrunchingData](https://twitter.com/CrunchingData) for updates, or 
-use [Discord](https://discord.gg/6RUdk2CPgw) or [Discussions](https://github.com/h2oai/nitro/discussions) for help / ideas / suggestions.
+**Currently a Work in Progress:** 
+Follow [the development blog](https://wrong.technology/tags/nitro/) or
+[@CrunchingData](https://twitter.com/CrunchingData) for updates, or use
+[Discord](https://discord.gg/6RUdk2CPgw) or
+[Discussions](https://github.com/h2oai/nitro/discussions) for help / ideas / suggestions.
 
 ![Nitro](docs/assets/banner.png)
 

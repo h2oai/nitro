@@ -21,9 +21,7 @@ fixes are provided for 1 year.
 
 Jun 27, 2022
 
-### Upgrading
-
-**When upgrading from v0.10x to v0.11, use `pip install "h2o-nitro[web]"`.**
+**Important: When upgrading to v0.11, use `pip install "h2o-nitro[web]"`.**
 
 The `h2o-nitro` package is now a smaller PyPI package (~13KB) designed to work
 in both web assembly (Wasm) and regular Python environments.
