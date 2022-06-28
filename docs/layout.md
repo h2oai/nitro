@@ -176,22 +176,22 @@ Set `cross_tile=` to control how items inside a view, row, or column are tiled a
 
 ```py
 boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
-col_style = dict(height=150, background='#eee')
+row_style = dict(height=150, background='#eee')
 view(
     # Pack items from the start.
-    col(row(*boxes, cross_tile='start'), **col_style),
+    row(*boxes, cross_tile='start', **row_style),
 
     # Pack items around the center.
-    col(row(*boxes, cross_tile='center'), **col_style),
+    row(*boxes, cross_tile='center', **row_style),
 
     # Pack items towards the end.
-    col(row(*boxes, cross_tile='end'), **col_style),
+    row(*boxes, cross_tile='end', **row_style),
 
     # Stretch items to fit.
-    col(row(*boxes, cross_tile='stretch'), **col_style),
+    row(*boxes, cross_tile='stretch', **row_style),
 
     # Default alignment.
-    col(row(*boxes, cross_tile='normal'), **col_style),
+    row(*boxes, cross_tile='normal', **row_style),
 )
 ```
 

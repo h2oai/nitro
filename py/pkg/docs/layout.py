@@ -150,22 +150,22 @@ def layout_tile(view: View):  # height 9
 # `cross_tile=` can be set to `start`, `center`, `end`, `stretch`, or `normal`.
 def layout_cross_tile(view: View):  # height 9
     boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
-    col_style = dict(height=150, background='#eee')
+    row_style = dict(height=150, background='#eee')
     view(
         # Pack items from the start.
-        col(row(*boxes, cross_tile='start'), **col_style),
+        row(*boxes, cross_tile='start', **row_style),
 
         # Pack items around the center.
-        col(row(*boxes, cross_tile='center'), **col_style),
+        row(*boxes, cross_tile='center', **row_style),
 
         # Pack items towards the end.
-        col(row(*boxes, cross_tile='end'), **col_style),
+        row(*boxes, cross_tile='end', **row_style),
 
         # Stretch items to fit.
-        col(row(*boxes, cross_tile='stretch'), **col_style),
+        row(*boxes, cross_tile='stretch', **row_style),
 
         # Default alignment.
-        col(row(*boxes, cross_tile='normal'), **col_style),
+        row(*boxes, cross_tile='normal', **row_style),
     )
 
 

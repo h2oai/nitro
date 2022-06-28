@@ -16,7 +16,7 @@ import { cssColor, IRGB } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import { XBox } from './box';
-import { Dict, isS, S, xid } from './core';
+import { B, Dict, isS, S } from './core';
 import { ImageBlock } from './image';
 import { Box } from './protocol';
 import { ClientContext } from './ui';
@@ -36,13 +36,13 @@ const toFlexStyle = (s: S): S => flexStyles[s] ?? s
 
 const translate = (s: S): S => isS(s) ? s.replace(/\$([\w-]+)/gi, 'var(--$1)') : s
 
-const computeStyle = (box: Partial<Box>) => {
+const computeStyle = (box: Partial<Box>, inRow: B) => {
   const
     { mode, row, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis } = box,
     isRow = row ? true : false,
     css: React.CSSProperties = {
       position: 'relative',
-      flexDirection: row ? 'row' : 'column',
+      flexDirection: isRow ? 'row' : 'column',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       gap: gap ?? '1rem',
       justifyContent: tile ? toFlexStyle(tile) : undefined,
@@ -170,7 +170,7 @@ const computeStyle = (box: Partial<Box>) => {
   if (grow !== undefined) css.flexGrow = grow
   if (shrink !== undefined) css.flexShrink = shrink
 
-  if (!isRow && width === undefined && height === undefined && grow === undefined && shrink === undefined) {
+  if (inRow && width === undefined && height === undefined && grow === undefined && shrink === undefined) {
     css.flexGrow = '1'
     if (basis === undefined) {
       // Default flex-basis to 0 to get more predictable grow/shrink behavior
@@ -185,32 +185,29 @@ const Container = styled.div`
   display: flex;
   box-sizing: border-box;
 `
+export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box, inRow: B }) => {
+  const { items, row } = box, isRow = row === true
 
-export const Zone = ({ context, boxes, box }: { context: ClientContext, boxes: Box[], box: Partial<Box> }) => {
-  const
-    children = boxes.map(box => {
-      if (box.items) {
-        return (
-          <Zone key={xid()} data-name={box.name ?? undefined} context={context} boxes={box.items} box={box} />
-        )
-      }
+  if (items) {
+    const children = items.map(box => (
+      <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+    ))
+    return (
+      <Container data-name={box.name ?? undefined} style={computeStyle(box, inRow)}>{children}</Container>
+    )
+  } else {
+    const style = computeStyle(box, inRow)
 
-      const style = computeStyle(box)
+    if (box.mode === 'image') {
+      return <ImageBlock key={box.xid} data-name={box.name ?? undefined} box={box} style={style} />
+    }
 
-      if (box.mode === 'image') {
-        return <ImageBlock key={xid()} data-name={box.name ?? undefined} box={box} style={style} />
-      }
+    box.context = context.scoped(box.index, box.xid)
 
-      box.context = context.scoped(box.index, box.xid)
-
-      return (
-        <Container key={xid()} data-name={box.name ?? undefined} style={style}>
-          <XBox key={box.xid} box={box} />
-        </Container>
-      )
-    })
-
-  return (
-    <Container data-name={box.name ?? undefined} style={computeStyle(box)}>{children}</Container>
-  )
+    return (
+      <Container key={box.xid} data-name={box.name ?? undefined} style={style}>
+        <XBox box={box} />
+      </Container>
+    )
+  }
 }

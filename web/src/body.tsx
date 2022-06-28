@@ -57,7 +57,7 @@ export const Body = ({ client }: { client: Client }) => {
   const boxes: Box[] = makeContinuable(client.body)
   return (
     <div className='main'>
-      <Zone context={client.context} boxes={boxes} box={{}} />
+      <Zone context={client.context} box={{ items: boxes } as Box} inRow={false} />
     </div>
   )
 }
@@ -91,7 +91,7 @@ export const Popup = make(({ client }: { client: Client }) => {
           modalProps={modalProps}
           hidden={hidden}
         >
-          <Zone context={client.context} boxes={boxes} box={{}} />
+          <Zone context={client.context} box={{ items: boxes } as Box} inRow={false} />
         </Dialog >
       )
     }
