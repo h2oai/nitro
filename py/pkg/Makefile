@@ -4,7 +4,7 @@ purge: ## Purge previous build
 	rm -rf build dist h2o_nitro.egg-info
 
 .PHONY: build
-build: purge docs ## Build wheel and docs
+build: purge ## Build wheel
 	./venv/bin/python setup.py bdist_wheel
 
 setup: clean ## Install dependencies
