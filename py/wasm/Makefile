@@ -14,7 +14,10 @@ build: purge ## Build everything
 		cp ../examples/* . && \
 		mv static/css/main.*.css static/css/main.css && \
 		mv static/js/main.*.js static/js/main.js && \
-		zip -r ../dist/nitride-v$(VERSION).zip *
+		zip -r ../dist/nitride-$(VERSION).zip *
+
+publish: ## Publish release
+	gh release upload v$(VERSION) dist/nitride-$(VERSION).zip --clobber
 
 purge: ## Purge previous build
 	rm -rf build dist
