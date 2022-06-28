@@ -300,7 +300,6 @@ view(
             box('Sky 2', background='$sky', color='black'),
             box('Sky 3', background='$sky', color='black'),
         ),
-        name='row1',
     ),
 )
 

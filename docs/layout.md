@@ -126,28 +126,35 @@ Set `tile=` to control how items inside a view, row, or column are tiled along t
 boxes = [box(text=f'{i + 1}', background='#666', width=100) for i in range(3)]
 row_style = dict(background='#eee')
 view(
+    "Start",
     # Pack items from the start.
     row(*boxes, tile='start', **row_style),
 
+    "Center",
     # Pack items around the center.
     row(*boxes, tile='center', **row_style),
 
+    "End",
     # Pack items towards the end.
     row(*boxes, tile='end', **row_style),
 
+    "Between",
     # Distribute items evenly.
     # The first item is flush with the start,
     # the last is flush with the end.
     row(*boxes, tile='between', **row_style),
 
+    "Around",
     # Distribute items evenly.
     # Items have a half-size space on either side.
     row(*boxes, tile='around', **row_style),
 
+    "Evenly",
     # Distribute items evenly.
     # Items have equal space around them.
     row(*boxes, tile='evenly', **row_style),
 
+    "Normal",
     # Default alignment.
     row(*boxes, tile='normal', **row_style),
 )

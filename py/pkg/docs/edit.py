@@ -236,7 +236,6 @@ def edit_insert_before_nested(view: View):  # height 5
                 box('Sky 2', background='$sky', color='black'),
                 box('Sky 3', background='$sky', color='black'),
             ),
-            name='row1',
         ),
     )
 
