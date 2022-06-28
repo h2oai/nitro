@@ -39,7 +39,6 @@ setup-docs: ## Set up docs for development mode
 
 .PHONY: docs
 docs: docs-py ## Build docs
-	cd py/pkg && $(MAKE) docs
 	./tools/docs/venv/bin/mkdocs build
 
 clean-docs: ## Clean docs
