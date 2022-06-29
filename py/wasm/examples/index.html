@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Nitro apps in your browser!</title>
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+</head>
+
+<body>
+  <main class="container">
+    <h1>Nitro apps in your browser!</h1>
+    <p>This directory contains a small selection of sample <a href="https://github.com/h2oai/nitro" target="_blank">H2O
+        Nitro</a> apps that run entirely in your browser, using <a href="https://pyodide.org"
+        target="_blank">Pyodide</a>.</p>
+
+    <p>To view these examples, make sure you are opening this page using a web server, and not directly from your
+      computer's file system. A simple way to do that is to open a terminal, change to this directory, and run
+      <code>python -m http.server</code>.
+    </p>
+
+    <h2>Example 1: <a href="example_basic.html">Embed Python</a></h2>
+
+    <p>To execute Python code, embed it in a <code>&lt;script type="text/python"&gt;</code> tag:</p>
+
+    <pre><code>
+&lt;script type="text/python"&gt;
+  from h2o_nitro import AsyncView as View, box
+
+  async def main(view: View):
+      name = await view(box('What is your name?', value='Boaty McBoatface'))
+      feel = await view(box(f'How do you feel today, {name}?', value='intrigued'))
+      await view(f'What a coincidence, {name}, I feel {feel}, too!')
+
+  nitro = View(main, title='Hello Nitro!', caption='v1.0')
+&lt;/script&gt;
+    </code></pre>
+
+    <h2>Example 2: <a href="example_entrypoint.html">Execute external modules</a></h2>
+
+    <p>To execute external <code>.py</code> modules, provide a YAML configuration. </p>
+    <p>Here, we run <a href="example_hello.py">example_hello.py</a>:</p>
+
+    <pre><code>
+&lt;script type="application/nitro"&gt;
+  language: python
+  entrypoint: example_hello.py
+&lt;/script&gt;
+    </code></pre>
+
+    <h2>Example 3: <a href="example_bokeh.html">Load external modules</a></h2>
+
+    <p>To load external packages and modules, specify <code>packages</code>, <code>bundles</code> and
+      <code>files</code>.
+    </p>
+    <p>Here, we run <a href="example_bokeh.py">example_bokeh.py</a>, which depends on <a
+        href="example_bokeh_util.py">example_bokeh_util.py</a>, <code>numpy</code>, <code>pandas</code>,
+      <code>bokeh</code> from <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">the Pyodide
+        repository</a>, and the <code>h2o-nitro-bokeh</code> <a href="https://pypi.org/project/h2o-nitro-bokeh/">plugin
+        from PyPI</a>:
+    </p>
+
+    <pre><code>
+&lt;script type="application/nitro"&gt;
+  language: python
+  packages:
+  - numpy
+  - pandas
+  - bokeh
+  bundles:
+  - h2o-nitro-bokeh
+  files:
+  - example_bokeh_util.py
+  entrypoint: example_bokeh.py
+&lt;/script&gt;
+    </code></pre>
+
+  </main>
+</body>
+
+</html>
