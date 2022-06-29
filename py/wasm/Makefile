@@ -1,3 +1,9 @@
+ifndef VERSION
+$(error VERSION is not set)
+endif
+
+ZIP_FILE=dist/nitride_$(VERSION).zip
+
 all: build
 
 setup: clean ## Setup everything
@@ -14,10 +20,10 @@ build: purge ## Build everything
 		cp ../examples/* . && \
 		mv static/css/main.*.css static/css/main.css && \
 		mv static/js/main.*.js static/js/main.js && \
-		zip -r ../dist/nitride-$(VERSION).zip *
+		zip -r ../$(ZIP_FILE) *
 
 publish: ## Publish release
-	gh release upload v$(VERSION) dist/nitride-$(VERSION).zip --clobber
+	gh release upload v$(VERSION) $(ZIP_FILE) --clobber
 
 purge: ## Purge previous build
 	rm -rf build dist
