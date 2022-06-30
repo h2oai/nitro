@@ -74,11 +74,17 @@ Nitro is for you if:
 Critical missing features include data visualization, back-button (history) support, internationalization and localization.
 
 The API is mostly stable, but expect minor changes while we ship support for at least one other 
-language (R, Julia, Go, Typescript, C#, Java planned), and compile apps to mobile or desktop.
+language (R, Julia, Go  planned), and compile apps to mobile or desktop.
 
 ## Features
 
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
+- **Library.** Nitro is a library, not a server.
+    - Integrates with [Django](https://www.djangoproject.com/) , [Flask](https://flask.palletsprojects.com/), 
+      [Starlette](https://www.starlette.io/) , [Tornado](https://www.tornadoweb.org/), [Uvicorn](https://www.uvicorn.org/) 
+      and other popular frameworks.
+    - Can be integrated into your existing or legacy applications.
+    - [Works entirely in-browser via WebAssembly, too](wasm.md)!
 - **Less Code.** Laser-focused on keeping application code simple, concise, and clear.
     - **Simplicity.** Page flow follows code flow.
     - **Brevity.** Lowest number of lines of code for expressing solutions to a given problem.
@@ -86,18 +92,14 @@ language (R, Julia, Go, Typescript, C#, Java planned), and compile apps to mobil
 - **Minimal API.** Only three functions: `view()`, `box()`, `option()`, and optionally `row()` and `column()` for
   layout.
 - **Batteries-included.** Huge library of sophisticated, accessibility-friendly widgets and data visualizations.
-- **Library.** Nitro is a library, not a server. Integrates with [Django](https://www.djangoproject.com/)
-  , [Flask](https://flask.palletsprojects.com/), [Starlette](https://www.starlette.io/)
-  , [Tornado](https://www.tornadoweb.org/), [Uvicorn](https://www.uvicorn.org/) and other popular frameworks. Can be
-  integrated into your existing applications.
 - **Prototyping-to-production.** Carefully designed API to rapidly prototype new ideas, then progressively improve
   presentation and aesthetics over time without affecting initial implementation simplicity, or sacrificing control.
 - **Unix philosophy.** Tries to do one thing and do it well: display interactive user interfaces. Bring your own web
   app/server of choice and follow its recommendations for hosting, deployment, security, monitoring, metrics and data
   management.
 - **Extensively documented.**
-  - See https://nitro.h2o.ai/ for documentation.
-  - Execute `nitro run https://nitro.h2o.ai/docs.py` to run interactive docs locally with 150+ live examples.
+    - See https://nitro.h2o.ai/ for documentation.
+    - Execute `nitro run https://nitro.h2o.ai/docs.py` to run interactive docs locally with 150+ live examples.
 
 ## Differences from H<sub>2</sub>O Wave
 
