@@ -32,7 +32,7 @@ def textbox_basic(view: View):  # height 2
 # `mode='text'` can be elided if `value=` is set.
 def textbox_value(view: View):  # height 2
     speed = view(box(value='60 km/h'))
-    view(f'Your speed is {speed} km/h.')
+    view(f'Your speed is {speed}.')
 
 
 # ## Set a label

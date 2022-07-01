@@ -27,7 +27,7 @@ Set `value=` to prefill the box with a value.
 
 ```py
 speed = view(box(value='60 km/h'))
-view(f'Your speed is {speed} km/h.')
+view(f'Your speed is {speed}.')
 ```
 
 

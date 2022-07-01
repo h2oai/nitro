@@ -51,7 +51,7 @@ view(f'You chose {choice}.')
 
 ## Show radio buttons
 
-Radio buttons is shown for 4-7 options.
+Radio buttons are shown for 4-7 options.
 
 Set `mode='radio'` to display radio buttons regardless of the number of options.
 

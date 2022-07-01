@@ -222,7 +222,7 @@ def about(view: View):
 
 nitro = View(
     main,
-    # The app's title and caption, displayed at tht top.
+    # The app's title and caption, displayed at the top.
     title='Hello Astronaut!',
     caption='Apply for space travel',
     # The main menu, displayed at the top left.
