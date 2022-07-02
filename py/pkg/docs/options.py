@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Options
+# Learn how to create options for pickers. Options can be created from strings, sequences, tuples, or dictionaries.
 
 # ## Basic
 # An `option` represents one of several choices to be presented to the user.

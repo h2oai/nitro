@@ -1,6 +1,6 @@
 # Styling
 
-
+Change how boxes look: colors, borders, sizing, margins, and padding.
 
 ## Set background color
 

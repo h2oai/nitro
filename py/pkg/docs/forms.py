@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Forms
+# Learn the basics of collecting inputs from the user.
 
 # ## Basic
 # To create a form, simply lay out all the inputs you need inside a view, then destructure the return value in order.

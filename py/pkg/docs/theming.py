@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem, Theme
 
 
 # # Theming
+# Learn how to customize your app's color scheme.
 
 # ## Set initial theme
 # Pass `theme=` when creating the app's `View()`.

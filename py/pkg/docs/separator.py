@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Separator
+# Use a separator to visually separate form inputs into sections.
 
 # ## Basic
 # Call `box()` with `mode='separator'` to show a separator.

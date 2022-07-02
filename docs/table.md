@@ -1,6 +1,8 @@
 # Table
 
-
+Use tables to display detailed information in the form of a grid.
+Tables can be thought of as pickers that allow one or more rows to be selected.
+They are a good replacement for dropdowns and dropdown lists when each option has several displayable attributes.
 
 ## Basic
 

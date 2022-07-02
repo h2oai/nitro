@@ -1,6 +1,6 @@
 # Textbox
 
-
+Use textboxes to capture text inputs and passwords.
 
 ## Basic
 

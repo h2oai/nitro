@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Advanced
+# Learn some advanced tips and tricks to level up your Nitro skills.
 
 # ## Embedding Web Pages
 # Set `mode='web'` to embed external web pages.

@@ -1,13 +1,13 @@
 # Toggle
 
-
+Use a toggle to choose between two mutually exclusive options, with an immediate result.
 
 ## Basic
 
 Set `mode='toggle'` to show a toggle.
 
 A toggle represents a physical switch that allows someone to choose between two mutually exclusive options.
-For example, “On/Off”, “Show/Hide”. Choosing an option should produce an immediate result.
+For example, “On/Off”, “Show/Hide”. Choosing an option produces an immediate result.
 
 Note that unlike a checkbox, a toggle returns its value immediately, much like a button.
 This lets you handle the changed value immediately.

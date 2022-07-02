@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Month Picker
+# Use a month picker to pick a month in a given range.
 
 # ## Basic
 # Set `mode='month'` to show a month picker.

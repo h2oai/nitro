@@ -16,6 +16,8 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Spinbox
+# Use spinboxes to capture numeric inputs.
+# A spinbox lets users incrementally adjust a value in small steps.
 
 # ## Basic
 # Call `box()` with `mode='number'` to show a box with increment/decrement buttons.

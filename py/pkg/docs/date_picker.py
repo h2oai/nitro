@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Date Picker
+# Use a date picker to pick a date within a range. A date picker is a compact form of the calendar.
 
 # ## Basic
 # Set `mode='date'` to show a date-picker.

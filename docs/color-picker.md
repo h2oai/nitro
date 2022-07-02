@@ -1,6 +1,6 @@
 # Color Picker
 
-
+Use a color picker to pick an arbitrary color.
 
 ## Basic
 

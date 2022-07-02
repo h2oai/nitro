@@ -16,7 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Basics
-
+# Take your first steps with Nitro.
 
 # ## Hello World!
 # Call `view()` to show something on a page.

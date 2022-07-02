@@ -1,6 +1,6 @@
 # Options
 
-
+Learn how to create options for pickers. Options can be created from strings, sequences, tuples, or dictionaries.
 
 ## Basic
 

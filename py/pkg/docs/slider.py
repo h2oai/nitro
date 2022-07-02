@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Slider
+# Use sliders to allow picking a number in a given range.
 
 # ## Basic
 # Set `mode='range'` to show a slider.

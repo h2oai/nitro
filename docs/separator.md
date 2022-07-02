@@ -1,6 +1,6 @@
 # Separator
 
-
+Use a separator to visually separate form inputs into sections.
 
 ## Basic
 

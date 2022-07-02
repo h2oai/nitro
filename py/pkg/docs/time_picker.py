@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Time Picker
+# Use a time picker to pick a time using a 12- or 24-hour clock.
 
 # ## Basic
 # Set `mode='time'` to show a time picker.

@@ -1,6 +1,6 @@
 # Tag Picker
 
-
+Use a tag picker to pick one or more tags (short strings or labels) from a group.
 
 ## Basic
 

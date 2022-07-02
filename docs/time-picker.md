@@ -1,6 +1,6 @@
 # Time Picker
 
-
+Use a time picker to pick a time using a 12- or 24-hour clock.
 
 ## Basic
 

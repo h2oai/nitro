@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Rating
+# Use a rating component to capture a star-rating.
 
 # ## Basic
 # Set `mode='rating'` to accept a star-rating.

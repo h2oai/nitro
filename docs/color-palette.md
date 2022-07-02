@@ -1,6 +1,6 @@
 # Color Palette
 
-
+Use a color palette to pick one color from a group of colors.
 
 ## Basic
 

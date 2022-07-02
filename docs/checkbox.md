@@ -1,6 +1,6 @@
 # Checkbox
 
-
+Use a checkbox to choose between two mutually exclusive options.
 
 ## Basic
 

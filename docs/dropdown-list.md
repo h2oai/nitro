@@ -1,6 +1,6 @@
 # Dropdown List
 
-
+Use a dropdown list to pick one or more options from a large number of options.
 
 ## Basic
 

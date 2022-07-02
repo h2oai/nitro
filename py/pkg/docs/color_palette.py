@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Color Palette
+# Use a color palette to pick one color from a group of colors.
 
 # ## Basic
 # Set `options=` with `mode='color'` to show a color palette.

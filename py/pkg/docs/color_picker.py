@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Color Picker
+# Use a color picker to pick an arbitrary color.
 
 # ## Basic
 # Set `mode='color'` to show a color picker.

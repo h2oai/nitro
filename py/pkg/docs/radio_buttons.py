@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Radio Buttons
+# Use radio buttons to pick one option from a small number of options.
 
 # ## Basic
 # Set `mode='radio'` to show radio buttons.

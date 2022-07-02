@@ -1,6 +1,6 @@
 # Markdown
 
-
+Use Markdown to display rich text, tables, and code.
 
 ## Basics
 

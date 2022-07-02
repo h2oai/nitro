@@ -1,6 +1,6 @@
 # Slider
 
-
+Use sliders to allow picking a number in a given range.
 
 ## Basic
 

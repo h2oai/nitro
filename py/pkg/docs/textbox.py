@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Textbox
+# Use textboxes to capture text inputs and passwords.
 
 # ## Basic
 # Call `box()` with `mode='text'` to show a textbox.

@@ -17,6 +17,7 @@ from h2o_nitro import View, box, row, col, option, lorem, Theme
 
 
 # # Editing
+# Make changes to content already displayed on a page.
 
 # ## Overview
 # By default, `view()` overwrites all boxes displayed by the previous `view()`,

@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Styling
+# Change how boxes look: colors, borders, sizing, margins, and padding.
 
 # ## Set background color
 # Set `background=` to apply a background color.

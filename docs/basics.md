@@ -1,6 +1,6 @@
 # Basics
 
-
+Take your first steps with Nitro.
 
 ## Hello World!
 

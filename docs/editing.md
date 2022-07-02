@@ -1,6 +1,6 @@
 # Editing
 
-
+Make changes to content already displayed on a page.
 
 ## Overview
 

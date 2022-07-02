@@ -1,11 +1,12 @@
 # Pickers
 
-
+Use pickers to pick one or more options from several options.
+Buttons, checklists, dropdowns, and color pickers are all examples of pickers.
 
 ## Basic
 
-A *picker* is a box that allows the user to pick one or more options from several presented options, like buttons,
-checklists, dropdowns, color pickers, and so on.
+A *picker* is a box that allows the user to pick one or more options from a group.
+Buttons, checklists, dropdowns, and color pickers are all examples of pickers.
 
 Set `options=` to create a picker.
 

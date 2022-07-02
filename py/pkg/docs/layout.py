@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Layout
+# Compose and arrange boxes to lay out content and control flow.
 
 # ## Basics
 # By default each item passed to `view()` are laid out one below the other, with a `10px` gap.

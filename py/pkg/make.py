@@ -25,6 +25,7 @@ from pathlib import Path
 
 git_root = Path('..') / '..'
 
+
 class Printer:
     def __init__(self, indent='    '):
         self._lines = []
@@ -184,7 +185,7 @@ def parse_groups(src: str) -> List[Group]:
         subparts = part.split('# ## ')
         header = subparts[0].strip().splitlines()
         title = header[0]
-        description = '\n'.join(header[1:])
+        description = '\n'.join([h.lstrip("# ") for h in header[1:]])
         groups.append(Group(title, description, [parse_example(x) for x in subparts[1:]]))
 
     # Mark prev/next on each example
@@ -257,6 +258,8 @@ def build_toc(groups: List[Group]) -> str:
     for g in groups:
         p()
         p(f'### {g.title}')
+        p()
+        p(g.description)
         p()
         for e in g.examples:
             p(f'- [{e.title}](#!docs.{doc_of(e.name)})')

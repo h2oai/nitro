@@ -1,6 +1,6 @@
 # Theming
 
-
+Learn how to customize your app's color scheme.
 
 ## Set initial theme
 

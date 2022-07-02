@@ -1,6 +1,6 @@
 # Popups
 
-
+Display content in popup dialogs.
 
 ## Basic
 

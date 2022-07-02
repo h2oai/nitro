@@ -1,6 +1,7 @@
 # Spinbox
 
-
+Use spinboxes to capture numeric inputs.
+A spinbox lets users incrementally adjust a value in small steps.
 
 ## Basic
 

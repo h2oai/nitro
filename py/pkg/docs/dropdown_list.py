@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Dropdown List
+# Use a dropdown list to pick one or more options from a large number of options.
 
 # ## Basic
 # Set `mode='menu'` with `multiple=True` to show a dropdown menu that allows multiple options to be selected.

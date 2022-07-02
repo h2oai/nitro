@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Week Picker
+# Use a week picker to pick a week in a given range.
 
 # ## Basic
 # Set `mode='week'` to show a week picker.

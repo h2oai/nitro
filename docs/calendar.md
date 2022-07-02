@@ -1,6 +1,6 @@
 # Calendar
 
-
+Use a calendar to pick a date within a range. The calendar is an expanded form of a date picker.
 
 ## Basic
 

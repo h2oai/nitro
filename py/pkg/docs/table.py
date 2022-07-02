@@ -16,6 +16,9 @@ from h2o_nitro import View, box, row, col, option, header, lorem
 
 
 # # Table
+# Use tables to display detailed information in the form of a grid.
+# Tables can be thought of as pickers that allow one or more rows to be selected.
+# They are a good replacement for dropdowns and dropdown lists when each option has several displayable attributes.
 
 # ## Basic
 # Call `box()` with `mode='table'` to show a table.

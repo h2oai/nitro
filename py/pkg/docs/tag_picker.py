@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Tag Picker
+# Use a tag picker to pick one or more tags (short strings or labels) from a group.
 
 # ## Basic
 # Set `mode='tag'` to display a tag picker. `multiple=True` is implied.

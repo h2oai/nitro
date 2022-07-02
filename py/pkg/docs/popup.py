@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Popups
+# Display content in popup dialogs.
 
 # ## Basic
 # Call `view()` with `popup=True` to show the view on a popup window.

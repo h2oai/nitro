@@ -1,6 +1,6 @@
 # Layout
 
-
+Compose and arrange boxes to lay out content and control flow.
 
 ## Basics
 

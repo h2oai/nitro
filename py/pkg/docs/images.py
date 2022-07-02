@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Images
+# Display images, or use them as backgrounds or in patterns.
 
 # ## Basic
 # Set `image=` to display an image.

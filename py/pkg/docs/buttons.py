@@ -16,6 +16,8 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Buttons
+# Use buttons to allow users to trigger actions.
+# They can be thought of as pickers that produce an immediate result when selected.
 
 # ## Basic
 # Set `mode='button'` to show buttons.

@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Checklist
+# Use checkboxes to pick one or more options from a small number of options.
 
 # ## Basic
 # Set `mode='check'` to show a checklist

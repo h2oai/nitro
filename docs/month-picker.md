@@ -1,6 +1,6 @@
 # Month Picker
 
-
+Use a month picker to pick a month in a given range.
 
 ## Basic
 

@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Checkbox
+# Use a checkbox to choose between two mutually exclusive options.
 
 # ## Basic
 # Set `mode='check'` to show a checkbox.

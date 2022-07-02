@@ -16,6 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Dropdown
+# Use a dropdown to pick one option from a large number of options.
 
 # ## Basic
 # Set `mode='menu'` to show a dropdown menu.

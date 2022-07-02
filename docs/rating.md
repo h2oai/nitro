@@ -1,6 +1,6 @@
 # Rating
 
-
+Use a rating component to capture a star-rating.
 
 ## Basic
 
