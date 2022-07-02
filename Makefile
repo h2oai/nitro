@@ -1,10 +1,19 @@
+.EXPORT_ALL_VARIABLES:
+VERSION:=$(shell cat VERSION)
+
 all: build
 
-setup: clean setup-web setup-py setup-screenshots setup-docs ## Install dependencies
+version:
+	echo "__version__ = \"${VERSION}\"" > py/pkg/h2o_nitro/version.py
+	echo "__version__ = \"${VERSION}\"" > py/web/h2o_nitro_web/version.py
 
-build: web py docs ## Build everything
+setup: clean version setup-web setup-py setup-screenshots setup-docs ## Install dependencies
+
+build: version web py docs ## Build everything
 
 clean: clean-docs clean-screenshots clean-py clean-web ## Clean everything
+	rm -f py/pkg/h2o_nitro/version.py
+	rm -f py/web/h2o_nitro_web/version.py
 
 setup-web: ## Install dependencies for web
 	cd web && npm ci

@@ -1,14 +1,11 @@
 all: build
 
-version:
-	cp ../pkg/h2o_nitro/version.py h2o_nitro_web/
-
 .PHONY: build
-build: purge version ## Build wheel
+build: purge ## Build wheel
 	cp -R ../../web/build h2o_nitro_web/www
 	./venv/bin/python setup.py bdist_wheel
 
-setup: clean version ## Install dependencies
+setup: clean ## Install dependencies
 	python3 -m venv venv
 	./venv/bin/python -m pip install --upgrade pip
 	./venv/bin/python -m pip install -r requirements.txt
