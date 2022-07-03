@@ -39,3 +39,4 @@ changelog:
       - '^test:'
       - '^wip:'
       - '^chore:'
+      - '^refactor:'
