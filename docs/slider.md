@@ -32,24 +32,6 @@ view(f'Your speed is {speed} km/h')
 ![Screenshot](assets/screenshots/slider_value.png)
 
 
-## Capture changes immediately
-
-Set `live=True` to immediately capture changes to the slider.
-
-
-```py
-speed = 5  # Starting value
-while True:
-    speed = view(
-        box('Speed (km/h)', mode='range', value=speed, live=True),
-        box(f'Your speed is {speed} km/h'),
-    )
-```
-
-
-![Screenshot](assets/screenshots/slider_live.png)
-
-
 ## Set min value
 
 Set `min=` to specify a minimum value.
@@ -201,3 +183,21 @@ view(f'Your speed is {speed} m/s')
 
 
 ![Screenshot](assets/screenshots/slider_decimal_step.png)
+
+
+## Capture changes immediately
+
+Set `live=True` to immediately capture changes to the slider.
+
+
+```py
+speed = 5  # Starting value
+while True:
+    speed = view(
+        box('Speed (km/h)', mode='range', value=speed, live=True),
+        box(f'Your speed is {speed} km/h'),
+    )
+```
+
+
+![Screenshot](assets/screenshots/slider_live.png)

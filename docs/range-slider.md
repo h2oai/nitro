@@ -18,24 +18,6 @@ view(f'Your speed ranges between {start} and {end} km/h')
 ![Screenshot](assets/screenshots/range_slider_basic.png)
 
 
-## Capture changes immediately
-
-Set `live=True` to immediately capture changes to the range slider.
-
-
-```py
-start, end = 3, 7  # Starting values
-while True:
-    start, end = view(
-        box('Speed range (km/h)', value=(start, end), live=True),
-        box(f'Your speed ranges between {start} and {end} km/h'),
-    )
-```
-
-
-![Screenshot](assets/screenshots/range_slider_live.png)
-
-
 ## Set min value
 
 Set `min=` to specify a minimum value.
@@ -187,3 +169,21 @@ view(f'Your speed ranges between {start} and {end} m/s')
 
 
 ![Screenshot](assets/screenshots/range_slider_decimal_step.png)
+
+
+## Capture changes immediately
+
+Set `live=True` to immediately capture changes to the range slider.
+
+
+```py
+start, end = 3, 7  # Starting values
+while True:
+    start, end = view(
+        box('Speed range (km/h)', value=(start, end), live=True),
+        box(f'Your speed ranges between {start} and {end} km/h'),
+    )
+```
+
+
+![Screenshot](assets/screenshots/range_slider_live.png)
