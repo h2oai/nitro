@@ -20,13 +20,16 @@ import { BoxProps, make } from './ui';
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
 export const Dropdown = make(({ box }: BoxProps) => {
   const
-    { context, text, placeholder, error, required, options } = box,
+    { context, text, placeholder, error, required, options, live } = box,
     selected = selectedOf(box),
     hasGroups = options.some(c => c.options?.length ? true : false),
     items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
     selectedKey = selected ? selected.value : undefined,
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IDropdownOption) => {
-      if (option) context.record(option.key)
+      if (option) {
+        context.record(option.key)
+        if (live) context.commit()
+      }
     },
     render = () => {
       return (

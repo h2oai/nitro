@@ -101,3 +101,23 @@ view(f'You chose {choice}.')
 
 
 ![Screenshot](assets/screenshots/dropdown_editable.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+color = 'yellow'
+while True:
+    color = view(
+        box('Choose a color', mode='menu', value=color, live=True, options=[
+            'blue', 'green', 'yellow', 'orange', 'red', 'black',
+        ]),
+        f'You chose {color}.'
+    )
+```
+
+
+![Screenshot](assets/screenshots/dropdown_live.png)
