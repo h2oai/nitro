@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const ChoiceGroup = make(({ box }: BoxProps) => {
   const
-    { context, text, placeholder, required, options } = box,
+    { context, text, placeholder, required, options, live } = box,
     hasNoPrimary = options.every(o => !isB(o.selected)),
     selected = selectedOf(box),
     items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
@@ -30,7 +30,10 @@ export const ChoiceGroup = make(({ box }: BoxProps) => {
     })),
     selectedKey = selected ? selected.value : (hasNoPrimary && options.length > 0) ? options[0].value : undefined,
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IChoiceGroupOption) => {
-      if (option) context.record(option?.key)
+      if (option) {
+        context.record(option?.key)
+        if (live) context.commit()
+      }
     },
     render = () => {
       return (

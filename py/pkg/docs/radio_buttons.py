@@ -67,3 +67,16 @@ def radio_icon(view: View):  # height 3
         option('donut', 'Donut', icon='DonutChart'),
     ]))
     view(f'You chose {choice}.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def radio_live(view: View):  # height 4
+    color = 'yellow'  # Initial value
+    while True:
+        color = view(
+            box('Choose a color', mode='radio', value=color, live=True, options=[
+                'blue', 'green', 'yellow', 'orange', 'red',
+            ]),
+            f'You chose {color}.'
+        )

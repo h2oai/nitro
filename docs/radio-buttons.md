@@ -79,3 +79,23 @@ view(f'You chose {choice}.')
 
 
 ![Screenshot](assets/screenshots/radio_icon.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+color = 'yellow'  # Initial value
+while True:
+    color = view(
+        box('Choose a color', mode='radio', value=color, live=True, options=[
+            'blue', 'green', 'yellow', 'orange', 'red',
+        ]),
+        f'You chose {color}.'
+    )
+```
+
+
+![Screenshot](assets/screenshots/radio_live.png)
