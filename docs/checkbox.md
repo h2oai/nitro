@@ -30,3 +30,21 @@ view(f'Keep me signed in: {keep_signed_in}.')
 
 
 ![Screenshot](assets/screenshots/checkbox_value.png)
+
+
+## Capture changes immediately
+
+Set `live=True` to capture changes immediately.
+
+
+```py
+keep_signed_in = True
+while True:
+    keep_signed_in = view(
+        box('Remember me', value=keep_signed_in, live=True),
+        "Keep me signed in." if keep_signed_in else "Don't keep me signed in.",
+    )
+```
+
+
+![Screenshot](assets/screenshots/checkbox_live.png)

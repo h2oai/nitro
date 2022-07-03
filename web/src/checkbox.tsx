@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { Checkbox as FCheckbox } from '@fluentui/react';
-import React from 'react';
 import styled from 'styled-components';
 import { B } from './core';
 import { BoxProps, make } from './ui';
@@ -23,9 +22,10 @@ const Container = styled.div`
 `
 export const Checkbox = make(({ box }: BoxProps) => {
   const
-    { context, value, text } = box,
+    { context, value, text, live } = box,
     onChecked = (checked?: B) => {
       context.record(checked ? true : false)
+      if (live) context.commit()
     },
     render = () => {
       return (
@@ -39,7 +39,7 @@ export const Checkbox = make(({ box }: BoxProps) => {
       )
     }
 
-  onChecked(value ? true : false)
+  context.record(value ? true : false)
 
   return { render }
 })
