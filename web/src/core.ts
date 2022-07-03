@@ -222,3 +222,8 @@ export const newIncr = (start = 0) => {
   return () => i++
 }
 export type Incr = ReturnType<typeof newIncr>
+export function areSetsEqual<T>(xs: Set<T>, ys: Set<T>) {
+  if (xs.size !== ys.size) return false
+  for (const x of xs) if (!ys.has(x)) return false
+  return true
+}

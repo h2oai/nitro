@@ -14,25 +14,29 @@
 
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { B, Dict, isB, isN, S, signal, U } from './core';
+import { areSetsEqual, B, Dict, isB, isN, S, signal, U } from './core';
 import { markdown } from './markdown';
-import { selectedsOf } from './options';
-import { Header, Option } from './protocol';
+import { selectedOf, selectedsOf } from './options';
+import { Box, Header, Option } from './protocol';
 import { BoxProps, make } from './ui';
 
 type TableRow = { key: S }
 type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
+
 export const Table = make(({ box }: BoxProps) => {
   const
     { context, headers, options, multiple } = box,
-    isList = isB(multiple),
-    selecteds = selectedsOf(box),
+    isMultiple = multiple === true,
+    isSingle = multiple === false,
+    isList = isMultiple || isSingle,
+    selectedOne = selectedOf(box),
+    selecteds = isSingle && selectedOne ? [selectedOne] : selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => {
       if (isList) {
         const vs = Array.from(selectedValues)
-        context.record(multiple ? vs : vs.length ? vs[0] : null)
+        context.record(isMultiple ? vs : vs.length ? vs[0] : null)
       } else {
         context.record(null)
       }
@@ -172,10 +176,16 @@ export const Table = make(({ box }: BoxProps) => {
     initSelection = () => {
       const selection = new Selection({
         onSelectionChanged: () => {
-          const items = selection.getSelection() as TableRow[]
-          selectedValues.clear()
-          for (const item of items) selectedValues.add(item.key)
-          capture()
+          const
+            items = selection.getSelection() as TableRow[],
+            newSelectedValues = new Set<S>(items.map(item => item.key))
+
+          // Prevent inf loop: don't commit unless selection has changed.
+          if (!areSetsEqual(selectedValues, newSelectedValues)) {
+            selectedValues.clear()
+            for (const v of newSelectedValues) selectedValues.add(v)
+            capture()
+          }
         }
       })
       selection.setItems(rows)
@@ -229,7 +239,7 @@ export const Table = make(({ box }: BoxProps) => {
           ariaLabelForSelectAllCheckbox="Select All"
           checkButtonAriaLabel="Select"
           onRenderItemColumn={onRenderItemColumn}
-          selectionMode={isList ? multiple ? SelectionMode.multiple : SelectionMode.single : SelectionMode.none}
+          selectionMode={isMultiple ? SelectionMode.multiple : isSingle ? SelectionMode.single : SelectionMode.none}
           checkboxVisibility={isList ? undefined : CheckboxVisibility.hidden}
         />
       )
