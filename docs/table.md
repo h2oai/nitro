@@ -240,7 +240,6 @@ choice = view(box(
         ]),
     ],
 ))
-view(f'You chose {choice}.')
 ```
 
 
@@ -279,7 +278,6 @@ choice = view(box(
         ]),
     ],
 ))
-view(f'You chose {choice}.')
 ```
 
 

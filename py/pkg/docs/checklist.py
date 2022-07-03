@@ -61,7 +61,7 @@ def checklist_selected(view: View):  # height 3
 
 # ## Handle changes immediately
 # Set `live=True` to handle changes immediately.
-def checklist_live(view: View):  # height 4
+def checklist_live(view: View):  # height 3
     choices = ['yellow', 'red']  # Initial selection
     while True:
         choices = view(

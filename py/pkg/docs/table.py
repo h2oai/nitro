@@ -204,7 +204,6 @@ def table_grouped(view: View):  # height 7
             ]),
         ],
     ))
-    view(f'You chose {choice}.')
 
 
 # ## Group rows at multiple levels
@@ -236,7 +235,6 @@ def table_multilevel(view: View):  # height 8
             ]),
         ],
     ))
-    view(f'You chose {choice}.')
 
 
 # ## Set column width
