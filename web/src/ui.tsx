@@ -40,7 +40,7 @@ export const noopClientContext: ClientContext = {
   switch: noop,
 }
 
-export const newClientContext = (xid: S, server: Server, onBusy: () => void): ClientContext => {
+export const newClientContext = (server: Server, onBusy: () => void): ClientContext => {
   const
     inputs: Array<Input> = [],
     record = (index: any, xid: S, value: InputValue) => {
@@ -48,7 +48,7 @@ export const newClientContext = (xid: S, server: Server, onBusy: () => void): Cl
     },
     commit = () => {
       onBusy()
-      server.send({ t: MessageType.Input, xid, inputs: inputs.slice() })
+      server.send({ t: MessageType.Input, inputs: inputs.slice() })
     },
     change = (m: S, p?: Dict<S>) => {
       onBusy()

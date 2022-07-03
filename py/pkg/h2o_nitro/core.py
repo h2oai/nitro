@@ -571,7 +571,7 @@ def _collect_delegates(d: Dict[str, FunctionType], options: Optional[Sequence[Op
             _collect_delegates(d, opt.options)
 
 
-def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
+def _interpret(msg, expected_type: int):
     if isinstance(msg, dict):
         t = msg.get('t')
 
@@ -588,12 +588,6 @@ def _interpret(msg, expected_type: int, expected_xid: Optional[str] = None):
             raise ProtocolError(400, f'unexpected message: want {expected_type}, got {t}')
 
         if t == _MsgType.Input:
-            xid = msg.get('xid')
-
-            if xid != expected_xid:
-                # TODO maintain skip list of used correlation IDs?
-                raise ProtocolError(400, f'unexpected message id: want {expected_xid}, got {xid}')
-
             inputs = msg.get('inputs')
 
             n = len(inputs)
@@ -634,7 +628,6 @@ def _marshal_set(
 ):
     return _marshal(dict(
         t=_MsgType.Set,
-        xid=_xid(),
         settings=_clean(dict(
             title=title,
             caption=caption,
@@ -773,10 +766,10 @@ class View(_View):
             except InterruptError:
                 return
 
-    def _read(self, expected: int, xid: Optional[str] = None):
+    def _read(self, expected: int):
         m = self._recv()
         if m:
-            return _interpret(_unmarshal(m), expected, xid)
+            return _interpret(_unmarshal(m), expected)
         raise InterruptError()
 
     def set(
@@ -827,7 +820,6 @@ class View(_View):
             image: Optional[str] = None,
             fit: Optional[str] = None,
     ):
-        xid = _xid()
         b = Box(
             items=items,
             row=row,
@@ -870,13 +862,12 @@ class View(_View):
 
         self._send(_marshal(_clean(dict(
             t=_MsgType.Output,
-            xid=xid,
             box=b.dump(),
             edit=edit.dump() if edit else None,
         ))))
 
         if read:
-            res = self._read(_MsgType.Input, xid)
+            res = self._read(_MsgType.Input)
             return res
 
 
@@ -928,10 +919,10 @@ class AsyncView(_View):
             except InterruptError:
                 return
 
-    async def _read(self, expected: int, xid: Optional[str] = None):
+    async def _read(self, expected: int):
         m = await self._recv()
         if m:
-            return _interpret(_unmarshal(m), expected, xid)
+            return _interpret(_unmarshal(m), expected)
         raise InterruptError()
 
     async def set(
@@ -982,7 +973,6 @@ class AsyncView(_View):
             image: Optional[str] = None,
             fit: Optional[str] = None,
     ):
-        xid = _xid()
         b = Box(
             items=items,
             row=row,
@@ -1025,13 +1015,12 @@ class AsyncView(_View):
 
         await self._send(_marshal(_clean(dict(
             t=_MsgType.Output,
-            xid=xid,
             box=b.dump(),
             edit=edit.dump() if edit else None,
         ))))
 
         if read:
-            res = await self._read(_MsgType.Input, xid)
+            res = await self._read(_MsgType.Input)
             return res
 
 

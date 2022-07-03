@@ -173,9 +173,9 @@ const getHashRPC = (): HashRPC | null => {
 
 const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>) => {
   const
-    invalidate = (xid: S, server: Server) => {
+    invalidate = (server: Server) => {
       client.busy = false
-      client.context = newClientContext(xid, server, () => {
+      client.context = newClientContext(server, () => {
         client.busy = true
         stateB({ t: AppStateT.Connected, client })
       })
@@ -207,7 +207,7 @@ const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>)
               case MessageType.Output:
                 {
                   const
-                    { xid, box: rawBox, edit: rawEdit } = msg,
+                    { box: rawBox, edit: rawEdit } = msg,
                     box = sanitizeBox(rawBox),
                     boxes = box.items ?? [],
                     { body, popup } = client,
@@ -298,13 +298,13 @@ const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>)
                     }
                     reIndex(body, newIncr())
                   }
-                  invalidate(xid, server)
+                  invalidate(server)
                 }
                 break
               case MessageType.Set:
                 {
                   const
-                    { xid, settings } = msg,
+                    { settings } = msg,
                     { title, caption, menu, nav, theme, plugins, mode } = settings
 
                   if (title) client.titleB(title)
@@ -329,7 +329,7 @@ const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>)
 
                   const state = stateB()
                   if (state.t === AppStateT.Connected) {
-                    invalidate(xid, server)
+                    invalidate(server)
                   }
                 }
                 break
@@ -390,7 +390,6 @@ export const App = make(({ server, client }: { server: Server, client: Client })
 
           return (
             <>
-              {busy && <Busy timeout={500} />}
               <div className='view'>
                 {!isChromeless && <div className='art' />}
                 <div className='page'>

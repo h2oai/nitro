@@ -67,16 +67,13 @@ export type Message = {
   params?: Dict<S> // params
 } | {
   t: MessageType.Input,
-  xid: S // correlation id
   inputs: Array<Input> // inputs
 } | {
   t: MessageType.Output
-  xid: S // correlation id
   box: Box // root view
   edit?: Edit // edit command
 } | {
   t: MessageType.Set,
-  xid: S // TODO Remove?
   settings: Settings
 }
 

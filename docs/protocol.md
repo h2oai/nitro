@@ -82,11 +82,8 @@ to the `method` sent in the `Join` message:
 | Name   | Type    | Required? | Description    | 
 |--------|---------|-----------|----------------|
 | `t`    | `int=5` | Y         | Message type   |
-| `xid`  | `str`   | Y         | Correlation ID |
 | `box`  | `dict`  | Y         | `Box`          |
 | `edit` | `dict`  | N         | `Edit`         |
-
-The correlation ID `xid` is expected to be unique per message at the connection (WebSocket) level.
 
 The `box` and `edit` attributes hold the view's root box and the kind of modification respectively,
 described in [protocol.ts](https://github.com/h2oai/nitro/blob/main/web/src/protocol.ts).
@@ -102,10 +99,8 @@ When the user provides input, the client sends an `Input` message:
 | Name     | Type           | Required? | Description    | 
 |----------|----------------|-----------|----------------|
 | `t`      | `int=4`        | Y         | Message type   |
-| `xid`    | `str`          | Y         | Correlation ID |
 | `inputs` | `array<Input>` | Y         | `Input` array  |
 
-The correlation ID `xid` will match the one on the `Output` message sent by the server.
 Note that unlike typical client/server applications where the client makes the request,
 and the server replies with a response, the roles in Nitro are reversed: the server makes
 a request using an `Output` message, and the client responds with an `Input` message.
