@@ -62,3 +62,27 @@ view(f'You chose {choices}.')
 
 
 ![Screenshot](assets/screenshots/checklist_selected.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+choices = ['yellow', 'red']  # Initial selection
+while True:
+    choices = view(
+        box(
+            'Choose some colors',
+            mode='check',
+            value=choices,
+            live=True,
+            options=['green', 'yellow', 'orange', 'red']
+        ),
+        f'You chose {choices}.'
+    )
+```
+
+
+![Screenshot](assets/screenshots/checklist_live.png)

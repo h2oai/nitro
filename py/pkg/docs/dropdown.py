@@ -87,15 +87,15 @@ def dropdown_editable(view: View):  # height 2
 # ## Handle changes immediately
 # Set `live=True` to handle changes immediately.
 def dropdown_live(view: View):  # height 3
-    color = 'yellow'
+    choice = 'yellow'
     while True:
-        color = view(
+        choice = view(
             box(
                 'Choose a color',
                 mode='menu',
-                value=color,
+                value=choice,
                 live=True,
                 options=['green', 'yellow', 'orange', 'red'],
             ),
-            f'You chose {color}.'
+            f'You chose {choice}.'
         )

@@ -109,17 +109,17 @@ Set `live=True` to handle changes immediately.
 
 
 ```py
-color = 'yellow'
+choice = 'yellow'
 while True:
-    color = view(
+    choice = view(
         box(
             'Choose a color',
             mode='menu',
-            value=color,
+            value=choice,
             live=True,
             options=['green', 'yellow', 'orange', 'red'],
         ),
-        f'You chose {color}.'
+        f'You chose {choice}.'
     )
 ```
 

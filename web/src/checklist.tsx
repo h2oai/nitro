@@ -25,7 +25,7 @@ const Container = styled.div`
 `
 export const Checklist = make(({ box }: BoxProps) => {
   const
-    { context, text, options } = box,
+    { context, text, options, live } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.record(Array.from(selection)),
@@ -36,6 +36,7 @@ export const Checklist = make(({ box }: BoxProps) => {
         selection.delete(String(value))
       }
       capture()
+      if (live) context.commit()
     },
     render = () => {
       const
