@@ -118,11 +118,11 @@ def slider_decimal_step(view: View):  # height 2
 
 
 # ## Capture changes immediately
-# Set `live=True` to immediately capture changes to the slider.
+# Set `live=True` to capture changes immediately.
 def slider_live(view: View):  # height 2
     speed = 5  # Starting value
     while True:
         speed = view(
             box('Speed (km/h)', mode='range', value=speed, live=True),
-            box(f'Your speed is {speed} km/h'),
+            f'Your speed is {speed} km/h',
         )

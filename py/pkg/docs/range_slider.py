@@ -111,11 +111,11 @@ def range_slider_decimal_step(view: View):  # height 2
 
 
 # ## Capture changes immediately
-# Set `live=True` to immediately capture changes to the range slider.
+# Set `live=True` to capture changes immediately.
 def range_slider_live(view: View):  # height 2
     start, end = 3, 7  # Starting values
     while True:
         start, end = view(
             box('Speed range (km/h)', value=(start, end), live=True),
-            box(f'Your speed ranges between {start} and {end} km/h'),
+            f'Your speed ranges between {start} and {end} km/h',
         )

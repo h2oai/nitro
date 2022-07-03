@@ -187,7 +187,7 @@ view(f'Your speed is {speed} m/s')
 
 ## Capture changes immediately
 
-Set `live=True` to immediately capture changes to the slider.
+Set `live=True` to capture changes immediately.
 
 
 ```py
@@ -195,7 +195,7 @@ speed = 5  # Starting value
 while True:
     speed = view(
         box('Speed (km/h)', mode='range', value=speed, live=True),
-        box(f'Your speed is {speed} km/h'),
+        f'Your speed is {speed} km/h',
     )
 ```
 
