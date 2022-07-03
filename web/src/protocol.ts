@@ -178,6 +178,7 @@ export type Box = {
   required?: B
   password?: B
   editable?: B
+  live?: B
 }
 
 export type Option = {

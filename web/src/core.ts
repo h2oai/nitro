@@ -191,6 +191,13 @@ export const anyN = (...xs: any[]) => xs.some(isN)
 export const anyS = (...xs: any[]) => xs.some(isS)
 export const anyD = (...xs: any[]) => xs.some(x => x !== undefined)
 export const defer = (seconds: U, f: TimerHandler) => window.setTimeout(f, seconds * 1000)
+export const debounce = (ms: U, f: () => void) => {
+  let t: U
+  return () => {
+    window.clearTimeout(t)
+    t = window.setTimeout(() => f(), ms)
+  }
+}
 export const words = (x: S) => x.trim().split(/\s+/g)
 export const snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase())
 export const valueFromRange = (value: any, min: any, max: any, step: any): N | undefined => {

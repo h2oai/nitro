@@ -336,6 +336,7 @@ class Box:
             required: Optional[bool] = None,
             password: Optional[bool] = None,
             editable: Optional[bool] = None,
+            live: Optional[bool] = None,
             ignore: Optional[bool] = None,
     ):
         self.xid = _xid()
@@ -396,6 +397,7 @@ class Box:
         self.required = required
         self.password = password
         self.editable = editable
+        self.live = live
         self.ignore = ignore
 
     def dump(self) -> dict:
@@ -447,6 +449,7 @@ class Box:
             required=self.required,
             password=self.password,
             editable=self.editable,
+            live=self.live,
             ignore=self.ignore,
         ))
 

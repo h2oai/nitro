@@ -390,6 +390,7 @@ export const App = make(({ server, client }: { server: Server, client: Client })
 
           return (
             <>
+              {busy && <Busy timeout={500} />}
               <div className='view'>
                 {!isChromeless && <div className='art' />}
                 <div className='page'>
