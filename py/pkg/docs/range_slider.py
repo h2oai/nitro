@@ -27,6 +27,17 @@ def range_slider_basic(view: View):  # height 2
     view(f'Your speed ranges between {start} and {end} km/h')
 
 
+# ## Capture changes immediately
+# Set `live=True` to immediately capture changes to the range slider.
+def range_slider_live(view: View):  # height 2
+    start, end = 3, 7  # Starting values
+    while True:
+        start, end = view(
+            box('Speed range (km/h)', value=(start, end), live=True),
+            box(f'Your speed ranges between {start} and {end} km/h'),
+        )
+
+
 # ## Set min value
 # Set `min=` to specify a minimum value.
 def range_slider_min(view: View):  # height 2
