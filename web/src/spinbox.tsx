@@ -19,11 +19,14 @@ import { BoxProps, make } from './ui';
 
 export const Spinbox = make(({ box }: BoxProps) => {
   const
-    { context, text, value, min, max, step, precision, placeholder } = box,
+    { context, text, value, min, max, step, precision, placeholder, live } = box,
     defaultValue = valueFromRange(value, min, max, step),
     onChange = (_: React.SyntheticEvent<HTMLElement>, value?: string): void => {
       let v = isS(value) ? parseFloat(value) : NaN
-      if (!isNaN(v)) context.record(v)
+      if (!isNaN(v)) {
+        context.record(v)
+        if (live) context.commit()
+      }
     },
     render = () => {
       return (

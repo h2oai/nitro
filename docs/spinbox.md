@@ -189,3 +189,21 @@ view(f'Your speed is {speed} m/s')
 
 
 ![Screenshot](assets/screenshots/spinbox_decimal_step.png)
+
+
+## Capture changes immediately
+
+Set `live=True` to immediately capture changes.
+
+
+```py
+speed = 42  # Starting value
+while True:
+    speed = view(
+        box('Speed (km/h)', value=speed, live=True),
+        box(f'Your speed is {speed} km/h'),
+    )
+```
+
+
+![Screenshot](assets/screenshots/spinbox_live.png)
