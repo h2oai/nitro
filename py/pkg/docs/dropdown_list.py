@@ -60,3 +60,21 @@ def multi_dropdown_selected(view: View):  # height 2
         ]
     ))
     view(f'You chose {choices}.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def multi_dropdown_live(view: View):  # height 3
+    choices = ['green', 'yellow']
+    while True:
+        choices = view(
+            box(
+                'Choose some colors',
+                mode='menu',
+                value=choices,
+                multiple=True,
+                live=True,
+                options=['green', 'yellow', 'orange', 'red'],
+            ),
+            f'You chose {choices}.'
+        )

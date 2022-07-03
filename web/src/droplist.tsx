@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const Droplist = make(({ box }: BoxProps) => {
   const
-    { context, text, placeholder, error, required, options } = box,
+    { context, text, placeholder, error, required, options, live } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
@@ -35,6 +35,7 @@ export const Droplist = make(({ box }: BoxProps) => {
           selection.delete(key)
         }
         capture()
+        if (live) context.commit()
       }
     },
     render = () => {

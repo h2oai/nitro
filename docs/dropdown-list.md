@@ -65,3 +65,28 @@ view(f'You chose {choices}.')
 
 
 ![Screenshot](assets/screenshots/multi_dropdown_selected.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+choices = ['green', 'yellow']
+while True:
+    choices = view(
+        box(
+            'Choose some colors',
+            mode='menu',
+            value=choices,
+            multiple=True,
+            live=True,
+            options=['green', 'yellow', 'orange', 'red'],
+        ),
+        f'You chose {choices}.'
+    )
+```
+
+
+![Screenshot](assets/screenshots/multi_dropdown_live.png)

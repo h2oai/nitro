@@ -112,9 +112,13 @@ Set `live=True` to handle changes immediately.
 color = 'yellow'
 while True:
     color = view(
-        box('Choose a color', mode='menu', value=color, live=True, options=[
-            'blue', 'green', 'yellow', 'orange', 'red', 'black',
-        ]),
+        box(
+            'Choose a color',
+            mode='menu',
+            value=color,
+            live=True,
+            options=['green', 'yellow', 'orange', 'red'],
+        ),
         f'You chose {color}.'
     )
 ```
