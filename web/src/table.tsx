@@ -26,7 +26,7 @@ type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
 export const Table = make(({ box }: BoxProps) => {
   const
-    { context, headers, options, multiple } = box,
+    { context, headers, options, multiple, live } = box,
     isMultiple = multiple === true,
     isSingle = multiple === false,
     isList = isMultiple || isSingle,
@@ -185,6 +185,7 @@ export const Table = make(({ box }: BoxProps) => {
             selectedValues.clear()
             for (const v of newSelectedValues) selectedValues.add(v)
             capture()
+            if (live) context.commit()
           }
         }
       })
