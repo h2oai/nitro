@@ -29,7 +29,7 @@ const
   },
   hasActions = (boxes: Box[]): B => { // recursive
     for (const box of boxes) {
-      if (box.halt) return true
+      if (box.halt || box.live) return true
       if (box.items) {
         if (hasActions(box.items)) return true
       } else {
