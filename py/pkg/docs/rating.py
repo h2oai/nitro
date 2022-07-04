@@ -62,3 +62,14 @@ def rating_min_max(view: View):  # height 2
 def rating_range(view: View):  # height 2
     stars = view(box('Rate your experience', mode='rating', value=3, range=(0, 10)))
     view(f'Your rating was {stars} stars.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def rating_live(view: View):  # height 2
+    stars = 3
+    while True:
+        stars = view(
+            box('Rate your experience', mode='rating', value=stars, live=True),
+            f'Your rating was {stars} stars.'
+        )

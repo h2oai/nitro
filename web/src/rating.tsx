@@ -20,12 +20,13 @@ import { BoxProps, make } from './ui';
 
 export const Rating = make(({ box }: BoxProps) => {
   const
-    { context, text, placeholder, min, max, value } = box,
+    { context, text, placeholder, min, max, value, live } = box,
     allowZeroStars = isN(min) && min <= 0,
     defaultRating = toN(value) ?? (allowZeroStars ? 0 : 1),
     onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {
       if (rating === undefined) return
       context.record(rating)
+      if (live) context.commit()
     },
     render = () => {
       return (

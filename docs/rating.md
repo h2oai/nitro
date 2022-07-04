@@ -88,3 +88,21 @@ view(f'Your rating was {stars} stars.')
 
 
 ![Screenshot](assets/screenshots/rating_range.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+stars = 3
+while True:
+    stars = view(
+        box('Rate your experience', mode='rating', value=stars, live=True),
+        f'Your rating was {stars} stars.'
+    )
+```
+
+
+![Screenshot](assets/screenshots/rating_live.png)
