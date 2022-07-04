@@ -63,3 +63,14 @@ def month_min_max(view: View):  # height 4
 def month_range(view: View):  # height 4
     month = view(box('Pick a month', mode='month', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {month}.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def month_live(view: View):  # height 4
+    month = '2021-10-10'
+    while True:
+        month = view(
+            box('Pick a month', mode='month', value=month, live=True),
+            f'You picked {month} (UTC).'
+        )

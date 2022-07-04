@@ -63,3 +63,14 @@ def week_min_max(view: View):  # height 4
 def week_range(view: View):  # height 4
     week = view(box('Pick a week', mode='week', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {week}.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def week_live(view: View):  # height 4
+    week = '2021-10-10'
+    while True:
+        week = view(
+            box('Pick a week', mode='week', value=week, live=True),
+            f'You picked {week} (UTC).'
+        )

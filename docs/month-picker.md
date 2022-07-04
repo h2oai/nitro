@@ -89,3 +89,21 @@ view(f'You picked {month}.')
 
 
 ![Screenshot](assets/screenshots/month_range.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+month = '2021-10-10'
+while True:
+    month = view(
+        box('Pick a month', mode='month', value=month, live=True),
+        f'You picked {month} (UTC).'
+    )
+```
+
+
+![Screenshot](assets/screenshots/month_live.png)

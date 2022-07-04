@@ -89,3 +89,21 @@ view(f'You picked {week}.')
 
 
 ![Screenshot](assets/screenshots/week_range.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+week = '2021-10-10'
+while True:
+    week = view(
+        box('Pick a week', mode='week', value=week, live=True),
+        f'You picked {week} (UTC).'
+    )
+```
+
+
+![Screenshot](assets/screenshots/week_live.png)
