@@ -48,3 +48,26 @@ view(f'You chose {color}.')
 
 
 ![Screenshot](assets/screenshots/color_value.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+color = [162, 65, 232, 100]
+while True:
+    color = view(
+        box(
+            'Choose a color',
+            mode='color',
+            value=f'rgba({color[0]},{color[1]},{color[2]},{color[3]}%)',
+            live=True,
+        ),
+        f'You chose {color}.'
+    )
+```
+
+
+![Screenshot](assets/screenshots/color_live.png)

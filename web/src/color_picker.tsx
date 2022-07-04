@@ -20,12 +20,15 @@ import { BoxProps, make } from './ui';
 
 export const ColorPicker = make(({ box }: BoxProps) => {
   const
-    { context, text, value } = box,
+    { context, text, value, live } = box,
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
     colorToTuple = ({ r, g, b, a }: IRGB) => [r, g, b, a ?? 100],
-    capture = (color: IRGB) => context.record(colorToTuple(color)),
-    onChange = (_: React.SyntheticEvent<HTMLElement>, color: IColor) => capture(color),
+    record = (color: IRGB) => {
+      context.record(colorToTuple(color))
+      if (live) context.commit()
+    },
+    onChange = (_: React.SyntheticEvent<HTMLElement>, color: IColor) => record(color),
     render = () => {
       return (
         <Labeled label={text}>
