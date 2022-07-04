@@ -58,3 +58,14 @@ def time_24_seconds(view: View):  # height 2
 def time_24_hour(view: View):  # height 2
     time = view(box('Set alarm for:', mode='time', value='15'))
     view(f'Alarm set for {time}.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def time_live(view: View):  # height 3
+    time = '3:04PM'
+    while True:
+        time = view(
+            box('Set alarm for:', mode='time', value=time, live=True),
+            f'Alarm will be set for {time}.',
+        )

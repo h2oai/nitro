@@ -84,3 +84,21 @@ view(f'Alarm set for {time}.')
 
 
 ![Screenshot](assets/screenshots/time_24_hour.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+time = '3:04PM'
+while True:
+    time = view(
+        box('Set alarm for:', mode='time', value=time, live=True),
+        f'Alarm will be set for {time}.',
+    )
+```
+
+
+![Screenshot](assets/screenshots/time_live.png)
