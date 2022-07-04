@@ -13,33 +13,27 @@
 // limitations under the License.
 
 import { DatePicker as FDatePicker } from '@fluentui/react';
-import React from 'react';
 import { dateToString, toDate } from './core';
 import { BoxProps, make } from './ui';
 
-
 export const DatePicker = make(({ box }: BoxProps) => {
   const
-    { context, value } = box,
+    { context, text, placeholder, value, min, max, required, live } = box,
     defaultDate = toDate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
+    minDate = toDate(min),
+    maxDate = toDate(max),
     onSelectDate = (d?: Date | null) => {
-      console.log('in select', d)
       context.record(dateToString(d ?? defaultDate))
+      if (live) context.commit()
     },
     render = () => {
-      const
-        { text, placeholder, value, min, max, required } = box,
-        date = toDate(value),
-        minDate = toDate(min),
-        maxDate = toDate(max)
-
       // TODO firstDayOfWeek, firstWeekOfYear customization
       // TODO pass strings for localization
       return (
         <FDatePicker
           label={text}
-          value={date}
+          value={defaultDate}
           minDate={minDate}
           maxDate={maxDate}
           placeholder={placeholder}

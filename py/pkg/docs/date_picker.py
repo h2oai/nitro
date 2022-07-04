@@ -20,7 +20,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # Set `mode='date'` to show a date-picker.
-def date_basic(view: View):  # height 2
+def date_basic(view: View):  # height 3
     date = view(box('Pick a date', mode='date'))
     view(f'You picked {date}.')
 
@@ -30,35 +30,35 @@ def date_basic(view: View):  # height 2
 #
 # Dates must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
 # Date-only strings (e.g. "1970-01-01") are treated as UTC, not local.
-def date_value(view: View):  # height 2
+def date_value(view: View):  # height 3
     date = view(box('Pick a date', mode='date', value='2021-10-10'))
     view(f'You picked {date}.')
 
 
 # ## Set placeholder text
 # Set `placeholder=` to show placeholder text.
-def date_placeholder(view: View):  # height 2
+def date_placeholder(view: View):  # height 3
     date = view(box('Deliver on', mode='date', placeholder='Delivery date'))
     view(f'You picked {date}.')
 
 
 # ## Set min date
 # Set `min=` to specify a minimum date.
-def date_min(view: View):  # height 2
+def date_min(view: View):  # height 3
     date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01'))
     view(f'You picked {date}.')
 
 
 # ## Set max date
 # Set `max=` to specify a maximum date.
-def date_max(view: View):  # height 2
+def date_max(view: View):  # height 3
     date = view(box('Pick a date', mode='date', value='2021-10-10', max='2022-12-31'))
     view(f'You picked {date}.')
 
 
 # ## Combine min and max date
 # Set both `min=` and `max=` to restrict selection between two dates.
-def date_min_max(view: View):  # height 2
+def date_min_max(view: View):  # height 3
     date = view(box('Pick a date', mode='date', value='2021-10-10', min='2019-01-01', max='2022-12-31'))
     view(f'You picked {date}.')
 
@@ -67,13 +67,24 @@ def date_min_max(view: View):  # height 2
 # Set `range=` to a `(min, max)` tuple to restrict selection between two dates.
 #
 # This is a shorthand notation for setting `min=` and `max=` individually.
-def date_range(view: View):  # height 2
+def date_range(view: View):  # height 3
     date = view(box('Pick a date', mode='date', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {date}.')
 
 
 # ## Mark as required
 # Set `required=True` to indicate that input is required.
-def date_required(view: View):  # height 2
+def date_required(view: View):  # height 3
     date = view(box('Pick a date', mode='date', required=True))
     view(f'You picked {date}.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def date_live(view: View):  # height 3
+    date = '2021-10-10'  # Initial value (UTC)
+    while True:
+        date = view(
+            box('Pick a date', mode='date', value=date, live=True),
+            f'You picked {date} (UTC).',
+        )
