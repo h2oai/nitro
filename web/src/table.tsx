@@ -14,10 +14,10 @@
 
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { areSetsEqual, B, Dict, isB, isN, S, signal, U } from './core';
+import { areSetsEqual, B, Dict, isN, S, signal, U } from './core';
 import { markdown } from './markdown';
 import { selectedOf, selectedsOf } from './options';
-import { Box, Header, Option } from './protocol';
+import { Header, Option } from './protocol';
 import { BoxProps, make } from './ui';
 
 type TableRow = { key: S }
