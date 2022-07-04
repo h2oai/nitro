@@ -31,6 +31,7 @@ export const Calendar = make(({ box }: BoxProps) => {
     onSelectDate = (d?: Date) => {
       const date = d ?? new Date()
       context.record(dateToString(date))
+      if (live) context.commit()
       dateB(date)
     },
     render = () => {

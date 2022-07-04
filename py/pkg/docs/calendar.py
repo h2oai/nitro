@@ -64,3 +64,14 @@ def day_min_max(view: View):  # height 4
 def day_range(view: View):  # height 4
     date = view(box('Pick a date', mode='day', value='2021-10-10', range=('2019-01-01', '2022-12-31')))
     view(f'You picked {date}.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def day_live(view: View):  # height 4
+    date = '2021-10-10'
+    while True:
+        date = view(
+            box('Pick a date', mode='day', value=date, live=True),
+            f'You picked {date} (UTC).'
+        )

@@ -89,3 +89,21 @@ view(f'You picked {date}.')
 
 
 ![Screenshot](assets/screenshots/day_range.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+date = '2021-10-10'
+while True:
+    date = view(
+        box('Pick a date', mode='day', value=date, live=True),
+        f'You picked {date} (UTC).'
+    )
+```
+
+
+![Screenshot](assets/screenshots/day_live.png)
