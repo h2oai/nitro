@@ -185,9 +185,9 @@ view(f'Your speed is {speed} m/s')
 ![Screenshot](assets/screenshots/slider_decimal_step.png)
 
 
-## Capture changes immediately
+## Handle changes immediately
 
-Set `live=True` to capture changes immediately.
+Set `live=True` to handle changes immediately.
 
 
 ```py

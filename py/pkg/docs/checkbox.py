@@ -34,8 +34,8 @@ def checkbox_value(view: View):  # height 2
     view(f'Keep me signed in: {keep_signed_in}.')
 
 
-# ## Capture changes immediately
-# Set `live=True` to capture changes immediately.
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
 def checkbox_live(view: View):  # height 2
     keep_signed_in = True
     while True:

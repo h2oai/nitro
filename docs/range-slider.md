@@ -171,9 +171,9 @@ view(f'Your speed ranges between {start} and {end} m/s')
 ![Screenshot](assets/screenshots/range_slider_decimal_step.png)
 
 
-## Capture changes immediately
+## Handle changes immediately
 
-Set `live=True` to capture changes immediately.
+Set `live=True` to handle changes immediately.
 
 
 ```py

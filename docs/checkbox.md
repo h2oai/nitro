@@ -32,9 +32,9 @@ view(f'Keep me signed in: {keep_signed_in}.')
 ![Screenshot](assets/screenshots/checkbox_value.png)
 
 
-## Capture changes immediately
+## Handle changes immediately
 
-Set `live=True` to capture changes immediately.
+Set `live=True` to handle changes immediately.
 
 
 ```py

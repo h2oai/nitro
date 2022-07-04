@@ -122,8 +122,8 @@ def spinbox_decimal_step(view: View):  # height 2
     view(f'Your speed is {speed} m/s')
 
 
-# ## Capture changes immediately
-# Set `live=True` to capture changes immediately.
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
 def spinbox_live(view: View):  # height 2
     speed = 42  # Starting value
     while True:
