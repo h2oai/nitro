@@ -54,3 +54,20 @@ def tag_picker_selected(view: View):  # height 2
         option('red', 'Red', selected=True),
     ]))
     view(f'You chose {tags}.')
+
+
+# ## Handle changes immediately
+# Set `live=True` to handle changes immediately.
+def tag_picker_live(view: View):  # height 2
+    tags = ['yellow', 'red']
+    while True:
+        tags = view(
+            box(
+                'Choose some tags',
+                mode='tag',
+                value=tags,
+                options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'],
+                live=True,
+            ),
+            f'You chose {tags}.'
+        )

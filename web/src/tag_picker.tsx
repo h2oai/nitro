@@ -19,15 +19,19 @@ import { Labeled } from './label';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
+const keysFromTags = (tags: ITag[]) => tags.map(tag => String(tag.key))
 
 export const TagPicker = make(({ box }: BoxProps) => {
   const
-    { context, text, options } = box,
+    { context, text, options, live } = box,
     selectedOptions = selectedsOf(box),
     selectedKeys = selectedOptions.map(o => String(o.value)),
     tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),
-    selectedTags = tags.filter(tag => selectedKeys.includes(tag.key as S)),
-    capture = (tags: ITag[]) => context.record(tags.map(tag => String(tag.key))),
+    initialTags = tags.filter(tag => selectedKeys.includes(tag.key as S)),
+    record = (tags: ITag[]) => {
+      context.record(keysFromTags(tags))
+      if (live) context.commit()
+    },
     listContainsTagList = (tag: ITag, tagList?: ITag[]) => (!tagList || !tagList.length || tagList.length === 0)
       ? false
       : tagList.some(compareTag => compareTag.key === tag.key),
@@ -38,7 +42,7 @@ export const TagPicker = make(({ box }: BoxProps) => {
     resolve = (item: ITag) => item.name,
     whenEmpty = () => tags,
     onChange = (tags?: ITag[]) => {
-      if (tags) capture(tags)
+      if (tags) record(tags)
     },
     render = () => {
       return (
@@ -51,14 +55,14 @@ export const TagPicker = make(({ box }: BoxProps) => {
             onResolveSuggestions={suggest}
             getTextFromItem={resolve}
             onEmptyResolveSuggestions={whenEmpty}
-            defaultSelectedItems={selectedTags}
+            defaultSelectedItems={initialTags}
             onChange={onChange}
           />
         </Labeled>
       )
     }
 
-  capture(selectedTags)
+  context.record(keysFromTags(initialTags))
 
   return { render }
 })

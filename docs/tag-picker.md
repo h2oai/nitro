@@ -59,3 +59,27 @@ view(f'You chose {tags}.')
 
 
 ![Screenshot](assets/screenshots/tag_picker_selected.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+tags = ['yellow', 'red']
+while True:
+    tags = view(
+        box(
+            'Choose some tags',
+            mode='tag',
+            value=tags,
+            options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'],
+            live=True,
+        ),
+        f'You chose {tags}.'
+    )
+```
+
+
+![Screenshot](assets/screenshots/tag_picker_live.png)
