@@ -23,7 +23,7 @@ import { BoxProps, make } from './ui';
 const swatchCellSize = 25
 export const ColorPalette = make(({ box }: BoxProps) => {
   const
-    { context, text, options } = box,
+    { context, text, options, live } = box,
     selected = selectedOf(box),
     cells: IColorCellProps[] = options.map(c => ({
       id: String(c.value),
@@ -31,7 +31,10 @@ export const ColorPalette = make(({ box }: BoxProps) => {
       color: String(c.value),
     })),
     onChange = (_e: React.FormEvent<HTMLElement>, _id?: S, color?: S) => {
-      if (color) context.record(color)
+      if (color) {
+        context.record(color)
+        if (live) context.commit()
+      }
     },
     render = () => {
       return (

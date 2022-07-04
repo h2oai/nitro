@@ -67,3 +67,34 @@ view(f'You chose {color}.')
 
 
 ![Screenshot](assets/screenshots/palette_selected.png)
+
+
+## Handle changes immediately
+
+Set `live=True` to handle changes immediately.
+
+
+```py
+color = '#0000ff'
+while True:
+    color = view(
+        box(
+            'Choose a color',
+            mode='color',
+            value=color,
+            options=[
+                option('#ff0000', 'Red'),
+                option('#00ff00', 'Green'),
+                option('#0000ff', 'Blue'),
+                option('#ffff00', 'Yellow'),
+                option('#00ffff', 'Cyan'),
+                option('#ff00ff', 'Magenta'),
+            ],
+            live=True,
+        ),
+        f'You chose {color}.'
+    )
+```
+
+
+![Screenshot](assets/screenshots/palette_live.png)
