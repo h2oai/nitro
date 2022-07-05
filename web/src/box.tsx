@@ -27,6 +27,7 @@ import { Droplist } from './droplist';
 import { FileUpload } from './file_upload';
 import { PluginBox } from './plugin';
 import { Rating } from './rating';
+import { ProgressBar } from './progress';
 import { Separator } from './separator';
 import { Slider } from './slider';
 import { Spinbox } from './spinbox';
@@ -78,6 +79,8 @@ export const XBox = ({ box }: BoxProps) => { // recursive
       return <Slider box={box} />
     case 'rating':
       return <Rating box={box} />
+    case 'progress':
+      return <ProgressBar box={box} />
     case 'separator':
       return <Separator box={box} />
     case 'table':

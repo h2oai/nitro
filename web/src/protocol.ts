@@ -124,7 +124,7 @@ export type Settings = {
 // If you add a new mode here, update heuristics.tsx to mark it as non-interactive (index=0) if applicable.
 export type BoxMode = 'none' | 'md' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
   | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color'
-  | 'rating' | 'table' | 'file' | 'separator' | 'image' | 'web'
+  | 'rating' | 'table' | 'file' | 'progress' | 'separator' | 'image' | 'web'
 
 export type Box = {
   xid: S
@@ -142,6 +142,7 @@ export type Box = {
   row?: B
   halt?: B
   title?: S
+  caption?: S
   popup?: B
   tile?: S
   cross_tile?: S

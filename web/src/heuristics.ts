@@ -176,6 +176,7 @@ export const sanitizeBox = (box: Box): Box => {
           if (!hasLinks) box.index = -1 // don't capture
         }
         break
+      case 'progress':
       case 'separator':
       case 'image':
         box.index = -1 // don't capture

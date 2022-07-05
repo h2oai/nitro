@@ -301,6 +301,7 @@ class Box:
             row: Optional[bool] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
+            caption: Optional[str] = None,
             popup: Optional[bool] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
@@ -362,6 +363,7 @@ class Box:
         self.row = row
         self.halt = halt
         self.title = title
+        self.caption = caption
         self.popup = popup
         self.tile = tile
         self.cross_tile = cross_tile
@@ -414,6 +416,7 @@ class Box:
             row=self.row,
             halt=self.halt,
             title=self.title,
+            caption=self.caption,
             popup=self.popup,
             tile=self.tile,
             cross_tile=self.cross_tile,
