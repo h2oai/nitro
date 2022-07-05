@@ -28,7 +28,7 @@ Get the "Hello World" example [hello.py](https://raw.githubusercontent.com/h2oai
     source venv/bin/activate
 
     # Install Nitro and Flask:
-    pip install h2o-nitro flask simple-websocket
+    pip install "h2o-nitro[web]" flask simple-websocket
 
     # Run the app:
     python hello.py
@@ -43,7 +43,7 @@ Get the "Hello World" example [hello.py](https://raw.githubusercontent.com/h2oai
     .\env\Scripts\activate
 
     :: Install Nitro and Flask:
-    pip install h2o-nitro flask simple-websocket
+    pip install "h2o-nitro[web]" flask simple-websocket
 
     :: Run the app:
     python hello.py
@@ -64,7 +64,7 @@ Get the "Hello World" example [hello_tornado.py](https://raw.githubusercontent.c
     source venv/bin/activate
 
     # Install Nitro and Tornado:
-    pip install h2o-nitro tornado
+    pip install "h2o-nitro[web]" tornado
 
     # Run the app:
     python hello_tornado.py
@@ -79,7 +79,7 @@ Get the "Hello World" example [hello_tornado.py](https://raw.githubusercontent.c
     .\env\Scripts\activate
 
     :: Install Nitro and Tornado:
-    pip install h2o-nitro flask simple-websocket
+    pip install "h2o-nitro[web]" flask simple-websocket
 
     :: Run the app:
     python hello_tornado.py
@@ -100,7 +100,7 @@ Get the "Hello World" example [hello_starlette.py](https://raw.githubusercontent
     source venv/bin/activate
 
     # Install Nitro and Starlette:
-    pip install h2o-nitro uvicorn starlette websockets
+    pip install "h2o-nitro[web]" uvicorn starlette websockets
 
     # Run the app:
     python -m uvicorn hello_starlette:app --reload --port 5000
@@ -115,7 +115,7 @@ Get the "Hello World" example [hello_starlette.py](https://raw.githubusercontent
     .\env\Scripts\activate
 
     :: Install Nitro and Starlette:
-    pip install h2o-nitro uvicorn starlette websockets
+    pip install "h2o-nitro[web]" uvicorn starlette websockets
 
     :: Run the app:
     python -m uvicorn hello_starlette:app --reload --port 5000
