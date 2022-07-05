@@ -13,14 +13,13 @@
 // limitations under the License.
 
 import { registerIcons } from '@fluentui/react';
-import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './app';
 import { newClient } from './client';
 import { icons } from './icons';
+import { newLocalServer } from './nitride';
 import reportWebVitals from './reportWebVitals';
 import { newSocketServer } from './socket';
-import { newLocalServer } from './nitride';
 import { loadScheme } from './theme';
 
 registerIcons({ icons })
@@ -29,10 +28,10 @@ const
   root = document.getElementById('nitro'),
   endpoint = root?.getAttribute('data-endpoint'), // TODO document
   server = endpoint ? newSocketServer(endpoint) : newLocalServer(),
-  client = newClient()
+  client = newClient(server)
 
 loadScheme(client.schemeB())
-ReactDOM.render(<App server={server} client={client} />, root);
+ReactDOM.render(<App client={client} />, root);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
