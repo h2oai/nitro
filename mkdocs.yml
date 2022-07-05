@@ -90,6 +90,7 @@ nav:
     - 'rating.md'
     - 'file-upload.md'
     - 'progress-bar.md'
+    - 'spinner.md'
     - 'separator.md'
     - 'theming.md'
     - 'advanced.md'
