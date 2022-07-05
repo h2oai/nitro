@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { anyD, anyN, Incr, isB, isN, isO, isPair, isS, isV, words, xid } from './core';
+import { anyD, anyN, B, Incr, isB, isN, isO, isPair, isS, isV, words, xid } from './core';
 import { markdown } from './markdown';
 import { Box, BoxMode, Option } from './protocol';
 import { noopContext } from './ui';
@@ -212,4 +212,31 @@ export const reIndex = (boxes: Box[], incr: Incr) => {
       }
     }
   }
+}
+
+export const hasActions = (boxes: Box[]): B => { // recursive
+  for (const box of boxes) {
+    if (box.halt || box.live) return true
+    if (box.items) {
+      if (hasActions(box.items)) return true
+    } else {
+      const { mode } = box
+      switch (mode) {
+        case 'button':
+          if (box.options.length) return true
+          break
+        case 'md':
+          if (box.index >= 0) return true
+          break
+        case 'toggle':
+        case 'progress':
+        case 'spinner':
+          return true
+        case 'table':
+          if (isB(box.multiple)) return false
+          if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
+      }
+    }
+  }
+  return false
 }

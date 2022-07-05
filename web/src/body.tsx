@@ -14,7 +14,8 @@
 
 import { ContextualMenu, Dialog, DialogType, IModalProps } from '@fluentui/react';
 import { Client } from './client';
-import { B, isB, signal, xid } from './core';
+import { signal, xid } from './core';
+import { hasActions } from './heuristics';
 import { Box } from './protocol';
 import { make, noopContext } from './ui';
 import { Zone } from './zone';
@@ -26,32 +27,6 @@ const
     index: -1, //don't capture
     options: [{ value: 'continue', text: 'Continue' }],
     context: noopContext
-  },
-  hasActions = (boxes: Box[]): B => { // recursive
-    for (const box of boxes) {
-      if (box.halt || box.live) return true
-      if (box.items) {
-        if (hasActions(box.items)) return true
-      } else {
-        const { mode } = box
-        switch (mode) {
-          case 'button':
-            if (box.options.length) return true
-            break
-          case 'md':
-            if (box.index >= 0) return true
-            break
-          case 'toggle':
-          case 'progress':
-          case 'spinner':
-            return true
-          case 'table':
-            if (isB(box.multiple)) return false
-            if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
-        }
-      }
-    }
-    return false
   },
   makeContinuable = (boxes: Box[]): Box[] => hasActions(boxes) ? boxes : [...boxes, continueButton]
 
