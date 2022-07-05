@@ -1,6 +1,7 @@
 :root {
     /* Fonts */
     --font-primary: 'Roboto Slab', serif;
+    --font-secondary: 'Roboto', sans-serif;
     --font-monospace: 'Roboto Mono', monospace;
 
     /* Theme Colors */

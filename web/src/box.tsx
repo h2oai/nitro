@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
+import { Banner } from './banner';
 import { Buttons } from './buttons';
 import { Calendar } from './calendar';
 import { Checkbox } from './checkbox';
@@ -26,11 +26,12 @@ import { Dropdown } from './dropdown';
 import { Droplist } from './droplist';
 import { FileUpload } from './file_upload';
 import { PluginBox } from './plugin';
-import { Rating } from './rating';
 import { ProgressBar } from './progress';
+import { Rating } from './rating';
 import { Separator } from './separator';
 import { Slider } from './slider';
 import { Spinbox } from './spinbox';
+import { Spinner } from './spinner';
 import { Table } from './table';
 import { TagPicker } from './tag_picker';
 import { Textbox } from './textbox';
@@ -39,7 +40,6 @@ import { TimePicker } from './time_picker';
 import { Toggle } from './toggle';
 import { BoxProps } from './ui';
 import { WebView } from './webview';
-import { Spinner } from './spinner';
 
 export const XBox = ({ box }: BoxProps) => { // recursive
   const { mode, options, editable, multiple } = box
@@ -86,6 +86,13 @@ export const XBox = ({ box }: BoxProps) => { // recursive
       return <Spinner box={box} />
     case 'separator':
       return <Separator box={box} />
+    case 'info':
+    case 'success':
+    case 'warning':
+    case 'critical':
+    case 'blocked':
+    case 'error':
+      return <Banner box={box} />
     case 'table':
       return <Table box={box} />
     case 'tag':
@@ -96,10 +103,11 @@ export const XBox = ({ box }: BoxProps) => { // recursive
       return <TimePicker box={box} />
     case 'web':
       return <WebView box={box} />
-
   }
 
   if (mode?.startsWith('plugin:')) return <PluginBox box={box} />
+
+  console.error(`Cannot render box: unknown mode "${mode}".`)
 
   return null
 }
