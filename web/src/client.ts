@@ -12,10 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { on, signal } from './core'
+import { on, S, signal, U } from './core'
 import { Box, DisplayMode, Option } from './protocol'
 import { defaultScheme, loadScheme } from './theme'
 import { noopClientContext } from './ui'
+
+export enum ClientStateT { Connecting, Disconnected, Invalid, Connected }
+
+export type ClientState = {
+  t: ClientStateT.Connecting
+} | {
+  t: ClientStateT.Disconnected
+  retry: U
+} | {
+  t: ClientStateT.Invalid
+  error: S
+} | {
+  t: ClientStateT.Connected
+  client: Client
+}
 
 
 export const newClient = () => {

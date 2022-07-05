@@ -14,30 +14,15 @@
 
 import styled from 'styled-components';
 import { Body, Popup } from './body';
-import { Client } from './client';
+import { Client, ClientState, ClientStateT } from './client';
 import { Dict, isS, newIncr, S, Signal, signal, U } from './core';
 import { Header } from './header';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
+import loadingAnimation from './loading.gif';
 import { installPlugins } from './plugin';
 import { Box, Edit, EditPosition, EditType, Message, MessageType, Server, ServerEvent, ServerEventT } from './protocol';
 import { defaultScheme, Scheme } from './theme';
 import { make, newClientContext } from './ui';
-import loadingAnimation from './loading.gif'
-
-enum AppStateT { Connecting, Disconnected, Invalid, Connected }
-
-type AppState = {
-  t: AppStateT.Connecting
-} | {
-  t: AppStateT.Disconnected
-  retry: U
-} | {
-  t: AppStateT.Invalid
-  error: S
-} | {
-  t: AppStateT.Connected
-  client: Client
-}
 
 const Overlay = styled.div`
   position: absolute;
@@ -171,15 +156,15 @@ const getHashRPC = (): HashRPC | null => {
   return null
 }
 
-const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>) => {
+const runRenderLoop = (server: Server, client: Client, stateB: Signal<ClientState>) => {
   const
     invalidate = (server: Server) => {
       client.busy = false
       client.context = newClientContext(server, () => {
         client.busy = true
-        stateB({ t: AppStateT.Connected, client })
+        stateB({ t: ClientStateT.Connected, client })
       })
-      stateB({ t: AppStateT.Connected, client })
+      stateB({ t: ClientStateT.Connected, client })
     },
     handleEvent = (e: ServerEvent) => {
       switch (e.t) {
@@ -202,7 +187,7 @@ const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>)
             switch (msg.t) {
               case MessageType.Error:
                 const { text: error } = msg
-                stateB({ t: AppStateT.Invalid, error })
+                stateB({ t: ClientStateT.Invalid, error })
                 break
               case MessageType.Output:
                 {
@@ -328,22 +313,22 @@ const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>)
                   if (plugins) installPlugins(plugins)
 
                   const state = stateB()
-                  if (state.t === AppStateT.Connected) {
+                  if (state.t === ClientStateT.Connected) {
                     invalidate(server)
                   }
                 }
                 break
               default:
-                stateB({ t: AppStateT.Invalid, error: `unknown message type: ${e.t}` })
+                stateB({ t: ClientStateT.Invalid, error: `unknown message type: ${e.t}` })
                 break
             }
           }
           break
         case ServerEventT.Disconnect:
-          stateB({ t: AppStateT.Disconnected, retry: e.retry })
+          stateB({ t: ClientStateT.Disconnected, retry: e.retry })
           break
         case ServerEventT.Error:
-          stateB({ t: AppStateT.Invalid, error: String(e.error) })
+          stateB({ t: ClientStateT.Invalid, error: String(e.error) })
           break
       }
     }
@@ -353,7 +338,7 @@ const runRenderLoop = (server: Server, client: Client, stateB: Signal<AppState>)
 
 export const App = make(({ server, client }: { server: Server, client: Client }) => {
   const
-    stateB = signal<AppState>({ t: AppStateT.Connecting }),
+    stateB = signal<ClientState>({ t: ClientStateT.Connecting }),
     init = () => {
       window.addEventListener('hashchange', () => {
         const hashbang = getHashRPC()
@@ -367,23 +352,23 @@ export const App = make(({ server, client }: { server: Server, client: Client })
     render = () => {
       const state = stateB()
       switch (state.t) {
-        case AppStateT.Connecting:
+        case ClientStateT.Connecting:
           return (
             <Busy timeout={100} />
           )
-        case AppStateT.Disconnected:
+        case ClientStateT.Disconnected:
           return (
             <Overlay>
               <Warning>Disconnected, retrying in {state.retry} seconds...</Warning>
             </Overlay>
           )
-        case AppStateT.Invalid:
+        case ClientStateT.Invalid:
           return (
             <Overlay>
               <Danger>Error: {state.error}</Danger>
             </Overlay>
           )
-        case AppStateT.Connected:
+        case ClientStateT.Connected:
           const
             { popup, busy, modeB } = client,
             isChromeless = modeB() === 'chromeless'
