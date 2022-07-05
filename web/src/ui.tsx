@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
-import { B, Dict, Disposable, isSignal, on, S } from './core';
+import { B, Dict, Disposable, isSignal, noop, on, S } from './core';
 import { Box, Input, InputValue, MessageType, Server } from './protocol';
 
 export type ClientContext = {
@@ -26,8 +26,6 @@ export type Context = {
   record(value: InputValue): void
   commit(): void
 }
-
-const noop = () => { }
 
 export const noopContext: Context = {
   record: (_: InputValue) => { },
