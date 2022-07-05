@@ -89,6 +89,7 @@ nav:
     - 'color-palette.md'
     - 'rating.md'
     - 'file-upload.md'
+    - 'banner.md'
     - 'progress-bar.md'
     - 'spinner.md'
     - 'separator.md'
