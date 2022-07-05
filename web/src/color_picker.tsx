@@ -18,9 +18,9 @@ import { Labeled } from './label';
 import { BoxProps, make } from './ui';
 
 
-export const ColorPicker = make(({ box }: BoxProps) => {
+export const ColorPicker = make(({ context, box }: BoxProps) => {
   const
-    { context, text, value, live } = box,
+    { text, value, live } = box,
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
     colorToTuple = ({ r, g, b, a }: IRGB) => [r, g, b, a ?? 100],

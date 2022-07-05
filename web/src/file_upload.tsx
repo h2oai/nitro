@@ -125,9 +125,9 @@ type Uploadable = {
   errorB: Signal<S>
 }
 
-export const FileUpload = make(({ box }: BoxProps) => {
+export const FileUpload = make(({ context, box }: BoxProps) => {
   const
-    { context, text, path } = box,
+    { text, path } = box,
     multiple = box.multiple ? true : false,
     label = multiple ? 'Drag files here, or' : 'Drag a file here, or',
     inputID = xid(),

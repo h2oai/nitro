@@ -18,9 +18,9 @@ import { N, S } from './core';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
 
-export const ComboBox = make(({ box }: BoxProps) => {
+export const ComboBox = make(({ context, box }: BoxProps) => {
   const
-    { context, value, text, placeholder, required, error, options } = box,
+    { value, text, placeholder, required, error, options } = box,
     items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
     selected = selectedOf(box),
     selectedKey = selected ? String(selected.value) : undefined,

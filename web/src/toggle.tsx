@@ -21,9 +21,9 @@ import { BoxProps, make } from './ui';
 const Container = styled.div`
   margin: 0.5rem 0;
 `
-export const Toggle = make(({ box }: BoxProps) => {
+export const Toggle = make(({ context, box }: BoxProps) => {
   const
-    { context, value, text } = box,
+    { value, text } = box,
     onChecked = (checked?: B) => {
       context.record(checked ? true : false)
       context.commit()

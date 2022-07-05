@@ -15,9 +15,8 @@
 import { Dict, isS, newIncr, on, S, signal, U } from './core';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
-import { Box, DisplayMode, Edit, EditPosition, EditType, Message, MessageType, Option, Server, ServerEvent, ServerEventT } from './protocol';
+import { Box, DisplayMode, Edit, EditPosition, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT } from './protocol';
 import { defaultScheme, loadScheme, Scheme } from './theme';
-import { newClientContext, noopClientContext } from './ui';
 
 export enum ClientStateT { Connecting, Disconnected, Invalid, Connected }
 
@@ -81,6 +80,44 @@ const queryBox = (boxes: Box[], name: S): [Box[], U] | null => {
   return null
 }
 
+export type ClientContext = {
+  scoped(index: any, xid: S): Context
+  commit(): void
+  switch(method: S, params?: Dict<S>): void
+}
+
+export type Context = {
+  record(value: InputValue): void
+  commit(): void
+}
+
+export const newClientContext = (server: Server, onBusy: () => void): ClientContext => {
+  const
+    inputs: Input[] = [],
+    popAll = (): Input[] => {
+      const a = inputs.slice()
+      inputs.length = 0
+      return a
+    },
+    record = (index: any, xid: S, value: InputValue) => {
+      if (index >= 0) inputs[index] = [xid, value]
+    },
+    commit = () => {
+      onBusy()
+      server.send({ t: MessageType.Input, inputs: popAll() })
+    },
+    change = (m: S, p?: Dict<S>) => {
+      onBusy()
+      server.send({ t: MessageType.Switch, method: m, params: p })
+    },
+    scoped = (index: any, xid: S): Context => ({
+      record: (value: InputValue) => record(index, xid, value),
+      commit,
+    })
+
+  return { commit, scoped, switch: change }
+}
+
 
 type HashRPC = {
   method: S
@@ -129,7 +166,10 @@ export const newClient = (server: Server) => {
     navB = signal<Option[]>([]),
     schemeB = signal(defaultScheme),
     modeB = signal<DisplayMode>('normal'),
-    context = noopClientContext,
+    context = newClientContext(server, () => {
+      client.busy = true
+      stateB({ t: ClientStateT.Connected, client })
+    }),
     stateB = signal<ClientState>({ t: ClientStateT.Connecting }),
     connect = () => {
       server.connect(handleEvent)
@@ -143,10 +183,6 @@ export const newClient = (server: Server) => {
     },
     invalidate = () => {
       client.busy = false
-      client.context = newClientContext(server, () => {
-        client.busy = true
-        stateB({ t: ClientStateT.Connected, client })
-      })
       stateB({ t: ClientStateT.Connected, client })
     },
     handleEvent = (e: ServerEvent) => {
@@ -315,6 +351,7 @@ export const newClient = (server: Server) => {
           break
       }
     }
+
   on(titleB, title => document.title = title)
   on(schemeB, scheme => window.setTimeout(() => loadScheme(scheme), 100))
 

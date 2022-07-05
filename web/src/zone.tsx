@@ -16,10 +16,10 @@ import { cssColor, IRGB } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import { XBox } from './box';
+import { ClientContext } from './client';
 import { B, Dict, isS, S } from './core';
 import { ImageBlock } from './image';
 import { Box } from './protocol';
-import { ClientContext } from './ui';
 
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
@@ -199,14 +199,19 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
     const style = computeStyle(box, inRow)
 
     if (box.mode === 'image') {
-      return <ImageBlock key={box.xid} data-name={box.name ?? undefined} box={box} style={style} />
+      return (
+        <ImageBlock
+          key={box.xid}
+          data-name={box.name ?? undefined}
+          context={context.scoped(box.index, box.xid)}
+          box={box}
+          style={style} />
+      )
     }
-
-    box.context = context.scoped(box.index, box.xid)
 
     return (
       <Container key={box.xid} data-name={box.name ?? undefined} style={style}>
-        <XBox box={box} />
+        <XBox context={context.scoped(box.index, box.xid)} box={box} />
       </Container>
     )
   }

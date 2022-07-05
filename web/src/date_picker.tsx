@@ -16,9 +16,9 @@ import { DatePicker as FDatePicker } from '@fluentui/react';
 import { dateToString, toDate } from './core';
 import { BoxProps, make } from './ui';
 
-export const DatePicker = make(({ box }: BoxProps) => {
+export const DatePicker = make(({ context, box }: BoxProps) => {
   const
-    { context, text, placeholder, value, min, max, required, live } = box,
+    { text, placeholder, value, min, max, required, live } = box,
     defaultDate = toDate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
     minDate = toDate(min),

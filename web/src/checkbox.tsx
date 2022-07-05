@@ -20,9 +20,9 @@ import { BoxProps, make } from './ui';
 const Container = styled.div`
   margin: 0.5rem 0;
 `
-export const Checkbox = make(({ box }: BoxProps) => {
+export const Checkbox = make(({ context, box }: BoxProps) => {
   const
-    { context, value, text, live } = box,
+    { value, text, live } = box,
     onChecked = (checked?: B) => {
       context.record(checked ? true : false)
       if (live) context.commit()

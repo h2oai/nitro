@@ -41,71 +41,71 @@ import { Toggle } from './toggle';
 import { BoxProps } from './ui';
 import { WebView } from './webview';
 
-export const XBox = ({ box }: BoxProps) => { // recursive
+export const XBox = ({ context, box }: BoxProps) => { // recursive
   const { mode, options, editable, multiple } = box
   switch (mode) {
     case 'md':
-      return <TextBlock box={box} />
+      return <TextBlock context={context} box={box} />
     case 'button':
-      return <Buttons box={box} />
+      return <Buttons context={context} box={box} />
     case 'check':
       return options.length
-        ? <Checklist box={box} />
-        : <Checkbox box={box} />
+        ? <Checklist context={context} box={box} />
+        : <Checkbox context={context} box={box} />
     case 'toggle':
-      return <Toggle box={box} />
+      return <Toggle context={context} box={box} />
     case 'color':
       return options.length
-        ? <ColorPalette box={box} />
-        : <ColorPicker box={box} />
+        ? <ColorPalette context={context} box={box} />
+        : <ColorPicker context={context} box={box} />
     case 'date':
-      return <DatePicker box={box} />
+      return <DatePicker context={context} box={box} />
     case 'day':
     case 'month':
     case 'week':
-      return <Calendar box={box} />
+      return <Calendar context={context} box={box} />
     case 'file':
-      return <FileUpload box={box} />
+      return <FileUpload context={context} box={box} />
     case 'menu':
       return editable
-        ? <ComboBox box={box} />
+        ? <ComboBox context={context} box={box} />
         : multiple
-          ? <Droplist box={box} />
-          : <Dropdown box={box} />
+          ? <Droplist context={context} box={box} />
+          : <Dropdown context={context} box={box} />
     case 'number':
-      return <Spinbox box={box} />
+      return <Spinbox context={context} box={box} />
     case 'radio':
-      return <ChoiceGroup box={box} />
+      return <ChoiceGroup context={context} box={box} />
     case 'range':
-      return <Slider box={box} />
+      return <Slider context={context} box={box} />
     case 'rating':
-      return <Rating box={box} />
+      return <Rating context={context} box={box} />
     case 'progress':
-      return <ProgressBar box={box} />
+      return <ProgressBar context={context} box={box} />
     case 'spinner':
-      return <Spinner box={box} />
+      return <Spinner context={context} box={box} />
     case 'separator':
-      return <Separator box={box} />
+      return <Separator context={context} box={box} />
     case 'info':
     case 'success':
     case 'warning':
     case 'critical':
     case 'blocked':
     case 'error':
-      return <Banner box={box} />
+      return <Banner context={context} box={box} />
     case 'table':
-      return <Table box={box} />
+      return <Table context={context} box={box} />
     case 'tag':
-      return <TagPicker box={box} />
+      return <TagPicker context={context} box={box} />
     case 'text':
-      return <Textbox box={box} />
+      return <Textbox context={context} box={box} />
     case 'time':
-      return <TimePicker box={box} />
+      return <TimePicker context={context} box={box} />
     case 'web':
-      return <WebView box={box} />
+      return <WebView context={context} box={box} />
   }
 
-  if (mode?.startsWith('plugin:')) return <PluginBox box={box} />
+  if (mode?.startsWith('plugin:')) return <PluginBox context={context} box={box} />
 
   console.error(`Cannot render box: unknown mode "${mode}".`)
 

@@ -21,9 +21,9 @@ import { BoxProps, make } from './ui';
 
 const keysFromTags = (tags: ITag[]) => tags.map(tag => String(tag.key))
 
-export const TagPicker = make(({ box }: BoxProps) => {
+export const TagPicker = make(({ context, box }: BoxProps) => {
   const
-    { context, text, options, live } = box,
+    { text, options, live } = box,
     selectedOptions = selectedsOf(box),
     selectedKeys = selectedOptions.map(o => String(o.value)),
     tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),

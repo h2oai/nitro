@@ -18,9 +18,9 @@ import { selectedOf, toDropdownOption, toGroupedDropdownOptions } from './option
 import { BoxProps, make } from './ui';
 
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
-export const Dropdown = make(({ box }: BoxProps) => {
+export const Dropdown = make(({ context, box }: BoxProps) => {
   const
-    { context, text, placeholder, error, required, options, live } = box,
+    { text, placeholder, error, required, options, live } = box,
     selected = selectedOf(box),
     hasGroups = options.some(c => c.options?.length ? true : false),
     items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),

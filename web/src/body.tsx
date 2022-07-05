@@ -17,7 +17,7 @@ import { Client } from './client';
 import { signal, xid } from './core';
 import { hasActions } from './heuristics';
 import { Box } from './protocol';
-import { make, noopContext } from './ui';
+import { make } from './ui';
 import { Zone } from './zone';
 
 const
@@ -26,7 +26,6 @@ const
     mode: 'button',
     index: -1, //don't capture
     options: [{ value: 'continue', text: 'Continue' }],
-    context: noopContext
   },
   makeContinuable = (boxes: Box[]): Box[] => hasActions(boxes) ? boxes : [...boxes, continueButton]
 

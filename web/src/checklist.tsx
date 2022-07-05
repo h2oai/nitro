@@ -23,9 +23,9 @@ import { BoxProps, make } from './ui';
 const Container = styled.div`
   margin: 1rem 0;
 `
-export const Checklist = make(({ box }: BoxProps) => {
+export const Checklist = make(({ context, box }: BoxProps) => {
   const
-    { context, text, options, live } = box,
+    { text, options, live } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.record(Array.from(selection)),

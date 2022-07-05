@@ -24,9 +24,9 @@ type TableRow = { key: S }
 type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
 
-export const Table = make(({ box }: BoxProps) => {
+export const Table = make(({ context, box }: BoxProps) => {
   const
-    { context, headers, options, multiple, live } = box,
+    { headers, options, multiple, live } = box,
     isMultiple = multiple === true,
     isSingle = multiple === false,
     isList = isMultiple || isSingle,

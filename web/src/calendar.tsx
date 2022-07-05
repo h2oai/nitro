@@ -17,9 +17,9 @@ import { dateToString, signal, toDate } from './core';
 import { Labeled } from './label';
 import { BoxProps, make } from './ui';
 
-export const Calendar = make(({ box }: BoxProps) => {
+export const Calendar = make(({ context, box }: BoxProps) => {
   const
-    { context, text, mode, value, min, max, live } = box,
+    { text, mode, value, min, max, live } = box,
     dateB = signal(toDate(value) ?? new Date()),
     minDate = toDate(min),
     maxDate = toDate(max),

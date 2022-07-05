@@ -16,9 +16,9 @@ import { ISliderProps, Slider as FSlider } from '@fluentui/react';
 import { isN, isPair, toN, U, valueFromRange } from './core';
 import { BoxProps, make } from './ui';
 
-export const Slider = make(({ box }: BoxProps) => {
+export const Slider = make(({ context, box }: BoxProps) => {
   const
-    { context, text, value, placeholder, min, max, step, live } = box,
+    { text, value, placeholder, min, max, step, live } = box,
     originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
     ranged = isPair(value) && isN(value[0]) && isN(value[1]),
     defaultValue = ranged ? 0 : valueFromRange(value, min, max, step),

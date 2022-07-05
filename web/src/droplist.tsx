@@ -18,9 +18,9 @@ import { S } from './core';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
-export const Droplist = make(({ box }: BoxProps) => {
+export const Droplist = make(({ context, box }: BoxProps) => {
   const
-    { context, text, placeholder, error, required, options, live } = box,
+    { text, placeholder, error, required, options, live } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),

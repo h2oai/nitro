@@ -13,54 +13,11 @@
 // limitations under the License.
 
 import React from 'react';
-import { B, Dict, Disposable, isSignal, noop, on, S } from './core';
-import { Box, Input, InputValue, MessageType, Server } from './protocol';
+import { Context } from './client';
+import { B, Dict, Disposable, isSignal, on } from './core';
+import { Box } from './protocol';
 
-export type ClientContext = {
-  scoped(index: any, xid: S): Context
-  commit(): void
-  switch(method: S, params?: Dict<S>): void
-}
-
-export type Context = {
-  record(value: InputValue): void
-  commit(): void
-}
-
-export const noopContext: Context = {
-  record: (_: InputValue) => { },
-  commit: noop
-}
-
-export const noopClientContext: ClientContext = {
-  scoped: () => noopContext,
-  commit: noop,
-  switch: noop,
-}
-
-export const newClientContext = (server: Server, onBusy: () => void): ClientContext => {
-  const
-    inputs: Array<Input> = [],
-    record = (index: any, xid: S, value: InputValue) => {
-      if (index >= 0) inputs[index] = [xid, value]
-    },
-    commit = () => {
-      onBusy()
-      server.send({ t: MessageType.Input, inputs: inputs.slice() })
-    },
-    change = (m: S, p?: Dict<S>) => {
-      onBusy()
-      server.send({ t: MessageType.Switch, method: m, params: p })
-    },
-    scoped = (index: any, xid: S): Context => ({
-      record: (value: InputValue) => record(index, xid, value),
-      commit,
-    })
-
-  return { commit, scoped, switch: change }
-}
-
-export type BoxProps = { box: Box }
+export type BoxProps = { context: Context, box: Box }
 
 export type StyledBoxProps = BoxProps & { style: React.CSSProperties }
 interface Renderable {

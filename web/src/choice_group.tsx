@@ -18,9 +18,9 @@ import { isB } from './core';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
 
-export const ChoiceGroup = make(({ box }: BoxProps) => {
+export const ChoiceGroup = make(({ context, box }: BoxProps) => {
   const
-    { context, text, placeholder, required, options, live } = box,
+    { text, placeholder, required, options, live } = box,
     hasNoPrimary = options.every(o => !isB(o.selected)),
     selected = selectedOf(box),
     items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({

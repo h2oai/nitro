@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import React from 'react';
+import { Context } from './client';
 import { B, Dict, gensym, S, U, xid } from "./core";
 import { Plugin, Script } from './protocol';
-import { BoxProps, Context, make } from './ui';
+import { BoxProps, make } from './ui';
 
 type Go = (error: S | null) => void
 
@@ -165,14 +166,14 @@ export const
       })
     })
   },
-  PluginBox = make(({ box }: BoxProps) => {
+  PluginBox = make(({ context, box }: BoxProps) => {
     const
       sig = (box.mode ?? ':.').split(':')[1],
       [plugin, method] = sig.split('.'),
       id = xid(),
       ref = React.createRef<HTMLDivElement>(),
       init = () => {
-        if (ref.current) execPlugin(plugin, method, box.context, ref.current, box.data)
+        if (ref.current) execPlugin(plugin, method, context, ref.current, box.data)
       },
       render = () => (<div id={id} ref={ref} />)
 

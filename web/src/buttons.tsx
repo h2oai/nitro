@@ -19,9 +19,9 @@ import { Labeled } from './label';
 import { toContextualMenuProps } from './options';
 import { BoxProps, make } from './ui';
 
-export const Buttons = make(({ box }: BoxProps) => {
+export const Buttons = make(({ context, box }: BoxProps) => {
   const
-    { context, value } = box,
+    { value } = box,
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const

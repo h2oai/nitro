@@ -18,9 +18,9 @@ import { isN, toN } from './core';
 import { Labeled } from './label';
 import { BoxProps, make } from './ui';
 
-export const Rating = make(({ box }: BoxProps) => {
+export const Rating = make(({ context, box }: BoxProps) => {
   const
-    { context, text, placeholder, min, max, value, live } = box,
+    { text, placeholder, min, max, value, live } = box,
     allowZeroStars = isN(min) && min <= 0,
     defaultRating = toN(value) ?? (allowZeroStars ? 0 : 1),
     onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {

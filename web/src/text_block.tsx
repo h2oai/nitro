@@ -15,11 +15,11 @@
 import React from 'react';
 import { BoxProps, make } from './ui';
 
-export const TextBlock = make(({ box }: BoxProps) => {
+export const TextBlock = make(({ context, box }: BoxProps) => {
   const
     ref = React.createRef<HTMLDivElement>(),
     update = () => {
-      const { context, index } = box
+      const { index } = box
       if (index < 0) return
 
       const el = ref.current

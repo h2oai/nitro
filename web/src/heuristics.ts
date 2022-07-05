@@ -15,7 +15,6 @@
 import { anyD, anyN, B, Incr, isB, isN, isO, isPair, isS, isV, words, xid } from './core';
 import { markdown } from './markdown';
 import { Box, BoxMode, Option } from './protocol';
-import { noopContext } from './ui';
 
 const determineMode = (box: Box): BoxMode => {
   const { options, editable, multiple } = box
@@ -153,7 +152,7 @@ export const sanitizeOptions = (x: any): Option[] => { // recursive
 
 export const sanitizeBox = (box: Box): Box => {
   if (isS(box)) {
-    box = { xid: xid(), index: 0, mode: 'md', text: box, options: [], context: noopContext }
+    box = { xid: xid(), index: 0, mode: 'md', text: box, options: [] }
   }
   if (box.items) {
     box.items = box.items.map(w => sanitizeBox(w))

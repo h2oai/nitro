@@ -43,9 +43,9 @@ const
     return c24 ? s : s + (pm ? 'PM' : 'AM')
   }
 
-export const TimePicker = make(({ box }: BoxProps) => {
+export const TimePicker = make(({ context, box }: BoxProps) => {
   const
-    { context, text, value, live } = box,
+    { text, value, live } = box,
     clock = parseClock(String(value).toLowerCase()),
     capture = () => {
       context.record(clockToString(clock))

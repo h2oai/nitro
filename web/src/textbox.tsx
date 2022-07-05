@@ -18,9 +18,9 @@ import { isN, isS, S } from './core';
 import { BoxProps, make } from './ui';
 
 
-export const Textbox = make(({ box }: BoxProps) => {
+export const Textbox = make(({ context, box }: BoxProps) => {
   const
-    { context, text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = box,
+    { text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = box,
     onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
       v = v ?? (target as HTMLInputElement).value ?? value ?? ''
       // TODO live?
