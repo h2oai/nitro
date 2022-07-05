@@ -39,6 +39,7 @@ import { TimePicker } from './time_picker';
 import { Toggle } from './toggle';
 import { BoxProps } from './ui';
 import { WebView } from './webview';
+import { Spinner } from './spinner';
 
 export const XBox = ({ box }: BoxProps) => { // recursive
   const { mode, options, editable, multiple } = box
@@ -81,6 +82,8 @@ export const XBox = ({ box }: BoxProps) => { // recursive
       return <Rating box={box} />
     case 'progress':
       return <ProgressBar box={box} />
+    case 'spinner':
+      return <Spinner box={box} />
     case 'separator':
       return <Separator box={box} />
     case 'table':

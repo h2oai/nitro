@@ -42,6 +42,8 @@ const
             if (box.index >= 0) return true
             break
           case 'toggle':
+          case 'progress':
+          case 'spinner':
             return true
           case 'table':
             if (isB(box.multiple)) return false

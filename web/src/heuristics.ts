@@ -177,6 +177,7 @@ export const sanitizeBox = (box: Box): Box => {
         }
         break
       case 'progress':
+      case 'spinner':
       case 'separator':
       case 'image':
         box.index = -1 // don't capture
