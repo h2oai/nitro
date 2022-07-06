@@ -17,11 +17,27 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.12.0
+
+Jul 05, 2022
+
+- Added
+    - Set `live=True` on any component except textboxes to handle changes immediately.
+    - Banner component in six styles: info, success, warning, critical, blocked, and error.
+    - Progress bar component with two styles: completion-status and indeterminate.
+    - Spinner component (infinite) with customizable label alignment.
+- Fixed
+    - Client might return stale values if later sync does not overwrite previous values.
+    - Selected date is not reflected in calendar. 
+    - Respect scalar initial value if table is in single-select mode. 
+    - Remove (harmless) xid mismatch errors when re-entering workflows.
+
 ## v0.11.0
 
 Jun 27, 2022
 
 **To upgrade:**
+
 - Use `pip install "h2o-nitro[web]"` instead of `pip install h2o-nitro`.
 - Change `from h2o_nitro import web_directory` to `from h2o_nitro_web import web_directory`.
 
