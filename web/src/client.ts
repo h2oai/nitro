@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, isS, newIncr, on, S, signal, U } from './core';
+import { Dict, isS, newIncr, on, S, signal, U, V } from './core';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditPosition, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT } from './protocol';
@@ -174,6 +174,9 @@ export const newClient = (server: Server) => {
     connect = () => {
       server.connect(handleEvent)
     },
+    jump = (v: V) => {
+      window.location.hash = '!' + v
+    },
     bounce = () => {
       const hashbang = getHashRPC()
       if (hashbang) {
@@ -305,6 +308,12 @@ export const newClient = (server: Server) => {
                   invalidate()
                 }
                 break
+              case MessageType.Switch:
+                {
+                  const { method } = msg
+                  client.jump(method)
+                }
+                break
               case MessageType.Set:
                 {
                   const
@@ -367,6 +376,7 @@ export const newClient = (server: Server) => {
     context,
     connect,
     bounce,
+    jump,
     stateB,
     busy: true,
   }
