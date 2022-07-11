@@ -17,7 +17,6 @@ import React from 'react';
 import { isN, isS, S } from './core';
 import { BoxProps, make } from './ui';
 
-
 export const Textbox = make(({ context, box }: BoxProps) => {
   const
     { text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = box,
@@ -32,6 +31,9 @@ export const Textbox = make(({ context, box }: BoxProps) => {
           label: text,
           defaultValue: isS(value) ? value : isN(value) ? String(value) : undefined,
           placeholder: placeholder ?? (text ? undefined : 'Enter some text...'),
+          iconProps: icon ? { iconName: icon } : undefined,
+          prefix,
+          suffix,
           errorMessage: error,
           required: required === true,
           onChange,
@@ -42,7 +44,7 @@ export const Textbox = make(({ context, box }: BoxProps) => {
           ? <MaskedTextField {...field} mask={mask} />
           : lines && (lines >= 1)
             ? <TextField {...field} multiline resizable autoAdjustHeight rows={lines} />
-            : <TextField {...field} iconProps={icon ? { iconName: icon } : undefined} prefix={prefix} suffix={suffix} />
+            : <TextField {...field} />
     }
 
   context.record((value as any) ?? '')
