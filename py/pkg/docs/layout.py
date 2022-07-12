@@ -293,3 +293,38 @@ def layout_vertical_alignment(view: View):  # height 5
             height='300px', background='$foreground', color='$background',
         )
     )
+
+
+# ## Tabbed layout
+def layout_tabs(view: View):  # height 5
+    view(
+        box(
+            mode='tabs',
+            items=[
+                box(
+                    'Profile',
+                    items=[
+                        box('First name', value='Boaty'),
+                        box('Last name', value='McBoatface'),
+                        box('Age', value=42)
+                    ],
+                ),
+                box(
+                    'Billing Address',
+                    items=[
+                        box('Billing address line 1', value=''),
+                        box('Billing address line 2', value=''),
+                        row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                    ],
+                ),
+                box(
+                    'Shipping Address',
+                    items=[
+                        box('Shipping address line 1', value=''),
+                        box('Shipping address line 2', value=''),
+                        row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                    ],
+                ),
+            ]
+        )
+    )
