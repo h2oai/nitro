@@ -196,7 +196,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
       case 'tabs':
         {
           const tabs = items.map((box, i) => (
-            <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`}>
+            <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
               <Zone key={box.xid} context={context} box={box} inRow={isRow} />
             </PivotItem>
           ))
