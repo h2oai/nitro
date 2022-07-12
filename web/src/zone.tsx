@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { cssColor, IRGB } from '@fluentui/react';
+import { cssColor, IRGB, Pivot, PivotItem } from '@fluentui/react';
 import React from 'react';
 import styled from 'styled-components';
 import { XBox } from './box';
@@ -192,27 +192,50 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
     style = computeStyle(box, inRow)
 
   if (items) {
-    const children = items.map(box => (
-      <Zone key={box.xid} context={context} box={box} inRow={isRow} />
-    ))
-    return (
-      <Container data-name={box.name ?? undefined} style={style}>{children}</Container>
-    )
-  } else {
-    if (box.mode === 'image') {
-      return (
-        <ImageBlock
-          key={box.xid}
-          data-name={box.name ?? undefined}
-          context={context.scoped(box.index, box.xid)}
-          box={box}
-          style={style} />
-      )
+    switch (mode) {
+      case 'tabs':
+        {
+          const tabs = items.map((box, i) => (
+            <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`}>
+              <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+            </PivotItem>
+          ))
+          return (
+            <Container data-name={box.name ?? undefined} style={style}>
+              <Pivot>{tabs}</Pivot>
+            </Container>
+          )
+        }
+      default:
+        {
+          const children = items.map(box => (
+            <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+          ))
+          return (
+            <Container data-name={box.name ?? undefined} style={style}>{children}</Container>
+          )
+        }
     }
-    return (
-      <Container key={box.xid} data-name={box.name ?? undefined} style={style}>
-        <XBox context={context.scoped(box.index, box.xid)} box={box} />
-      </Container>
-    )
+  } else {
+    switch (mode) {
+      case 'image':
+        {
+          return (
+            <ImageBlock
+              data-name={box.name ?? undefined}
+              context={context.scoped(box.index, box.xid)}
+              box={box}
+              style={style} />
+          )
+        }
+      default:
+        {
+          return (
+            <Container data-name={box.name ?? undefined} style={style}>
+              <XBox context={context.scoped(box.index, box.xid)} box={box} />
+            </Container>
+          )
+        }
+    }
   }
 }
