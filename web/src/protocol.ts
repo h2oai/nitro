@@ -123,7 +123,7 @@ export type BannerMode = 'info' | 'success' | 'warning' | 'critical' | 'blocked'
 
 // *** Warning ***
 // If you add a new mode here, update heuristics.tsx to mark it as non-interactive (index=0) if applicable.
-export type BoxMode = 'none' | 'md' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
+export type BoxMode = 'none' | 'row' | 'md' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
   | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color'
   | 'rating' | 'table' | 'file' | 'progress' | 'spinner' | 'separator' | 'image' | 'web' | BannerMode
 
@@ -139,11 +139,11 @@ export type Box = {
   headers?: Header[]
   items?: Box[]
   data?: any
-  row?: B
   halt?: B
   title?: S
   caption?: S
   popup?: B
+  layout?: 'row' | 'column'
   tile?: S
   cross_tile?: S
   wrap?: S

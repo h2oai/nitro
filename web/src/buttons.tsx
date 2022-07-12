@@ -25,8 +25,8 @@ export const Buttons = make(({ context, box }: BoxProps) => {
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
-        { text, row, options, align } = box,
-        horizontal = row !== false,
+        { text, layout, options, align } = box,
+        horizontal = layout !== 'column',
         horizontalAlign = horizontal
           ? align === 'center'
             ? 'center'

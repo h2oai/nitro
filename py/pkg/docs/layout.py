@@ -40,13 +40,13 @@ def layout_row(view: View):  # height 2
     ))
 
 
-# Setting `row=True` produces the same result as wrapping items with `row()`.
+# Setting `mode='row'` produces the same result as wrapping items with `row()`.
 def layout_row_alt(view: View):
     view(
         box(value='Left'),
         box(value='Center'),
         box(value='Right'),
-        row=True,
+        mode='row',
     )
 
 

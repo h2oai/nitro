@@ -35,7 +35,7 @@ view(row(
 ```
 
 
-Setting `row=True` produces the same result as wrapping items with `row()`.
+Setting `mode='row'` produces the same result as wrapping items with `row()`.
 
 
 ```py
@@ -43,7 +43,7 @@ view(
     box(value='Left'),
     box(value='Center'),
     box(value='Right'),
-    row=True,
+    mode='row',
 )
 ```
 

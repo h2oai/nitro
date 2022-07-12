@@ -38,8 +38,8 @@ const translate = (s: S): S => isS(s) ? s.replace(/\$([\w-]+)/gi, 'var(--$1)') :
 
 const computeStyle = (box: Partial<Box>, inRow: B) => {
   const
-    { mode, row, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis } = box,
-    isRow = row ? true : false,
+    { mode, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis } = box,
+    isRow = mode === 'row',
     css: React.CSSProperties = {
       position: 'relative',
       flexDirection: isRow ? 'row' : 'column',
@@ -187,8 +187,8 @@ const Container = styled.div`
 `
 export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box, inRow: B }) => {
   const
-    { items, row } = box,
-    isRow = row === true,
+    { mode, items } = box,
+    isRow = mode === 'row',
     style = computeStyle(box, inRow)
 
   if (items) {

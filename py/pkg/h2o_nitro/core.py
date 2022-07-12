@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import warnings
 from typing import Callable, Optional, Sequence, Set, Tuple, List, Dict, Union, Iterable
 from types import FunctionType
 import random
@@ -303,6 +303,7 @@ class Box:
             title: Optional[str] = None,
             caption: Optional[str] = None,
             popup: Optional[bool] = None,
+            layout: Optional[str] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -352,6 +353,15 @@ class Box:
             label = text
             opts = options
 
+        if row is not None:
+            warnings.warn(
+                "The 'row' argument will be removed in a future version."
+                " Use layout='row' or layout='col' instead of row=True or row=False.",
+                DeprecationWarning,
+            )
+            if layout is None:
+                layout = 'row' if row else 'column'
+
         self.text = label
         self.name = name
         self.mode = mode
@@ -360,11 +370,11 @@ class Box:
         self.headers = headers
         self.items = items
         self.data = data
-        self.row = row
         self.halt = halt
         self.title = title
         self.caption = caption
         self.popup = popup
+        self.layout = layout
         self.tile = tile
         self.cross_tile = cross_tile
         self.wrap = wrap
@@ -413,11 +423,11 @@ class Box:
             headers=_dump(self.headers),
             items=_dump(self.items),
             data=_dump(self.data),
-            row=self.row,
             halt=self.halt,
             title=self.title,
             caption=self.caption,
             popup=self.popup,
+            layout=self.layout,
             tile=self.tile,
             cross_tile=self.cross_tile,
             wrap=self.wrap,
@@ -458,6 +468,11 @@ class Box:
 
 
 box = Box
+
+
+class BoxLayout(Enum):
+    Row = 'row'
+    Column = 'column'
 
 
 class BoxArrange(Enum):
@@ -501,8 +516,8 @@ def row(
 ) -> Box:
     return Box(
         items=items,
+        mode='row',
         name=name,
-        row=True,
         tile=tile,
         cross_tile=cross_tile,
         wrap=wrap,
@@ -814,6 +829,7 @@ class View(_View):
             at: Optional[str] = None,
             after: Optional[str] = None,
             before: Optional[str] = None,
+            mode: Optional[str] = None,
             row: Optional[bool] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
@@ -836,9 +852,17 @@ class View(_View):
             image: Optional[str] = None,
             fit: Optional[str] = None,
     ):
+        if row is not None:
+            warnings.warn(
+                "The 'row' argument will be removed in a future version. Use mode='row' instead of row=True.",
+                DeprecationWarning,
+            )
+            if row and mode is not None:
+                mode = 'row'
+
         b = Box(
             items=items,
-            row=row,
+            mode=mode,
             halt=halt,
             title=title,
             popup=popup,
@@ -970,6 +994,7 @@ class AsyncView(_View):
             at: Optional[str] = None,
             after: Optional[str] = None,
             before: Optional[str] = None,
+            mode: Optional[str] = None,
             row: Optional[bool] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
@@ -992,9 +1017,17 @@ class AsyncView(_View):
             image: Optional[str] = None,
             fit: Optional[str] = None,
     ):
+        if row is not None:
+            warnings.warn(
+                "The 'row' argument will be removed in a future version. Use mode='row' instead of row=True.",
+                DeprecationWarning,
+            )
+            if row and mode is not None:
+                mode = 'row'
+
         b = Box(
             items=items,
-            row=row,
+            mode=mode,
             halt=halt,
             title=title,
             popup=popup,
