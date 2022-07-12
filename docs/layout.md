@@ -35,6 +35,21 @@ view(row(
 ```
 
 
+`row(x, y, z)` is shorthand for `box(mode='row', items=[x, y, z])`.
+
+
+```py
+view(box(
+    mode='row',
+    items=[
+        box(value='Left'),
+        box(value='Center'),
+        box(value='Right'),
+    ]
+))
+```
+
+
 Setting `mode='row'` produces the same result as wrapping items with `row()`.
 
 
@@ -81,7 +96,110 @@ view(
 ```
 
 
+`col(x, y, z)` is shorthand for `box(mode='column', items=[x, y, z])`.
+
+
+```py
+box(
+    mode='column',
+    items=[
+        box(value='North'),
+        box(value='Center'),
+        box(value='South'),
+    ]
+)
+```
+
+
 ![Screenshot](assets/screenshots/layout_col.png)
+
+
+## Lay out in tabs
+
+Set mode='tabs' on a box to lay out its items in tabs.
+
+The `text` of each child item is used as the tab's label.
+
+
+```py
+view(
+    box(
+        mode='tabs',
+        items=[
+            box(
+                'Profile',
+                items=[
+                    box('First name', value='Boaty'),
+                    box('Last name', value='McBoatface'),
+                    box('Age', value=42)
+                ],
+            ),
+            box(
+                'Billing Address',
+                items=[
+                    box('Billing address line 1', value=''),
+                    box('Billing address line 2', value=''),
+                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                ],
+            ),
+            box(
+                'Shipping Address',
+                items=[
+                    box('Shipping address line 1', value=''),
+                    box('Shipping address line 2', value=''),
+                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                ],
+            ),
+        ]
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/layout_tabs.png)
+
+
+## Show icons on tabs
+
+```py
+view(
+    box(
+        mode='tabs',
+        items=[
+            box(
+                'Profile',
+                icon='Contact',
+                items=[
+                    box('First name', value='Boaty'),
+                    box('Last name', value='McBoatface'),
+                    box('Age', value=42)
+                ],
+            ),
+            box(
+                'Billing Address',
+                icon='PaymentCard',
+                items=[
+                    box('Billing address line 1', value=''),
+                    box('Billing address line 2', value=''),
+                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                ],
+            ),
+            box(
+                'Shipping Address',
+                icon='DeliveryTruck',
+                items=[
+                    box('Shipping address line 1', value=''),
+                    box('Shipping address line 2', value=''),
+                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                ],
+            ),
+        ]
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/layout_tabs_icons.png)
 
 
 ## Control scrolling
@@ -350,43 +468,3 @@ view(
 
 
 ![Screenshot](assets/screenshots/layout_vertical_alignment.png)
-
-
-## Tabbed layout
-
-```py
-view(
-    box(
-        mode='tabs',
-        items=[
-            box(
-                'Profile',
-                items=[
-                    box('First name', value='Boaty'),
-                    box('Last name', value='McBoatface'),
-                    box('Age', value=42)
-                ],
-            ),
-            box(
-                'Billing Address',
-                items=[
-                    box('Billing address line 1', value=''),
-                    box('Billing address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
-            ),
-            box(
-                'Shipping Address',
-                items=[
-                    box('Shipping address line 1', value=''),
-                    box('Shipping address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
-            ),
-        ]
-    )
-)
-```
-
-
-![Screenshot](assets/screenshots/layout_tabs.png)
