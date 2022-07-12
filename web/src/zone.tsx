@@ -186,18 +186,19 @@ const Container = styled.div`
   box-sizing: border-box;
 `
 export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box, inRow: B }) => {
-  const { items, row } = box, isRow = row === true
+  const
+    { items, row } = box,
+    isRow = row === true,
+    style = computeStyle(box, inRow)
 
   if (items) {
     const children = items.map(box => (
       <Zone key={box.xid} context={context} box={box} inRow={isRow} />
     ))
     return (
-      <Container data-name={box.name ?? undefined} style={computeStyle(box, inRow)}>{children}</Container>
+      <Container data-name={box.name ?? undefined} style={style}>{children}</Container>
     )
   } else {
-    const style = computeStyle(box, inRow)
-
     if (box.mode === 'image') {
       return (
         <ImageBlock
@@ -208,7 +209,6 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
           style={style} />
       )
     }
-
     return (
       <Container key={box.xid} data-name={box.name ?? undefined} style={style}>
         <XBox context={context.scoped(box.index, box.xid)} box={box} />
