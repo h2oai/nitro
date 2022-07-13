@@ -13,8 +13,10 @@
 // limitations under the License.
 
 import { IconButton, Label, Panel, Stack } from '@fluentui/react';
+import React from 'react';
 import { ClientContext } from './client';
 import { B, Dict, on, S, Signal, signal } from './core';
+import { markdown } from './markdown';
 import { make } from './ui';
 
 export const Help = make(({ context, help, offset, children }: { context: ClientContext, help: S, offset: B, children: JSX.Element }) => {
@@ -44,6 +46,24 @@ export const Help = make(({ context, help, offset, children }: { context: Client
   return { render }
 })
 
+const Doc = make(({ html, helpE }: { html: S, helpE: Signal<S> }) => {
+  const
+    ref = React.createRef<HTMLDivElement>(),
+    update = () => {
+      const el = ref.current
+      if (!el) return
+
+      el.querySelectorAll<HTMLAnchorElement>('a[data-jump]').forEach(link => {
+        const id = link.getAttribute('data-jump')
+        if (id) link.onclick = e => { helpE(id) }
+      })
+    },
+    render = () => {
+      return <div className='md' ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
+    }
+  return { init: update, update, render }
+})
+
 export const HelpPanel = make(({ helpE, docsB }: { helpE: Signal<S>, docsB: Signal<Dict<S>> }) => {
   const
     closed = { open: false, doc: '' },
@@ -52,21 +72,23 @@ export const HelpPanel = make(({ helpE, docsB }: { helpE: Signal<S>, docsB: Sign
     showHelp = (id: S) => {
       stateB({
         open: true,
-        doc: docsB()[id] ?? `Aw, snap! Help topic "${id}" not found.`,
+        doc: docsB()[id] ?? `> Aw, snap! Help topic "${id}" not found.`,
       })
     },
     init = () => {
       on(helpE, showHelp)
     },
     render = () => {
-      const { open, doc } = stateB()
+      const
+        { open, doc } = stateB(),
+        [html, _] = markdown(doc)
       return (
         <Panel
           headerText='Help'
           isBlocking={false}
           isOpen={open}
           onDismiss={onDismiss}
-        >{doc}</Panel>
+        ><Doc html={html} helpE={helpE} /></Panel>
       )
     }
   return { init, render, stateB }
