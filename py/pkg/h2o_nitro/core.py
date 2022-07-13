@@ -302,6 +302,7 @@ class Box:
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             caption: Optional[str] = None,
+            help: Optional[str] = None,
             popup: Optional[bool] = None,
             layout: Optional[str] = None,
             tile: Optional[str] = None,
@@ -373,6 +374,7 @@ class Box:
         self.halt = halt
         self.title = title
         self.caption = caption
+        self.help = help
         self.popup = popup
         self.layout = layout
         self.tile = tile
@@ -426,6 +428,7 @@ class Box:
             halt=self.halt,
             title=self.title,
             caption=self.caption,
+            help=self.help,
             popup=self.popup,
             layout=self.layout,
             tile=self.tile,

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, isS, newIncr, on, S, signal, U, V } from './core';
+import { Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditPosition, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT } from './protocol';
@@ -84,6 +84,7 @@ export type ClientContext = {
   scoped(index: any, xid: S): Context
   commit(): void
   switch(method: S, params?: Dict<S>): void
+  help(id: S): void
 }
 
 export type Context = {
@@ -91,7 +92,7 @@ export type Context = {
   commit(): void
 }
 
-export const newClientContext = (server: Server, onBusy: () => void): ClientContext => {
+export const newClientContext = (server: Server, helpE: Signal<S>, onBusy: () => void): ClientContext => {
   const
     inputs: Input[] = [],
     popAll = (): Input[] => {
@@ -114,8 +115,7 @@ export const newClientContext = (server: Server, onBusy: () => void): ClientCont
       record: (value: InputValue) => record(index, xid, value),
       commit,
     })
-
-  return { commit, scoped, switch: change }
+  return { commit, scoped, switch: change, help: helpE }
 }
 
 
@@ -166,7 +166,9 @@ export const newClient = (server: Server) => {
     navB = signal<Option[]>([]),
     schemeB = signal(defaultScheme),
     modeB = signal<DisplayMode>('normal'),
-    context = newClientContext(server, () => {
+    docsB = signal<Dict<S>>({}),
+    helpE = signal<S>(),
+    context = newClientContext(server, helpE, () => {
       client.busy = true
       stateB({ t: ClientStateT.Connected, client })
     }),
@@ -371,6 +373,8 @@ export const newClient = (server: Server) => {
     navB,
     schemeB,
     modeB,
+    docsB,
+    helpE,
     body,
     popup,
     context,

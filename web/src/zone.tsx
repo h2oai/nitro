@@ -18,8 +18,10 @@ import styled from 'styled-components';
 import { XBox } from './box';
 import { ClientContext } from './client';
 import { B, Dict, isS, S } from './core';
+import { Help } from './help';
 import { ImageBlock } from './image';
-import { Box } from './protocol';
+import { Box, BoxMode } from './protocol';
+import { make } from './ui';
 
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
@@ -181,6 +183,10 @@ const computeStyle = (box: Partial<Box>, inRow: B) => {
   return css
 }
 
+const needOffset: Set<BoxMode> = new Set([
+  'menu',
+])
+
 const Container = styled.div`
   display: flex;
   box-sizing: border-box;
@@ -230,10 +236,13 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
         }
       default:
         {
+          const
+            component = <XBox context={context.scoped(box.index, box.xid)} box={box} />,
+            maybeWithHelp = box.help
+              ? <Help context={context} help={box.help} offset={needOffset.has(mode ?? 'md')}>{component}</Help>
+              : component
           return (
-            <Container data-name={box.name ?? undefined} style={style}>
-              <XBox context={context.scoped(box.index, box.xid)} box={box} />
-            </Container>
+            <Container data-name={box.name ?? undefined} style={style}>{maybeWithHelp}</Container>
           )
         }
     }

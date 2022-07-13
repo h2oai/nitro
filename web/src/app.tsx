@@ -17,6 +17,7 @@ import { Body, Popup } from './body';
 import { Client, ClientStateT } from './client';
 import { signal, U } from './core';
 import { Header } from './header';
+import { HelpPanel } from './help';
 import loadingAnimation from './loading.gif';
 import { make } from './ui';
 
@@ -102,6 +103,7 @@ export const App = make(({ client }: { client: Client }) => {
           return (
             <>
               {busy && <Busy timeout={500} />}
+              <HelpPanel helpE={client.helpE} docsB={client.docsB} />
               <div className='view'>
                 {!isChromeless && <div className='art' />}
                 <div className='page'>
