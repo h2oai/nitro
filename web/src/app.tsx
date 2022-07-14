@@ -103,7 +103,7 @@ export const App = make(({ client }: { client: Client }) => {
           return (
             <>
               {busy && <Busy timeout={500} />}
-              <HelpPanel helpE={client.helpE} helpB={client.helpB} />
+              <HelpPanel helpE={client.helpE} />
               <div className='view'>
                 {!isChromeless && <div className='art' />}
                 <div className='page'>

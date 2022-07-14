@@ -238,8 +238,8 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
         {
           const
             component = <XBox context={context.scoped(box.index, box.xid)} box={box} />,
-            maybeWithHelp = box.help
-              ? <Help context={context} help={box.help} offset={needOffset.has(mode ?? 'md')}>{component}</Help>
+            maybeWithHelp = box.hint || box.help
+              ? <Help context={context} hint={box.hint} help={box.help} offset={needOffset.has(mode ?? 'md')}>{component}</Help>
               : component
           return (
             <Container data-name={box.name ?? undefined} style={style}>{maybeWithHelp}</Container>

@@ -12,21 +12,62 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { IconButton, Label, Panel, Stack } from '@fluentui/react';
+import { IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import React from 'react';
 import { ClientContext } from './client';
-import { B, Dict, on, S, Signal, signal } from './core';
+import { B, Dict, on, S, Signal, signal, xid } from './core';
 import { markdown } from './markdown';
 import { make } from './ui';
 
-export const Help = make(({ context, help, offset, children }: { context: ClientContext, help: S, offset: B, children: JSX.Element }) => {
+const Hint = make(({ context, hint, help }: { context: ClientContext, hint?: S, help?: S }) => {
   const
-    onClick = () => {
-      context.help(help)
+    id = xid(),
+    visibleB = signal(false),
+    getHint = () => {
+      if (!hint) return null
+      if (!visibleB()) return null
+      const
+        s = hint.trim(),
+        nl = s.indexOf('\n')
+      if (nl < 0) return [s]
+      return [s.slice(0, nl), s.slice(nl)]
     },
+    showHint = () => {
+      if (hint) {
+        visibleB(true)
+      } else if (help) {
+        context.help(help)
+      }
+    },
+    hideHint = () => visibleB(false),
     render = () => {
       const
-        button = <IconButton iconProps={{ iconName: 'Info' }} onClick={onClick} />,
+        hint = getHint(),
+        bubble = hint
+          ? (
+            <TeachingBubble
+              target={'#' + id}
+              hasCloseButton={true}
+              onDismiss={hideHint}
+              headline={hint.length > 1 ? hint[0] : undefined}
+            >{hint[hint.length - 1]}</TeachingBubble>
+          )
+          : null
+      return (
+        <>
+          {bubble}
+          <IconButton id={id} iconProps={{ iconName: 'Info' }} onClick={showHint} />
+        </>
+      )
+    }
+  return { render, visibleB }
+})
+
+export const Help = make(({ context, hint, help, offset, children }: { context: ClientContext, hint?: S, help?: S, offset: B, children: JSX.Element }) => {
+  const
+    render = () => {
+      const
+        button = <Hint context={context} hint={hint} help={help} />,
         maybeWithLabel = offset
           ? (
             <Stack>
@@ -64,27 +105,18 @@ const Doc = make(({ html, helpE }: { html: S, helpE: Signal<S> }) => {
   return { init: update, update, render }
 })
 
-export const HelpPanel = make(({ helpE, helpB }: { helpE: Signal<S>, helpB: Signal<Dict<S>> }) => {
+export const HelpPanel = make(({ helpE }: { helpE: Signal<S> }) => {
   const
-    closed = { open: false, doc: '' },
+    closed = { open: false, help: '' },
     stateB = signal(closed),
     onDismiss = () => stateB(closed),
-    showHelp = (id: S) => {
-      stateB({
-        open: true,
-        doc: helpB()[id] ?? `> Aw, snap! Help topic "${id}" not found.`,
-      })
-    },
-    init = () => {
-      on(helpE, showHelp)
-    },
+    init = () => on(helpE, (help: S) => stateB({ open: true, help })),
     render = () => {
       const
-        { open, doc } = stateB(),
-        [html, _] = markdown(doc)
+        { open, help } = stateB(),
+        [html, _] = markdown(help)
       return (
         <Panel
-          headerText='Help'
           isBlocking={false}
           isOpen={open}
           onDismiss={onDismiss}

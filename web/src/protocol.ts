@@ -147,6 +147,7 @@ export type Box = {
   halt?: B
   title?: S
   caption?: S
+  hint?: S
   help?: S
   popup?: B
   layout?: 'row' | 'column'
