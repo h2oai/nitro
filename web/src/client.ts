@@ -190,7 +190,7 @@ export const newClient = (server: Server) => {
       const hashbang = getHashRPC()
       if (hashbang) {
         const { method, params } = hashbang
-        client.context.switch(method, params)
+        context.switch(method, params)
       }
     },
     invalidate = () => {
@@ -226,7 +226,6 @@ export const newClient = (server: Server) => {
                     { box: rawBox, edit: rawEdit } = msg,
                     box = sanitizeBox(rawBox),
                     boxes = box.items ?? [],
-                    { body, popup } = client,
                     root = body[0]?.items ?? []
                   if (box.popup) {
                     popup.length = 0
@@ -320,7 +319,7 @@ export const newClient = (server: Server) => {
               case MessageType.Switch:
                 {
                   const { method } = msg
-                  client.jump(method)
+                  jump(method)
                 }
                 break
               case MessageType.Set:
@@ -329,10 +328,10 @@ export const newClient = (server: Server) => {
                     { settings } = msg,
                     { title, caption, menu, nav, theme, plugins, mode, locale } = settings
 
-                  if (title) client.titleB(title)
-                  if (caption) client.captionB(caption)
-                  if (menu) client.menuB(sanitizeOptions(menu))
-                  if (nav) client.navB(sanitizeOptions(nav))
+                  if (title) titleB(title)
+                  if (caption) captionB(caption)
+                  if (menu) menuB(sanitizeOptions(menu))
+                  if (nav) navB(sanitizeOptions(nav))
                   if (theme) {
                     const
                       d = defaultScheme,
@@ -344,11 +343,11 @@ export const newClient = (server: Server) => {
                         primaryColor: theme.accent_color ?? d.primaryColor,
                         primaryColorName: theme.accent_color_name ?? d.primaryColorName,
                       }
-                    client.schemeB(scheme)
+                    schemeB(scheme)
                   }
-                  if (mode) client.modeB(mode)
+                  if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)
-                  if (locale) client.localeB(locale)
+                  if (locale) localeB(locale)
 
                   const state = stateB()
                   if (state.t === ClientStateT.Connected) {
