@@ -87,7 +87,7 @@ export type Edit = {
 }
 
 export type Client = {
-  lang: S
+  locale: S
 }
 
 export type Theme = {
@@ -121,7 +121,7 @@ export type Settings = {
   theme?: Theme
   plugins?: Plugin[]
   mode?: DisplayMode
-  help?: Dict<S>
+  locale?: Dict<S>
 }
 
 export type BannerMode = 'info' | 'success' | 'warning' | 'critical' | 'blocked' | 'error'

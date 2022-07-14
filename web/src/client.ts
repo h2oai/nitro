@@ -156,7 +156,7 @@ const sanitizeEdit = (e?: Edit): SanitizedEdit => {
   }
 }
 
-const getLang = () => {
+const getLocale = () => {
   const { language, languages } = window.navigator
   if (Array.isArray(languages)) for (const lang of languages) if (lang?.length) return lang
   if (language?.length) return language
@@ -173,7 +173,7 @@ export const newClient = (server: Server) => {
     navB = signal<Option[]>([]),
     schemeB = signal(defaultScheme),
     modeB = signal<DisplayMode>('normal'),
-    helpB = signal<Dict<S>>({}),
+    localeB = signal<Dict<S>>({}),
     helpE = signal<S>(),
     context = newClientContext(server, helpE, () => {
       client.busy = true
@@ -202,7 +202,7 @@ export const newClient = (server: Server) => {
         case ServerEventT.Connect:
           if (server) {
             const
-              join: Message = { t: MessageType.Join, client: { lang: getLang() } },
+              join: Message = { t: MessageType.Join, client: { locale: getLocale() } },
               rpc = getHashRPC()
             if (rpc) {
               const { method, params } = rpc
@@ -327,7 +327,7 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { settings } = msg,
-                    { title, caption, menu, nav, theme, plugins, mode, help } = settings
+                    { title, caption, menu, nav, theme, plugins, mode, locale } = settings
 
                   if (title) client.titleB(title)
                   if (caption) client.captionB(caption)
@@ -348,7 +348,7 @@ export const newClient = (server: Server) => {
                   }
                   if (mode) client.modeB(mode)
                   if (plugins) installPlugins(plugins)
-                  if (help) client.helpB(help)
+                  if (locale) client.localeB(locale)
 
                   const state = stateB()
                   if (state.t === ClientStateT.Connected) {
@@ -381,7 +381,7 @@ export const newClient = (server: Server) => {
     navB,
     schemeB,
     modeB,
-    helpB,
+    localeB,
     helpE,
     body,
     popup,

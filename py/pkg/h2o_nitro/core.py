@@ -67,8 +67,8 @@ class _MsgType(IntEnum):
 
 _primitive = (bool, int, float, str)
 Primitive = Union[bool, int, float, str]
-LangDict = Dict[str, str]
-LangDicts = Dict[str, LangDict]
+Locale = Dict[str, str]
+Locales = Dict[str, Locale]
 
 
 class RemoteError(Exception):
@@ -304,6 +304,7 @@ class Box:
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             caption: Optional[str] = None,
+            hint: Optional[str] = None,
             help: Optional[str] = None,
             popup: Optional[bool] = None,
             layout: Optional[str] = None,
@@ -376,6 +377,7 @@ class Box:
         self.halt = halt
         self.title = title
         self.caption = caption
+        self.hint = hint
         self.help = help
         self.popup = popup
         self.layout = layout
@@ -430,6 +432,7 @@ class Box:
             halt=self.halt,
             title=self.title,
             caption=self.caption,
+            hint=self.hint,
             help=self.help,
             popup=self.popup,
             layout=self.layout,
@@ -627,11 +630,11 @@ def _interpret(msg, expected_type: int):
 
         if t == _MsgType.Join:
             client = msg.get('client')
-            lang = client.get('lang') if client else None
+            locale = client.get('locale') if client else None
             method = msg.get('method')
             params = msg.get('params')
             mode = params.get('mode') if params else None
-            return method, mode, lang
+            return method, mode, locale
 
         raise ProtocolError(400, f'unknown message type {t}')
     raise ProtocolError(400, f'unknown message format: want dict, got {type(msg)}')
@@ -652,7 +655,7 @@ def _marshal_set(
         nav: Optional[Sequence[Option]] = None,
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
-        help: Optional[LangDict] = None,
+        locale: Optional[Locale] = None,
         mode: Optional[str] = None,
 ):
     return _marshal(dict(
@@ -664,7 +667,7 @@ def _marshal_set(
             nav=_dump(nav),
             theme=_dump(theme),
             plugins=_dump(plugins),
-            help=help,
+            locale=locale,
             mode=mode,
         ))))
 
@@ -676,10 +679,10 @@ def _marshal_switch(method: Union[V, Callable]):
     ))
 
 
-def _get_lang_dict(langs: Optional[LangDicts], lang: Optional[str]) -> Optional[LangDict]:
-    if langs is None or lang is None:
+def _get_locale(locales: Optional[Locales], locale: Optional[str]) -> Optional[Locale]:
+    if locales is None or locale is None:
         return None
-    return langs.get(lang.lower()) or langs.get('en-us') or langs.get('en')
+    return locales.get(locale) or locales.get('en-US') or locales.get('en')
 
 
 class _View:
@@ -696,7 +699,7 @@ class _View:
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
-            help: Optional[LangDicts] = None,
+            locales: Optional[Locales] = None,
     ):
         self._delegate = delegate
         self.context = context or {}
@@ -709,14 +712,14 @@ class _View:
         self._routes = routes
         self._theme = theme
         self._plugins = plugins
-        self._help = help
+        self._locales = locales
 
         self._delegates: Dict[str, FunctionType] = dict()
         _collect_delegates(self._delegates, self._menu)
         _collect_delegates(self._delegates, self._nav)
         _collect_delegates(self._delegates, self._routes)
 
-    def _ack(self, mode: Optional[str] = None, lang: Optional[str] = None):
+    def _ack(self, mode: Optional[str] = None, locale: Optional[str] = None):
         return _marshal_set(
             title=self._title,
             caption=self._caption,
@@ -724,7 +727,7 @@ class _View:
             nav=self._nav,
             theme=self._theme,
             plugins=self._plugins,
-            help=_get_lang_dict(self._help, lang),
+            locale=_get_locale(self._locales, locale),
             mode=mode,
         )
 
@@ -778,9 +781,9 @@ class View(_View):
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
-            help: Optional[LangDicts] = None,
+            locales: Optional[Locales] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, help)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
@@ -795,13 +798,13 @@ class View(_View):
             routes=self._routes,
             theme=self._theme,
             plugins=self._plugins,
-            help=self._help,
+            locales=self._locales,
         )._run()
 
     def _run(self):
         # Handshake
-        method, mode, lang = self._read(_MsgType.Join)
-        self._send(self._ack(mode, lang))
+        method, mode, locale = self._read(_MsgType.Join)
+        self._send(self._ack(mode, locale))
 
         # Event loop
         while True:
@@ -945,9 +948,9 @@ class AsyncView(_View):
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
-            help: Optional[LangDicts] = None,
+            locales: Optional[Locales] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, help)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
@@ -962,13 +965,13 @@ class AsyncView(_View):
             routes=self._routes,
             theme=self._theme,
             plugins=self._plugins,
-            help=self._help,
+            locales=self._locales,
         )._run()
 
     async def _run(self):
         # Handshake
-        method, mode, lang = await self._read(_MsgType.Join)
-        await self._send(self._ack(mode, lang))
+        method, mode, locale = await self._read(_MsgType.Join)
+        await self._send(self._ack(mode, locale))
 
         # Event loop
         while True:
