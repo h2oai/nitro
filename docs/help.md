@@ -1,51 +1,130 @@
 # Help
 
-This section contains topics that don't fit anywhere else in the documentation.
+Show context-sensitive hints and help.
 
-#### Add CLI to PATH
+## Basic
 
+Set `help=` to associate context-sensitive help with a box.
 
-=== "bash / zsh"
-
-    Step 1. Create a directory for local binaries:
-
-    ```sh
-    mkdir -p ~/bin
-    ```
-    
-    Step 2. Move the `nitro` executable there:
-
-    ```sh
-    mv ~/path/to/nitro ~/bin
-    ```
-
-    Step 3. Append this line to your `~/.bashrc` or `~/.zshrc` file:
-
-    ```sh
-    export PATH=~/bin:${PATH}
-    ```
-
-    Step 4. Exit and open a new terminal.
-
-    Step 5. Verify if the `nitro` command works:
-
-    ```sh
-    nitro version
-    ```
+A _hint_ (or info) icon is displayed next to the box.
+Clicking on the icon displays the help content on a sidebar.
 
 
-=== "Windows"
-
-    Step 1. Move `nitro.exe` to a local directory, say, `C:\Users\MyUsername\bin`
-    
-    Step 2. Add `C:\Users\MyUsername\bin` to your system's `Path`. [See walkthrough](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/).
-
-    Step 3. Open a new Command Prompt.
-
-    Step 4. Verify if the `nitro` command works:
-
-    ```sh
-    nitro version
-    ```
+```py
+choice = view(box(
+    'Choose a flavor',
+    mode='menu',
+    options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
+    help='All our flavors are 100% natural - no added sugar or colors!',
+))
+view(f'You chose {choice}.')
+```
 
 
+![Screenshot](assets/screenshots/help_basic.png)
+
+
+## Using Markdown
+
+`help=` supports Markdown.
+
+
+```py
+choice = view(box(
+    'Choose a flavor',
+    mode='menu',
+    options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
+    help='''
+    ### No health risks!
+
+    All our flavors are **100% natural** - no added sugar or colors!
+    ''',
+))
+view(f'You chose {choice}.')
+```
+
+
+![Screenshot](assets/screenshots/help_markdown.png)
+
+
+## Localization
+
+Prefix the help with a `@` to show a locale-specific string.
+
+For example `help='@flavor_help` shows a locale-specific string named `flavor_help`, if available.
+
+
+```py
+choice = view(box(
+    '@flavor_caption',
+    mode='menu',
+    options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
+    help='@flavor_help',
+))
+view(f'You chose {choice}.')
+```
+
+
+![Screenshot](assets/screenshots/help_localization.png)
+
+
+## Hint
+
+Set `hint=` to show an in-place pop-up hint when clicked.
+
+Hints are a lightweight alternative to showing long-form help.
+Use `hint=` instead of `help=` when you have 1-2 lines of text to display.
+
+
+```py
+choice = view(box(
+    'Choose a flavor',
+    mode='menu',
+    options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
+    hint='All our flavors are 100% natural - no added sugar or colors!',
+))
+view(f'You chose {choice}.')
+```
+
+
+![Screenshot](assets/screenshots/hint_basic.png)
+
+
+## Hint with title
+
+If the hint contains multiple lines of text, the first line is used as the title.
+
+
+```py
+choice = view(box(
+    'Choose a flavor',
+    mode='menu',
+    options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
+    hint='No health risks!\nAll our flavors are 100% natural - no added sugar or colors!',
+))
+view(f'You chose {choice}.')
+```
+
+
+![Screenshot](assets/screenshots/hint_title.png)
+
+
+## Hint localization
+
+Prefix the hint with a `@` to show a locale-specific string as the hint.
+
+For example `hint='@flavor_hint'` shows a locale-specific string named `flavor_hint`, if available.
+
+
+```py
+choice = view(box(
+    '@flavor_caption',
+    mode='menu',
+    options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
+    hint='@flavor_hint',
+))
+view(f'You chose {choice}.')
+```
+
+
+![Screenshot](assets/screenshots/hint_localization.png)

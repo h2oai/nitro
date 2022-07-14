@@ -64,6 +64,7 @@ nav:
     - 'layout.md'
     - 'forms.md'
     - 'editing.md'
+    - 'help.md'
     - 'popups.md'
     - 'textbox.md'
     - 'spinbox.md'
