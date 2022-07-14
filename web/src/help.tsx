@@ -55,7 +55,7 @@ const Doc = make(({ html, helpE }: { html: S, helpE: Signal<S> }) => {
 
       el.querySelectorAll<HTMLAnchorElement>('a[data-jump]').forEach(link => {
         const id = link.getAttribute('data-jump')
-        if (id) link.onclick = e => { helpE(id) }
+        if (id) link.onclick = _ => { helpE(id) }
       })
     },
     render = () => {
@@ -64,7 +64,7 @@ const Doc = make(({ html, helpE }: { html: S, helpE: Signal<S> }) => {
   return { init: update, update, render }
 })
 
-export const HelpPanel = make(({ helpE, docsB }: { helpE: Signal<S>, docsB: Signal<Dict<S>> }) => {
+export const HelpPanel = make(({ helpE, helpB }: { helpE: Signal<S>, helpB: Signal<Dict<S>> }) => {
   const
     closed = { open: false, doc: '' },
     stateB = signal(closed),
@@ -72,7 +72,7 @@ export const HelpPanel = make(({ helpE, docsB }: { helpE: Signal<S>, docsB: Sign
     showHelp = (id: S) => {
       stateB({
         open: true,
-        doc: docsB()[id] ?? `> Aw, snap! Help topic "${id}" not found.`,
+        doc: helpB()[id] ?? `> Aw, snap! Help topic "${id}" not found.`,
       })
     },
     init = () => {

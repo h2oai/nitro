@@ -57,9 +57,9 @@ export type Message = {
   text: S // description
 } | {
   t: MessageType.Join
+  client: Client
   method?: S // method
   params?: Dict<S> // params
-  d?: any // XXX formalize
 } | {
   t: MessageType.Switch,
   method: S // method
@@ -84,6 +84,10 @@ export type Edit = {
   t: EditType
   p: EditPosition
   s?: S | S[] // selector
+}
+
+export type Client = {
+  lang: S
 }
 
 export type Theme = {
@@ -117,6 +121,7 @@ export type Settings = {
   theme?: Theme
   plugins?: Plugin[]
   mode?: DisplayMode
+  help?: Dict<S>
 }
 
 export type BannerMode = 'info' | 'success' | 'warning' | 'critical' | 'blocked' | 'error'
