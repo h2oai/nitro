@@ -21,6 +21,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # #include layout.py
 # #include forms.py
 # #include edit.py
+# #include help.py
 # #include popup.py
 # #include textbox.py
 # #include spinbox.py
