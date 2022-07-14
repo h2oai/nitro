@@ -224,7 +224,7 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { box: rawBox, edit: rawEdit } = msg,
-                    box = sanitizeBox(rawBox),
+                    box = sanitizeBox(localeB(), rawBox),
                     boxes = box.items ?? [],
                     root = body[0]?.items ?? []
                   if (box.popup) {

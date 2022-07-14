@@ -679,10 +679,10 @@ def _marshal_switch(method: Union[V, Callable]):
     ))
 
 
-def _get_locale(locales: Optional[Locales], locale: Optional[str]) -> Optional[Locale]:
+def _get_locale(locales: Optional[Locales], locale: Optional[str], fallback: str) -> Optional[Locale]:
     if locales is None or locale is None:
         return None
-    return locales.get(locale) or locales.get('en-US') or locales.get('en')
+    return locales.get(locale) or locales.get(fallback)
 
 
 class _View:
@@ -700,6 +700,7 @@ class _View:
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
             locales: Optional[Locales] = None,
+            default_locale: Optional[str] = None,
     ):
         self._delegate = delegate
         self.context = context or {}
@@ -713,6 +714,7 @@ class _View:
         self._theme = theme
         self._plugins = plugins
         self._locales = locales
+        self._default_locale = default_locale or 'en-US'
 
         self._delegates: Dict[str, FunctionType] = dict()
         _collect_delegates(self._delegates, self._menu)
@@ -727,7 +729,7 @@ class _View:
             nav=self._nav,
             theme=self._theme,
             plugins=self._plugins,
-            locale=_get_locale(self._locales, locale),
+            locale=_get_locale(self._locales, locale, self._default_locale),
             mode=mode,
         )
 
@@ -782,8 +784,9 @@ class View(_View):
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
             locales: Optional[Locales] = None,
+            default_locale: Optional[str] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales, default_locale)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
@@ -799,6 +802,7 @@ class View(_View):
             theme=self._theme,
             plugins=self._plugins,
             locales=self._locales,
+            default_locale=self._default_locale
         )._run()
 
     def _run(self):
@@ -949,8 +953,9 @@ class AsyncView(_View):
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
             locales: Optional[Locales] = None,
+            default_locale: Optional[str] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales, default_locale)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
@@ -966,6 +971,7 @@ class AsyncView(_View):
             theme=self._theme,
             plugins=self._plugins,
             locales=self._locales,
+            default_locale=self._default_locale,
         )._run()
 
     async def _run(self):

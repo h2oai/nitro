@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { anyD, anyN, B, Incr, isB, isN, isO, isPair, isS, isV, words, xid } from './core';
+import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, S, words, xid } from './core';
 import { markdown } from './markdown';
-import { Box, BoxMode, Option } from './protocol';
+import { Box, BoxMode, Header, Option } from './protocol';
 
 const determineMode = (box: Box): BoxMode => {
   const { options, editable, multiple } = box
@@ -150,12 +150,45 @@ export const sanitizeOptions = (x: any): Option[] => { // recursive
   return []
 }
 
-export const sanitizeBox = (box: Box): Box => {
+const translate = (locale: Dict<S>, s?: S) => {
+  if (s && /^@\w+$/.test(s)) {
+    const alt = locale[s.substring(1)]
+    if (alt) return alt
+  }
+  return s
+}
+
+const localizeBox = (locale: Dict<S>, box: Box) => {
+  const { text, title, caption, placeholder, prefix, suffix, hint, help, options, headers } = box
+  if (text) box.text = translate(locale, text)
+  if (title) box.title = translate(locale, title)
+  if (caption) box.caption = translate(locale, caption)
+  if (placeholder) box.placeholder = translate(locale, placeholder)
+  if (prefix) box.prefix = translate(locale, prefix)
+  if (suffix) box.suffix = translate(locale, suffix)
+  if (hint) box.hint = translate(locale, hint)
+  if (help) box.help = translate(locale, help)
+  if (options) for (const option of options) localizeOption(locale, option)
+  if (headers) for (const header of headers) localizeHeader(locale, header)
+}
+
+const localizeOption = (locale: Dict<S>, option: Option) => {
+  const { text, caption } = option
+  if (text) option.text = translate(locale, text)
+  if (caption) option.caption = translate(locale, caption)
+}
+
+const localizeHeader = (locale: Dict<S>, header: Header) => {
+  const { text } = header
+  if (text) header.text = translate(locale, text) ?? ''
+}
+
+export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   if (isS(box)) {
     box = { xid: xid(), index: 0, mode: 'md', text: box, options: [] }
   }
   if (box.items) {
-    box.items = box.items.map(w => sanitizeBox(w))
+    box.items = box.items.map(b => sanitizeBox(locale, b))
   } else {
     const { value, options } = box
     if (isB(value)) {
@@ -166,6 +199,8 @@ export const sanitizeBox = (box: Box): Box => {
     box.index = 0
     sanitizeRange(box)
     if (!box.mode) box.mode = determineMode(box)
+
+    localizeBox(locale, box)
 
     switch (box.mode) {
       case 'md':
