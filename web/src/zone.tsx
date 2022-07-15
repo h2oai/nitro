@@ -20,8 +20,7 @@ import { ClientContext } from './client';
 import { B, Dict, isS, S } from './core';
 import { Help } from './help';
 import { ImageBlock } from './image';
-import { Box, BoxMode } from './protocol';
-import { make } from './ui';
+import { Box } from './protocol';
 
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
@@ -183,9 +182,19 @@ const computeStyle = (box: Partial<Box>, inRow: B) => {
   return css
 }
 
-const needOffset: Set<BoxMode> = new Set([
-  'menu',
-])
+const hasLabel = (box: Box): B => {
+  switch (box.mode) {
+    case 'text':
+    case 'number':
+    case 'menu':
+    case 'date':
+    case 'button':
+    case 'tag':
+    case 'rating':
+      if (box.text) return true
+  }
+  return false
+}
 
 const Container = styled.div`
   display: flex;
@@ -239,7 +248,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
           const
             component = <XBox context={context.scoped(box.index, box.xid)} box={box} />,
             maybeWithHelp = box.hint || box.help
-              ? <Help context={context} hint={box.hint} help={box.help} offset={needOffset.has(mode ?? 'md')}>{component}</Help>
+              ? <Help context={context} hint={box.hint} help={box.help} offset={hasLabel(box)}>{component}</Help>
               : component
           return (
             <Container data-name={box.name ?? undefined} style={style}>{maybeWithHelp}</Container>

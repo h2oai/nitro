@@ -15,7 +15,7 @@
 import { IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import React from 'react';
 import { ClientContext } from './client';
-import { B, Dict, on, S, Signal, signal, splitLines, xid } from './core';
+import { B, on, S, Signal, signal, splitLines, xid } from './core';
 import { markdown } from './markdown';
 import { make } from './ui';
 
