@@ -672,10 +672,11 @@ def _marshal_set(
         ))))
 
 
-def _marshal_switch(method: Union[V, Callable]):
+def _marshal_switch(method: Union[V, Callable], params: Optional[dict]=None):
     return _marshal(dict(
         t=_MsgType.Switch,
         method=_qual_name_of(method) if isinstance(method, FunctionType) else str(method),
+        params=params,
     ))
 
 
@@ -786,7 +787,8 @@ class View(_View):
             locales: Optional[Locales] = None,
             default_locale: Optional[str] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales, default_locale)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales,
+                         default_locale)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
@@ -843,8 +845,8 @@ class View(_View):
             theme=theme,
         ))
 
-    def jump(self, method: Union[V, Callable]):
-        self._send(_marshal_switch(method))
+    def jump(self, method: Union[V, Callable], **params):
+        self._send(_marshal_switch(method, params))
 
     def __call__(
             self,
@@ -955,7 +957,8 @@ class AsyncView(_View):
             locales: Optional[Locales] = None,
             default_locale: Optional[str] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales, default_locale)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales,
+                         default_locale)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
@@ -1012,8 +1015,8 @@ class AsyncView(_View):
             theme=theme,
         ))
 
-    async def jump(self, method: Union[V, Callable]):
-        await self._send(_marshal_switch(method))
+    async def jump(self, method: Union[V, Callable], **params):
+        await self._send(_marshal_switch(method, params))
 
     async def __call__(
             self,

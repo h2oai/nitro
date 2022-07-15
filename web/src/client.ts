@@ -183,7 +183,22 @@ export const newClient = (server: Server) => {
     connect = () => {
       server.connect(handleEvent)
     },
-    jump = (v: V) => {
+    jump = (v: V, params?: Dict<S>) => {
+      if (isS(v) && /^http[s]*:\/\//.test(v)) {
+        const
+          p = params ?? {},
+          target = p['target'] ?? '_self',
+          features: S[] = []
+        for (const k in p) if (k !== 'target') features.push(`${k}=${p[k]}`)
+        if (features.length) {
+          console.log(v, target, features)
+          window.open(v, target, features.join(','))
+        } else {
+          console.log(v, target)
+          window.open(v, target)
+        }
+        return
+      }
       window.location.hash = '!' + v
     },
     bounce = () => {
@@ -318,8 +333,8 @@ export const newClient = (server: Server) => {
                 break
               case MessageType.Switch:
                 {
-                  const { method } = msg
-                  jump(method)
+                  const { method, params } = msg
+                  jump(method, params)
                 }
                 break
               case MessageType.Set:

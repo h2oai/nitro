@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React from 'react';
 import styled from 'styled-components';
 import { xid } from './core';
 import { BoxProps } from './ui';
-
 
 // Make sure iframe works in browsers where 100% width/height is not respected
 const Frame = styled.iframe`
@@ -28,9 +26,17 @@ const Frame = styled.iframe`
 `
 
 export const WebView = ({ box }: BoxProps) => {
-  const { path } = box
+  const
+    { name: rawName, path } = box,
+    name = rawName ?? xid()
   return (
-    <Frame title={xid()} src={path} frameBorder="0" width="100%" height="100%" />
+    <Frame
+      name={name}
+      title={name}
+      src={path}
+      frameBorder="0"
+      width="100%"
+      height="100%" />
   )
 }
 
