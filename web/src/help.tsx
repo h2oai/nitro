@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
+import { IButtonProps, IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import React from 'react';
 import { ClientContext } from './client';
 import { B, on, S, Signal, signal, splitLines, xid } from './core';
@@ -40,12 +40,20 @@ const Hint = make(({ context, hint: rawHint, help }: { context: ClientContext, h
       }
     },
     hideHint = () => visibleB(false),
+    moreButton: IButtonProps | undefined = help ? {
+      children: 'More...',
+      onClick: () => {
+        context.help(help)
+        visibleB(false)
+      }
+    } : undefined,
     render = () => {
       const
         bubble = visibleB() && hint
           ? (
             <TeachingBubble
               target={'#' + id}
+              primaryButtonProps={moreButton}
               hasCloseButton={true}
               onDismiss={hideHint}
               headline={headline}

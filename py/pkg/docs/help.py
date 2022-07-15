@@ -90,6 +90,27 @@ def hint_title(view: View):  # height 2
     view(f'You chose {choice}.')
 
 
+# ## Hint with help
+# If a box has both `hint=` and `help=` set, the hint will automatically show a button that launches help.
+def hint_help(view: View):  # height 2
+    choice = view(box(
+        'Choose a flavor',
+        mode='menu',
+        options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
+        hint='No health risks!\nAll our flavors are 100% natural - no added sugar or colors!',
+        help='''
+        ### What goes into our flavoring?
+        
+        Our flavors contain the essential oil, oleoresin, essence or extractive, protein hydrolysate, distillate, 
+        or any product of roasting, heating or enzymolysis, which contains the flavoring constituents derived from 
+        a spice, fruit or fruit juice, vegetable or vegetable juice, edible yeast, herb, bark, bud, root, leaf or 
+        similar plant material, meat, seafood, poultry, eggs, dairy products, or fermentation products thereof, 
+        whose significant function in food is flavoring rather than nutritional.
+        ''',
+    ))
+    view(f'You chose {choice}.')
+
+
 # ## Hint localization
 # Prefix the hint with a `@` to show a locale-specific string as the hint.
 #
