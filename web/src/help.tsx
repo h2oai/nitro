@@ -15,23 +15,23 @@
 import { IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import React from 'react';
 import { ClientContext } from './client';
-import { B, Dict, on, S, Signal, signal, xid } from './core';
+import { B, Dict, on, S, Signal, signal, splitLines, xid } from './core';
 import { markdown } from './markdown';
 import { make } from './ui';
 
-const Hint = make(({ context, hint, help }: { context: ClientContext, hint?: S, help?: S }) => {
+const tokenize = (hint?: S) => {
+  if (!hint) return []
+  const
+    s = hint.trim(),
+    lines = splitLines(s)
+  return lines.length > 1 ? [lines.slice(1).join('\n'), lines[0]] : lines
+}
+
+const Hint = make(({ context, hint: rawHint, help }: { context: ClientContext, hint?: S, help?: S }) => {
   const
     id = xid(),
     visibleB = signal(false),
-    getHint = () => {
-      if (!hint) return null
-      if (!visibleB()) return null
-      const
-        s = hint.trim(),
-        nl = s.indexOf('\n')
-      if (nl < 0) return [s]
-      return [s.slice(0, nl), s.slice(nl)]
-    },
+    [hint, headline] = tokenize(rawHint),
     showHint = () => {
       if (hint) {
         visibleB(true)
@@ -42,15 +42,14 @@ const Hint = make(({ context, hint, help }: { context: ClientContext, hint?: S, 
     hideHint = () => visibleB(false),
     render = () => {
       const
-        hint = getHint(),
-        bubble = hint
+        bubble = visibleB() && hint
           ? (
             <TeachingBubble
               target={'#' + id}
               hasCloseButton={true}
               onDismiss={hideHint}
-              headline={hint.length > 1 ? hint[0] : undefined}
-            >{hint[hint.length - 1]}</TeachingBubble>
+              headline={headline}
+            >{hint}</TeachingBubble>
           )
           : null
       return (

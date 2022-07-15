@@ -199,6 +199,7 @@ export const debounce = (ms: U, f: () => void) => {
     t = window.setTimeout(() => f(), ms)
   }
 }
+export const splitLines = (x: S) => x.split(/\r?\n/)
 export const words = (x: S) => x.trim().split(/\s+/g)
 export const snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase())
 export const valueFromRange = (value: any, min: any, max: any, step: any): N | undefined => {
