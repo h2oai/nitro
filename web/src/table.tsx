@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, IColumn, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
+import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, DetailsRow, IColumn, IDetailsRowProps, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
 import { areSetsEqual, B, Dict, isN, S, signal, U } from './core';
 import { markdown } from './markdown';
@@ -224,6 +224,9 @@ export const Table = make(({ context, box }: BoxProps) => {
         ? <Link href="" onClick={onClick}>{text}</Link>
         : renderCell(text, column.data as Header)
     },
+    onRenderRow = (props?: IDetailsRowProps) => props
+      ? <DetailsRow {...props} styles={{ cell: { fontSize: 14 } }} />
+      : null,
     contentB = signal<[IColumn[], TableRow[]]>([columns, rows]),
     render = () => {
       const [columns, rows] = contentB()
@@ -240,6 +243,7 @@ export const Table = make(({ context, box }: BoxProps) => {
           ariaLabelForSelectAllCheckbox="Select All"
           checkButtonAriaLabel="Select"
           onRenderItemColumn={onRenderItemColumn}
+          onRenderRow={onRenderRow}
           selectionMode={isMultiple ? SelectionMode.multiple : isSingle ? SelectionMode.single : SelectionMode.none}
           checkboxVisibility={isList ? CheckboxVisibility.always : CheckboxVisibility.hidden}
         />
