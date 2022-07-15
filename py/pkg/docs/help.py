@@ -23,7 +23,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 #
 # A _hint_ (or info) icon is displayed next to the box.
 # Clicking on the icon displays the help content on a sidebar.
-def help_basic(view: View):  # height 2
+def help_basic(view: View):  # height 3
     choice = view(box(
         'Choose a flavor',
         mode='menu',
@@ -35,7 +35,7 @@ def help_basic(view: View):  # height 2
 
 # ## Using Markdown
 # `help=` supports Markdown.
-def help_markdown(view: View):  # height 2
+def help_markdown(view: View):  # height 3
     choice = view(box(
         'Choose a flavor',
         mode='menu',
@@ -53,7 +53,7 @@ def help_markdown(view: View):  # height 2
 # Prefix the help with a `@` to show a locale-specific string.
 #
 # For example `help='@flavor_help` shows a locale-specific string named `flavor_help`, if available.
-def help_localization(view: View):  # height 4
+def help_localization(view: View):  # height 3
     choice = view(box(
         '@flavor_caption',
         mode='menu',
@@ -94,7 +94,7 @@ def hint_title(view: View):  # height 2
 # Prefix the hint with a `@` to show a locale-specific string as the hint.
 #
 # For example `hint='@flavor_hint'` shows a locale-specific string named `flavor_hint`, if available.
-def hint_localization(view: View):  # height 4
+def hint_localization(view: View):  # height 2
     choice = view(box(
         '@flavor_caption',
         mode='menu',
