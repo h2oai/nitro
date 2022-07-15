@@ -173,9 +173,10 @@ const localizeBox = (locale: Dict<S>, box: Box) => {
 }
 
 const localizeOption = (locale: Dict<S>, option: Option) => {
-  const { text, caption } = option
+  const { text, caption, options } = option
   if (text) option.text = translate(locale, text)
   if (caption) option.caption = translate(locale, caption)
+  if (options) for (const option of options) localizeOption(locale, option)
 }
 
 const localizeHeader = (locale: Dict<S>, header: Header) => {
