@@ -102,3 +102,36 @@ def hint_localization(view: View):  # height 2
         hint='@flavor_hint',
     ))
     view(f'You chose {choice}.')
+
+
+# ## More examples
+# All boxes support `hint=` and `help=`, except containers like rows, columns, or tabs.
+def help_examples(view: View):  # height 10
+    hint = 'Here is a hint about this box!'
+    flavors = ['Vanilla', 'Strawberry', 'Blueberry']
+    view(
+        box('Your name', value='Jelly McJellyface', hint=hint),
+        box('How many donuts?', mode='number', hint=hint),
+        box('Add sprinkles', mode='check', hint=hint),
+        box('Add sprinkles', mode='toggle', value=True, hint=hint),
+        box('Choose a flavor', mode='button', options=flavors, hint=hint),
+        box('Choose a flavor', mode='menu', options=flavors, hint=hint),
+        box('Choose a flavor', mode='menu', options=flavors, multiple=True, hint=hint),
+        box('Choose a flavor', mode='radio', options=flavors, hint=hint),
+        box('Choose a flavor', mode='check', options=flavors, hint=hint),
+        box('How many donuts?', mode='range', value=5, hint=hint),
+        box('Party size', mode='range', value=(3, 7), hint=hint),
+        box('Pick a time', mode='time', value='3:04PM', hint=hint),
+        box('Pick a date', mode='date', hint=hint),
+        box('Pick a week', mode='week', hint=hint),
+        box('Pick a month', mode='month', hint=hint),
+        box('Pick a date', mode='day', hint=hint),
+        box('Choose a flavor', mode='tag', options=flavors, hint=hint),
+        box('Package color', mode='color', options=[
+            option('#ff0000', 'Red'),
+            option('#00ff00', 'Green'),
+            option('#0000ff', 'Blue'),
+        ], hint=hint),
+        box('Package color', mode='color', hint=hint),
+        box('Rate your experience', mode='rating', hint=hint),
+    )
