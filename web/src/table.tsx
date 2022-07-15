@@ -241,7 +241,7 @@ export const Table = make(({ context, box }: BoxProps) => {
           checkButtonAriaLabel="Select"
           onRenderItemColumn={onRenderItemColumn}
           selectionMode={isMultiple ? SelectionMode.multiple : isSingle ? SelectionMode.single : SelectionMode.none}
-          checkboxVisibility={isList ? undefined : CheckboxVisibility.hidden}
+          checkboxVisibility={isList ? CheckboxVisibility.always : CheckboxVisibility.hidden}
         />
       )
     }
