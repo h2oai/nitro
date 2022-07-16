@@ -12,7 +12,7 @@ You will need Python 3.7 or later installed on your system.
 
 ## Hello World!
 
-To build apps with Nitro, you'll also need something like [Flask](https://flask.palletsprojects.com/),
+To build apps with Nitro, you'll also need to install one of [Flask](https://flask.palletsprojects.com/),
 [Tornado](https://www.tornadoweb.org/), or [Starlette](https://www.starlette.io/)
 to host [WebSocket](https://en.wikipedia.org/wiki/WebSocket) connections.
 

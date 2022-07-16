@@ -96,7 +96,10 @@
 | Set view menu. | `view.set(menu='...')` |
 | Set view nav. | `view.set(nav='...')` |
 | Set view theme. | `view.set(theme='...')` |
-| Jump to another view. | `view.jump(func)` |
+| Jump to another view function. | `view.jump(func)` |
+| Jump to another URL. | `view.jump(url)` |
+| Jump to another URL in a new window. | `view.jump(url, target='_blank')` |
+| Jump to another URL in a new popup window. | `view.jump(url, target='_blank', popup=1)` |
 
 ## Layout
 

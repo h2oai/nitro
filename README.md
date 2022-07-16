@@ -1,18 +1,23 @@
 # Nitro
 
-Nitro (N<sub>2</sub>O) is the simplest way to build web apps using Python. No Javascript/HTML/CSS coding.
+Create apps 10x quicker, without Javascript, HTML, or CSS.
 
-**Currently a Work in Progress:** 
+![Nitro](docs/assets/banner.png)
+
+**[Get Started](https://nitro.h2o.ai/install/)**
+/ [Cheatsheet](https://nitro.h2o.ai/cheatsheet/)
+/ [Guide](https://nitro.h2o.ai/basics/)
+/ [Examples](https://nitro.h2o.ai/examples/)
+/ [Plugins](https://nitro.h2o.ai/plugins/)
+/ [Roadmap](https://github.com/h2oai/nitro/issues/4)
+/ [Milestones](https://github.com/h2oai/nitro/milestones)
+/ [Backlog](https://github.com/h2oai/nitro/issues/15)
+
+**Currently a Work in Progress.**
 Follow [the development blog](https://wrong.technology/tags/nitro/) or
 [@CrunchingData](https://twitter.com/CrunchingData) for updates, or use
 [Discord](https://discord.gg/6RUdk2CPgw) or
 [Discussions](https://github.com/h2oai/nitro/discussions) for help / ideas / suggestions.
-
-![Nitro](docs/assets/banner.png)
-
-## Get started
-
-Go to https://nitro.h2o.ai/install/
 
 ## Philosophy
 
