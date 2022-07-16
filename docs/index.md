@@ -9,6 +9,7 @@ Create apps 10x quicker, without Javascript, HTML, or CSS.
 / [Guide](https://nitro.h2o.ai/basics/)
 / [Examples](https://nitro.h2o.ai/examples/)
 / [Plugins](https://nitro.h2o.ai/plugins/)
+/ [Change Log](https://nitro.h2o.ai/change-log/)
 / [Roadmap](https://github.com/h2oai/nitro/issues/4)
 / [Milestones](https://github.com/h2oai/nitro/milestones)
 / [Backlog](https://github.com/h2oai/nitro/issues/15)
