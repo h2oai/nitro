@@ -18,6 +18,7 @@ import styled from 'styled-components';
 import { XBox } from './box';
 import { ClientContext } from './client';
 import { B, Dict, isS, S } from './core';
+import { Expander } from './expander';
 import { Help } from './help';
 import { ImageBlock } from './image';
 import { Box } from './protocol';
@@ -202,7 +203,7 @@ const Container = styled.div`
 `
 export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box, inRow: B }) => {
   const
-    { mode, items } = box,
+    { mode, items, layout } = box,
     isRow = mode === 'row',
     style = computeStyle(box, inRow)
 
@@ -210,17 +211,27 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
     switch (mode) {
       case 'tabs':
         {
-          const tabs = items.map((box, i) => (
-            <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
-              <Zone key={box.xid} context={context} box={box} inRow={isRow} />
-            </PivotItem>
-          ))
-          return (
-            <Container data-name={box.name ?? undefined} style={style}>
-              <Pivot>{tabs}</Pivot>
-            </Container>
-          )
+          if (layout === 'column') {
+            const tabs = items.map((box, i) => (
+              <Expander key={box.xid} headerText={box.text ?? `Tab ${i + 1}`}>
+                <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+              </Expander>
+            ))
+            return <Container data-name={box.name ?? undefined} style={style}>{tabs}</Container>
+          } else {
+            const tabs = items.map((box, i) => (
+              <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
+                <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+              </PivotItem>
+            ))
+            return (
+              <Container data-name={box.name ?? undefined} style={style}>
+                <Pivot>{tabs}</Pivot>
+              </Container>
+            )
+          }
         }
+        break
       default:
         {
           const children = items.map(box => (

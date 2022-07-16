@@ -159,7 +159,57 @@ view(
 ![Screenshot](assets/screenshots/layout_tabs.png)
 
 
+## Lay out in tabs vertically
+
+Set `layout='column'` to lay out tabs one below the other.
+
+
+```py
+view(
+    box(
+        mode='tabs',
+        layout='column',
+        items=[
+            box(
+                'Profile',
+                icon='Contact',
+                items=[
+                    box('First name', value='Boaty'),
+                    box('Last name', value='McBoatface'),
+                    box('Age', value=42)
+                ],
+            ),
+            box(
+                'Billing Address',
+                icon='PaymentCard',
+                items=[
+                    box('Billing address line 1', value=''),
+                    box('Billing address line 2', value=''),
+                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                ],
+            ),
+            box(
+                'Shipping Address',
+                icon='DeliveryTruck',
+                items=[
+                    box('Shipping address line 1', value=''),
+                    box('Shipping address line 2', value=''),
+                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                ],
+            ),
+        ]
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/layout_tabs_vertical.png)
+
+
 ## Show icons on tabs
+
+Set `icon=` on each tab to show an icon on the tab.
+
 
 ```py
 view(
