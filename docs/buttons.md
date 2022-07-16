@@ -207,7 +207,7 @@ view(f'You chose {choice}.')
 
 ## Lay out buttons vertically
 
-By default, buttons are arranged row-wise. Set `row=False` to arrange them column-wise.
+By default, buttons are arranged row-wise. Set `layout='column'` to arrange them column-wise.
 
 
 ```py
@@ -218,7 +218,7 @@ choice = view(
         option('yellow', 'Yellow'),
         option('orange', 'Orange'),
         option('red', 'Red'),
-    ], row=False)
+    ], layout='column')
 )
 view(f'You chose {choice}.')
 ```

@@ -163,7 +163,7 @@ def buttons_caption(view: View):  # height 2
 
 
 # ## Lay out buttons vertically
-# By default, buttons are arranged row-wise. Set `row=False` to arrange them column-wise.
+# By default, buttons are arranged row-wise. Set `layout='column'` to arrange them column-wise.
 def buttons_layout(view: View):  # height 3
     choice = view(
         'Choose a color:',
@@ -172,6 +172,6 @@ def buttons_layout(view: View):  # height 3
             option('yellow', 'Yellow'),
             option('orange', 'Orange'),
             option('red', 'Red'),
-        ], row=False)
+        ], layout='column')
     )
     view(f'You chose {choice}.')
