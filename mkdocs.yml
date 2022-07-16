@@ -55,6 +55,7 @@ nav:
   - 'live-docs.md'
   - 'examples.md'
   - 'plugins.md'
+  - 'cheatsheet.md'
   # Begin generated
   - Guide:
     - 'basics.md'
@@ -103,5 +104,5 @@ nav:
     - 'writing-plugins.md'
     - 'protocol.md'
   - Meta:
-     - 'help.md'
+     - 'appendix.md'
      - 'change-log.md'
