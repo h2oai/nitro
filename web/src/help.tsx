@@ -121,7 +121,7 @@ export const HelpPanel = make(({ helpE }: { helpE: Signal<S> }) => {
     render = () => {
       const
         { open, help } = stateB(),
-        [html, _] = markdown(help)
+        [html] = markdown(help)
       return (
         <Panel
           isBlocking={false}

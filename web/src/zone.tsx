@@ -231,7 +231,6 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
             )
           }
         }
-        break
       default:
         {
           const children = items.map(box => (
