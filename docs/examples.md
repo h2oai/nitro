@@ -48,7 +48,7 @@ Source: https://github.com/h2oai/nitro/blob/main/py/examples/hello_starlette.py
     nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello_starlette.py
     ```
 
-### Apply for Space Flight
+### Apply for space flight
 
 A job application wizard. Seven pages in seven statements!
 
@@ -57,6 +57,17 @@ Source: https://github.com/h2oai/nitro/blob/main/py/examples/space_flight.py
 !!!example "Run"
     ```
     nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/space_flight.py
+    ```
+
+### Back button state handling
+
+How to track state when the user clicks back/forward to navigate between pages.
+
+Source: https://github.com/h2oai/nitro/blob/main/py/examples/back_button.py
+
+!!!example "Run"
+    ```
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/back_button.py
     ```
 
 ## Data Visualization
