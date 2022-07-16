@@ -29,6 +29,7 @@ setup-py: ## Install dependencies for Python
 	cd py/web && $(MAKE) setup
 	cd py/pkg && $(MAKE) setup
 	cd py/wasm && $(MAKE) setup
+	cd py/examples && $(MAKE) setup
 
 .PHONY: py
 py: ## Build Python
@@ -40,6 +41,7 @@ clean-py: ## Clean Python dependencies
 	cd py/web && $(MAKE) clean
 	cd py/pkg && $(MAKE) clean
 	cd py/wasm && $(MAKE) clean
+	cd py/examples && $(MAKE) clean
 
 setup-docs: ## Set up docs for development mode
 	mkdir -p tools/docs && cd tools/docs && python3 -m venv venv
