@@ -20,8 +20,8 @@ from h2o_nitro import View, box, row, col, option, lorem, Theme
 # Make changes to content already displayed on a page.
 
 # ## Overview
-# By default, `view()` overwrites all boxes displayed by the previous `view()`,
-# but you can also make `view()` selectively  append, update, insert or remove boxes.
+# By default, `view()` overwrites all boxes displayed by the previous `view()`.
+# However, you can also make `view()` selectively  append, update, insert or remove boxes.
 #
 # The following example uses `insert=` or `remove=` with `before=`, `at=` or `after=`
 # to edit the view.
@@ -105,6 +105,27 @@ def edit_update_after(view: View):  # height 4
     )
 
 
+# ## Update inside
+# Set `inside=` to overwrite boxes inside an existing box.
+def edit_update_inside(view: View):  # height 4
+    view(
+        box('Blue 1', background='$blue', color='white'),
+        col(
+            box('Indigo 1', background='$indigo', color='white'),
+            box('Indigo 2', background='$indigo', color='white'),
+            box('Indigo 3', background='$indigo', color='white'),
+            name='indigo'
+        ),
+        box('Blue 2', background='$blue', color='white'),
+    )
+    view(
+        box('Red 1', background='$lava', color='white'),
+        box('Red 2', background='$lava', color='white'),
+        box('Red 3', background='$lava', color='white'),
+        inside='indigo',
+    )
+
+
 # ## Insert
 # Set `insert=True` to insert boxes into an existing view.
 #
@@ -171,6 +192,25 @@ def edit_insert_after(view: View):
     )
 
 
+# ## Insert inside
+# Set `insert=True` and `inside=` to insert boxes inside an existing box.
+def insert_update_inside(view: View):  # height 5
+    view(
+        box('Blue 1', background='$blue', color='white'),
+        col(
+            box('Indigo 1', background='$indigo', color='white'),
+            box('Indigo 2', background='$indigo', color='white'),
+            name='indigo'
+        ),
+        box('Blue 2', background='$blue', color='white'),
+    )
+    view(
+        box('Red 1', background='$lava', color='white'),
+        box('Red 2', background='$lava', color='white'),
+        insert=True, inside='indigo',
+    )
+
+
 # ## Remove at
 # Set `remove=True` and `at=` to remove an existing box.
 def edit_remove_at(view: View):  # height 4
@@ -208,6 +248,22 @@ def edit_remove_after(view: View):  # height 4
         box('Blue 4', background='$blue', color='white'),
     )
     view(remove=True, after='indigo')
+
+
+# ## Remove inside
+# Set `remove=True` and `inside=` to remove boxes inside an existing box.
+def edit_remove_inside(view: View):  # height 4
+    view(
+        box('Blue 1', background='$blue', color='white'),
+        col(
+            box('Indigo 1', background='$indigo', color='white'),
+            box('Indigo 2', background='$indigo', color='white'),
+            box('Indigo 3', background='$indigo', color='white'),
+            name='indigo'
+        ),
+        box('Blue 2', background='$blue', color='white'),
+    )
+    view(remove=True, inside='indigo')
 
 
 # ## Selecting nested boxes

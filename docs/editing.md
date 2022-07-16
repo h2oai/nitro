@@ -4,8 +4,8 @@ Make changes to content already displayed on a page.
 
 ## Overview
 
-By default, `view()` overwrites all boxes displayed by the previous `view()`,
-but you can also make `view()` selectively  append, update, insert or remove boxes.
+By default, `view()` overwrites all boxes displayed by the previous `view()`.
+However, you can also make `view()` selectively  append, update, insert or remove boxes.
 
 The following example uses `insert=` or `remove=` with `before=`, `at=` or `after=`
 to edit the view.
@@ -116,6 +116,34 @@ view(
 ![Screenshot](assets/screenshots/edit_update_after.png)
 
 
+## Update inside
+
+Set `inside=` to overwrite boxes inside an existing box.
+
+
+```py
+view(
+    box('Blue 1', background='$blue', color='white'),
+    col(
+        box('Indigo 1', background='$indigo', color='white'),
+        box('Indigo 2', background='$indigo', color='white'),
+        box('Indigo 3', background='$indigo', color='white'),
+        name='indigo'
+    ),
+    box('Blue 2', background='$blue', color='white'),
+)
+view(
+    box('Red 1', background='$lava', color='white'),
+    box('Red 2', background='$lava', color='white'),
+    box('Red 3', background='$lava', color='white'),
+    inside='indigo',
+)
+```
+
+
+![Screenshot](assets/screenshots/edit_update_inside.png)
+
+
 ## Insert
 
 Set `insert=True` to insert boxes into an existing view.
@@ -210,6 +238,32 @@ view(
 ![Screenshot](assets/screenshots/edit_insert_after.png)
 
 
+## Insert inside
+
+Set `insert=True` and `inside=` to insert boxes inside an existing box.
+
+
+```py
+view(
+    box('Blue 1', background='$blue', color='white'),
+    col(
+        box('Indigo 1', background='$indigo', color='white'),
+        box('Indigo 2', background='$indigo', color='white'),
+        name='indigo'
+    ),
+    box('Blue 2', background='$blue', color='white'),
+)
+view(
+    box('Red 1', background='$lava', color='white'),
+    box('Red 2', background='$lava', color='white'),
+    insert=True, inside='indigo',
+)
+```
+
+
+![Screenshot](assets/screenshots/insert_update_inside.png)
+
+
 ## Remove at
 
 Set `remove=True` and `at=` to remove an existing box.
@@ -268,6 +322,29 @@ view(remove=True, after='indigo')
 
 
 ![Screenshot](assets/screenshots/edit_remove_after.png)
+
+
+## Remove inside
+
+Set `remove=True` and `inside=` to remove boxes inside an existing box.
+
+
+```py
+view(
+    box('Blue 1', background='$blue', color='white'),
+    col(
+        box('Indigo 1', background='$indigo', color='white'),
+        box('Indigo 2', background='$indigo', color='white'),
+        box('Indigo 3', background='$indigo', color='white'),
+        name='indigo'
+    ),
+    box('Blue 2', background='$blue', color='white'),
+)
+view(remove=True, inside='indigo')
+```
+
+
+![Screenshot](assets/screenshots/edit_remove_inside.png)
 
 
 ## Selecting nested boxes
