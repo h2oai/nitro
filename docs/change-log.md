@@ -17,6 +17,26 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.13.0
+
+Jul 16, 2022
+
+- Added
+    - `view.jump()` API for back-button handling and opening URLs in current, new, or popup windows.
+    - Tabbed layout (`mode='tabs'`).
+    - Expander component (vertical tabbed layout, with expandable section).
+    - Set `hint=` to show context-sensitive popup hints on components.
+    - Set `help=` to show context-sensitive long-form help about components.
+    - (Experimental) Basic i18n/l10n support: load locale-specific string during init.
+    - (Experimental) Use `@foo` wherever text is accepted to reference locale-specific strings.
+    - Cheatsheet section in docs (https://nitro.h2o.ai/cheatsheet).
+- Changed
+    - Default font size of table component increased for improving readability.
+    - Checkboxes for selectable tables are always displayed (instead of only on hover).
+    - `box(row=False)` is marked obsolete. Use `box(layout='column')` instead.
+- Fixed
+    - Textboxes with masks don't display prefix, suffix, icon
+
 ## v0.12.0
 
 Jul 05, 2022
