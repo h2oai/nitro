@@ -14,7 +14,7 @@
 
 import React from 'react';
 import { Dict, S, words } from './core';
-import { colorPalette, sizeScale, stylize } from './style'
+import { borderRadii, colorPalette, sizeScale, stylize } from './style'
 
 const compare = (spec: string, expected: React.CSSProperties) => {
   const actual: React.CSSProperties = {}
@@ -171,5 +171,18 @@ tc('text-end', { textAlign: 'end' })
 tc('text-inherit', { color: 'inherit' })
 loopd(colorPalette, (k, v) => tc('text-' + k, { color: v }))
 
+const dash = (k: S) => k ? '-' + k : k
+
+loopd(borderRadii, (k, v) => {
+  tc('rounded' + dash(k), { borderRadius: v })
+  tc('rounded-t' + dash(k), { borderTopLeftRadius: v, borderTopRightRadius: v })
+  tc('rounded-r' + dash(k), { borderTopRightRadius: v, borderBottomRightRadius: v })
+  tc('rounded-b' + dash(k), { borderBottomLeftRadius: v, borderBottomRightRadius: v })
+  tc('rounded-l' + dash(k), { borderTopLeftRadius: v, borderBottomLeftRadius: v })
+  tc('rounded-tr' + dash(k), { borderTopRightRadius: v })
+  tc('rounded-tl' + dash(k), { borderTopLeftRadius: v })
+  tc('rounded-br' + dash(k), { borderBottomRightRadius: v })
+  tc('rounded-bl' + dash(k), { borderBottomLeftRadius: v })
+})
 
 cases.forEach(([spec, expected]) => it(spec, () => { compare(spec, expected) }))

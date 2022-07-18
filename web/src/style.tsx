@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import React from 'react';
-import { css } from 'styled-components';
 import { B, Dict, S, U } from './core';
 
 type CSS = React.CSSProperties
@@ -293,6 +292,18 @@ const miscSizings: Dict<S> = {
   fit: 'fit-content',
 }
 
+export const borderRadii: Dict<U> = {
+  none: 0,
+  sm: 2,
+  '': 4,
+  md: 6,
+  lg: 8,
+  xl: 12,
+  '2xl': 16,
+  '3xl': 24,
+  full: 9999,
+}
+
 const textAlignments = ['left', 'center', 'right', 'justify', 'start', 'end']
 const borderStyles = ['solid', 'dashed', 'dotted', 'double', 'hidden', 'none']
 type Match = (s: S) => any
@@ -326,7 +337,8 @@ const
   matchSizeOrAuto = matchOne(matchAuto, matchSizeScale),
   matchSize = matchOne(matchSizeScale, matchDict(miscSizings), matchPercent),
   matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette)),
-  match0248 = matchDict({ '0': 0, '2': 2, '4': 4, '8': 8 })
+  match0248 = matchDict({ '0': 0, '2': 2, '4': 4, '8': 8 }),
+  matchBorderRadii = matchDict(borderRadii)
 
 
 const handlers: Dict<Handler[]> = {
@@ -389,6 +401,15 @@ const handlers: Dict<Handler[]> = {
     [match0248, (css, v) => css.borderLeftWidth = v],
     [matchInheritOrColor, (css, v) => css.borderLeftColor = v],
   ],
+  rounded: [[matchBorderRadii, (css, v) => css.borderRadius = v]],
+  'rounded-t': [[matchBorderRadii, (css, v) => { css.borderTopLeftRadius = v; css.borderTopRightRadius = v }]],
+  'rounded-r': [[matchBorderRadii, (css, v) => { css.borderTopRightRadius = v; css.borderBottomRightRadius = v }]],
+  'rounded-b': [[matchBorderRadii, (css, v) => { css.borderBottomLeftRadius = v; css.borderBottomRightRadius = v }]],
+  'rounded-l': [[matchBorderRadii, (css, v) => { css.borderTopLeftRadius = v; css.borderBottomLeftRadius = v }]],
+  'rounded-tr': [[matchBorderRadii, (css, v) => css.borderTopRightRadius = v]],
+  'rounded-tl': [[matchBorderRadii, (css, v) => css.borderTopLeftRadius = v]],
+  'rounded-br': [[matchBorderRadii, (css, v) => css.borderBottomRightRadius = v]],
+  'rounded-bl': [[matchBorderRadii, (css, v) => css.borderBottomLeftRadius = v]],
 }
 
 const tryApply = (css: CSS, handles: Handler[], arg: S): B => {
