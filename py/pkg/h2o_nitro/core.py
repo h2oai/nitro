@@ -308,6 +308,7 @@ class Box:
             help: Optional[str] = None,
             popup: Optional[bool] = None,
             layout: Optional[str] = None,
+            style: Optional[str] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -381,6 +382,7 @@ class Box:
         self.help = help
         self.popup = popup
         self.layout = layout
+        self.style = style
         self.tile = tile
         self.cross_tile = cross_tile
         self.wrap = wrap
@@ -436,6 +438,7 @@ class Box:
             help=self.help,
             popup=self.popup,
             layout=self.layout,
+            style=self.style,
             tile=self.tile,
             cross_tile=self.cross_tile,
             wrap=self.wrap,
@@ -504,6 +507,7 @@ class BoxAlign(Enum):
 def row(
         *items: Item,
         name: Optional[str] = None,
+        style: Optional[str] = None,
         tile: Optional[str] = None,
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
@@ -526,6 +530,7 @@ def row(
         items=items,
         mode='row',
         name=name,
+        style=style,
         tile=tile,
         cross_tile=cross_tile,
         wrap=wrap,
@@ -549,6 +554,7 @@ def row(
 def col(
         *items: Item,
         name: Optional[str] = None,
+        style: Optional[str] = None,
         tile: Optional[str] = None,
         cross_tile: Optional[str] = None,
         wrap: Optional[str] = None,
@@ -570,6 +576,7 @@ def col(
     return Box(
         items=items,
         name=name,
+        style=style,
         tile=tile,
         cross_tile=cross_tile,
         wrap=wrap,
@@ -863,6 +870,7 @@ class View(_View):
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
+            style: Optional[str] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -895,6 +903,7 @@ class View(_View):
             halt=halt,
             title=title,
             popup=popup,
+            style=style,
             tile=tile,
             cross_tile=cross_tile,
             wrap=wrap,
@@ -1033,6 +1042,7 @@ class AsyncView(_View):
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
+            style: Optional[str] = None,
             tile: Optional[str] = None,
             cross_tile: Optional[str] = None,
             wrap: Optional[str] = None,
@@ -1065,6 +1075,7 @@ class AsyncView(_View):
             halt=halt,
             title=title,
             popup=popup,
+            style=style,
             tile=tile,
             cross_tile=cross_tile,
             wrap=wrap,

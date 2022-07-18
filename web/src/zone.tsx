@@ -22,6 +22,7 @@ import { Expander } from './expander';
 import { Help } from './help';
 import { ImageBlock } from './image';
 import { Box } from './protocol';
+import { stylize } from './style';
 
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
@@ -40,7 +41,7 @@ const translate = (s: S): S => isS(s) ? s.replace(/\$([\w-]+)/gi, 'var(--$1)') :
 
 const computeStyle = (box: Partial<Box>, inRow: B) => {
   const
-    { mode, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis } = box,
+    { mode, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis, style } = box,
     isRow = mode === 'row',
     css: React.CSSProperties = {
       position: 'relative',
@@ -171,6 +172,8 @@ const computeStyle = (box: Partial<Box>, inRow: B) => {
   if (basis !== undefined) css.flexBasis = basis
   if (grow !== undefined) css.flexGrow = grow
   if (shrink !== undefined) css.flexShrink = shrink
+
+  if (style !== undefined) stylize(css, style)
 
   if (inRow && width === undefined && height === undefined && grow === undefined && shrink === undefined) {
     css.flexGrow = '1'

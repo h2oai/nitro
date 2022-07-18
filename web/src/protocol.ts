@@ -151,6 +151,7 @@ export type Box = {
   help?: S
   popup?: B
   layout?: 'row' | 'column'
+  style?: S
   tile?: S
   cross_tile?: S
   wrap?: S
