@@ -109,6 +109,7 @@ const cases: [string, React.CSSProperties][] = [
   ['ml-auto', { marginLeft: 'auto' }],
 
   ['text-inherit', { color: 'inherit' }],
+  ['bg-inherit', { backgroundColor: 'inherit' }],
 ]
 
 forEach(sizeScale, (k, v) => cases.push(['w-' + k, { width: v }]))
@@ -128,5 +129,6 @@ forEach(sizeScale, (k, v) => cases.push(['mr-' + k, { marginRight: v }]))
 forEach(sizeScale, (k, v) => cases.push(['mb-' + k, { marginBottom: v }]))
 forEach(sizeScale, (k, v) => cases.push(['ml-' + k, { marginLeft: v }]))
 forEach(colorPalette, (k, v) => cases.push(['text-' + k, { color: v }]))
+forEach(colorPalette, (k, v) => cases.push(['bg-' + k, { backgroundColor: v }]))
 
 cases.forEach(([spec, expected]) => it(spec, () => { compare(spec, expected) }))

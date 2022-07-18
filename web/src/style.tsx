@@ -318,7 +318,8 @@ const
   matchSizeScale = matchDict(sizeScale),
   matchAuto = matchValue('auto'),
   matchSizeOrAuto = matchOne(matchAuto, matchSizeScale),
-  matchSize = matchOne(matchSizeScale, matchDict(miscSizings), matchPercent)
+  matchSize = matchOne(matchSizeScale, matchDict(miscSizings), matchPercent),
+  matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette))
 
 
 const handlers: Dict<Handler[]> = {
@@ -340,8 +341,11 @@ const handlers: Dict<Handler[]> = {
   h: [[matchSize, (css, v) => css.height = v]],
   text: [
     [matchSet(textAlignments), (css, v) => css.textAlign = v],
-    [matchOne(matchValue('inherit'), matchDict(colorPalette)), (css, v) => css.color = v],
+    [matchInheritOrColor, (css, v) => css.color = v],
   ],
+  bg: [
+    [matchInheritOrColor, (css, v) => css.backgroundColor = v],
+  ]
 }
 
 export const stylize = (css: CSS, spec: S) => {
