@@ -321,92 +321,92 @@ const
   matchSizeOrAuto = matchOne(matchAuto, matchSizeScale),
   matchSize = matchOne(matchSizeScale, matchDict(miscSizings), matchPercent)
 
-type Handler = (css: CSS, tokens: S[]) => void
+type Handler = (css: CSS, arg: S) => void
 
 const handlers: Dict<Handler> = {
-  p: (css: CSS, [s]: S[]) => {
+  p: (css: CSS, s: S) => {
     const p = matchSizeScale(s)
     if (p !== undefined) css.padding = p
   },
-  px: (css: CSS, [s]: S[]) => {
+  px: (css: CSS, s: S) => {
     const p = matchSizeScale(s)
     if (p !== undefined) {
       css.paddingLeft = p
       css.paddingRight = p
     }
   },
-  py: (css: CSS, [s]: S[]) => {
+  py: (css: CSS, s: S) => {
     const p = matchSizeScale(s)
     if (p !== undefined) {
       css.paddingTop = p
       css.paddingBottom = p
     }
   },
-  pt: (css: CSS, [s]: S[]) => {
+  pt: (css: CSS, s: S) => {
     const p = matchSizeScale(s)
     if (p !== undefined) css.paddingTop = p
   },
-  pr: (css: CSS, [s]: S[]) => {
+  pr: (css: CSS, s: S) => {
     const p = matchSizeScale(s)
     if (p !== undefined) css.paddingRight = p
   },
-  pb: (css: CSS, [s]: S[]) => {
+  pb: (css: CSS, s: S) => {
     const p = matchSizeScale(s)
     if (p !== undefined) css.paddingBottom = p
   },
-  pl: (css: CSS, [s]: S[]) => {
+  pl: (css: CSS, s: S) => {
     const p = matchSizeScale(s)
     if (p !== undefined) css.paddingLeft = p
   },
-  m: (css: CSS, [s]: S[]) => {
+  m: (css: CSS, s: S) => {
     const p = matchSizeOrAuto(s)
     if (p !== undefined) css.margin = p
   },
-  mx: (css: CSS, [s]: S[]) => {
+  mx: (css: CSS, s: S) => {
     const p = matchSizeOrAuto(s)
     if (p !== undefined) {
       css.marginLeft = p
       css.marginRight = p
     }
   },
-  my: (css: CSS, [s]: S[]) => {
+  my: (css: CSS, s: S) => {
     const p = matchSizeOrAuto(s)
     if (p !== undefined) {
       css.marginTop = p
       css.marginBottom = p
     }
   },
-  mt: (css: CSS, [s]: S[]) => {
+  mt: (css: CSS, s: S) => {
     const p = matchSizeOrAuto(s)
     if (p !== undefined) css.marginTop = p
   },
-  mr: (css: CSS, [s]: S[]) => {
+  mr: (css: CSS, s: S) => {
     const p = matchSizeOrAuto(s)
     if (p !== undefined) css.marginRight = p
   },
-  mb: (css: CSS, [s]: S[]) => {
+  mb: (css: CSS, s: S) => {
     const p = matchSizeOrAuto(s)
     if (p !== undefined) css.marginBottom = p
   },
-  ml: (css: CSS, [s]: S[]) => {
+  ml: (css: CSS, s: S) => {
     const p = matchSizeOrAuto(s)
     if (p !== undefined) css.marginLeft = p
   },
-  w: (css: CSS, [s]: S[]) => {
+  w: (css: CSS, s: S) => {
     const w = matchSize(s)
     if (w !== undefined) css.width = w
   },
-  h: (css: CSS, [s]: S[]) => {
+  h: (css: CSS, s: S) => {
     const h = matchSize(s)
     if (h !== undefined) css.height = h
   },
-  text: (css: CSS, s: S[]) => {
-    const textAlign = matchSet(textAlignments)(s[0])
+  text: (css: CSS, s: S) => {
+    const textAlign = matchSet(textAlignments)(s)
     if (textAlign !== undefined) {
       css.textAlign = textAlign as any
       return
     }
-    const color = matchOne(matchValue('inherit'), matchDict(colorPalette))(s.join('-'))
+    const color = matchOne(matchValue('inherit'), matchDict(colorPalette))(s)
     if (color !== undefined) {
       css.color = color as any
       return
@@ -418,8 +418,14 @@ export const stylize = (css: CSS, spec: S) => {
   const styles = spec.split(/\s+/g)
   for (const style of styles) {
     const
-      tokens = style.split('-'),
-      handle = handlers[tokens[0]]
-    if (handle) handle(css, tokens.slice(1))
+      i = style.indexOf('-'),
+      method = i > 0 ? style.substring(0, i) : style,
+      arg = i > 0 ? style.substring(i + 1) : '',
+      handle = handlers[method]
+    if (handle) {
+      handle(css, arg)
+    } else {
+      console.warn(`Unknown style: "${style}"`)
+    }
   }
 }
