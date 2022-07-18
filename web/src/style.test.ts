@@ -140,6 +140,16 @@ forEach(sizeScale, (k, v) => cases.push(['ml-' + k, { marginLeft: v }]))
 forEach(colorPalette, (k, v) => cases.push(['text-' + k, { color: v }]))
 forEach(colorPalette, (k, v) => cases.push(['bg-' + k, { backgroundColor: v }]));
 
+forEach(colorPalette, (k, v) => {
+  cases.push(['border-' + k, { borderColor: v }])
+  cases.push(['border-x-' + k, { borderLeftColor: v, borderRightColor: v }])
+  cases.push(['border-y-' + k, { borderTopColor: v, borderBottomColor: v }])
+  cases.push(['border-t-' + k, { borderTopColor: v }])
+  cases.push(['border-r-' + k, { borderRightColor: v }])
+  cases.push(['border-b-' + k, { borderBottomColor: v }])
+  cases.push(['border-l-' + k, { borderLeftColor: v }])
+});
+
 [0, 2, 4, 8].forEach(v => {
   cases.push(['border-' + v, { borderWidth: v }])
   cases.push(['border-x-' + v, { borderLeftWidth: v, borderRightWidth: v }])
@@ -148,6 +158,10 @@ forEach(colorPalette, (k, v) => cases.push(['bg-' + k, { backgroundColor: v }]))
   cases.push(['border-r-' + v, { borderRightWidth: v }])
   cases.push(['border-b-' + v, { borderBottomWidth: v }])
   cases.push(['border-l-' + v, { borderLeftWidth: v }])
-})
+});
+
+['solid', 'dashed', 'dotted', 'double', 'hidden', 'none'].forEach(v => {
+  cases.push(['border-' + v, { borderStyle: v }])
+});
 
 cases.forEach(([spec, expected]) => it(spec, () => { compare(spec, expected) }))

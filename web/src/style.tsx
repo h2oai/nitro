@@ -294,6 +294,7 @@ const miscSizings: Dict<S> = {
 }
 
 const textAlignments = ['left', 'center', 'right', 'justify', 'start', 'end']
+const borderStyles = ['solid', 'dashed', 'dotted', 'double', 'hidden', 'none']
 type Match = (s: S) => any
 type Apply = (css: CSS, value: any) => void
 type Handler = [Match, Apply]
@@ -355,30 +356,38 @@ const handlers: Dict<Handler[]> = {
   border: [
     [matchEmpty, (css) => css.borderWidth = 1],
     [match0248, (css, v) => css.borderWidth = v],
+    [matchSet(borderStyles), (css, v) => css.borderStyle = v],
+    [matchInheritOrColor, (css, v) => css.borderColor = v],
   ],
   'border-x': [
     [matchEmpty, (css) => { css.borderLeftWidth = 1, css.borderRightWidth = 1 }],
     [match0248, (css, v) => { css.borderLeftWidth = v; css.borderRightWidth = v }],
+    [matchInheritOrColor, (css, v) => { css.borderLeftColor = v; css.borderRightColor = v }],
   ],
   'border-y': [
     [matchEmpty, (css) => { css.borderTopWidth = 1, css.borderBottomWidth = 1 }],
     [match0248, (css, v) => { css.borderTopWidth = v; css.borderBottomWidth = v }],
+    [matchInheritOrColor, (css, v) => { css.borderTopColor = v; css.borderBottomColor = v }],
   ],
   'border-t': [
     [matchEmpty, (css) => css.borderTopWidth = 1],
     [match0248, (css, v) => css.borderTopWidth = v],
+    [matchInheritOrColor, (css, v) => css.borderTopColor = v],
   ],
   'border-r': [
     [matchEmpty, (css) => css.borderRightWidth = 1],
     [match0248, (css, v) => css.borderRightWidth = v],
+    [matchInheritOrColor, (css, v) => css.borderRightColor = v],
   ],
   'border-b': [
     [matchEmpty, (css) => css.borderBottomWidth = 1],
     [match0248, (css, v) => css.borderBottomWidth = v],
+    [matchInheritOrColor, (css, v) => css.borderBottomColor = v],
   ],
   'border-l': [
     [matchEmpty, (css) => css.borderLeftWidth = 1],
     [match0248, (css, v) => css.borderLeftWidth = v],
+    [matchInheritOrColor, (css, v) => css.borderLeftColor = v],
   ],
 }
 
