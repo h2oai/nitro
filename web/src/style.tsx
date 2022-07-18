@@ -13,7 +13,8 @@
 // limitations under the License.
 
 import React from 'react';
-import { Dict, S, U } from './core';
+import { css } from 'styled-components';
+import { B, Dict, S, U } from './core';
 
 type CSS = React.CSSProperties
 
@@ -292,14 +293,18 @@ const miscSizings: Dict<S> = {
   fit: 'fit-content',
 }
 
-const textAlignments = new Set(['left', 'center', 'right', 'justify', 'start', 'end'])
+const textAlignments = ['left', 'center', 'right', 'justify', 'start', 'end']
 type Match = (s: S) => any
 type Apply = (css: CSS, value: any) => void
 type Handler = [Match, Apply]
 
 const
   matchValue = (k: S) => (v: S) => { if (k === v) return v },
-  matchSet = (set: Set<S>) => (v: S) => { if (set.has(v)) return v },
+  matchEmpty = matchValue(''),
+  matchSet = (xs: any[]) => {
+    const set = new Set(xs)
+    return (v: S) => { if (set.has(v)) return v }
+  },
   matchDict = (dict: Dict<S | U>) => (k: S) => { if (k in dict) return dict[k] },
   matchPercent = (s: S) => {
     if (/^\d+\/\d+$/.test(s)) {
@@ -319,7 +324,8 @@ const
   matchAuto = matchValue('auto'),
   matchSizeOrAuto = matchOne(matchAuto, matchSizeScale),
   matchSize = matchOne(matchSizeScale, matchDict(miscSizings), matchPercent),
-  matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette))
+  matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette)),
+  match0248 = matchDict({ '0': 0, '2': 2, '4': 4, '8': 8 })
 
 
 const handlers: Dict<Handler[]> = {
@@ -345,27 +351,64 @@ const handlers: Dict<Handler[]> = {
   ],
   bg: [
     [matchInheritOrColor, (css, v) => css.backgroundColor = v],
-  ]
+  ],
+  border: [
+    [matchEmpty, (css) => css.borderWidth = 1],
+    [match0248, (css, v) => css.borderWidth = v],
+  ],
+  'border-x': [
+    [matchEmpty, (css) => { css.borderLeftWidth = 1, css.borderRightWidth = 1 }],
+    [match0248, (css, v) => { css.borderLeftWidth = v; css.borderRightWidth = v }],
+  ],
+  'border-y': [
+    [matchEmpty, (css) => { css.borderTopWidth = 1, css.borderBottomWidth = 1 }],
+    [match0248, (css, v) => { css.borderTopWidth = v; css.borderBottomWidth = v }],
+  ],
+  'border-t': [
+    [matchEmpty, (css) => css.borderTopWidth = 1],
+    [match0248, (css, v) => css.borderTopWidth = v],
+  ],
+  'border-r': [
+    [matchEmpty, (css) => css.borderRightWidth = 1],
+    [match0248, (css, v) => css.borderRightWidth = v],
+  ],
+  'border-b': [
+    [matchEmpty, (css) => css.borderBottomWidth = 1],
+    [match0248, (css, v) => css.borderBottomWidth = v],
+  ],
+  'border-l': [
+    [matchEmpty, (css) => css.borderLeftWidth = 1],
+    [match0248, (css, v) => css.borderLeftWidth = v],
+  ],
+}
+
+const tryApply = (css: CSS, handles: Handler[], arg: S): B => {
+  if (!handles) return false
+  for (const [match, apply] of handles) {
+    const v = match(arg)
+    if (v !== undefined) {
+      apply(css, v)
+      return true
+    }
+  }
+  return false
 }
 
 export const stylize = (css: CSS, spec: S) => {
   const styles = spec.split(/\s+/g)
-  for (const style of styles) {
-    const
-      i = style.indexOf('-'),
-      prefix = i > 0 ? style.substring(0, i) : style,
-      arg = i > 0 ? style.substring(i + 1) : '',
-      handles = handlers[prefix]
-    if (handles) {
-      for (const [match, apply] of handles) {
-        const v = match(arg)
-        if (v !== undefined) {
-          apply(css, v)
-          break
-        }
+  for (const s of styles) {
+    if (tryApply(css, handlers[s], '')) continue
+    let
+      pos = s.indexOf('-'),
+      matched = false
+    while (pos >= 0 && pos < s.length) {
+      const handles = handlers[s.substring(0, pos)]
+      if (tryApply(css, handles, s.substring(pos + 1))) {
+        matched = true
+        break
       }
-    } else {
-      console.warn(`Unknown style: "${style}"`)
+      pos = s.indexOf('-', pos + 1)
     }
+    if (!matched) console.warn(`Unknown style: "${s}"`)
   }
 }

@@ -110,6 +110,15 @@ const cases: [string, React.CSSProperties][] = [
 
   ['text-inherit', { color: 'inherit' }],
   ['bg-inherit', { backgroundColor: 'inherit' }],
+
+
+  ['border', { borderWidth: 1 }],
+  ['border-x', { borderLeftWidth: 1, borderRightWidth: 1 }],
+  ['border-y', { borderTopWidth: 1, borderBottomWidth: 1 }],
+  ['border-t', { borderTopWidth: 1 }],
+  ['border-r', { borderRightWidth: 1 }],
+  ['border-b', { borderBottomWidth: 1 }],
+  ['border-l', { borderLeftWidth: 1 }],
 ]
 
 forEach(sizeScale, (k, v) => cases.push(['w-' + k, { width: v }]))
@@ -129,6 +138,16 @@ forEach(sizeScale, (k, v) => cases.push(['mr-' + k, { marginRight: v }]))
 forEach(sizeScale, (k, v) => cases.push(['mb-' + k, { marginBottom: v }]))
 forEach(sizeScale, (k, v) => cases.push(['ml-' + k, { marginLeft: v }]))
 forEach(colorPalette, (k, v) => cases.push(['text-' + k, { color: v }]))
-forEach(colorPalette, (k, v) => cases.push(['bg-' + k, { backgroundColor: v }]))
+forEach(colorPalette, (k, v) => cases.push(['bg-' + k, { backgroundColor: v }]));
+
+[0, 2, 4, 8].forEach(v => {
+  cases.push(['border-' + v, { borderWidth: v }])
+  cases.push(['border-x-' + v, { borderLeftWidth: v, borderRightWidth: v }])
+  cases.push(['border-y-' + v, { borderTopWidth: v, borderBottomWidth: v }])
+  cases.push(['border-t-' + v, { borderTopWidth: v }])
+  cases.push(['border-r-' + v, { borderRightWidth: v }])
+  cases.push(['border-b-' + v, { borderBottomWidth: v }])
+  cases.push(['border-l-' + v, { borderLeftWidth: v }])
+})
 
 cases.forEach(([spec, expected]) => it(spec, () => { compare(spec, expected) }))
