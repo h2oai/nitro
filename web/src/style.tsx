@@ -394,21 +394,18 @@ const tryApply = (css: CSS, handles: Handler[], arg: S): B => {
   return false
 }
 
+const applyStyle = (css: CSS, s: S): B => {
+  if (tryApply(css, handlers[s], '')) return true
+  let pos = s.indexOf('-')
+  while (pos >= 0 && pos < s.length) {
+    const handles = handlers[s.substring(0, pos)]
+    if (tryApply(css, handles, s.substring(pos + 1))) return true
+    pos = s.indexOf('-', pos + 1)
+  }
+  return false
+}
+
 export const stylize = (css: CSS, spec: S) => {
   const styles = spec.split(/\s+/g)
-  for (const s of styles) {
-    if (tryApply(css, handlers[s], '')) continue
-    let
-      pos = s.indexOf('-'),
-      matched = false
-    while (pos >= 0 && pos < s.length) {
-      const handles = handlers[s.substring(0, pos)]
-      if (tryApply(css, handles, s.substring(pos + 1))) {
-        matched = true
-        break
-      }
-      pos = s.indexOf('-', pos + 1)
-    }
-    if (!matched) console.warn(`Unknown style: "${s}"`)
-  }
+  for (const s of styles) if (!applyStyle(css, s)) console.warn(`Unknown style: "${s}"`)
 }
