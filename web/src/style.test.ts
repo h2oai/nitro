@@ -14,7 +14,7 @@
 
 import React from 'react';
 import { Dict, S, words } from './core';
-import { sizeScale, stylize } from './style'
+import { colorPalette, sizeScale, stylize } from './style'
 
 const compare = (spec: string, expected: React.CSSProperties) => {
   const actual: React.CSSProperties = {}
@@ -108,6 +108,7 @@ const cases: [string, React.CSSProperties][] = [
   ['mb-auto', { marginBottom: 'auto' }],
   ['ml-auto', { marginLeft: 'auto' }],
 
+  ['text-inherit', { color: 'inherit' }],
 ]
 
 forEach(sizeScale, (k, v) => cases.push(['w-' + k, { width: v }]))
@@ -126,5 +127,6 @@ forEach(sizeScale, (k, v) => cases.push(['mt-' + k, { marginTop: v }]))
 forEach(sizeScale, (k, v) => cases.push(['mr-' + k, { marginRight: v }]))
 forEach(sizeScale, (k, v) => cases.push(['mb-' + k, { marginBottom: v }]))
 forEach(sizeScale, (k, v) => cases.push(['ml-' + k, { marginLeft: v }]))
+forEach(colorPalette, (k, v) => cases.push(['text-' + k, { color: v }]))
 
 cases.forEach(([spec, expected]) => it(spec, () => { compare(spec, expected) }))
