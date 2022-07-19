@@ -357,6 +357,17 @@ export const maxW: Dict<any> = {
   'screen-2xl': 1536,
 }
 
+export const boxShadows = {
+  sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+  '': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+  md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+  lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+  xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+  '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+  inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
+  none: '0 0 #0000',
+}
+
 const textAlignments = ['left', 'center', 'right', 'justify', 'start', 'end']
 const borderStyles = ['solid', 'dashed', 'dotted', 'double', 'hidden', 'none']
 type Match = (s: S) => any
@@ -366,7 +377,6 @@ type Handler = [Match, Apply]
 const
   matchValue = (k: S) => (x: S) => { if (x === k) return x },
   matchAs = (find: S, replace: any) => (x: S) => { if (x === find) return replace },
-  matchEmpty = matchValue(''),
   matchSet = (xs: any[]) => {
     const set = new Set(xs)
     return (x: S) => { if (set.has(x)) return x }
@@ -383,7 +393,7 @@ const
   matchSizeOrAuto = matchOne(matchAuto, matchSizeScale),
   matchSize = matchOne(matchSizeScale, matchAuto, matchDict(miscSizings), matchDict(ratioPercents)),
   matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette)),
-  match0248 = matchDict({ '0': 0, '2': 2, '4': 4, '8': 8 }),
+  match0248 = matchDict({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
   matchBorderRadii = matchDict(borderRadii)
 
 
@@ -416,38 +426,31 @@ const handlers: Dict<Handler[]> = {
     [matchInheritOrColor, (css, v) => css.backgroundColor = v],
   ],
   border: [
-    [matchEmpty, (css) => css.borderWidth = 1],
     [match0248, (css, v) => css.borderWidth = v],
     [matchSet(borderStyles), (css, v) => css.borderStyle = v],
     [matchInheritOrColor, (css, v) => css.borderColor = v],
   ],
   'border-x': [
-    [matchEmpty, (css) => { css.borderLeftWidth = 1, css.borderRightWidth = 1 }],
     [match0248, (css, v) => { css.borderLeftWidth = v; css.borderRightWidth = v }],
     [matchInheritOrColor, (css, v) => { css.borderLeftColor = v; css.borderRightColor = v }],
   ],
   'border-y': [
-    [matchEmpty, (css) => { css.borderTopWidth = 1, css.borderBottomWidth = 1 }],
     [match0248, (css, v) => { css.borderTopWidth = v; css.borderBottomWidth = v }],
     [matchInheritOrColor, (css, v) => { css.borderTopColor = v; css.borderBottomColor = v }],
   ],
   'border-t': [
-    [matchEmpty, (css) => css.borderTopWidth = 1],
     [match0248, (css, v) => css.borderTopWidth = v],
     [matchInheritOrColor, (css, v) => css.borderTopColor = v],
   ],
   'border-r': [
-    [matchEmpty, (css) => css.borderRightWidth = 1],
     [match0248, (css, v) => css.borderRightWidth = v],
     [matchInheritOrColor, (css, v) => css.borderRightColor = v],
   ],
   'border-b': [
-    [matchEmpty, (css) => css.borderBottomWidth = 1],
     [match0248, (css, v) => css.borderBottomWidth = v],
     [matchInheritOrColor, (css, v) => css.borderBottomColor = v],
   ],
   'border-l': [
-    [matchEmpty, (css) => css.borderLeftWidth = 1],
     [match0248, (css, v) => css.borderLeftWidth = v],
     [matchInheritOrColor, (css, v) => css.borderLeftColor = v],
   ],
@@ -460,6 +463,7 @@ const handlers: Dict<Handler[]> = {
   'rounded-tl': [[matchBorderRadii, (css, v) => css.borderTopLeftRadius = v]],
   'rounded-br': [[matchBorderRadii, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[matchBorderRadii, (css, v) => css.borderBottomLeftRadius = v]],
+  shadow: [[matchDict(boxShadows), (css, v) => css.boxShadow = v]]
 }
 
 const tryApply = (css: CSS, handles: Handler[], arg: S): B => {
