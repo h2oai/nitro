@@ -247,6 +247,45 @@ const colorPalette: Dict<S> = {
   'rose-900': '#881337',
 }
 
+const cursors: S[] = [
+  'auto',
+  'default',
+  'pointer',
+  'wait',
+  'text',
+  'move',
+  'help',
+  'not-allowed',
+  'none',
+  'context-menu',
+  'progress',
+  'cell',
+  'crosshair',
+  'vertical-text',
+  'alias',
+  'copy',
+  'no-drop',
+  'grab',
+  'grabbing',
+  'all-scroll',
+  'col-resize',
+  'row-resize',
+  'n-resize',
+  'e-resize',
+  's-resize',
+  'w-resize',
+  'ne-resize',
+  'nw-resize',
+  'se-resize',
+  'sw-resize',
+  'ew-resize',
+  'ns-resize',
+  'nesw-resize',
+  'nwse-resize',
+  'zoom-in',
+  'zoom-out',
+]
+
 // Tailwind size scale
 const sizeScale: Dict<U> = {
   '0': 0,
@@ -404,6 +443,14 @@ const
   is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
   isCorner = map(corners)
 
+const transform = (css: CSS, transform: S) => {
+  if (css.transform) {
+    css.transform += ' ' + transform
+  } else {
+    css.transform = transform
+  }
+}
+
 const handlers: Dict<Handler[]> = {
   p: [[isSize, (css, v) => css.padding = v]],
   px: [[isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
@@ -470,6 +517,22 @@ const handlers: Dict<Handler[]> = {
   'rounded-tl': [[isCorner, (css, v) => css.borderTopLeftRadius = v]],
   'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
+  'skew-x': [[eq('0', '1', '2', '3', '6', '12'), (css, v) => transform(css, `skewX(${v}deg)`)]],
+  'skew-y': [[eq('0', '1', '2', '3', '6', '12'), (css, v) => transform(css, `skewY(${v}deg)`)]],
+  origin: [[map({
+    'center': 'center',
+    'top': 'top',
+    'top-right': 'top right',
+    'right': 'right',
+    'bottom-right': 'bottom right',
+    'bottom': 'bottom',
+    'bottom-left': 'bottom left',
+    'left': 'left',
+    'top-left': 'top left',
+  }), (css, v) => css.transformOrigin = v]],
+  accent: [[or(isColor, eq1('auto')), (css, v) => css.accentColor = v]],
+  appearance: [[eq1('none'), (css, v) => css.appearance = v]],
+  cursor: [[eq(...cursors), (css, v) => css.cursor = v]],
   caret: [[isColor, (css, v) => css.caretColor = v]],
   'pointer-events': [[eq('none', 'auto'), (css, v) => css.pointerEvents = v]],
   resize: [[map({ none: 'none', x: 'horizontal', y: 'vertical', '': 'both' }), (css, v) => css.resize = v]],
