@@ -467,15 +467,15 @@ const
   is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
   isCorner = map(corners),
   isDuration = eq('75', '100', '150', '200', '300', '500', '700', '1000'),
-  easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
-
-const transform = (css: CSS, transform: S) => {
-  if (css.transform) {
-    css.transform += ' ' + transform
-  } else {
-    css.transform = transform
+  easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)',
+  backdropFilter = (f: S) => (css: CSS, v: any) => css.backdropFilter = `${f}(${v})`,
+  transform = (css: CSS, transform: S) => {
+    if (css.transform) {
+      css.transform += ' ' + transform
+    } else {
+      css.transform = transform
+    }
   }
-}
 
 const handlers: Dict<Handler[]> = {
   p: [[isSize, (css, v) => css.padding = v]],
@@ -544,6 +544,83 @@ const handlers: Dict<Handler[]> = {
   'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
 
+  'backdrop-blur': [[map({
+    'none': '0',
+    'sm': '4px',
+    '': '8px',
+    'md': '12px',
+    'lg': '16px',
+    'xl': '24px',
+    '2xl': '40px',
+    '3xl': '64px',
+
+  }), backdropFilter('blur')]],
+  'backdrop-brightness': [[map({
+    '0': '0',
+    '50': '.5',
+    '75': '.75',
+    '90': '.9',
+    '95': '.95',
+    '100': '1',
+    '105': '1.05',
+    '110': '1.1',
+    '125': '1.25',
+    '150': '1.5',
+    '200': '2',
+  }), backdropFilter('brightness')]],
+  'backdrop-contrast': [[map({
+    '0': '0',
+    '50': '.5',
+    '75': '.75',
+    '100': '1',
+    '125': '1.25',
+    '150': '1.5',
+    '200': '2',
+  }), backdropFilter('contrast')]],
+  'backdrop-grayscale': [[map({
+    '0': '0',
+    '': '100%',
+  }), backdropFilter('grayscale')]],
+  'backdrop-hue-rotate': [[map({
+    '0': '0deg',
+    '15': '15deg',
+    '30': '30deg',
+    '60': '60deg',
+    '90': '90deg',
+    '180': '180deg',
+  }), backdropFilter('hue-rotate')]],
+  'backdrop-invert': [[map({
+    '0': '0',
+    '': '100%',
+  }), backdropFilter('invert')]],
+  'backdrop-opacity': [[map({
+    '0': '0',
+    '5': '0.05',
+    '10': '0.1',
+    '20': '0.2',
+    '25': '0.25',
+    '30': '0.3',
+    '40': '0.4',
+    '50': '0.5',
+    '60': '0.6',
+    '70': '0.7',
+    '75': '0.75',
+    '80': '0.8',
+    '90': '0.9',
+    '95': '0.95',
+    '100': '1',
+  }), backdropFilter('opacity')]],
+  'backdrop-saturate': [[map({
+    '0': '0',
+    '50': '.5',
+    '100': '1',
+    '150': '1.5',
+    '200': '2',
+  }), backdropFilter('saturate')]],
+  'backdrop-sepia': [[map({
+    '0': '0',
+    '': '100%',
+  }), backdropFilter('sepia')]],
   duration: [[isDuration, (css, v) => css.transitionDuration = v + 'ms']],
   transition: [
     [eq1('none'), (css, s) => css.transitionProperty = s],
