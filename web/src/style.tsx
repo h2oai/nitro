@@ -465,7 +465,9 @@ const
   isRatioSubset = map(ratioPercentsSubset),
   isColor = map(colorPalette),
   is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
-  isCorner = map(corners)
+  isCorner = map(corners),
+  isDuration = eq('75', '100', '150', '200', '300', '500', '700', '1000'),
+  easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
 const transform = (css: CSS, transform: S) => {
   if (css.transform) {
@@ -541,14 +543,33 @@ const handlers: Dict<Handler[]> = {
   'rounded-tl': [[isCorner, (css, v) => css.borderTopLeftRadius = v]],
   'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
-  delay: [[eq('75', '100', '150', '200', '300', '500', '700', '1000'), (css, v) => css.transitionDelay = v + 'ms']],
+
+  duration: [[isDuration, (css, v) => css.transitionDuration = v + 'ms']],
+  transition: [
+    [eq1('none'), (css, s) => css.transitionProperty = s],
+    [or(eq('all', 'opacity', 'transform'), map({
+      '': 'color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter',
+      'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
+      'shadow': 'box-shadow',
+    })), (css, s) => {
+      css.transitionProperty = s;
+      css.transitionTimingFunction = easeInOut;
+      css.transitionDuration = '150ms';
+    }],
+  ],
+  ease: [[map({
+    'linear': 'linear',
+    'in': 'cubic-bezier(0.4, 0, 1, 1)',
+    'out': 'cubic-bezier(0, 0, 0.2, 1)',
+    'in-out': easeInOut,
+  }), (css, v) => css.transitionTimingFunction = v]],
+  delay: [[isDuration, (css, v) => css.transitionDelay = v + 'ms']],
   animate: [[map({
     'none': 'none',
     'spin': 'spin 1s linear infinite',
     'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
     'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
     'bounce': 'bounce 1s infinite',
-
   }), (css, v) => css.animation = v]],
   'scale': [[map(scaleTransforms), (css, v) => transform(css, `scale(${v})`)]],
   'scale-x': [[map(scaleTransforms), (css, v) => transform(css, `scaleX(${v})`)]],
