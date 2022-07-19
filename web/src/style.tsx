@@ -326,6 +326,7 @@ const sizeScale: Dict<U> = {
 }
 
 const ratioPercents: Dict<S> = {
+  full: '100%',
   '1/2': '50%',
   '1/3': '33.333333%',
   '2/3': '66.666667%',
@@ -354,8 +355,17 @@ const ratioPercents: Dict<S> = {
   '11/12': '91.666667%',
 }
 
-const miscSizings: Dict<S> = {
+const ratioPercentsSubset: Dict<S> = {
   full: '100%',
+  '1/2': '50%',
+  '1/3': '33.333333%',
+  '2/3': '66.666667%',
+  '1/4': '25%',
+  '2/4': '50%',
+  '3/4': '75%',
+}
+
+const miscSizings: Dict<S> = {
   min: 'min-content',
   max: 'max-content',
   fit: 'fit-content',
@@ -399,7 +409,7 @@ const maxW: Dict<any> = {
   'screen-2xl': 1536,
 }
 
-const boxShadows = {
+const boxShadows: Dict<S> = {
   sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
   '': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
   md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
@@ -408,6 +418,19 @@ const boxShadows = {
   '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
   inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
   none: '0 0 #0000',
+}
+
+const scaleTransforms: Dict<S> = {
+  '0': '0',
+  '50': '.5',
+  '75': '.75',
+  '90': '.9',
+  '95': '.95',
+  '100': '1',
+  '105': '1.05',
+  '110': '1.1',
+  '125': '1.25',
+  '150': '1.5',
 }
 
 type Match = (s: S) => any
@@ -439,6 +462,7 @@ const
   isSize = map(sizeScale),
   isAutoOrSize = or(auto, isSize),
   matchSize = or(isSize, auto, map(miscSizings), map(ratioPercents)),
+  isRatioSubset = map(ratioPercentsSubset),
   isColor = map(colorPalette),
   is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
   isCorner = map(corners)
@@ -517,6 +541,27 @@ const handlers: Dict<Handler[]> = {
   'rounded-tl': [[isCorner, (css, v) => css.borderTopLeftRadius = v]],
   'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
+  delay: [[eq('75', '100', '150', '200', '300', '500', '700', '1000'), (css, v) => css.transitionDelay = v + 'ms']],
+  animate: [[map({
+    'none': 'none',
+    'spin': 'spin 1s linear infinite',
+    'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
+    'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+    'bounce': 'bounce 1s infinite',
+
+  }), (css, v) => css.animation = v]],
+  'scale': [[map(scaleTransforms), (css, v) => transform(css, `scale(${v})`)]],
+  'scale-x': [[map(scaleTransforms), (css, v) => transform(css, `scaleX(${v})`)]],
+  'scale-y': [[map(scaleTransforms), (css, v) => transform(css, `scaleY(${v})`)]],
+  'rotate': [[eq('0', '1', '2', '3', '6', '12', '45', '90', '180'), (css, v) => transform(css, `rotate(${v}deg)`)]],
+  'translate-x': [
+    [isSize, (css, v) => transform(css, `translateX(${v}px)`)],
+    [isRatioSubset, (css, v) => transform(css, `translateX(${v})`)],
+  ],
+  'translate-y': [
+    [isSize, (css, v) => transform(css, `translateY(${v}px)`)],
+    [isRatioSubset, (css, v) => transform(css, `translateY(${v})`)],
+  ],
   'skew-x': [[eq('0', '1', '2', '3', '6', '12'), (css, v) => transform(css, `skewX(${v}deg)`)]],
   'skew-y': [[eq('0', '1', '2', '3', '6', '12'), (css, v) => transform(css, `skewY(${v}deg)`)]],
   origin: [[map({
