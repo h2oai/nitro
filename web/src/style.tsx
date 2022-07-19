@@ -530,21 +530,21 @@ const
     '': '100%',
   }),
   isOpacity = map({
-    '0': '0',
-    '5': '0.05',
-    '10': '0.1',
-    '20': '0.2',
-    '25': '0.25',
-    '30': '0.3',
-    '40': '0.4',
-    '50': '0.5',
-    '60': '0.6',
-    '70': '0.7',
-    '75': '0.75',
-    '80': '0.8',
-    '90': '0.9',
-    '95': '0.95',
-    '100': '1',
+    '0': 0,
+    '5': 0.05,
+    '10': 0.1,
+    '20': 0.2,
+    '25': 0.25,
+    '30': 0.3,
+    '40': 0.4,
+    '50': 0.5,
+    '60': 0.6,
+    '70': 0.7,
+    '75': 0.75,
+    '80': 0.8,
+    '90': 0.9,
+    '95': 0.95,
+    '100': 1,
   }),
   isSaturate = map({
     '0': '0',
@@ -556,7 +556,26 @@ const
   isSepia = map({
     '0': '0',
     '': '100%',
-  })
+  }),
+  isBlendMode = eq(
+    'normal',
+    'multiply',
+    'screen',
+    'overlay',
+    'darken',
+    'lighten',
+    'color-dodge',
+    'color-burn',
+    'hard-light',
+    'soft-light',
+    'difference',
+    'exclusion',
+    'hue',
+    'saturation',
+    'color',
+    'luminosity',
+    'plus-lighter',
+  )
 
 
 const handlers: Dict<Handler[]> = {
@@ -626,6 +645,11 @@ const handlers: Dict<Handler[]> = {
   'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
 
+  opacity: [[isOpacity, (css, v) => css.opacity = v]],
+
+  'mix-blend': [[isBlendMode, (css, v) => css.mixBlendMode = v]],
+  'bg-blend': [[isBlendMode, (css, v) => css.backgroundBlendMode = v]],
+
   'blur': [[isBlur, filter('blur')]],
   'brightness': [[isBrightness, filter('brightness')]],
   'contrast': [[isContrast, filter('contrast')]],
@@ -641,7 +665,6 @@ const handlers: Dict<Handler[]> = {
   'grayscale': [[isGrayscale, filter('grayscale')]],
   'hue-rotate': [[isHueRotate, filter('hue-rotate')]],
   'invert': [[isInvert, filter('invert')]],
-  'opacity': [[isOpacity, filter('opacity')]],
   'saturate': [[isSaturate, filter('saturate')]],
   'sepia': [[isSepia, filter('sepia')]],
 
