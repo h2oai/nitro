@@ -313,7 +313,6 @@ export const ratioPercents: Dict<S> = {
 }
 
 const miscSizings: Dict<S> = {
-  auto: 'auto',
   full: '100%',
   min: 'min-content',
   max: 'max-content',
@@ -332,6 +331,32 @@ export const borderRadii: Dict<U> = {
   full: 9999,
 }
 
+export const maxW: Dict<any> = {
+  '0': 0,
+  'none': 'none',
+  'xs': 320,
+  'sm': 384,
+  'md': 448,
+  'lg': 512,
+  'xl': 576,
+  '2xl': 672,
+  '3xl': 768,
+  '4xl': 896,
+  '5xl': 1024,
+  '6xl': 1152,
+  '7xl': 1280,
+  'full': '100%',
+  'min': 'min-content',
+  'max': 'max-content',
+  'fit': 'fit-content',
+  'prose': '65ch',
+  'screen-sm': 640,
+  'screen-md': 768,
+  'screen-lg': 1024,
+  'screen-xl': 1280,
+  'screen-2xl': 1536,
+}
+
 const textAlignments = ['left', 'center', 'right', 'justify', 'start', 'end']
 const borderStyles = ['solid', 'dashed', 'dotted', 'double', 'hidden', 'none']
 type Match = (s: S) => any
@@ -340,7 +365,7 @@ type Handler = [Match, Apply]
 
 const
   matchValue = (k: S) => (x: S) => { if (x === k) return x },
-  matchAs = (find: S, replace: S) => (x: S) => { if (x === find) return replace },
+  matchAs = (find: S, replace: any) => (x: S) => { if (x === find) return replace },
   matchEmpty = matchValue(''),
   matchSet = (xs: any[]) => {
     const set = new Set(xs)
@@ -356,7 +381,7 @@ const
   matchSizeScale = matchDict(sizeScale),
   matchAuto = matchValue('auto'),
   matchSizeOrAuto = matchOne(matchAuto, matchSizeScale),
-  matchSize = matchOne(matchSizeScale, matchDict(miscSizings), matchDict(ratioPercents)),
+  matchSize = matchOne(matchSizeScale, matchAuto, matchDict(miscSizings), matchDict(ratioPercents)),
   matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette)),
   match0248 = matchDict({ '0': 0, '2': 2, '4': 4, '8': 8 }),
   matchBorderRadii = matchDict(borderRadii)
@@ -378,7 +403,11 @@ const handlers: Dict<Handler[]> = {
   mb: [[matchSizeOrAuto, (css, v) => css.marginBottom = v]],
   ml: [[matchSizeOrAuto, (css, v) => css.marginLeft = v]],
   w: [[matchOne(matchSize, matchAs('screen', '100vw')), (css, v) => css.width = v]],
+  'min-w': [[matchOne(matchAs('0', 0), matchDict(miscSizings)), (css, v) => css.minWidth = v]],
+  'max-w': [[matchOne(matchDict(maxW), matchDict(miscSizings)), (css, v) => css.maxWidth = v]],
   h: [[matchOne(matchSize, matchAs('screen', '100vh')), (css, v) => css.height = v]],
+  'min-h': [[matchOne(matchAs('0', 0), matchDict(miscSizings), matchAs('screen', '100vh')), (css, v) => css.minHeight = v]],
+  'max-h': [[matchOne(matchSize, matchDict(miscSizings), matchAs('screen', '100vh')), (css, v) => css.maxHeight = v]],
   text: [
     [matchSet(textAlignments), (css, v) => css.textAlign = v],
     [matchInheritOrColor, (css, v) => css.color = v],
