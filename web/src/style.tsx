@@ -20,12 +20,14 @@ type CSS = React.CSSProperties
 // Tailwind palette
 // https://tailwindcss.com/docs/customizing-colors
 const colorPalette: Dict<S> = {
+  inherit: 'inherit',
+  current: 'currentColor',
   transparent: 'transparent',
   white: '#fff',
   black: '#000',
   'slate-50': '#f8fafc',
   'slate-100': '#f1f5f9',
-  'slate-200': '#e3e8f0',
+  'slate-200': '#e2e8f0',
   'slate-300': '#cbd5e1',
   'slate-400': '#94a3b8',
   'slate-500': '#64748b',
@@ -122,6 +124,7 @@ const colorPalette: Dict<S> = {
   'lime-600': '#65a30d',
   'lime-700': '#4d7c0f',
   'lime-800': '#3f6212',
+  'lime-900': '#365314',
   'green-50': '#f0fdf4',
   'green-100': '#dcfce7',
   'green-200': '#bbf7d0',
@@ -394,12 +397,10 @@ const
     }
   },
   auto = eq1('auto'),
-  isInherit = eq1('inherit'),
   isSize = map(sizeScale),
   isAutoOrSize = or(auto, isSize),
   matchSize = or(isSize, auto, map(miscSizings), map(ratioPercents)),
   isColor = map(colorPalette),
-  isInheritOrColor = or(isInherit, isColor),
   is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
   isCorner = map(corners)
 
@@ -426,39 +427,39 @@ const handlers: Dict<Handler[]> = {
   'max-h': [[or(matchSize, map(miscSizings), map1('screen', '100vh')), (css, v) => css.maxHeight = v]],
   text: [
     [eq('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
-    [isInheritOrColor, (css, v) => css.color = v],
+    [isColor, (css, v) => css.color = v],
   ],
   bg: [
-    [isInheritOrColor, (css, v) => css.backgroundColor = v],
+    [isColor, (css, v) => css.backgroundColor = v],
   ],
   border: [
     [is0248, (css, v) => css.borderWidth = v],
     [eq('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), (css, v) => css.borderStyle = v],
-    [isInheritOrColor, (css, v) => css.borderColor = v],
+    [isColor, (css, v) => css.borderColor = v],
   ],
   'border-x': [
     [is0248, (css, v) => { css.borderLeftWidth = v; css.borderRightWidth = v }],
-    [isInheritOrColor, (css, v) => { css.borderLeftColor = v; css.borderRightColor = v }],
+    [isColor, (css, v) => { css.borderLeftColor = v; css.borderRightColor = v }],
   ],
   'border-y': [
     [is0248, (css, v) => { css.borderTopWidth = v; css.borderBottomWidth = v }],
-    [isInheritOrColor, (css, v) => { css.borderTopColor = v; css.borderBottomColor = v }],
+    [isColor, (css, v) => { css.borderTopColor = v; css.borderBottomColor = v }],
   ],
   'border-t': [
     [is0248, (css, v) => css.borderTopWidth = v],
-    [isInheritOrColor, (css, v) => css.borderTopColor = v],
+    [isColor, (css, v) => css.borderTopColor = v],
   ],
   'border-r': [
     [is0248, (css, v) => css.borderRightWidth = v],
-    [isInheritOrColor, (css, v) => css.borderRightColor = v],
+    [isColor, (css, v) => css.borderRightColor = v],
   ],
   'border-b': [
     [is0248, (css, v) => css.borderBottomWidth = v],
-    [isInheritOrColor, (css, v) => css.borderBottomColor = v],
+    [isColor, (css, v) => css.borderBottomColor = v],
   ],
   'border-l': [
     [is0248, (css, v) => css.borderLeftWidth = v],
-    [isInheritOrColor, (css, v) => css.borderLeftColor = v],
+    [isColor, (css, v) => css.borderLeftColor = v],
   ],
   rounded: [[isCorner, (css, v) => css.borderRadius = v]],
   'rounded-t': [[isCorner, (css, v) => { css.borderTopLeftRadius = v; css.borderTopRightRadius = v }]],
@@ -469,6 +470,9 @@ const handlers: Dict<Handler[]> = {
   'rounded-tl': [[isCorner, (css, v) => css.borderTopLeftRadius = v]],
   'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
+  caret: [[isColor, (css, v) => css.caretColor = v]],
+  'pointer-events': [[eq('none', 'auto'), (css, v) => css.pointerEvents = v]],
+  resize: [[map({ none: 'none', x: 'horizontal', y: 'vertical', '': 'both' }), (css, v) => css.resize = v]],
   scroll: [[eq('auto', 'smooth'), (css, v) => css.scrollBehavior = v]],
   'scroll-m': [[isSize, (css, v) => css.scrollMargin = v]],
   'scroll-mx': [[isSize, (css, v) => { css.scrollMarginLeft = v; css.scrollMarginRight = v }]],
