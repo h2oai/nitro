@@ -19,7 +19,7 @@ type CSS = React.CSSProperties
 
 // Tailwind palette
 // https://tailwindcss.com/docs/customizing-colors
-export const colorPalette: Dict<S> = {
+const colorPalette: Dict<S> = {
   transparent: 'transparent',
   white: '#fff',
   black: '#000',
@@ -245,7 +245,7 @@ export const colorPalette: Dict<S> = {
 }
 
 // Tailwind size scale
-export const sizeScale: Dict<U> = {
+const sizeScale: Dict<U> = {
   '0': 0,
   'px': 1,
   '0.5': 2,
@@ -283,7 +283,7 @@ export const sizeScale: Dict<U> = {
   '96': 384,
 }
 
-export const ratioPercents: Dict<S> = {
+const ratioPercents: Dict<S> = {
   '1/2': '50%',
   '1/3': '33.333333%',
   '2/3': '66.666667%',
@@ -319,7 +319,7 @@ const miscSizings: Dict<S> = {
   fit: 'fit-content',
 }
 
-export const borderRadii: Dict<U> = {
+const borderRadii: Dict<U> = {
   none: 0,
   sm: 2,
   '': 4,
@@ -331,7 +331,7 @@ export const borderRadii: Dict<U> = {
   full: 9999,
 }
 
-export const maxW: Dict<any> = {
+const maxW: Dict<any> = {
   '0': 0,
   'none': 'none',
   'xs': 320,
@@ -357,7 +357,7 @@ export const maxW: Dict<any> = {
   'screen-2xl': 1536,
 }
 
-export const boxShadows = {
+const boxShadows = {
   sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
   '': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
   md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
@@ -368,16 +368,21 @@ export const boxShadows = {
   none: '0 0 #0000',
 }
 
-const textAlignments = ['left', 'center', 'right', 'justify', 'start', 'end']
-const borderStyles = ['solid', 'dashed', 'dotted', 'double', 'hidden', 'none']
 type Match = (s: S) => any
 type Apply = (css: CSS, value: any) => void
 type Handler = [Match, Apply]
 
+const willChangeMap: Dict<S> = {
+  auto: 'auto',
+  scroll: 'scroll-position',
+  contents: 'contents',
+  transform: 'transform',
+}
+
 const
   matchValue = (k: S) => (x: S) => { if (x === k) return x },
   matchAs = (find: S, replace: any) => (x: S) => { if (x === find) return replace },
-  matchSet = (xs: any[]) => {
+  matchSet = (...xs: S[]) => {
     const set = new Set(xs)
     return (x: S) => { if (set.has(x)) return x }
   },
@@ -395,7 +400,6 @@ const
   matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette)),
   match0248 = matchDict({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
   matchBorderRadii = matchDict(borderRadii)
-
 
 const handlers: Dict<Handler[]> = {
   p: [[matchSizeScale, (css, v) => css.padding = v]],
@@ -419,7 +423,7 @@ const handlers: Dict<Handler[]> = {
   'min-h': [[matchOne(matchAs('0', 0), matchDict(miscSizings), matchAs('screen', '100vh')), (css, v) => css.minHeight = v]],
   'max-h': [[matchOne(matchSize, matchDict(miscSizings), matchAs('screen', '100vh')), (css, v) => css.maxHeight = v]],
   text: [
-    [matchSet(textAlignments), (css, v) => css.textAlign = v],
+    [matchSet('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
     [matchInheritOrColor, (css, v) => css.color = v],
   ],
   bg: [
@@ -427,7 +431,7 @@ const handlers: Dict<Handler[]> = {
   ],
   border: [
     [match0248, (css, v) => css.borderWidth = v],
-    [matchSet(borderStyles), (css, v) => css.borderStyle = v],
+    [matchSet('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), (css, v) => css.borderStyle = v],
     [matchInheritOrColor, (css, v) => css.borderColor = v],
   ],
   'border-x': [
@@ -463,7 +467,20 @@ const handlers: Dict<Handler[]> = {
   'rounded-tl': [[matchBorderRadii, (css, v) => css.borderTopLeftRadius = v]],
   'rounded-br': [[matchBorderRadii, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[matchBorderRadii, (css, v) => css.borderBottomLeftRadius = v]],
-  shadow: [[matchDict(boxShadows), (css, v) => css.boxShadow = v]]
+  snap: [
+    [matchValue('none'), (css, v) => css.scrollSnapType = v],
+    [matchDict({
+      start: 'start',
+      end: 'end',
+      center: 'center',
+      'align-none': 'none',
+    }), (css, v) => css.scrollSnapAlign = v],
+    [matchSet('normal', 'always'), (css, v) => css.scrollSnapStop = v]
+  ],
+  shadow: [[matchDict(boxShadows), (css, v) => css.boxShadow = v]],
+  touch: [[matchSet('auto', 'none', 'pan-x', 'pan-left', 'pan-right', 'pan-y', 'pan-up', 'pan-down', 'pinch-zoom', 'manipulation'), (css, v) => css.touchAction = v]],
+  select: [[matchSet('none', 'text', 'all', 'auto'), (css, v) => css.userSelect = v]],
+  'will-change': [[matchDict(willChangeMap), (css, v) => css.willChange = v]],
 }
 
 const tryApply = (css: CSS, handles: Handler[], arg: S): B => {
@@ -491,5 +508,6 @@ const applyStyle = (css: CSS, s: S): B => {
 
 export const stylize = (css: CSS, spec: S) => {
   const styles = spec.split(/\s+/g)
-  for (const s of styles) if (!applyStyle(css, s)) console.warn(`Unknown style: "${s}"`)
+  // for (const s of styles) if (!applyStyle(css, s)) console.warn(`Unknown style: "${s}"`)
+  for (const s of styles) applyStyle(css, s)
 }
