@@ -283,10 +283,38 @@ export const sizeScale: Dict<U> = {
   '96': 384,
 }
 
+export const ratioPercents: Dict<S> = {
+  '1/2': '50%',
+  '1/3': '33.333333%',
+  '2/3': '66.666667%',
+  '1/4': '25%',
+  '2/4': '50%',
+  '3/4': '75%',
+  '1/5': '20%',
+  '2/5': '40%',
+  '3/5': '60%',
+  '4/5': '80%',
+  '1/6': '16.666667%',
+  '2/6': '33.333333%',
+  '3/6': '50%',
+  '4/6': '66.666667%',
+  '5/6': '83.333333%',
+  '1/12': '8.333333%',
+  '2/12': '16.666667%',
+  '3/12': '25%',
+  '4/12': '33.333333%',
+  '5/12': '41.666667%',
+  '6/12': '50%',
+  '7/12': '58.333333%',
+  '8/12': '66.666667%',
+  '9/12': '75%',
+  '10/12': '83.333333%',
+  '11/12': '91.666667%',
+}
+
 const miscSizings: Dict<S> = {
   auto: 'auto',
   full: '100%',
-  screen: '100vw',
   min: 'min-content',
   max: 'max-content',
   fit: 'fit-content',
@@ -311,31 +339,24 @@ type Apply = (css: CSS, value: any) => void
 type Handler = [Match, Apply]
 
 const
-  matchValue = (k: S) => (v: S) => { if (k === v) return v },
+  matchValue = (k: S) => (x: S) => { if (x === k) return x },
+  matchAs = (find: S, replace: S) => (x: S) => { if (x === find) return replace },
   matchEmpty = matchValue(''),
   matchSet = (xs: any[]) => {
     const set = new Set(xs)
-    return (v: S) => { if (set.has(v)) return v }
+    return (x: S) => { if (set.has(x)) return x }
   },
-  matchDict = (dict: Dict<S | U>) => (k: S) => { if (k in dict) return dict[k] },
-  matchPercent = (s: S) => {
-    if (/^\d+\/\d+$/.test(s)) {
-      const
-        [x, y] = s.split('/'),
-        p = 100 * parseInt(x) / parseInt(y)
-      return (Number.isInteger(p) ? p : p.toFixed(6)) + '%'
-    }
-  },
-  matchOne = (...matchers: Match[]) => (s: S) => {
+  matchDict = (dict: Dict<S | U>) => (x: S) => { if (x in dict) return dict[x] },
+  matchOne = (...matchers: Match[]) => (x: S) => {
     for (const m of matchers) {
-      const v = m(s)
+      const v = m(x)
       if (v !== undefined) return v
     }
   },
   matchSizeScale = matchDict(sizeScale),
   matchAuto = matchValue('auto'),
   matchSizeOrAuto = matchOne(matchAuto, matchSizeScale),
-  matchSize = matchOne(matchSizeScale, matchDict(miscSizings), matchPercent),
+  matchSize = matchOne(matchSizeScale, matchDict(miscSizings), matchDict(ratioPercents)),
   matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette)),
   match0248 = matchDict({ '0': 0, '2': 2, '4': 4, '8': 8 }),
   matchBorderRadii = matchDict(borderRadii)
@@ -356,8 +377,8 @@ const handlers: Dict<Handler[]> = {
   mr: [[matchSizeOrAuto, (css, v) => css.marginRight = v]],
   mb: [[matchSizeOrAuto, (css, v) => css.marginBottom = v]],
   ml: [[matchSizeOrAuto, (css, v) => css.marginLeft = v]],
-  w: [[matchSize, (css, v) => css.width = v]],
-  h: [[matchSize, (css, v) => css.height = v]],
+  w: [[matchOne(matchSize, matchAs('screen', '100vw')), (css, v) => css.width = v]],
+  h: [[matchOne(matchSize, matchAs('screen', '100vh')), (css, v) => css.height = v]],
   text: [
     [matchSet(textAlignments), (css, v) => css.textAlign = v],
     [matchInheritOrColor, (css, v) => css.color = v],
