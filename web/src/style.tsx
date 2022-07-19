@@ -319,7 +319,7 @@ const miscSizings: Dict<S> = {
   fit: 'fit-content',
 }
 
-const borderRadii: Dict<U> = {
+const corners: Dict<U> = {
   none: 0,
   sm: 2,
   '': 4,
@@ -380,107 +380,124 @@ const willChangeMap: Dict<S> = {
 }
 
 const
-  matchValue = (k: S) => (x: S) => { if (x === k) return x },
-  matchAs = (find: S, replace: any) => (x: S) => { if (x === find) return replace },
-  matchSet = (...xs: S[]) => {
+  eq1 = (k: S) => (x: S) => { if (x === k) return x },
+  map1 = (find: S, replace: any) => (x: S) => { if (x === find) return replace },
+  map = (dict: Dict<S | U>) => (x: S) => { if (x in dict) return dict[x] },
+  eq = (...xs: S[]) => {
     const set = new Set(xs)
     return (x: S) => { if (set.has(x)) return x }
   },
-  matchDict = (dict: Dict<S | U>) => (x: S) => { if (x in dict) return dict[x] },
-  matchOne = (...matchers: Match[]) => (x: S) => {
+  or = (...matchers: Match[]) => (x: S) => {
     for (const m of matchers) {
       const v = m(x)
       if (v !== undefined) return v
     }
   },
-  matchSizeScale = matchDict(sizeScale),
-  matchAuto = matchValue('auto'),
-  matchSizeOrAuto = matchOne(matchAuto, matchSizeScale),
-  matchSize = matchOne(matchSizeScale, matchAuto, matchDict(miscSizings), matchDict(ratioPercents)),
-  matchInheritOrColor = matchOne(matchValue('inherit'), matchDict(colorPalette)),
-  match0248 = matchDict({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
-  matchBorderRadii = matchDict(borderRadii)
+  auto = eq1('auto'),
+  isInherit = eq1('inherit'),
+  isSize = map(sizeScale),
+  isAutoOrSize = or(auto, isSize),
+  matchSize = or(isSize, auto, map(miscSizings), map(ratioPercents)),
+  isColor = map(colorPalette),
+  isInheritOrColor = or(isInherit, isColor),
+  is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
+  isCorner = map(corners)
 
 const handlers: Dict<Handler[]> = {
-  p: [[matchSizeScale, (css, v) => css.padding = v]],
-  px: [[matchSizeScale, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
-  py: [[matchSizeScale, (css, v) => { css.paddingTop = v; css.paddingBottom = v }]],
-  pt: [[matchSizeScale, (css, v) => css.paddingTop = v]],
-  pr: [[matchSizeScale, (css, v) => css.paddingRight = v]],
-  pb: [[matchSizeScale, (css, v) => css.paddingBottom = v]],
-  pl: [[matchSizeScale, (css, v) => css.paddingLeft = v]],
-  m: [[matchSizeOrAuto, (css, v) => css.margin = v]],
-  mx: [[matchSizeOrAuto, (css, v) => { css.marginLeft = v; css.marginRight = v }]],
-  my: [[matchSizeOrAuto, (css, v) => { css.marginTop = v; css.marginBottom = v }]],
-  mt: [[matchSizeOrAuto, (css, v) => css.marginTop = v]],
-  mr: [[matchSizeOrAuto, (css, v) => css.marginRight = v]],
-  mb: [[matchSizeOrAuto, (css, v) => css.marginBottom = v]],
-  ml: [[matchSizeOrAuto, (css, v) => css.marginLeft = v]],
-  w: [[matchOne(matchSize, matchAs('screen', '100vw')), (css, v) => css.width = v]],
-  'min-w': [[matchOne(matchAs('0', 0), matchDict(miscSizings)), (css, v) => css.minWidth = v]],
-  'max-w': [[matchOne(matchDict(maxW), matchDict(miscSizings)), (css, v) => css.maxWidth = v]],
-  h: [[matchOne(matchSize, matchAs('screen', '100vh')), (css, v) => css.height = v]],
-  'min-h': [[matchOne(matchAs('0', 0), matchDict(miscSizings), matchAs('screen', '100vh')), (css, v) => css.minHeight = v]],
-  'max-h': [[matchOne(matchSize, matchDict(miscSizings), matchAs('screen', '100vh')), (css, v) => css.maxHeight = v]],
+  p: [[isSize, (css, v) => css.padding = v]],
+  px: [[isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
+  py: [[isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }]],
+  pt: [[isSize, (css, v) => css.paddingTop = v]],
+  pr: [[isSize, (css, v) => css.paddingRight = v]],
+  pb: [[isSize, (css, v) => css.paddingBottom = v]],
+  pl: [[isSize, (css, v) => css.paddingLeft = v]],
+  m: [[isAutoOrSize, (css, v) => css.margin = v]],
+  mx: [[isAutoOrSize, (css, v) => { css.marginLeft = v; css.marginRight = v }]],
+  my: [[isAutoOrSize, (css, v) => { css.marginTop = v; css.marginBottom = v }]],
+  mt: [[isAutoOrSize, (css, v) => css.marginTop = v]],
+  mr: [[isAutoOrSize, (css, v) => css.marginRight = v]],
+  mb: [[isAutoOrSize, (css, v) => css.marginBottom = v]],
+  ml: [[isAutoOrSize, (css, v) => css.marginLeft = v]],
+  w: [[or(matchSize, map1('screen', '100vw')), (css, v) => css.width = v]],
+  'min-w': [[or(map1('0', 0), map(miscSizings)), (css, v) => css.minWidth = v]],
+  'max-w': [[or(map(maxW), map(miscSizings)), (css, v) => css.maxWidth = v]],
+  h: [[or(matchSize, map1('screen', '100vh')), (css, v) => css.height = v]],
+  'min-h': [[or(map1('0', 0), map(miscSizings), map1('screen', '100vh')), (css, v) => css.minHeight = v]],
+  'max-h': [[or(matchSize, map(miscSizings), map1('screen', '100vh')), (css, v) => css.maxHeight = v]],
   text: [
-    [matchSet('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
-    [matchInheritOrColor, (css, v) => css.color = v],
+    [eq('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
+    [isInheritOrColor, (css, v) => css.color = v],
   ],
   bg: [
-    [matchInheritOrColor, (css, v) => css.backgroundColor = v],
+    [isInheritOrColor, (css, v) => css.backgroundColor = v],
   ],
   border: [
-    [match0248, (css, v) => css.borderWidth = v],
-    [matchSet('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), (css, v) => css.borderStyle = v],
-    [matchInheritOrColor, (css, v) => css.borderColor = v],
+    [is0248, (css, v) => css.borderWidth = v],
+    [eq('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), (css, v) => css.borderStyle = v],
+    [isInheritOrColor, (css, v) => css.borderColor = v],
   ],
   'border-x': [
-    [match0248, (css, v) => { css.borderLeftWidth = v; css.borderRightWidth = v }],
-    [matchInheritOrColor, (css, v) => { css.borderLeftColor = v; css.borderRightColor = v }],
+    [is0248, (css, v) => { css.borderLeftWidth = v; css.borderRightWidth = v }],
+    [isInheritOrColor, (css, v) => { css.borderLeftColor = v; css.borderRightColor = v }],
   ],
   'border-y': [
-    [match0248, (css, v) => { css.borderTopWidth = v; css.borderBottomWidth = v }],
-    [matchInheritOrColor, (css, v) => { css.borderTopColor = v; css.borderBottomColor = v }],
+    [is0248, (css, v) => { css.borderTopWidth = v; css.borderBottomWidth = v }],
+    [isInheritOrColor, (css, v) => { css.borderTopColor = v; css.borderBottomColor = v }],
   ],
   'border-t': [
-    [match0248, (css, v) => css.borderTopWidth = v],
-    [matchInheritOrColor, (css, v) => css.borderTopColor = v],
+    [is0248, (css, v) => css.borderTopWidth = v],
+    [isInheritOrColor, (css, v) => css.borderTopColor = v],
   ],
   'border-r': [
-    [match0248, (css, v) => css.borderRightWidth = v],
-    [matchInheritOrColor, (css, v) => css.borderRightColor = v],
+    [is0248, (css, v) => css.borderRightWidth = v],
+    [isInheritOrColor, (css, v) => css.borderRightColor = v],
   ],
   'border-b': [
-    [match0248, (css, v) => css.borderBottomWidth = v],
-    [matchInheritOrColor, (css, v) => css.borderBottomColor = v],
+    [is0248, (css, v) => css.borderBottomWidth = v],
+    [isInheritOrColor, (css, v) => css.borderBottomColor = v],
   ],
   'border-l': [
-    [match0248, (css, v) => css.borderLeftWidth = v],
-    [matchInheritOrColor, (css, v) => css.borderLeftColor = v],
+    [is0248, (css, v) => css.borderLeftWidth = v],
+    [isInheritOrColor, (css, v) => css.borderLeftColor = v],
   ],
-  rounded: [[matchBorderRadii, (css, v) => css.borderRadius = v]],
-  'rounded-t': [[matchBorderRadii, (css, v) => { css.borderTopLeftRadius = v; css.borderTopRightRadius = v }]],
-  'rounded-r': [[matchBorderRadii, (css, v) => { css.borderTopRightRadius = v; css.borderBottomRightRadius = v }]],
-  'rounded-b': [[matchBorderRadii, (css, v) => { css.borderBottomLeftRadius = v; css.borderBottomRightRadius = v }]],
-  'rounded-l': [[matchBorderRadii, (css, v) => { css.borderTopLeftRadius = v; css.borderBottomLeftRadius = v }]],
-  'rounded-tr': [[matchBorderRadii, (css, v) => css.borderTopRightRadius = v]],
-  'rounded-tl': [[matchBorderRadii, (css, v) => css.borderTopLeftRadius = v]],
-  'rounded-br': [[matchBorderRadii, (css, v) => css.borderBottomRightRadius = v]],
-  'rounded-bl': [[matchBorderRadii, (css, v) => css.borderBottomLeftRadius = v]],
+  rounded: [[isCorner, (css, v) => css.borderRadius = v]],
+  'rounded-t': [[isCorner, (css, v) => { css.borderTopLeftRadius = v; css.borderTopRightRadius = v }]],
+  'rounded-r': [[isCorner, (css, v) => { css.borderTopRightRadius = v; css.borderBottomRightRadius = v }]],
+  'rounded-b': [[isCorner, (css, v) => { css.borderBottomLeftRadius = v; css.borderBottomRightRadius = v }]],
+  'rounded-l': [[isCorner, (css, v) => { css.borderTopLeftRadius = v; css.borderBottomLeftRadius = v }]],
+  'rounded-tr': [[isCorner, (css, v) => css.borderTopRightRadius = v]],
+  'rounded-tl': [[isCorner, (css, v) => css.borderTopLeftRadius = v]],
+  'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
+  'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
+  scroll: [[eq('auto', 'smooth'), (css, v) => css.scrollBehavior = v]],
+  'scroll-m': [[isSize, (css, v) => css.scrollMargin = v]],
+  'scroll-mx': [[isSize, (css, v) => { css.scrollMarginLeft = v; css.scrollMarginRight = v }]],
+  'scroll-my': [[isSize, (css, v) => { css.scrollMarginTop = v; css.scrollMarginBottom = v }]],
+  'scroll-mt': [[isSize, (css, v) => css.scrollMarginTop = v]],
+  'scroll-mr': [[isSize, (css, v) => css.scrollMarginRight = v]],
+  'scroll-mb': [[isSize, (css, v) => css.scrollMarginBottom = v]],
+  'scroll-ml': [[isSize, (css, v) => css.scrollMarginLeft = v]],
+  'scroll-p': [[isSize, (css, v) => css.scrollPadding = v]],
+  'scroll-px': [[isSize, (css, v) => { css.scrollPaddingLeft = v; css.scrollPaddingRight = v }]],
+  'scroll-py': [[isSize, (css, v) => { css.scrollPaddingTop = v; css.scrollPaddingBottom = v }]],
+  'scroll-pt': [[isSize, (css, v) => css.scrollPaddingTop = v]],
+  'scroll-pr': [[isSize, (css, v) => css.scrollPaddingRight = v]],
+  'scroll-pb': [[isSize, (css, v) => css.scrollPaddingBottom = v]],
+  'scroll-pl': [[isSize, (css, v) => css.scrollPaddingLeft = v]],
   snap: [
-    [matchValue('none'), (css, v) => css.scrollSnapType = v],
-    [matchDict({
+    [eq1('none'), (css, v) => css.scrollSnapType = v],
+    [map({
       start: 'start',
       end: 'end',
       center: 'center',
       'align-none': 'none',
     }), (css, v) => css.scrollSnapAlign = v],
-    [matchSet('normal', 'always'), (css, v) => css.scrollSnapStop = v]
+    [eq('normal', 'always'), (css, v) => css.scrollSnapStop = v]
   ],
-  shadow: [[matchDict(boxShadows), (css, v) => css.boxShadow = v]],
-  touch: [[matchSet('auto', 'none', 'pan-x', 'pan-left', 'pan-right', 'pan-y', 'pan-up', 'pan-down', 'pinch-zoom', 'manipulation'), (css, v) => css.touchAction = v]],
-  select: [[matchSet('none', 'text', 'all', 'auto'), (css, v) => css.userSelect = v]],
-  'will-change': [[matchDict(willChangeMap), (css, v) => css.willChange = v]],
+  shadow: [[map(boxShadows), (css, v) => css.boxShadow = v]],
+  touch: [[eq('auto', 'none', 'pan-x', 'pan-left', 'pan-right', 'pan-y', 'pan-up', 'pan-down', 'pinch-zoom', 'manipulation'), (css, v) => css.touchAction = v]],
+  select: [[eq('none', 'text', 'all', 'auto'), (css, v) => css.userSelect = v]],
+  'will-change': [[map(willChangeMap), (css, v) => css.willChange = v]],
 }
 
 const tryApply = (css: CSS, handles: Handler[], arg: S): B => {
