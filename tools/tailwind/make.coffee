@@ -1,23 +1,24 @@
 fs = require 'fs'
 
-camel_case = (s) => s.replace /-(\w)/g, (_, w) -> w.toUpperCase()
+camel_case = (s) -> s.replace /-(\w)/g, (_, w) -> w.toUpperCase()
 
 rgb_to_hex = (bs) ->
-  '#' + bs
-    .map (b) ->
-      h = b.toString 16
-      if h.length is 1 then '0' + h else h
-    .join ''
+  hs = bs.map (b) ->
+    h = b.toString 16
+    if h.length is 1 then '0' + h else h
+  if hs.every (h) -> h[0] is h[1]
+    hs = hs.map (h) -> h[0]
+  '#' + hs.join ''
 
-to_rule = (line) =>
+to_rule = (line) ->
   [l, r] = line.split /\s*:\s*/
   r = r.replace /^(\d+)px$/g, '$1'
   r = "'#{r}'" unless /^(\d+\.\d+|\d+)$/.test r
   "#{camel_case l}: #{r}"
 
-rem_to_px = (s) => (16 * parseFloat(s)).toFixed 0
+rem_to_px = (s) -> (16 * parseFloat(s)).toFixed 0
 
-to_style = (css) =>
+to_style = (css) ->
   lines = css
     # rgb(x y z) -> #aabbcc
     .replace /\brgb\((\d+)\s+(\d+)\s+(\d+)\)/g, (_, r, g, b) ->
@@ -25,9 +26,9 @@ to_style = (css) =>
     # /* */
     .replace /\/\*.+?\*\//g, ''
     # (1rem) -> (16px)
-    .replace /\(([\d\.]+)rem\)/g, (_, f) => "(#{rem_to_px f}px)"
+    .replace /\(([\d\.]+)rem\)/g, (_, f) -> "(#{rem_to_px f}px)"
     # 1rem -> 16
-    .replace /\b([\d\.]+)rem\b/g, (_, f) => rem_to_px f
+    .replace /\b([\d\.]+)rem\b/g, (_, f) -> rem_to_px f
     .split /;/g
     .map (x) -> x.trim()
     .filter (x) -> if x then yes else no
