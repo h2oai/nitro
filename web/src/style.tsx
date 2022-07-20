@@ -721,14 +721,52 @@ rule('row-span', [either(isBetweenOf(1, 6, n => `span ${n} / span ${n}`), isOf({
 const isGridRowStart = either(isAuto, isBetween(1, 7))
 rule('row-start', [isGridRowStart, (css, v) => css.gridRowStart = v])
 rule('row-end', [isGridColStart, (css, v) => css.gridRowEnd = v])
-rule('grid-flow', [isOf({ row: 'row', col: 'column', dense: 'dense', 'row-dense': 'row dense', 'col-dense': 'column dense' }), (css, v) => css.gridAutoFlow = v])
+rule('grid-flow', [isOf({
+  row: 'row',
+  col: 'column',
+  dense: 'dense',
+  'row-dense': 'row dense',
+  'col-dense': 'column dense',
+}), (css, v) => css.gridAutoFlow = v])
 const isGridAuto = isOf({ min: 'min-content', max: 'max-content', fr: 'minmax(0, 1fr)' })
 rule('auto-cols', [either(isAuto, isGridAuto), (css, v) => css.gridAutoColumns = v])
 rule('auto-rows', [either(isAuto, isGridAuto), (css, v) => css.gridAutoRows = v])
 rule('gap', [isSize, (css, v) => css.gap = v])
 rule('gap-x', [isSize, (css, v) => css.columnGap = v])
 rule('gap-y', [isSize, (css, v) => css.rowGap = v])
-
+const isFlexAlign = isOf({
+  start: 'flex-start',
+  end: 'flex-end',
+  center: 'center',
+  between: 'space-between',
+  around: 'space-around',
+  evenly: 'space-evenly',
+})
+rule('justify', [isFlexAlign, (css, v) => css.justifyContent = v])
+const isFlexJustify = isIn('start', 'end', 'center', 'stretch')
+rule('justify-items', [isFlexJustify, (css, v) => css.justifyItems = v])
+rule('justify-self', [either(isAuto, isFlexJustify), (css, v) => css.justifySelf = v])
+rule('content', [isFlexAlign, (css, v) => css.alignContent = v])
+const isAlignItems = isOf({
+  start: 'flex-start',
+  end: 'flex-end',
+  center: 'center',
+  baseline: 'baseline',
+  stretch: 'stretch',
+})
+rule('items', [isAlignItems, (css, v) => css.alignItems = v])
+rule('place-content', [isOf({
+  center: 'center',
+  start: 'start',
+  end: 'end',
+  between: 'space-between',
+  around: 'space-around',
+  evenly: 'space-evenly',
+  stretch: 'stretch',
+}), (css, v) => css.placeContent = v])
+rule('self', [either(isAuto, isAlignItems), (css, v) => css.alignSelf = v])
+rule('place-items', [isFlexJustify, (css, v) => css.placeItems = v])
+rule('place-self', [either(isAuto, isFlexJustify), (css, v) => css.placeSelf = v])
 rule('p', [isSize, (css, v) => css.padding = v])
 rule('px', [isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }])
 rule('py', [isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }])
@@ -744,10 +782,10 @@ rule('mr', [isAutoOrSize, (css, v) => css.marginRight = v])
 rule('mb', [isAutoOrSize, (css, v) => css.marginBottom = v])
 rule('ml', [isAutoOrSize, (css, v) => css.marginLeft = v])
 rule('w', [either(matchSize, map1('screen', '100vw')), (css, v) => css.width = v])
-rule('min-w', [either(map1('0', 0), isOf(miscSizings)), (css, v) => css.minWidth = v])
+rule('min-w', [either(map1('0', 0), map1('full', '100%'), isOf(miscSizings)), (css, v) => css.minWidth = v])
 rule('max-w', [either(isOf(maxW), isOf(miscSizings)), (css, v) => css.maxWidth = v])
 rule('h', [either(matchSize, map1('screen', '100vh')), (css, v) => css.height = v])
-rule('min-h', [either(map1('0', 0), isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.minHeight = v])
+rule('min-h', [either(map1('0', 0), map1('full', '100%'), isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.minHeight = v])
 rule('max-h', [either(matchSize, isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.maxHeight = v])
 rule('text',
   [isIn('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
