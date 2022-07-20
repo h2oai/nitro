@@ -645,6 +645,15 @@ const handlers: Dict<Handler[]> = {
   'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
   'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
 
+  outline: [
+    [map({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineWidth = v],
+    [isColor, (css, v) => css.outlineColor = v],
+    [eq1('none'), (css) => { css.outline = '2px solid transparent'; css.outlineOffset = 2 }],
+    [eq1(''), (css) => css.outlineStyle = 'solid'],
+    [eq('dashed', 'dotted', 'double', 'hidden'), (css, v) => css.outlineStyle = v],
+  ],
+  'outline-offset': [[map({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineOffset = v]],
+  shadow: [[map(boxShadows), (css, v) => css.boxShadow = v]],
   opacity: [[isOpacity, (css, v) => css.opacity = v]],
 
   'mix-blend': [[isBlendMode, (css, v) => css.mixBlendMode = v]],
@@ -761,7 +770,6 @@ const handlers: Dict<Handler[]> = {
     }), (css, v) => css.scrollSnapAlign = v],
     [eq('normal', 'always'), (css, v) => css.scrollSnapStop = v]
   ],
-  shadow: [[map(boxShadows), (css, v) => css.boxShadow = v]],
   touch: [[eq('auto', 'none', 'pan-x', 'pan-left', 'pan-right', 'pan-y', 'pan-up', 'pan-down', 'pinch-zoom', 'manipulation'), (css, v) => css.touchAction = v]],
   select: [[eq('none', 'text', 'all', 'auto'), (css, v) => css.userSelect = v]],
   'will-change': [[map(willChangeMap), (css, v) => css.willChange = v]],
