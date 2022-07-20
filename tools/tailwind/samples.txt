@@ -2330,9 +2330,6 @@ bg-repeat-space	background-repeat: space;
 bg-auto	background-size: auto;
 bg-cover	background-size: cover;
 bg-contain	background-size: contain;
-bg-auto	background-size: auto;
-bg-cover	background-size: cover;
-bg-contain	background-size: contain;
 rounded-none	border-radius: 0px;
 rounded-sm	border-radius: 0.125rem; /* 2px */
 rounded	border-radius: 0.25rem; /* 4px */
@@ -4435,8 +4432,8 @@ backdrop-saturate-150	backdrop-filter: saturate(1.5);
 backdrop-saturate-200	backdrop-filter: saturate(2);
 backdrop-sepia-0	backdrop-filter: sepia(0);
 backdrop-sepia	backdrop-filter: sepia(100%);
-border-collapse	border-collapse: collapse;
-border-separate	border-collapse: separate;
+# border-collapse	border-collapse: collapse;
+# border-separate	border-collapse: separate;
 transition-none	transition-property: none;
 transition-all	transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms;
 transition	transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms;
