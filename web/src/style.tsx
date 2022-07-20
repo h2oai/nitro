@@ -611,7 +611,10 @@ const
     'right-bottom': 'right bottom',
     'right-top': 'right top',
     'top': 'top',
-  })
+  }),
+  isOverflow = eq('auto', 'hidden', 'clip', 'visible', 'scroll'),
+  isOverscroll = eq('auto', 'contain', 'none')
+
 
 
 const handlers: Dict<Handler[]> = {
@@ -653,6 +656,17 @@ const handlers: Dict<Handler[]> = {
     [isObjectFit, (css, v) => css.objectFit = v],
     [isObjectPosition, (css, v) => css.objectPosition = v],
   ],
+  overflow: [[isOverflow, (css, v) => css.overflow = v]],
+  'overflow-x': [[isOverflow, (css, v) => css.overflowX = v]],
+  'overflow-y': [[isOverflow, (css, v) => css.overflowY = v]],
+  overscroll: [[isOverscroll, (css, v) => css.overscrollBehavior = v]],
+  'overscroll-x': [[isOverscroll, (css, v) => css.overscrollBehaviorX = v]],
+  'overscroll-y': [[isOverscroll, (css, v) => css.overscrollBehaviorY = v]],
+  static: [[empty, (css, v) => css.position = 'static']],
+  fixed: [[empty, (css, v) => css.position = 'fixed']],
+  absolute: [[empty, (css, v) => css.position = 'absolute']],
+  relative: [[empty, (css, v) => css.position = 'relative']],
+  sticky: [[empty, (css, v) => css.position = 'sticky']],
   p: [[isSize, (css, v) => css.padding = v]],
   px: [[isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
   py: [[isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }]],
@@ -700,17 +714,7 @@ const handlers: Dict<Handler[]> = {
     [isColor, (css, v) => css.backgroundColor = v],
     [eq1('no-repeat'), (css, v) => css.backgroundRepeat = v],
     [eq('fixed', 'local', 'scroll'), (css, v) => css.backgroundAttachment = v],
-    [map({
-      'bottom': 'bottom',
-      'center': 'center',
-      'left': 'left',
-      'left-bottom': 'left bottom',
-      'left-top': 'left top',
-      'right': 'right',
-      'right-bottom': 'right bottom',
-      'right-top': 'right top',
-      'top': 'top',
-    }), (css, v) => css.backgroundPosition = v],
+    [isObjectPosition, (css, v) => css.backgroundPosition = v],
     [eq('auto', 'cover', 'contain'), (css, v) => css.backgroundSize = v],
   ],
   'bg-repeat': [[map({
