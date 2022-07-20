@@ -741,10 +741,6 @@ justify-items-start	justify-items: start;
 justify-items-end	justify-items: end;
 justify-items-center	justify-items: center;
 justify-items-stretch	justify-items: stretch;
-justify-items-start	justify-items: start;
-justify-items-end	justify-items: end;
-justify-items-center	justify-items: center;
-justify-items-stretch	justify-items: stretch;
 justify-self-auto	justify-self: auto;
 justify-self-start	justify-self: start;
 justify-self-end	justify-self: end;
@@ -1493,8 +1489,8 @@ text-6xl	font-size: 3.75rem; /* 60px */ line-height: 1;
 text-7xl	font-size: 4.5rem; /* 72px */ line-height: 1;
 text-8xl	font-size: 6rem; /* 96px */ line-height: 1;
 text-9xl	font-size: 8rem; /* 128px */ line-height: 1;
-antialiased	-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-subpixel-antialiased	-webkit-font-smoothing: auto; -moz-osx-font-smoothing: auto;
+# antialiased	-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+# subpixel-antialiased	-webkit-font-smoothing: auto; -moz-osx-font-smoothing: auto;
 italic	font-style: italic;
 not-italic	font-style: normal;
 font-thin	font-weight: 100;
@@ -1521,7 +1517,7 @@ tracking-normal	letter-spacing: 0em;
 tracking-wide	letter-spacing: 0.025em;
 tracking-wider	letter-spacing: 0.05em;
 tracking-widest	letter-spacing: 0.1em;
-leading-3	line-height: .75rem; /* 12px */
+leading-3	line-height: 0.75rem; /* 12px */
 leading-4	line-height: 1rem; /* 16px */
 leading-5	line-height: 1.25rem; /* 20px */
 leading-6	line-height: 1.5rem; /* 24px */
