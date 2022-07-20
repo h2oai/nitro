@@ -446,6 +446,7 @@ const willChangeMap: Dict<S> = {
 
 const
   eq1 = (k: S) => (x: S) => { if (x === k) return x },
+  empty = (k: S) => k === '',
   map1 = (find: S, replace: any) => (x: S) => { if (x === find) return replace },
   map = (dict: Dict<S | U>) => (x: S) => { if (x in dict) return dict[x] },
   eq = (...xs: S[]) => {
@@ -465,6 +466,7 @@ const
   isRatioSubset = map(ratioPercentsSubset),
   isColor = map(colorPalette),
   is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
+  is01248 = map({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }),
   isCorner = map(corners),
   isDuration = eq('75', '100', '150', '200', '300', '500', '700', '1000'),
   easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -602,7 +604,26 @@ const handlers: Dict<Handler[]> = {
   text: [
     [eq('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
     [isColor, (css, v) => css.color = v],
+    [eq('ellipsis', 'clip'), (css, v) => css.textOverflow = v],
   ],
+  underline: [[empty, (css) => css.textDecorationLine = 'underline']],
+  overline: [[empty, (css) => css.textDecorationLine = 'overline']],
+  'line-through': [[empty, (css) => css.textDecorationLine = 'line-through']],
+  'no-underline': [[empty, (css) => css.textDecorationLine = 'none']],
+  decoration: [
+    [isColor, (css, v) => css.textDecorationColor = v],
+    [eq('solid', 'double', 'dotted', 'dashed', 'wavy'), (css, v) => css.textDecorationStyle = v],
+    [or(auto, eq1('from-font'), is01248), (css, v) => css.textDecorationThickness = v]
+  ],
+  'underline-offset': [[or(auto, is01248), (css, v) => css.textUnderlineOffset = v]],
+  uppercase: [[empty, (css) => css.textTransform = 'uppercase']],
+  lowercase: [[empty, (css) => css.textTransform = 'lowercase']],
+  capitalize: [[empty, (css) => css.textTransform = 'capitalize']],
+  'normal-case': [[empty, (css) => css.textTransform = 'none']],
+  truncate: [[empty, (css) => { css.overflow = 'hidden'; css.textOverflow = 'ellipsis'; css.whiteSpace = 'nowrap' }]],
+  indent: [[isSize, (css, v) => css.textIndent = v]],
+  align: [[eq('baseline', 'top', 'middle', 'bottom', 'text-top', 'text-bottom', 'sub', 'super'), (css, v) => css.verticalAlign = v]],
+  whitespace: [[eq('normal', 'nowrap', 'pre', 'pre-line', 'pre-wrap'), (css, v) => css.whiteSpace = v]],
   bg: [
     [isColor, (css, v) => css.backgroundColor = v],
     [eq1('no-repeat'), (css, v) => css.backgroundRepeat = v],
@@ -834,4 +855,5 @@ export const stylize = (css: CSS, spec: S) => {
   const styles = spec.split(/\s+/g)
   // for (const s of styles) if (!applyStyle(css, s)) console.warn(`Unknown style: "${s}"`)
   for (const s of styles) applyStyle(css, s)
+  return css
 }
