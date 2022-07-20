@@ -459,10 +459,11 @@ const
       if (v !== undefined) return v
     }
   },
-  auto = eq1('auto'),
+  isAuto = eq1('auto'),
   isSize = map(sizeScale),
-  isAutoOrSize = or(auto, isSize),
-  matchSize = or(isSize, auto, map(miscSizings), map(ratioPercents)),
+  isAutoOrSize = or(isAuto, isSize),
+  isRatio = map(ratioPercents),
+  matchSize = or(isSize, isAuto, map(miscSizings), isRatio),
   isRatioSubset = map(ratioPercentsSubset),
   isColor = map(colorPalette),
   is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
@@ -578,7 +579,12 @@ const
     'luminosity',
     'plus-lighter',
   ),
-  isNumSeq = (i: U, j: U) => {
+  eqN = (...ns: U[]) => {
+    const d: Dict<U> = {}
+    for (const n of ns) d['' + n] = n
+    return map(d)
+  },
+  eqNR = (i: U, j: U) => {
     const d: Dict<U> = {}
     for (let i = 0; i <= j; i++) d['' + i] = i
     return map(d)
@@ -613,13 +619,14 @@ const
     'top': 'top',
   }),
   isOverflow = eq('auto', 'hidden', 'clip', 'visible', 'scroll'),
-  isOverscroll = eq('auto', 'contain', 'none')
+  isOverscroll = eq('auto', 'contain', 'none'),
+  isInset = or(isAuto, isSize, isRatioSubset)
 
 
 
 const handlers: Dict<Handler[]> = {
   aspect: [[map({ 'auto': 'auto', 'square': '1 / 1', 'video': '16 / 9' }), (css, v) => css.aspectRatio = v]],
-  columns: [[or(isNumSeq(1, 12), auto, isColumnSize), (css, v) => css.columns = v]],
+  columns: [[or(eqNR(1, 12), isAuto, isColumnSize), (css, v) => css.columns = v]],
   'break-after': [[isBreakAfter, (css, v) => css.breakAfter = v]],
   'break-before': [[isBreakAfter, (css, v) => css.breakBefore = v]],
   'break-inside': [[isBreakInside, (css, v) => css.breakInside = v]],
@@ -667,6 +674,17 @@ const handlers: Dict<Handler[]> = {
   absolute: [[empty, (css, v) => css.position = 'absolute']],
   relative: [[empty, (css, v) => css.position = 'relative']],
   sticky: [[empty, (css, v) => css.position = 'sticky']],
+  inset: [[isInset, (css, v) => { css.top = v; css.right = v; css.bottom = v; css.left = v }]],
+  'inset-x': [[isInset, (css, v) => { css.left = v; css.right = v }]],
+  'inset-y': [[isInset, (css, v) => { css.top = v; css.bottom = v }]],
+  top: [[isInset, (css, v) => css.top = v]],
+  right: [[isInset, (css, v) => css.right = v]],
+  bottom: [[isInset, (css, v) => css.bottom = v]],
+  left: [[isInset, (css, v) => css.left = v]],
+  visible: [[empty, (css) => css.visibility = 'visible']],
+  invisible: [[empty, (css) => css.visibility = 'hidden']],
+  z: [[or(isAuto, eqN(0, 10, 20, 30, 40, 50)), (css, v) => css.zIndex = v]],
+  basis: [[or(isAuto, isSize, isRatio), (css, v) => css.flexBasis = v]],
   p: [[isSize, (css, v) => css.padding = v]],
   px: [[isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
   py: [[isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }]],
@@ -699,9 +717,9 @@ const handlers: Dict<Handler[]> = {
   decoration: [
     [isColor, (css, v) => css.textDecorationColor = v],
     [eq('solid', 'double', 'dotted', 'dashed', 'wavy'), (css, v) => css.textDecorationStyle = v],
-    [or(auto, eq1('from-font'), is01248), (css, v) => css.textDecorationThickness = v]
+    [or(isAuto, eq1('from-font'), is01248), (css, v) => css.textDecorationThickness = v]
   ],
-  'underline-offset': [[or(auto, is01248), (css, v) => css.textUnderlineOffset = v]],
+  'underline-offset': [[or(isAuto, is01248), (css, v) => css.textUnderlineOffset = v]],
   uppercase: [[empty, (css) => css.textTransform = 'uppercase']],
   lowercase: [[empty, (css) => css.textTransform = 'lowercase']],
   capitalize: [[empty, (css) => css.textTransform = 'capitalize']],
