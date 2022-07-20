@@ -12,7 +12,7 @@ rgb_to_hex = (bs) ->
 
 to_rule = (line) ->
   [l, r] = line.split /\s*:\s*/
-  r = r.replace /^(\d+)px$/g, '$1'
+  r = r.replace /^(\d+)px$/g, '$1' if l isnt 'line-height'
   r = "'#{r}'" unless /^[-]?(\d+\.\d+|\d+)$/.test r
   "#{camel_case l}: #{r}"
 
@@ -25,10 +25,8 @@ to_style = (css) ->
       rgb_to_hex [r, g, b].map (x) -> parseInt x
     # /* */
     .replace /\/\*.+?\*\//g, ''
-    # (1rem) -> (16px)
-    .replace /\(([\d\.]+)rem\)/g, (_, f) -> "(#{rem_to_px f}px)"
     # 1rem -> 16
-    .replace /\b([\d\.]+)rem\b/g, (_, f) -> rem_to_px f
+    .replace /\b([\d\.]+)rem\b/g, (_, f) -> "#{rem_to_px f}px"
     .split /;/g
     .map (x) -> x.trim()
     .filter (x) -> if x then yes else no
