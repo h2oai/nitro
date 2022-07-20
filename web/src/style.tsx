@@ -577,10 +577,82 @@ const
     'color',
     'luminosity',
     'plus-lighter',
-  )
+  ),
+  isNumSeq = (i: U, j: U) => {
+    const d: Dict<U> = {}
+    for (let i = 0; i <= j; i++) d['' + i] = i
+    return map(d)
+  },
+  isColumnSize = map({
+    '3xs': 256,
+    '2xs': 288,
+    'xs': 320,
+    'sm': 384,
+    'md': 448,
+    'lg': 512,
+    'xl': 576,
+    '2xl': 672,
+    '3xl': 768,
+    '4xl': 896,
+    '5xl': 1024,
+    '6xl': 1152,
+    '7xl': 1280,
+  }),
+  isBreakAfter = eq('auto', 'avoid', 'all', 'avoid-page', 'page', 'left', 'right', 'column'),
+  isBreakInside = eq('auto', 'avoid', 'avoid-page', 'avoid-column'),
+  isObjectFit = eq('contain', 'cover', 'fill', 'none', 'scale-down'),
+  isObjectPosition = map({
+    'bottom': 'bottom',
+    'center': 'center',
+    'left': 'left',
+    'left-bottom': 'left bottom',
+    'left-top': 'left top',
+    'right': 'right',
+    'right-bottom': 'right bottom',
+    'right-top': 'right top',
+    'top': 'top',
+  })
 
 
 const handlers: Dict<Handler[]> = {
+  aspect: [[map({ 'auto': 'auto', 'square': '1 / 1', 'video': '16 / 9' }), (css, v) => css.aspectRatio = v]],
+  columns: [[or(isNumSeq(1, 12), auto, isColumnSize), (css, v) => css.columns = v]],
+  'break-after': [[isBreakAfter, (css, v) => css.breakAfter = v]],
+  'break-before': [[isBreakAfter, (css, v) => css.breakBefore = v]],
+  'break-inside': [[isBreakInside, (css, v) => css.breakInside = v]],
+  'box-decoration': [[eq('clone', 'slice'), (css, v) => css.boxDecorationBreak = v]],
+  box: [[map({ 'border': 'border-box', 'content': 'content-box' }), (css, v) => css.boxSizing = v]],
+  block: [[empty, (css, v) => css.display = 'block']],
+  'inline-block': [[empty, (css, v) => css.display = 'inline-block']],
+  inline: [[empty, (css, v) => css.display = 'inline']],
+  flex: [[empty, (css, v) => css.display = 'flex']],
+  'inline-flex': [[empty, (css, v) => css.display = 'inline-flex']],
+  table: [[map({
+    '': 'table',
+    caption: 'table-caption',
+    cell: 'table-cell',
+    column: 'table-column',
+    'column-group': 'table-column-group',
+    'footer-group': 'table-footer-group',
+    'header-group': 'table-header-group',
+    'row-group': 'table-row-group',
+    row: 'table-row',
+  }), (css, v) => css.display = v]],
+  'inline-table': [[empty, (css, v) => css.display = 'inline-table']],
+  'flow-root': [[empty, (css, v) => css.display = 'flow-root']],
+  grid: [[empty, (css, v) => css.display = 'grid']],
+  'inline-grid': [[empty, (css, v) => css.display = 'inline-grid']],
+  contents: [[empty, (css, v) => css.display = 'contents']],
+  'list-item': [[empty, (css, v) => css.display = 'list-item']],
+  hidden: [[empty, (css, v) => css.display = 'none']],
+  float: [[eq('right', 'left', 'none'), (css, v) => css.float = v]],
+  clear: [[eq('left', 'right', 'both', 'none'), (css, v) => css.clear = v]],
+  isolate: [[empty, css => css.isolation = 'isolate']],
+  'isolation-auto': [[empty, css => css.isolation = 'auto']],
+  object: [
+    [isObjectFit, (css, v) => css.objectFit = v],
+    [isObjectPosition, (css, v) => css.objectPosition = v],
+  ],
   p: [[isSize, (css, v) => css.padding = v]],
   px: [[isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
   py: [[isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }]],
@@ -853,7 +925,6 @@ const applyStyle = (css: CSS, s: S): B => {
 
 export const stylize = (css: CSS, spec: S) => {
   const styles = spec.split(/\s+/g)
-  // for (const s of styles) if (!applyStyle(css, s)) console.warn(`Unknown style: "${s}"`)
-  for (const s of styles) applyStyle(css, s)
+  for (const s of styles) if (!applyStyle(css, s)) console.warn(`Unknown style: "${s}"`)
   return css
 }
