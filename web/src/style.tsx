@@ -639,6 +639,7 @@ const
 
 const rules: Dict<Handler[]> = {}
 const rule = (name: S, ...handlers: Handler[]) => rules[name] = handlers
+const rule0 = (name: S, apply: Apply) => rule(name, [empty, apply])
 
 rule('aspect', [isOf({ 'auto': 'auto', 'square': '1 / 1', 'video': '16 / 9' }), (css, v) => css.aspectRatio = v])
 rule('columns', [either(isBetween(1, 12), isAuto, isColumnSize), (css, v) => css.columns = v])
@@ -651,7 +652,7 @@ rule('block', [empty, (css, v) => css.display = 'block'])
 rule('inline-block', [empty, (css, v) => css.display = 'inline-block'])
 rule('inline', [empty, (css, v) => css.display = 'inline'])
 rule('flex',
-  [empty, (css, v) => css.display = 'flex'],
+  [empty, (css) => css.display = 'flex'],
   [either(isIn('row', 'row-reverse'), isOf({ 'col': 'column', 'col-reverse': 'column-reverse' })), (css, v) => css.flexDirection = v],
   [isIn('wrap', 'wrap-reverse', 'nowrap', ''), (css, v) => css.flexWrap = v],
   [isOf({ '1': '1 1 0%', 'auto': '1 1 auto', 'initial': '0 1 auto', 'none': 'none' }), (css, v) => css.flex = v]
@@ -746,7 +747,10 @@ rule('justify', [isFlexAlign, (css, v) => css.justifyContent = v])
 const isFlexJustify = isIn('start', 'end', 'center', 'stretch')
 rule('justify-items', [isFlexJustify, (css, v) => css.justifyItems = v])
 rule('justify-self', [either(isAuto, isFlexJustify), (css, v) => css.justifySelf = v])
-rule('content', [isFlexAlign, (css, v) => css.alignContent = v])
+rule('content',
+  [isFlexAlign, (css, v) => css.alignContent = v],
+  [isNone, css => css.content = 'none'],
+)
 const isAlignItems = isOf({
   start: 'flex-start',
   end: 'flex-end',
@@ -768,11 +772,24 @@ rule('self', [either(isAuto, isAlignItems), (css, v) => css.alignSelf = v])
 rule('place-items', [isFlexJustify, (css, v) => css.placeItems = v])
 rule('place-self', [either(isAuto, isFlexJustify), (css, v) => css.placeSelf = v])
 
-rule('font', [isOf({
-  sans: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-  serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
-  mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-}), (css, v) => css.fontFamily = v])
+rule('font',
+  [isOf({
+    sans: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+    serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+    mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+  }), (css, v) => css.fontFamily = v],
+  [isOf({
+    'thin': 100,
+    'extralight': 200,
+    'light': 300,
+    'normal': 400,
+    'medium': 500,
+    'semibold': 600,
+    'bold': 700,
+    'extrabold': 800,
+    'black': 900,
+  }), (css, v) => css.fontWeight = v],
+)
 
 const textSizes: [S, U, S | U][] = [
   ['xs', 12, '16px'],
@@ -790,7 +807,51 @@ const textSizes: [S, U, S | U][] = [
   ['9xl', 128, 1],
 ]
 
-textSizes.forEach(([n, fs, lh]) => rule('text-' + n, [empty, (css, v) => { css.fontSize = fs; css.lineHeight = lh }]))
+textSizes.forEach(([n, fs, lh]) => rule('text-' + n, [empty, (css) => { css.fontSize = fs; css.lineHeight = lh }]))
+
+rule0('italic', (css) => css.fontStyle = 'italic')
+rule0('not-italic', (css) => css.fontStyle = 'normal')
+
+rule0('normal-nums', (css, v) => css.fontVariantNumeric = 'normal')
+rule0('ordinal', (css, v) => css.fontVariantNumeric = 'ordinal')
+rule0('slashed-zero', (css, v) => css.fontVariantNumeric = 'slashed-zero')
+rule0('lining-nums', (css, v) => css.fontVariantNumeric = 'lining-nums')
+rule0('oldstyle-nums', (css, v) => css.fontVariantNumeric = 'oldstyle-nums')
+rule0('proportional-nums', (css, v) => css.fontVariantNumeric = 'proportional-nums')
+rule0('tabular-nums', (css, v) => css.fontVariantNumeric = 'tabular-nums')
+rule0('diagonal-fractions', (css, v) => css.fontVariantNumeric = 'diagonal-fractions')
+rule0('stacked-fractions', (css, v) => css.fontVariantNumeric = 'stacked-fractions')
+
+rule('tracking', [isOf({
+  tighter: '-0.05em',
+  tight: '-0.025em',
+  normal: '0em',
+  wide: '0.025em',
+  wider: '0.05em',
+  widest: '0.1em',
+}), (css, v) => css.letterSpacing = v])
+
+rule('leading', [isOf({
+  '3': '12px',
+  '4': '16px',
+  '5': '20px',
+  '6': '24px',
+  '7': '28px',
+  '8': '32px',
+  '9': '36px',
+  '10': '40px',
+  'none': 1,
+  'tight': 1.25,
+  'snug': 1.375,
+  'normal': 1.5,
+  'relaxed': 1.625,
+  'loose': 2,
+}), (css, v) => css.lineHeight = v])
+
+rule('list',
+  [isIn('none', 'disc', 'decimal'), (css, v) => css.listStyleType = v],
+  [isIn('inside', 'outside'), (css, v) => css.listStylePosition = v],
+)
 
 rule('p', [isSize, (css, v) => css.padding = v])
 rule('px', [isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }])
@@ -835,6 +896,9 @@ rule('truncate', [empty, (css) => { css.overflow = 'hidden'; css.textOverflow = 
 rule('indent', [isSize, (css, v) => css.textIndent = v])
 rule('align', [isIn('baseline', 'top', 'middle', 'bottom', 'text-top', 'text-bottom', 'sub', 'super'), (css, v) => css.verticalAlign = v])
 rule('whitespace', [isIn('normal', 'nowrap', 'pre', 'pre-line', 'pre-wrap'), (css, v) => css.whiteSpace = v])
+rule0('break-normal', css => { css.overflowWrap = 'normal'; css.wordBreak = 'normal' })
+rule0('break-words', css => css.overflowWrap = 'break-word')
+rule0('break-all', css => css.wordBreak = 'break-all')
 rule('bg',
   [isColor, (css, v) => css.backgroundColor = v],
   [isEq('no-repeat'), (css, v) => css.backgroundRepeat = v],
