@@ -637,317 +637,318 @@ const
   isOverscroll = isIn('auto', 'contain', 'none'),
   isInset = either(isAuto, isSize, isRatioSubset)
 
+const rules: Dict<Handler[]> = {}
+const rule = (name: S, ...handlers: Handler[]) => rules[name] = handlers
 
+rule('aspect', [isOf({ 'auto': 'auto', 'square': '1 / 1', 'video': '16 / 9' }), (css, v) => css.aspectRatio = v])
+rule('columns', [either(isBetween(1, 12), isAuto, isColumnSize), (css, v) => css.columns = v])
+rule('break-after', [isBreakAfter, (css, v) => css.breakAfter = v])
+rule('break-before', [isBreakAfter, (css, v) => css.breakBefore = v])
+rule('break-inside', [isBreakInside, (css, v) => css.breakInside = v])
+rule('box-decoration', [isIn('clone', 'slice'), (css, v) => css.boxDecorationBreak = v])
+rule('box', [isOf({ 'border': 'border-box', 'content': 'content-box' }), (css, v) => css.boxSizing = v])
+rule('block', [empty, (css, v) => css.display = 'block'])
+rule('inline-block', [empty, (css, v) => css.display = 'inline-block'])
+rule('inline', [empty, (css, v) => css.display = 'inline'])
+rule('flex',
+  [empty, (css, v) => css.display = 'flex'],
+  [either(isIn('row', 'row-reverse'), isOf({ 'col': 'column', 'col-reverse': 'column-reverse' })), (css, v) => css.flexDirection = v],
+  [isIn('wrap', 'wrap-reverse', 'nowrap', ''), (css, v) => css.flexWrap = v],
+  [isOf({ '1': '1 1 0%', 'auto': '1 1 auto', 'initial': '0 1 auto', 'none': 'none' }), (css, v) => css.flex = v]
+)
+rule('inline-flex', [empty, (css, v) => css.display = 'inline-flex'])
+rule('table', [isOf({
+  '': 'table',
+  caption: 'table-caption',
+  cell: 'table-cell',
+  column: 'table-column',
+  'column-group': 'table-column-group',
+  'footer-group': 'table-footer-group',
+  'header-group': 'table-header-group',
+  'row-group': 'table-row-group',
+  row: 'table-row',
+}), (css, v) => css.display = v])
+// TODO condense rule(x, css.y =x)
+rule('inline-table', [empty, (css, v) => css.display = 'inline-table'])
+rule('flow-root', [empty, (css, v) => css.display = 'flow-root'])
+rule('grid', [empty, (css, v) => css.display = 'grid'])
+rule('inline-grid', [empty, (css, v) => css.display = 'inline-grid'])
+rule('contents', [empty, (css, v) => css.display = 'contents'])
+rule('list-item', [empty, (css, v) => css.display = 'list-item'])
+rule('hidden', [empty, (css, v) => css.display = 'none'])
+rule('float', [isIn('right', 'left', 'none'), (css, v) => css.float = v])
+rule('clear', [isIn('left', 'right', 'both', 'none'), (css, v) => css.clear = v])
+rule('isolate', [empty, css => css.isolation = 'isolate'])
+rule('isolation-auto', [empty, css => css.isolation = 'auto'])
+rule('object',
+  [isObjectFit, (css, v) => css.objectFit = v],
+  [isObjectPosition, (css, v) => css.objectPosition = v],
+)
+rule('overflow', [isOverflow, (css, v) => css.overflow = v])
+rule('overflow-x', [isOverflow, (css, v) => css.overflowX = v])
+rule('overflow-y', [isOverflow, (css, v) => css.overflowY = v])
+rule('overscroll', [isOverscroll, (css, v) => css.overscrollBehavior = v])
+rule('overscroll-x', [isOverscroll, (css, v) => css.overscrollBehaviorX = v])
+rule('overscroll-y', [isOverscroll, (css, v) => css.overscrollBehaviorY = v])
+rule('static', [empty, (css, v) => css.position = 'static'])
+rule('fixed', [empty, (css, v) => css.position = 'fixed'])
+rule('absolute', [empty, (css, v) => css.position = 'absolute'])
+rule('relative', [empty, (css, v) => css.position = 'relative'])
+rule('sticky', [empty, (css, v) => css.position = 'sticky'])
+rule('inset', [isInset, (css, v) => { css.top = v; css.right = v; css.bottom = v; css.left = v }])
+rule('inset-x', [isInset, (css, v) => { css.left = v; css.right = v }])
+rule('inset-y', [isInset, (css, v) => { css.top = v; css.bottom = v }])
+rule('top', [isInset, (css, v) => css.top = v])
+rule('right', [isInset, (css, v) => css.right = v])
+rule('bottom', [isInset, (css, v) => css.bottom = v])
+rule('left', [isInset, (css, v) => css.left = v])
+rule('visible', [empty, (css) => css.visibility = 'visible'])
+rule('invisible', [empty, (css) => css.visibility = 'hidden'])
+rule('z', [either(isAuto, isN(0, 10, 20, 30, 40, 50)), (css, v) => css.zIndex = v])
+rule('basis', [either(isAuto, isSize, isRatio), (css, v) => css.flexBasis = v])
+rule('grow', [isOf({ '': 1, '0': 0 }), (css, v) => css.flexGrow = v])
+rule('shrink', [isOf({ '': 1, '0': 0 }), (css, v) => css.flexShrink = v])
+rule('order', [either(isBetween(1, 12), isOf({ first: -9999, last: 9999, none: 0 })), (css, v) => css.order = v])
+rule('grid-cols', [either(isNone, isBetweenOf(1, 12, n => `repeat(${n}, minmax(0, 1fr))`)), (css, v) => css.gridTemplateColumns = v])
+rule('col-auto', [empty, (css) => css.gridColumn = 'auto'])
+rule('col-span', [either(isBetweenOf(1, 12, n => `span ${n} / span ${n}`), isOf({ full: '1 / -1' })), (css, v) => css.gridColumn = v])
+rule('col-start', [either(isAuto, isBetween(1, 13)), (css, v) => css.gridColumnStart = v])
+rule('p', [isSize, (css, v) => css.padding = v])
+rule('px', [isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }])
+rule('py', [isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }])
+rule('pt', [isSize, (css, v) => css.paddingTop = v])
+rule('pr', [isSize, (css, v) => css.paddingRight = v])
+rule('pb', [isSize, (css, v) => css.paddingBottom = v])
+rule('pl', [isSize, (css, v) => css.paddingLeft = v])
+rule('m', [isAutoOrSize, (css, v) => css.margin = v])
+rule('mx', [isAutoOrSize, (css, v) => { css.marginLeft = v; css.marginRight = v }])
+rule('my', [isAutoOrSize, (css, v) => { css.marginTop = v; css.marginBottom = v }])
+rule('mt', [isAutoOrSize, (css, v) => css.marginTop = v])
+rule('mr', [isAutoOrSize, (css, v) => css.marginRight = v])
+rule('mb', [isAutoOrSize, (css, v) => css.marginBottom = v])
+rule('ml', [isAutoOrSize, (css, v) => css.marginLeft = v])
+rule('w', [either(matchSize, map1('screen', '100vw')), (css, v) => css.width = v])
+rule('min-w', [either(map1('0', 0), isOf(miscSizings)), (css, v) => css.minWidth = v])
+rule('max-w', [either(isOf(maxW), isOf(miscSizings)), (css, v) => css.maxWidth = v])
+rule('h', [either(matchSize, map1('screen', '100vh')), (css, v) => css.height = v])
+rule('min-h', [either(map1('0', 0), isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.minHeight = v])
+rule('max-h', [either(matchSize, isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.maxHeight = v])
+rule('text',
+  [isIn('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
+  [isColor, (css, v) => css.color = v],
+  [isIn('ellipsis', 'clip'), (css, v) => css.textOverflow = v],
+)
+rule('underline', [empty, (css) => css.textDecorationLine = 'underline'])
+rule('overline', [empty, (css) => css.textDecorationLine = 'overline'])
+rule('line-through', [empty, (css) => css.textDecorationLine = 'line-through'])
+rule('no-underline', [empty, (css) => css.textDecorationLine = 'none'])
+rule('decoration',
+  [isColor, (css, v) => css.textDecorationColor = v],
+  [isIn('solid', 'double', 'dotted', 'dashed', 'wavy'), (css, v) => css.textDecorationStyle = v],
+  [either(isAuto, isEq('from-font'), is01248), (css, v) => css.textDecorationThickness = v]
+)
+rule('underline-offset', [either(isAuto, is01248), (css, v) => css.textUnderlineOffset = v])
+rule('uppercase', [empty, (css) => css.textTransform = 'uppercase'])
+rule('lowercase', [empty, (css) => css.textTransform = 'lowercase'])
+rule('capitalize', [empty, (css) => css.textTransform = 'capitalize'])
+rule('normal-case', [empty, (css) => css.textTransform = 'none'])
+rule('truncate', [empty, (css) => { css.overflow = 'hidden'; css.textOverflow = 'ellipsis'; css.whiteSpace = 'nowrap' }])
+rule('indent', [isSize, (css, v) => css.textIndent = v])
+rule('align', [isIn('baseline', 'top', 'middle', 'bottom', 'text-top', 'text-bottom', 'sub', 'super'), (css, v) => css.verticalAlign = v])
+rule('whitespace', [isIn('normal', 'nowrap', 'pre', 'pre-line', 'pre-wrap'), (css, v) => css.whiteSpace = v])
+rule('bg',
+  [isColor, (css, v) => css.backgroundColor = v],
+  [isEq('no-repeat'), (css, v) => css.backgroundRepeat = v],
+  [isIn('fixed', 'local', 'scroll'), (css, v) => css.backgroundAttachment = v],
+  [isObjectPosition, (css, v) => css.backgroundPosition = v],
+  [isIn('auto', 'cover', 'contain'), (css, v) => css.backgroundSize = v],
+)
+rule('bg-repeat', [isOf({
+  '': 'repeat',
+  'x': 'repeat-x',
+  'y': 'repeat-y',
+  'round': 'round',
+  'space': 'space',
+}), (css, v) => css.backgroundRepeat = v])
+rule('bg-clip', [isOf({
+  'border': 'border-box',
+  'padding': 'padding-box',
+  'content': 'content-box',
+  'text': 'text',
+}), (css, v) => css.backgroundClip = v])
+rule('bg-origin', [isOf({
+  'border': 'border-box',
+  'padding': 'padding-box',
+  'content': 'content-box',
+}), (css, v) => css.backgroundOrigin = v])
+rule('border',
+  [is0248, (css, v) => css.borderWidth = v],
+  [isIn('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), (css, v) => css.borderStyle = v],
+  [isColor, (css, v) => css.borderColor = v],
+)
+rule('border-x',
+  [is0248, (css, v) => { css.borderLeftWidth = v; css.borderRightWidth = v }],
+  [isColor, (css, v) => { css.borderLeftColor = v; css.borderRightColor = v }],
+)
+rule('border-y',
+  [is0248, (css, v) => { css.borderTopWidth = v; css.borderBottomWidth = v }],
+  [isColor, (css, v) => { css.borderTopColor = v; css.borderBottomColor = v }],
+)
+rule('border-t',
+  [is0248, (css, v) => css.borderTopWidth = v],
+  [isColor, (css, v) => css.borderTopColor = v],
+)
+rule('border-r',
+  [is0248, (css, v) => css.borderRightWidth = v],
+  [isColor, (css, v) => css.borderRightColor = v],
+)
+rule('border-b',
+  [is0248, (css, v) => css.borderBottomWidth = v],
+  [isColor, (css, v) => css.borderBottomColor = v],
+)
+rule('border-l',
+  [is0248, (css, v) => css.borderLeftWidth = v],
+  [isColor, (css, v) => css.borderLeftColor = v],
+)
+rule('rounded', [isCorner, (css, v) => css.borderRadius = v])
+rule('rounded-t', [isCorner, (css, v) => { css.borderTopLeftRadius = v; css.borderTopRightRadius = v }])
+rule('rounded-r', [isCorner, (css, v) => { css.borderTopRightRadius = v; css.borderBottomRightRadius = v }])
+rule('rounded-b', [isCorner, (css, v) => { css.borderBottomLeftRadius = v; css.borderBottomRightRadius = v }])
+rule('rounded-l', [isCorner, (css, v) => { css.borderTopLeftRadius = v; css.borderBottomLeftRadius = v }])
+rule('rounded-tr', [isCorner, (css, v) => css.borderTopRightRadius = v])
+rule('rounded-tl', [isCorner, (css, v) => css.borderTopLeftRadius = v])
+rule('rounded-br', [isCorner, (css, v) => css.borderBottomRightRadius = v])
+rule('rounded-bl', [isCorner, (css, v) => css.borderBottomLeftRadius = v])
 
-const handlers: Dict<Handler[]> = {
-  aspect: [[isOf({ 'auto': 'auto', 'square': '1 / 1', 'video': '16 / 9' }), (css, v) => css.aspectRatio = v]],
-  columns: [[either(isBetween(1, 12), isAuto, isColumnSize), (css, v) => css.columns = v]],
-  'break-after': [[isBreakAfter, (css, v) => css.breakAfter = v]],
-  'break-before': [[isBreakAfter, (css, v) => css.breakBefore = v]],
-  'break-inside': [[isBreakInside, (css, v) => css.breakInside = v]],
-  'box-decoration': [[isIn('clone', 'slice'), (css, v) => css.boxDecorationBreak = v]],
-  box: [[isOf({ 'border': 'border-box', 'content': 'content-box' }), (css, v) => css.boxSizing = v]],
-  block: [[empty, (css, v) => css.display = 'block']],
-  'inline-block': [[empty, (css, v) => css.display = 'inline-block']],
-  inline: [[empty, (css, v) => css.display = 'inline']],
-  flex: [
-    [empty, (css, v) => css.display = 'flex'],
-    [either(isIn('row', 'row-reverse'), isOf({ 'col': 'column', 'col-reverse': 'column-reverse' })), (css, v) => css.flexDirection = v],
-    [isIn('wrap', 'wrap-reverse', 'nowrap', ''), (css, v) => css.flexWrap = v],
-    [isOf({ '1': '1 1 0%', 'auto': '1 1 auto', 'initial': '0 1 auto', 'none': 'none' }), (css, v) => css.flex = v]
-  ],
-  'inline-flex': [[empty, (css, v) => css.display = 'inline-flex']],
-  table: [[isOf({
-    '': 'table',
-    caption: 'table-caption',
-    cell: 'table-cell',
-    column: 'table-column',
-    'column-group': 'table-column-group',
-    'footer-group': 'table-footer-group',
-    'header-group': 'table-header-group',
-    'row-group': 'table-row-group',
-    row: 'table-row',
-  }), (css, v) => css.display = v]],
-  'inline-table': [[empty, (css, v) => css.display = 'inline-table']],
-  'flow-root': [[empty, (css, v) => css.display = 'flow-root']],
-  grid: [[empty, (css, v) => css.display = 'grid']],
-  'inline-grid': [[empty, (css, v) => css.display = 'inline-grid']],
-  contents: [[empty, (css, v) => css.display = 'contents']],
-  'list-item': [[empty, (css, v) => css.display = 'list-item']],
-  hidden: [[empty, (css, v) => css.display = 'none']],
-  float: [[isIn('right', 'left', 'none'), (css, v) => css.float = v]],
-  clear: [[isIn('left', 'right', 'both', 'none'), (css, v) => css.clear = v]],
-  isolate: [[empty, css => css.isolation = 'isolate']],
-  'isolation-auto': [[empty, css => css.isolation = 'auto']],
-  object: [
-    [isObjectFit, (css, v) => css.objectFit = v],
-    [isObjectPosition, (css, v) => css.objectPosition = v],
-  ],
-  overflow: [[isOverflow, (css, v) => css.overflow = v]],
-  'overflow-x': [[isOverflow, (css, v) => css.overflowX = v]],
-  'overflow-y': [[isOverflow, (css, v) => css.overflowY = v]],
-  overscroll: [[isOverscroll, (css, v) => css.overscrollBehavior = v]],
-  'overscroll-x': [[isOverscroll, (css, v) => css.overscrollBehaviorX = v]],
-  'overscroll-y': [[isOverscroll, (css, v) => css.overscrollBehaviorY = v]],
-  static: [[empty, (css, v) => css.position = 'static']],
-  fixed: [[empty, (css, v) => css.position = 'fixed']],
-  absolute: [[empty, (css, v) => css.position = 'absolute']],
-  relative: [[empty, (css, v) => css.position = 'relative']],
-  sticky: [[empty, (css, v) => css.position = 'sticky']],
-  inset: [[isInset, (css, v) => { css.top = v; css.right = v; css.bottom = v; css.left = v }]],
-  'inset-x': [[isInset, (css, v) => { css.left = v; css.right = v }]],
-  'inset-y': [[isInset, (css, v) => { css.top = v; css.bottom = v }]],
-  top: [[isInset, (css, v) => css.top = v]],
-  right: [[isInset, (css, v) => css.right = v]],
-  bottom: [[isInset, (css, v) => css.bottom = v]],
-  left: [[isInset, (css, v) => css.left = v]],
-  visible: [[empty, (css) => css.visibility = 'visible']],
-  invisible: [[empty, (css) => css.visibility = 'hidden']],
-  z: [[either(isAuto, isN(0, 10, 20, 30, 40, 50)), (css, v) => css.zIndex = v]],
-  basis: [[either(isAuto, isSize, isRatio), (css, v) => css.flexBasis = v]],
-  grow: [[isOf({ '': 1, '0': 0 }), (css, v) => css.flexGrow = v]],
-  shrink: [[isOf({ '': 1, '0': 0 }), (css, v) => css.flexShrink = v]],
-  order: [[either(isBetween(1, 12), isOf({ first: -9999, last: 9999, none: 0 })), (css, v) => css.order = v]],
-  'grid-cols': [[either(isNone, isBetweenOf(1, 12, n => `repeat(${n}, minmax(0, 1fr))`)), (css, v) => css.gridTemplateColumns = v]],
-  'col-auto': [[empty, (css) => css.gridColumn = 'auto']],
-  'col-span': [[either(isBetweenOf(1, 12, n => `span ${n} / span ${n}`), isOf({ full: '1 / -1' })), (css, v) => css.gridColumn = v]],
-  'col-start': [[either(isAuto, isBetween(1, 13)), (css, v) => css.gridColumnStart = v]],
-  p: [[isSize, (css, v) => css.padding = v]],
-  px: [[isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
-  py: [[isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }]],
-  pt: [[isSize, (css, v) => css.paddingTop = v]],
-  pr: [[isSize, (css, v) => css.paddingRight = v]],
-  pb: [[isSize, (css, v) => css.paddingBottom = v]],
-  pl: [[isSize, (css, v) => css.paddingLeft = v]],
-  m: [[isAutoOrSize, (css, v) => css.margin = v]],
-  mx: [[isAutoOrSize, (css, v) => { css.marginLeft = v; css.marginRight = v }]],
-  my: [[isAutoOrSize, (css, v) => { css.marginTop = v; css.marginBottom = v }]],
-  mt: [[isAutoOrSize, (css, v) => css.marginTop = v]],
-  mr: [[isAutoOrSize, (css, v) => css.marginRight = v]],
-  mb: [[isAutoOrSize, (css, v) => css.marginBottom = v]],
-  ml: [[isAutoOrSize, (css, v) => css.marginLeft = v]],
-  w: [[either(matchSize, map1('screen', '100vw')), (css, v) => css.width = v]],
-  'min-w': [[either(map1('0', 0), isOf(miscSizings)), (css, v) => css.minWidth = v]],
-  'max-w': [[either(isOf(maxW), isOf(miscSizings)), (css, v) => css.maxWidth = v]],
-  h: [[either(matchSize, map1('screen', '100vh')), (css, v) => css.height = v]],
-  'min-h': [[either(map1('0', 0), isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.minHeight = v]],
-  'max-h': [[either(matchSize, isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.maxHeight = v]],
-  text: [
-    [isIn('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
-    [isColor, (css, v) => css.color = v],
-    [isIn('ellipsis', 'clip'), (css, v) => css.textOverflow = v],
-  ],
-  underline: [[empty, (css) => css.textDecorationLine = 'underline']],
-  overline: [[empty, (css) => css.textDecorationLine = 'overline']],
-  'line-through': [[empty, (css) => css.textDecorationLine = 'line-through']],
-  'no-underline': [[empty, (css) => css.textDecorationLine = 'none']],
-  decoration: [
-    [isColor, (css, v) => css.textDecorationColor = v],
-    [isIn('solid', 'double', 'dotted', 'dashed', 'wavy'), (css, v) => css.textDecorationStyle = v],
-    [either(isAuto, isEq('from-font'), is01248), (css, v) => css.textDecorationThickness = v]
-  ],
-  'underline-offset': [[either(isAuto, is01248), (css, v) => css.textUnderlineOffset = v]],
-  uppercase: [[empty, (css) => css.textTransform = 'uppercase']],
-  lowercase: [[empty, (css) => css.textTransform = 'lowercase']],
-  capitalize: [[empty, (css) => css.textTransform = 'capitalize']],
-  'normal-case': [[empty, (css) => css.textTransform = 'none']],
-  truncate: [[empty, (css) => { css.overflow = 'hidden'; css.textOverflow = 'ellipsis'; css.whiteSpace = 'nowrap' }]],
-  indent: [[isSize, (css, v) => css.textIndent = v]],
-  align: [[isIn('baseline', 'top', 'middle', 'bottom', 'text-top', 'text-bottom', 'sub', 'super'), (css, v) => css.verticalAlign = v]],
-  whitespace: [[isIn('normal', 'nowrap', 'pre', 'pre-line', 'pre-wrap'), (css, v) => css.whiteSpace = v]],
-  bg: [
-    [isColor, (css, v) => css.backgroundColor = v],
-    [isEq('no-repeat'), (css, v) => css.backgroundRepeat = v],
-    [isIn('fixed', 'local', 'scroll'), (css, v) => css.backgroundAttachment = v],
-    [isObjectPosition, (css, v) => css.backgroundPosition = v],
-    [isIn('auto', 'cover', 'contain'), (css, v) => css.backgroundSize = v],
-  ],
-  'bg-repeat': [[isOf({
-    '': 'repeat',
-    'x': 'repeat-x',
-    'y': 'repeat-y',
-    'round': 'round',
-    'space': 'space',
-  }), (css, v) => css.backgroundRepeat = v]],
-  'bg-clip': [[isOf({
-    'border': 'border-box',
-    'padding': 'padding-box',
-    'content': 'content-box',
-    'text': 'text',
-  }), (css, v) => css.backgroundClip = v]],
-  'bg-origin': [[isOf({
-    'border': 'border-box',
-    'padding': 'padding-box',
-    'content': 'content-box',
-  }), (css, v) => css.backgroundOrigin = v]],
-  border: [
-    [is0248, (css, v) => css.borderWidth = v],
-    [isIn('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), (css, v) => css.borderStyle = v],
-    [isColor, (css, v) => css.borderColor = v],
-  ],
-  'border-x': [
-    [is0248, (css, v) => { css.borderLeftWidth = v; css.borderRightWidth = v }],
-    [isColor, (css, v) => { css.borderLeftColor = v; css.borderRightColor = v }],
-  ],
-  'border-y': [
-    [is0248, (css, v) => { css.borderTopWidth = v; css.borderBottomWidth = v }],
-    [isColor, (css, v) => { css.borderTopColor = v; css.borderBottomColor = v }],
-  ],
-  'border-t': [
-    [is0248, (css, v) => css.borderTopWidth = v],
-    [isColor, (css, v) => css.borderTopColor = v],
-  ],
-  'border-r': [
-    [is0248, (css, v) => css.borderRightWidth = v],
-    [isColor, (css, v) => css.borderRightColor = v],
-  ],
-  'border-b': [
-    [is0248, (css, v) => css.borderBottomWidth = v],
-    [isColor, (css, v) => css.borderBottomColor = v],
-  ],
-  'border-l': [
-    [is0248, (css, v) => css.borderLeftWidth = v],
-    [isColor, (css, v) => css.borderLeftColor = v],
-  ],
-  rounded: [[isCorner, (css, v) => css.borderRadius = v]],
-  'rounded-t': [[isCorner, (css, v) => { css.borderTopLeftRadius = v; css.borderTopRightRadius = v }]],
-  'rounded-r': [[isCorner, (css, v) => { css.borderTopRightRadius = v; css.borderBottomRightRadius = v }]],
-  'rounded-b': [[isCorner, (css, v) => { css.borderBottomLeftRadius = v; css.borderBottomRightRadius = v }]],
-  'rounded-l': [[isCorner, (css, v) => { css.borderTopLeftRadius = v; css.borderBottomLeftRadius = v }]],
-  'rounded-tr': [[isCorner, (css, v) => css.borderTopRightRadius = v]],
-  'rounded-tl': [[isCorner, (css, v) => css.borderTopLeftRadius = v]],
-  'rounded-br': [[isCorner, (css, v) => css.borderBottomRightRadius = v]],
-  'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
+rule('outline',
+  [isOf({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineWidth = v],
+  [isColor, (css, v) => css.outlineColor = v],
+  [isNone, (css) => { css.outline = '2px solid transparent'; css.outlineOffset = 2 }],
+  [isEq(''), (css) => css.outlineStyle = 'solid'],
+  [isIn('dashed', 'dotted', 'double', 'hidden'), (css, v) => css.outlineStyle = v],
+)
+rule('outline-offset', [isOf({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineOffset = v])
+rule('shadow', [isOf(boxShadows), (css, v) => css.boxShadow = v])
+rule('opacity', [isOpacity, (css, v) => css.opacity = v])
 
-  outline: [
-    [isOf({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineWidth = v],
-    [isColor, (css, v) => css.outlineColor = v],
-    [isNone, (css) => { css.outline = '2px solid transparent'; css.outlineOffset = 2 }],
-    [isEq(''), (css) => css.outlineStyle = 'solid'],
-    [isIn('dashed', 'dotted', 'double', 'hidden'), (css, v) => css.outlineStyle = v],
-  ],
-  'outline-offset': [[isOf({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineOffset = v]],
-  shadow: [[isOf(boxShadows), (css, v) => css.boxShadow = v]],
-  opacity: [[isOpacity, (css, v) => css.opacity = v]],
+rule('mix-blend', [isBlendMode, (css, v) => css.mixBlendMode = v])
+rule('bg-blend', [isBlendMode, (css, v) => css.backgroundBlendMode = v])
 
-  'mix-blend': [[isBlendMode, (css, v) => css.mixBlendMode = v]],
-  'bg-blend': [[isBlendMode, (css, v) => css.backgroundBlendMode = v]],
+rule('blur', [isBlur, filter('blur')])
+rule('brightness', [isBrightness, filter('brightness')])
+rule('contrast', [isContrast, filter('contrast')])
+rule('drop-shadow', [isOf({
+  'sm': 'drop-shadow(0 1px 1px rgb(0 0 0 / 0.05))',
+  '': 'drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))',
+  'md': 'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
+  'lg': 'drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))',
+  'xl': 'drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08))',
+  '2xl': 'drop-shadow(0 25px 25px rgb(0 0 0 / 0.15))',
+  'none': 'drop-shadow(0 0 #0000)',
+}), (css, v) => css.filter = v])
+rule('grayscale', [isGrayscale, filter('grayscale')])
+rule('hue-rotate', [isHueRotate, filter('hue-rotate')])
+rule('invert', [isInvert, filter('invert')])
+rule('saturate', [isSaturate, filter('saturate')])
+rule('sepia', [isSepia, filter('sepia')])
 
-  'blur': [[isBlur, filter('blur')]],
-  'brightness': [[isBrightness, filter('brightness')]],
-  'contrast': [[isContrast, filter('contrast')]],
-  'drop-shadow': [[isOf({
-    'sm': 'drop-shadow(0 1px 1px rgb(0 0 0 / 0.05))',
-    '': 'drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))',
-    'md': 'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
-    'lg': 'drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1))',
-    'xl': 'drop-shadow(0 20px 13px rgb(0 0 0 / 0.03)) drop-shadow(0 8px 5px rgb(0 0 0 / 0.08))',
-    '2xl': 'drop-shadow(0 25px 25px rgb(0 0 0 / 0.15))',
-    'none': 'drop-shadow(0 0 #0000)',
-  }), (css, v) => css.filter = v]],
-  'grayscale': [[isGrayscale, filter('grayscale')]],
-  'hue-rotate': [[isHueRotate, filter('hue-rotate')]],
-  'invert': [[isInvert, filter('invert')]],
-  'saturate': [[isSaturate, filter('saturate')]],
-  'sepia': [[isSepia, filter('sepia')]],
+rule('backdrop-blur', [isBlur, backdropFilter('blur')])
+rule('backdrop-brightness', [isBrightness, backdropFilter('brightness')])
+rule('backdrop-contrast', [isContrast, backdropFilter('contrast')])
+rule('backdrop-grayscale', [isGrayscale, backdropFilter('grayscale')])
+rule('backdrop-hue-rotate', [isHueRotate, backdropFilter('hue-rotate')])
+rule('backdrop-invert', [isInvert, backdropFilter('invert')])
+rule('backdrop-opacity', [isOpacity, backdropFilter('opacity')])
+rule('backdrop-saturate', [isSaturate, backdropFilter('saturate')])
+rule('backdrop-sepia', [isSepia, backdropFilter('sepia')])
 
-  'backdrop-blur': [[isBlur, backdropFilter('blur')]],
-  'backdrop-brightness': [[isBrightness, backdropFilter('brightness')]],
-  'backdrop-contrast': [[isContrast, backdropFilter('contrast')]],
-  'backdrop-grayscale': [[isGrayscale, backdropFilter('grayscale')]],
-  'backdrop-hue-rotate': [[isHueRotate, backdropFilter('hue-rotate')]],
-  'backdrop-invert': [[isInvert, backdropFilter('invert')]],
-  'backdrop-opacity': [[isOpacity, backdropFilter('opacity')]],
-  'backdrop-saturate': [[isSaturate, backdropFilter('saturate')]],
-  'backdrop-sepia': [[isSepia, backdropFilter('sepia')]],
+rule('duration', [isDuration, (css, v) => css.transitionDuration = v + 'ms'])
+rule('transition',
+  [isNone, (css, s) => css.transitionProperty = s],
+  [either(isIn('all', 'opacity', 'transform'), isOf({
+    '': 'color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter',
+    'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
+    'shadow': 'box-shadow',
+  })), (css, s) => {
+    css.transitionProperty = s;
+    css.transitionTimingFunction = easeInOut;
+    css.transitionDuration = '150ms';
+  }],
+)
+rule('ease', [isOf({
+  'linear': 'linear',
+  'in': 'cubic-bezier(0.4, 0, 1, 1)',
+  'out': 'cubic-bezier(0, 0, 0.2, 1)',
+  'in-out': easeInOut,
+}), (css, v) => css.transitionTimingFunction = v])
+rule('delay', [isDuration, (css, v) => css.transitionDelay = v + 'ms'])
+rule('animate', [isOf({
+  'none': 'none',
+  'spin': 'spin 1s linear infinite',
+  'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
+  'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+  'bounce': 'bounce 1s infinite',
+}), (css, v) => css.animation = v])
+rule('scale', [isOf(scaleTransforms), transform('scale')])
+rule('scale-x', [isOf(scaleTransforms), transform('scaleX')])
+rule('scale-y', [isOf(scaleTransforms), transform('scaleY')])
+rule('rotate', [isIn('0', '1', '2', '3', '6', '12', '45', '90', '180'), transformDeg('rotate')])
+rule('translate-x',
+  [isSize, transformPx('translateX')],
+  [isRatioSubset, transform('translateX')],
+)
+rule('translate-y',
+  [isSize, transformPx('translateY')],
+  [isRatioSubset, transform('translateY')],
+)
+rule('skew-x', [isIn('0', '1', '2', '3', '6', '12'), transformDeg('skewX')])
+rule('skew-y', [isIn('0', '1', '2', '3', '6', '12'), transformDeg('skewY')])
+rule('origin', [isOf({
+  'center': 'center',
+  'top': 'top',
+  'top-right': 'top right',
+  'right': 'right',
+  'bottom-right': 'bottom right',
+  'bottom': 'bottom',
+  'bottom-left': 'bottom left',
+  'left': 'left',
+  'top-left': 'top left',
+}), (css, v) => css.transformOrigin = v])
+rule('accent', [either(isColor, isEq('auto')), (css, v) => css.accentColor = v])
+rule('appearance', [isNone, (css, v) => css.appearance = v])
+rule('cursor', [isIn(...cursors), (css, v) => css.cursor = v])
+rule('caret', [isColor, (css, v) => css.caretColor = v])
+rule('pointer-events', [isIn('none', 'auto'), (css, v) => css.pointerEvents = v])
+rule('resize', [isOf({ none: 'none', x: 'horizontal', y: 'vertical', '': 'both' }), (css, v) => css.resize = v])
+rule('scroll', [isIn('auto', 'smooth'), (css, v) => css.scrollBehavior = v])
+rule('scroll-m', [isSize, (css, v) => css.scrollMargin = v])
+rule('scroll-mx', [isSize, (css, v) => { css.scrollMarginLeft = v; css.scrollMarginRight = v }])
+rule('scroll-my', [isSize, (css, v) => { css.scrollMarginTop = v; css.scrollMarginBottom = v }])
+rule('scroll-mt', [isSize, (css, v) => css.scrollMarginTop = v])
+rule('scroll-mr', [isSize, (css, v) => css.scrollMarginRight = v])
+rule('scroll-mb', [isSize, (css, v) => css.scrollMarginBottom = v])
+rule('scroll-ml', [isSize, (css, v) => css.scrollMarginLeft = v])
+rule('scroll-p', [isSize, (css, v) => css.scrollPadding = v])
+rule('scroll-px', [isSize, (css, v) => { css.scrollPaddingLeft = v; css.scrollPaddingRight = v }])
+rule('scroll-py', [isSize, (css, v) => { css.scrollPaddingTop = v; css.scrollPaddingBottom = v }])
+rule('scroll-pt', [isSize, (css, v) => css.scrollPaddingTop = v])
+rule('scroll-pr', [isSize, (css, v) => css.scrollPaddingRight = v])
+rule('scroll-pb', [isSize, (css, v) => css.scrollPaddingBottom = v])
+rule('scroll-pl', [isSize, (css, v) => css.scrollPaddingLeft = v])
+rule('snap',
+  [isNone, (css, v) => css.scrollSnapType = v],
+  [isOf({
+    start: 'start',
+    end: 'end',
+    center: 'center',
+    'align-none': 'none',
+  }), (css, v) => css.scrollSnapAlign = v],
+  [isIn('normal', 'always'), (css, v) => css.scrollSnapStop = v]
+)
+rule('touch', [isIn('auto', 'none', 'pan-x', 'pan-left', 'pan-right', 'pan-y', 'pan-up', 'pan-down', 'pinch-zoom', 'manipulation'), (css, v) => css.touchAction = v])
+rule('select', [isIn('none', 'text', 'all', 'auto'), (css, v) => css.userSelect = v])
+rule('will-change', [isOf(willChangeMap), (css, v) => css.willChange = v])
 
-  duration: [[isDuration, (css, v) => css.transitionDuration = v + 'ms']],
-  transition: [
-    [isNone, (css, s) => css.transitionProperty = s],
-    [either(isIn('all', 'opacity', 'transform'), isOf({
-      '': 'color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter',
-      'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
-      'shadow': 'box-shadow',
-    })), (css, s) => {
-      css.transitionProperty = s;
-      css.transitionTimingFunction = easeInOut;
-      css.transitionDuration = '150ms';
-    }],
-  ],
-  ease: [[isOf({
-    'linear': 'linear',
-    'in': 'cubic-bezier(0.4, 0, 1, 1)',
-    'out': 'cubic-bezier(0, 0, 0.2, 1)',
-    'in-out': easeInOut,
-  }), (css, v) => css.transitionTimingFunction = v]],
-  delay: [[isDuration, (css, v) => css.transitionDelay = v + 'ms']],
-  animate: [[isOf({
-    'none': 'none',
-    'spin': 'spin 1s linear infinite',
-    'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
-    'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-    'bounce': 'bounce 1s infinite',
-  }), (css, v) => css.animation = v]],
-  'scale': [[isOf(scaleTransforms), transform('scale')]],
-  'scale-x': [[isOf(scaleTransforms), transform('scaleX')]],
-  'scale-y': [[isOf(scaleTransforms), transform('scaleY')]],
-  'rotate': [[isIn('0', '1', '2', '3', '6', '12', '45', '90', '180'), transformDeg('rotate')]],
-  'translate-x': [
-    [isSize, transformPx('translateX')],
-    [isRatioSubset, transform('translateX')],
-  ],
-  'translate-y': [
-    [isSize, transformPx('translateY')],
-    [isRatioSubset, transform('translateY')],
-  ],
-  'skew-x': [[isIn('0', '1', '2', '3', '6', '12'), transformDeg('skewX')]],
-  'skew-y': [[isIn('0', '1', '2', '3', '6', '12'), transformDeg('skewY')]],
-  origin: [[isOf({
-    'center': 'center',
-    'top': 'top',
-    'top-right': 'top right',
-    'right': 'right',
-    'bottom-right': 'bottom right',
-    'bottom': 'bottom',
-    'bottom-left': 'bottom left',
-    'left': 'left',
-    'top-left': 'top left',
-  }), (css, v) => css.transformOrigin = v]],
-  accent: [[either(isColor, isEq('auto')), (css, v) => css.accentColor = v]],
-  appearance: [[isNone, (css, v) => css.appearance = v]],
-  cursor: [[isIn(...cursors), (css, v) => css.cursor = v]],
-  caret: [[isColor, (css, v) => css.caretColor = v]],
-  'pointer-events': [[isIn('none', 'auto'), (css, v) => css.pointerEvents = v]],
-  resize: [[isOf({ none: 'none', x: 'horizontal', y: 'vertical', '': 'both' }), (css, v) => css.resize = v]],
-  scroll: [[isIn('auto', 'smooth'), (css, v) => css.scrollBehavior = v]],
-  'scroll-m': [[isSize, (css, v) => css.scrollMargin = v]],
-  'scroll-mx': [[isSize, (css, v) => { css.scrollMarginLeft = v; css.scrollMarginRight = v }]],
-  'scroll-my': [[isSize, (css, v) => { css.scrollMarginTop = v; css.scrollMarginBottom = v }]],
-  'scroll-mt': [[isSize, (css, v) => css.scrollMarginTop = v]],
-  'scroll-mr': [[isSize, (css, v) => css.scrollMarginRight = v]],
-  'scroll-mb': [[isSize, (css, v) => css.scrollMarginBottom = v]],
-  'scroll-ml': [[isSize, (css, v) => css.scrollMarginLeft = v]],
-  'scroll-p': [[isSize, (css, v) => css.scrollPadding = v]],
-  'scroll-px': [[isSize, (css, v) => { css.scrollPaddingLeft = v; css.scrollPaddingRight = v }]],
-  'scroll-py': [[isSize, (css, v) => { css.scrollPaddingTop = v; css.scrollPaddingBottom = v }]],
-  'scroll-pt': [[isSize, (css, v) => css.scrollPaddingTop = v]],
-  'scroll-pr': [[isSize, (css, v) => css.scrollPaddingRight = v]],
-  'scroll-pb': [[isSize, (css, v) => css.scrollPaddingBottom = v]],
-  'scroll-pl': [[isSize, (css, v) => css.scrollPaddingLeft = v]],
-  snap: [
-    [isNone, (css, v) => css.scrollSnapType = v],
-    [isOf({
-      start: 'start',
-      end: 'end',
-      center: 'center',
-      'align-none': 'none',
-    }), (css, v) => css.scrollSnapAlign = v],
-    [isIn('normal', 'always'), (css, v) => css.scrollSnapStop = v]
-  ],
-  touch: [[isIn('auto', 'none', 'pan-x', 'pan-left', 'pan-right', 'pan-y', 'pan-up', 'pan-down', 'pinch-zoom', 'manipulation'), (css, v) => css.touchAction = v]],
-  select: [[isIn('none', 'text', 'all', 'auto'), (css, v) => css.userSelect = v]],
-  'will-change': [[isOf(willChangeMap), (css, v) => css.willChange = v]],
-}
 
 const tryExpand = (css: CSS, handles: Handler[], arg: S): B => {
   if (!handles) return false
@@ -962,10 +963,10 @@ const tryExpand = (css: CSS, handles: Handler[], arg: S): B => {
 }
 
 const expand = (s: S, css: CSS): B => {
-  if (tryExpand(css, handlers[s], '')) return true
+  if (tryExpand(css, rules[s], '')) return true
   let pos = s.indexOf('-')
   while (pos >= 0 && pos < s.length) {
-    const handles = handlers[s.substring(0, pos)]
+    const handles = rules[s.substring(0, pos)]
     if (tryExpand(css, handles, s.substring(pos + 1))) return true
     pos = s.indexOf('-', pos + 1)
   }
