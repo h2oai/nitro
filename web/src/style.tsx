@@ -14,6 +14,7 @@
 
 import React from 'react';
 import { css } from 'styled-components';
+import { isEmptyBindingPattern } from 'typescript';
 import { B, Dict, S, U } from './core';
 
 type CSS = React.CSSProperties
@@ -446,32 +447,33 @@ const willChangeMap: Dict<S> = {
 }
 
 const
-  eq1 = (k: S) => (x: S) => { if (x === k) return x },
-  empty = eq1(''),
+  isEq = (k: S) => (x: S) => { if (x === k) return x },
+  empty = isEq(''),
+  isNone = isEq('none'),
   map1 = (find: S, replace: any) => (x: S) => { if (x === find) return replace },
-  map = (dict: Dict<S | U>) => (x: S) => { if (x in dict) return dict[x] },
-  eq = (...xs: S[]) => {
+  isOf = (dict: Dict<S | U>) => (x: S) => { if (x in dict) return dict[x] },
+  isIn = (...xs: S[]) => {
     const set = new Set(xs)
     return (x: S) => { if (set.has(x)) return x }
   },
-  or = (...matchers: Match[]) => (x: S) => {
+  either = (...matchers: Match[]) => (x: S) => {
     for (const m of matchers) {
       const v = m(x)
       if (v !== undefined) return v
     }
   },
-  is0 = eq1('0'),
-  isAuto = eq1('auto'),
-  isSize = map(sizeScale),
-  isAutoOrSize = or(isAuto, isSize),
-  isRatio = map(ratioPercents),
-  matchSize = or(isSize, isAuto, map(miscSizings), isRatio),
-  isRatioSubset = map(ratioPercentsSubset),
-  isColor = map(colorPalette),
-  is0248 = map({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
-  is01248 = map({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }),
-  isCorner = map(corners),
-  isDuration = eq('75', '100', '150', '200', '300', '500', '700', '1000'),
+  is0 = isEq('0'),
+  isAuto = isEq('auto'),
+  isSize = isOf(sizeScale),
+  isAutoOrSize = either(isAuto, isSize),
+  isRatio = isOf(ratioPercents),
+  matchSize = either(isSize, isAuto, isOf(miscSizings), isRatio),
+  isRatioSubset = isOf(ratioPercentsSubset),
+  isColor = isOf(colorPalette),
+  is0248 = isOf({ '': 1, '0': 0, '2': 2, '4': 4, '8': 8 }),
+  is01248 = isOf({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }),
+  isCorner = isOf(corners),
+  isDuration = isIn('75', '100', '150', '200', '300', '500', '700', '1000'),
   easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)',
   backdropFilter = (f: S) => (css: CSS, v: any) => css.backdropFilter = `${f}(${v})`,
   filter = (f: S) => (css: CSS, v: any) => css.filter = `${f}(${v})`,
@@ -486,7 +488,7 @@ const
   transform = transformU(''),
   transformDeg = transformU('deg'),
   transformPx = transformU('px'),
-  isBlur = map({
+  isBlur = isOf({
     'none': '0',
     'sm': '4px',
     '': '8px',
@@ -496,7 +498,7 @@ const
     '2xl': '40px',
     '3xl': '64px',
   }),
-  isBrightness = map({
+  isBrightness = isOf({
     '0': '0',
     '50': '.5',
     '75': '.75',
@@ -509,7 +511,7 @@ const
     '150': '1.5',
     '200': '2',
   }),
-  isContrast = map({
+  isContrast = isOf({
     '0': '0',
     '50': '.5',
     '75': '.75',
@@ -518,11 +520,11 @@ const
     '150': '1.5',
     '200': '2',
   }),
-  isGrayscale = map({
+  isGrayscale = isOf({
     '0': '0',
     '': '100%',
   }),
-  isHueRotate = map({
+  isHueRotate = isOf({
     '0': '0deg',
     '15': '15deg',
     '30': '30deg',
@@ -530,11 +532,11 @@ const
     '90': '90deg',
     '180': '180deg',
   }),
-  isInvert = map({
+  isInvert = isOf({
     '0': '0',
     '': '100%',
   }),
-  isOpacity = map({
+  isOpacity = isOf({
     '0': 0,
     '5': 0.05,
     '10': 0.1,
@@ -551,18 +553,18 @@ const
     '95': 0.95,
     '100': 1,
   }),
-  isSaturate = map({
+  isSaturate = isOf({
     '0': '0',
     '50': '.5',
     '100': '1',
     '150': '1.5',
     '200': '2',
   }),
-  isSepia = map({
+  isSepia = isOf({
     '0': '0',
     '': '100%',
   }),
-  isBlendMode = eq(
+  isBlendMode = isIn(
     'normal',
     'multiply',
     'screen',
@@ -581,17 +583,28 @@ const
     'luminosity',
     'plus-lighter',
   ),
-  eqN = (...ns: U[]) => {
+  _seq = (m: U, n: U) => {
+    const
+      k = n - m + 1,
+      ns = new Array<U>(k)
+    for (let i = 0; i < k; i++, m++) ns[i] = m
+    return ns
+  },
+  _seq2map = (ns: U[]) => {
     const d: Dict<U> = {}
     for (const n of ns) d['' + n] = n
-    return map(d)
+    return isOf(d)
   },
-  eqNR = (i: U, j: U) => {
-    const d: Dict<U> = {}
-    for (let i = 0; i <= j; i++) d['' + i] = i
-    return map(d)
+  isN = (...ns: U[]) => _seq2map(ns),
+  isBetween = (m: U, n: U) => _seq2map(_seq(m, n)),
+  isBetweenOf = (m: U, n: U, f: (k: U) => S) => {
+    const
+      d: Dict<S> = {},
+      ns = _seq(m, n)
+    for (const n of ns) d['' + n] = f(n)
+    return isOf(d)
   },
-  isColumnSize = map({
+  isColumnSize = isOf({
     '3xs': 256,
     '2xs': 288,
     'xs': 320,
@@ -606,10 +619,10 @@ const
     '6xl': 1152,
     '7xl': 1280,
   }),
-  isBreakAfter = eq('auto', 'avoid', 'all', 'avoid-page', 'page', 'left', 'right', 'column'),
-  isBreakInside = eq('auto', 'avoid', 'avoid-page', 'avoid-column'),
-  isObjectFit = eq('contain', 'cover', 'fill', 'none', 'scale-down'),
-  isObjectPosition = map({
+  isBreakAfter = isIn('auto', 'avoid', 'all', 'avoid-page', 'page', 'left', 'right', 'column'),
+  isBreakInside = isIn('auto', 'avoid', 'avoid-page', 'avoid-column'),
+  isObjectFit = isIn('contain', 'cover', 'fill', 'none', 'scale-down'),
+  isObjectPosition = isOf({
     'bottom': 'bottom',
     'center': 'center',
     'left': 'left',
@@ -620,31 +633,31 @@ const
     'right-top': 'right top',
     'top': 'top',
   }),
-  isOverflow = eq('auto', 'hidden', 'clip', 'visible', 'scroll'),
-  isOverscroll = eq('auto', 'contain', 'none'),
-  isInset = or(isAuto, isSize, isRatioSubset)
+  isOverflow = isIn('auto', 'hidden', 'clip', 'visible', 'scroll'),
+  isOverscroll = isIn('auto', 'contain', 'none'),
+  isInset = either(isAuto, isSize, isRatioSubset)
 
 
 
 const handlers: Dict<Handler[]> = {
-  aspect: [[map({ 'auto': 'auto', 'square': '1 / 1', 'video': '16 / 9' }), (css, v) => css.aspectRatio = v]],
-  columns: [[or(eqNR(1, 12), isAuto, isColumnSize), (css, v) => css.columns = v]],
+  aspect: [[isOf({ 'auto': 'auto', 'square': '1 / 1', 'video': '16 / 9' }), (css, v) => css.aspectRatio = v]],
+  columns: [[either(isBetween(1, 12), isAuto, isColumnSize), (css, v) => css.columns = v]],
   'break-after': [[isBreakAfter, (css, v) => css.breakAfter = v]],
   'break-before': [[isBreakAfter, (css, v) => css.breakBefore = v]],
   'break-inside': [[isBreakInside, (css, v) => css.breakInside = v]],
-  'box-decoration': [[eq('clone', 'slice'), (css, v) => css.boxDecorationBreak = v]],
-  box: [[map({ 'border': 'border-box', 'content': 'content-box' }), (css, v) => css.boxSizing = v]],
+  'box-decoration': [[isIn('clone', 'slice'), (css, v) => css.boxDecorationBreak = v]],
+  box: [[isOf({ 'border': 'border-box', 'content': 'content-box' }), (css, v) => css.boxSizing = v]],
   block: [[empty, (css, v) => css.display = 'block']],
   'inline-block': [[empty, (css, v) => css.display = 'inline-block']],
   inline: [[empty, (css, v) => css.display = 'inline']],
   flex: [
     [empty, (css, v) => css.display = 'flex'],
-    [or(eq('row', 'row-reverse'), map({ 'col': 'column', 'col-reverse': 'column-reverse' })), (css, v) => css.flexDirection = v],
-    [eq('wrap', 'wrap-reverse', 'nowrap', ''), (css, v) => css.flexWrap = v],
-    [map({ '1': '1 1 0%', 'auto': '1 1 auto', 'initial': '0 1 auto', 'none': 'none' }), (css, v) => css.flex = v]
+    [either(isIn('row', 'row-reverse'), isOf({ 'col': 'column', 'col-reverse': 'column-reverse' })), (css, v) => css.flexDirection = v],
+    [isIn('wrap', 'wrap-reverse', 'nowrap', ''), (css, v) => css.flexWrap = v],
+    [isOf({ '1': '1 1 0%', 'auto': '1 1 auto', 'initial': '0 1 auto', 'none': 'none' }), (css, v) => css.flex = v]
   ],
   'inline-flex': [[empty, (css, v) => css.display = 'inline-flex']],
-  table: [[map({
+  table: [[isOf({
     '': 'table',
     caption: 'table-caption',
     cell: 'table-cell',
@@ -662,8 +675,8 @@ const handlers: Dict<Handler[]> = {
   contents: [[empty, (css, v) => css.display = 'contents']],
   'list-item': [[empty, (css, v) => css.display = 'list-item']],
   hidden: [[empty, (css, v) => css.display = 'none']],
-  float: [[eq('right', 'left', 'none'), (css, v) => css.float = v]],
-  clear: [[eq('left', 'right', 'both', 'none'), (css, v) => css.clear = v]],
+  float: [[isIn('right', 'left', 'none'), (css, v) => css.float = v]],
+  clear: [[isIn('left', 'right', 'both', 'none'), (css, v) => css.clear = v]],
   isolate: [[empty, css => css.isolation = 'isolate']],
   'isolation-auto': [[empty, css => css.isolation = 'auto']],
   object: [
@@ -690,11 +703,15 @@ const handlers: Dict<Handler[]> = {
   left: [[isInset, (css, v) => css.left = v]],
   visible: [[empty, (css) => css.visibility = 'visible']],
   invisible: [[empty, (css) => css.visibility = 'hidden']],
-  z: [[or(isAuto, eqN(0, 10, 20, 30, 40, 50)), (css, v) => css.zIndex = v]],
-  basis: [[or(isAuto, isSize, isRatio), (css, v) => css.flexBasis = v]],
-  grow: [[map({ '': 1, '0': 0 }), (css, v) => css.flexGrow = v]],
-  shrink: [[map({ '': 1, '0': 0 }), (css, v) => css.flexShrink = v]],
-  order: [[or(eqNR(1, 12), map({ first: -9999, last: 9999, none: 0 })), (css, v) => css.order = v]],
+  z: [[either(isAuto, isN(0, 10, 20, 30, 40, 50)), (css, v) => css.zIndex = v]],
+  basis: [[either(isAuto, isSize, isRatio), (css, v) => css.flexBasis = v]],
+  grow: [[isOf({ '': 1, '0': 0 }), (css, v) => css.flexGrow = v]],
+  shrink: [[isOf({ '': 1, '0': 0 }), (css, v) => css.flexShrink = v]],
+  order: [[either(isBetween(1, 12), isOf({ first: -9999, last: 9999, none: 0 })), (css, v) => css.order = v]],
+  'grid-cols': [[either(isNone, isBetweenOf(1, 12, n => `repeat(${n}, minmax(0, 1fr))`)), (css, v) => css.gridTemplateColumns = v]],
+  'col-auto': [[empty, (css) => css.gridColumn = 'auto']],
+  'col-span': [[either(isBetweenOf(1, 12, n => `span ${n} / span ${n}`), isOf({ full: '1 / -1' })), (css, v) => css.gridColumn = v]],
+  'col-start': [[either(isAuto, isBetween(1, 13)), (css, v) => css.gridColumnStart = v]],
   p: [[isSize, (css, v) => css.padding = v]],
   px: [[isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
   py: [[isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }]],
@@ -709,16 +726,16 @@ const handlers: Dict<Handler[]> = {
   mr: [[isAutoOrSize, (css, v) => css.marginRight = v]],
   mb: [[isAutoOrSize, (css, v) => css.marginBottom = v]],
   ml: [[isAutoOrSize, (css, v) => css.marginLeft = v]],
-  w: [[or(matchSize, map1('screen', '100vw')), (css, v) => css.width = v]],
-  'min-w': [[or(map1('0', 0), map(miscSizings)), (css, v) => css.minWidth = v]],
-  'max-w': [[or(map(maxW), map(miscSizings)), (css, v) => css.maxWidth = v]],
-  h: [[or(matchSize, map1('screen', '100vh')), (css, v) => css.height = v]],
-  'min-h': [[or(map1('0', 0), map(miscSizings), map1('screen', '100vh')), (css, v) => css.minHeight = v]],
-  'max-h': [[or(matchSize, map(miscSizings), map1('screen', '100vh')), (css, v) => css.maxHeight = v]],
+  w: [[either(matchSize, map1('screen', '100vw')), (css, v) => css.width = v]],
+  'min-w': [[either(map1('0', 0), isOf(miscSizings)), (css, v) => css.minWidth = v]],
+  'max-w': [[either(isOf(maxW), isOf(miscSizings)), (css, v) => css.maxWidth = v]],
+  h: [[either(matchSize, map1('screen', '100vh')), (css, v) => css.height = v]],
+  'min-h': [[either(map1('0', 0), isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.minHeight = v]],
+  'max-h': [[either(matchSize, isOf(miscSizings), map1('screen', '100vh')), (css, v) => css.maxHeight = v]],
   text: [
-    [eq('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
+    [isIn('left', 'center', 'right', 'justify', 'start', 'end'), (css, v) => css.textAlign = v],
     [isColor, (css, v) => css.color = v],
-    [eq('ellipsis', 'clip'), (css, v) => css.textOverflow = v],
+    [isIn('ellipsis', 'clip'), (css, v) => css.textOverflow = v],
   ],
   underline: [[empty, (css) => css.textDecorationLine = 'underline']],
   overline: [[empty, (css) => css.textDecorationLine = 'overline']],
@@ -726,46 +743,46 @@ const handlers: Dict<Handler[]> = {
   'no-underline': [[empty, (css) => css.textDecorationLine = 'none']],
   decoration: [
     [isColor, (css, v) => css.textDecorationColor = v],
-    [eq('solid', 'double', 'dotted', 'dashed', 'wavy'), (css, v) => css.textDecorationStyle = v],
-    [or(isAuto, eq1('from-font'), is01248), (css, v) => css.textDecorationThickness = v]
+    [isIn('solid', 'double', 'dotted', 'dashed', 'wavy'), (css, v) => css.textDecorationStyle = v],
+    [either(isAuto, isEq('from-font'), is01248), (css, v) => css.textDecorationThickness = v]
   ],
-  'underline-offset': [[or(isAuto, is01248), (css, v) => css.textUnderlineOffset = v]],
+  'underline-offset': [[either(isAuto, is01248), (css, v) => css.textUnderlineOffset = v]],
   uppercase: [[empty, (css) => css.textTransform = 'uppercase']],
   lowercase: [[empty, (css) => css.textTransform = 'lowercase']],
   capitalize: [[empty, (css) => css.textTransform = 'capitalize']],
   'normal-case': [[empty, (css) => css.textTransform = 'none']],
   truncate: [[empty, (css) => { css.overflow = 'hidden'; css.textOverflow = 'ellipsis'; css.whiteSpace = 'nowrap' }]],
   indent: [[isSize, (css, v) => css.textIndent = v]],
-  align: [[eq('baseline', 'top', 'middle', 'bottom', 'text-top', 'text-bottom', 'sub', 'super'), (css, v) => css.verticalAlign = v]],
-  whitespace: [[eq('normal', 'nowrap', 'pre', 'pre-line', 'pre-wrap'), (css, v) => css.whiteSpace = v]],
+  align: [[isIn('baseline', 'top', 'middle', 'bottom', 'text-top', 'text-bottom', 'sub', 'super'), (css, v) => css.verticalAlign = v]],
+  whitespace: [[isIn('normal', 'nowrap', 'pre', 'pre-line', 'pre-wrap'), (css, v) => css.whiteSpace = v]],
   bg: [
     [isColor, (css, v) => css.backgroundColor = v],
-    [eq1('no-repeat'), (css, v) => css.backgroundRepeat = v],
-    [eq('fixed', 'local', 'scroll'), (css, v) => css.backgroundAttachment = v],
+    [isEq('no-repeat'), (css, v) => css.backgroundRepeat = v],
+    [isIn('fixed', 'local', 'scroll'), (css, v) => css.backgroundAttachment = v],
     [isObjectPosition, (css, v) => css.backgroundPosition = v],
-    [eq('auto', 'cover', 'contain'), (css, v) => css.backgroundSize = v],
+    [isIn('auto', 'cover', 'contain'), (css, v) => css.backgroundSize = v],
   ],
-  'bg-repeat': [[map({
+  'bg-repeat': [[isOf({
     '': 'repeat',
     'x': 'repeat-x',
     'y': 'repeat-y',
     'round': 'round',
     'space': 'space',
   }), (css, v) => css.backgroundRepeat = v]],
-  'bg-clip': [[map({
+  'bg-clip': [[isOf({
     'border': 'border-box',
     'padding': 'padding-box',
     'content': 'content-box',
     'text': 'text',
   }), (css, v) => css.backgroundClip = v]],
-  'bg-origin': [[map({
+  'bg-origin': [[isOf({
     'border': 'border-box',
     'padding': 'padding-box',
     'content': 'content-box',
   }), (css, v) => css.backgroundOrigin = v]],
   border: [
     [is0248, (css, v) => css.borderWidth = v],
-    [eq('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), (css, v) => css.borderStyle = v],
+    [isIn('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), (css, v) => css.borderStyle = v],
     [isColor, (css, v) => css.borderColor = v],
   ],
   'border-x': [
@@ -803,14 +820,14 @@ const handlers: Dict<Handler[]> = {
   'rounded-bl': [[isCorner, (css, v) => css.borderBottomLeftRadius = v]],
 
   outline: [
-    [map({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineWidth = v],
+    [isOf({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineWidth = v],
     [isColor, (css, v) => css.outlineColor = v],
-    [eq1('none'), (css) => { css.outline = '2px solid transparent'; css.outlineOffset = 2 }],
-    [eq1(''), (css) => css.outlineStyle = 'solid'],
-    [eq('dashed', 'dotted', 'double', 'hidden'), (css, v) => css.outlineStyle = v],
+    [isNone, (css) => { css.outline = '2px solid transparent'; css.outlineOffset = 2 }],
+    [isEq(''), (css) => css.outlineStyle = 'solid'],
+    [isIn('dashed', 'dotted', 'double', 'hidden'), (css, v) => css.outlineStyle = v],
   ],
-  'outline-offset': [[map({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineOffset = v]],
-  shadow: [[map(boxShadows), (css, v) => css.boxShadow = v]],
+  'outline-offset': [[isOf({ '0': 0, '1': 1, '2': 2, '4': 4, '8': 8 }), (css, v) => css.outlineOffset = v]],
+  shadow: [[isOf(boxShadows), (css, v) => css.boxShadow = v]],
   opacity: [[isOpacity, (css, v) => css.opacity = v]],
 
   'mix-blend': [[isBlendMode, (css, v) => css.mixBlendMode = v]],
@@ -819,7 +836,7 @@ const handlers: Dict<Handler[]> = {
   'blur': [[isBlur, filter('blur')]],
   'brightness': [[isBrightness, filter('brightness')]],
   'contrast': [[isContrast, filter('contrast')]],
-  'drop-shadow': [[map({
+  'drop-shadow': [[isOf({
     'sm': 'drop-shadow(0 1px 1px rgb(0 0 0 / 0.05))',
     '': 'drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))',
     'md': 'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
@@ -846,8 +863,8 @@ const handlers: Dict<Handler[]> = {
 
   duration: [[isDuration, (css, v) => css.transitionDuration = v + 'ms']],
   transition: [
-    [eq1('none'), (css, s) => css.transitionProperty = s],
-    [or(eq('all', 'opacity', 'transform'), map({
+    [isNone, (css, s) => css.transitionProperty = s],
+    [either(isIn('all', 'opacity', 'transform'), isOf({
       '': 'color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter',
       'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
       'shadow': 'box-shadow',
@@ -857,24 +874,24 @@ const handlers: Dict<Handler[]> = {
       css.transitionDuration = '150ms';
     }],
   ],
-  ease: [[map({
+  ease: [[isOf({
     'linear': 'linear',
     'in': 'cubic-bezier(0.4, 0, 1, 1)',
     'out': 'cubic-bezier(0, 0, 0.2, 1)',
     'in-out': easeInOut,
   }), (css, v) => css.transitionTimingFunction = v]],
   delay: [[isDuration, (css, v) => css.transitionDelay = v + 'ms']],
-  animate: [[map({
+  animate: [[isOf({
     'none': 'none',
     'spin': 'spin 1s linear infinite',
     'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
     'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
     'bounce': 'bounce 1s infinite',
   }), (css, v) => css.animation = v]],
-  'scale': [[map(scaleTransforms), transform('scale')]],
-  'scale-x': [[map(scaleTransforms), transform('scaleX')]],
-  'scale-y': [[map(scaleTransforms), transform('scaleY')]],
-  'rotate': [[eq('0', '1', '2', '3', '6', '12', '45', '90', '180'), transformDeg('rotate')]],
+  'scale': [[isOf(scaleTransforms), transform('scale')]],
+  'scale-x': [[isOf(scaleTransforms), transform('scaleX')]],
+  'scale-y': [[isOf(scaleTransforms), transform('scaleY')]],
+  'rotate': [[isIn('0', '1', '2', '3', '6', '12', '45', '90', '180'), transformDeg('rotate')]],
   'translate-x': [
     [isSize, transformPx('translateX')],
     [isRatioSubset, transform('translateX')],
@@ -883,9 +900,9 @@ const handlers: Dict<Handler[]> = {
     [isSize, transformPx('translateY')],
     [isRatioSubset, transform('translateY')],
   ],
-  'skew-x': [[eq('0', '1', '2', '3', '6', '12'), transformDeg('skewX')]],
-  'skew-y': [[eq('0', '1', '2', '3', '6', '12'), transformDeg('skewY')]],
-  origin: [[map({
+  'skew-x': [[isIn('0', '1', '2', '3', '6', '12'), transformDeg('skewX')]],
+  'skew-y': [[isIn('0', '1', '2', '3', '6', '12'), transformDeg('skewY')]],
+  origin: [[isOf({
     'center': 'center',
     'top': 'top',
     'top-right': 'top right',
@@ -896,13 +913,13 @@ const handlers: Dict<Handler[]> = {
     'left': 'left',
     'top-left': 'top left',
   }), (css, v) => css.transformOrigin = v]],
-  accent: [[or(isColor, eq1('auto')), (css, v) => css.accentColor = v]],
-  appearance: [[eq1('none'), (css, v) => css.appearance = v]],
-  cursor: [[eq(...cursors), (css, v) => css.cursor = v]],
+  accent: [[either(isColor, isEq('auto')), (css, v) => css.accentColor = v]],
+  appearance: [[isNone, (css, v) => css.appearance = v]],
+  cursor: [[isIn(...cursors), (css, v) => css.cursor = v]],
   caret: [[isColor, (css, v) => css.caretColor = v]],
-  'pointer-events': [[eq('none', 'auto'), (css, v) => css.pointerEvents = v]],
-  resize: [[map({ none: 'none', x: 'horizontal', y: 'vertical', '': 'both' }), (css, v) => css.resize = v]],
-  scroll: [[eq('auto', 'smooth'), (css, v) => css.scrollBehavior = v]],
+  'pointer-events': [[isIn('none', 'auto'), (css, v) => css.pointerEvents = v]],
+  resize: [[isOf({ none: 'none', x: 'horizontal', y: 'vertical', '': 'both' }), (css, v) => css.resize = v]],
+  scroll: [[isIn('auto', 'smooth'), (css, v) => css.scrollBehavior = v]],
   'scroll-m': [[isSize, (css, v) => css.scrollMargin = v]],
   'scroll-mx': [[isSize, (css, v) => { css.scrollMarginLeft = v; css.scrollMarginRight = v }]],
   'scroll-my': [[isSize, (css, v) => { css.scrollMarginTop = v; css.scrollMarginBottom = v }]],
@@ -918,18 +935,18 @@ const handlers: Dict<Handler[]> = {
   'scroll-pb': [[isSize, (css, v) => css.scrollPaddingBottom = v]],
   'scroll-pl': [[isSize, (css, v) => css.scrollPaddingLeft = v]],
   snap: [
-    [eq1('none'), (css, v) => css.scrollSnapType = v],
-    [map({
+    [isNone, (css, v) => css.scrollSnapType = v],
+    [isOf({
       start: 'start',
       end: 'end',
       center: 'center',
       'align-none': 'none',
     }), (css, v) => css.scrollSnapAlign = v],
-    [eq('normal', 'always'), (css, v) => css.scrollSnapStop = v]
+    [isIn('normal', 'always'), (css, v) => css.scrollSnapStop = v]
   ],
-  touch: [[eq('auto', 'none', 'pan-x', 'pan-left', 'pan-right', 'pan-y', 'pan-up', 'pan-down', 'pinch-zoom', 'manipulation'), (css, v) => css.touchAction = v]],
-  select: [[eq('none', 'text', 'all', 'auto'), (css, v) => css.userSelect = v]],
-  'will-change': [[map(willChangeMap), (css, v) => css.willChange = v]],
+  touch: [[isIn('auto', 'none', 'pan-x', 'pan-left', 'pan-right', 'pan-y', 'pan-up', 'pan-down', 'pinch-zoom', 'manipulation'), (css, v) => css.touchAction = v]],
+  select: [[isIn('none', 'text', 'all', 'auto'), (css, v) => css.userSelect = v]],
+  'will-change': [[isOf(willChangeMap), (css, v) => css.willChange = v]],
 }
 
 const tryExpand = (css: CSS, handles: Handler[], arg: S): B => {
