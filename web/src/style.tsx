@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import React from 'react';
+import { css } from 'styled-components';
 import { B, Dict, S, U } from './core';
 
 type CSS = React.CSSProperties
@@ -446,7 +447,7 @@ const willChangeMap: Dict<S> = {
 
 const
   eq1 = (k: S) => (x: S) => { if (x === k) return x },
-  empty = (k: S) => k === '',
+  empty = eq1(''),
   map1 = (find: S, replace: any) => (x: S) => { if (x === find) return replace },
   map = (dict: Dict<S | U>) => (x: S) => { if (x in dict) return dict[x] },
   eq = (...xs: S[]) => {
@@ -459,6 +460,7 @@ const
       if (v !== undefined) return v
     }
   },
+  is0 = eq1('0'),
   isAuto = eq1('auto'),
   isSize = map(sizeScale),
   isAutoOrSize = or(isAuto, isSize),
@@ -635,7 +637,12 @@ const handlers: Dict<Handler[]> = {
   block: [[empty, (css, v) => css.display = 'block']],
   'inline-block': [[empty, (css, v) => css.display = 'inline-block']],
   inline: [[empty, (css, v) => css.display = 'inline']],
-  flex: [[empty, (css, v) => css.display = 'flex']],
+  flex: [
+    [empty, (css, v) => css.display = 'flex'],
+    [or(eq('row', 'row-reverse'), map({ 'col': 'column', 'col-reverse': 'column-reverse' })), (css, v) => css.flexDirection = v],
+    [eq('wrap', 'wrap-reverse', 'nowrap', ''), (css, v) => css.flexWrap = v],
+    [map({ '1': '1 1 0%', 'auto': '1 1 auto', 'initial': '0 1 auto', 'none': 'none' }), (css, v) => css.flex = v]
+  ],
   'inline-flex': [[empty, (css, v) => css.display = 'inline-flex']],
   table: [[map({
     '': 'table',
@@ -685,6 +692,9 @@ const handlers: Dict<Handler[]> = {
   invisible: [[empty, (css) => css.visibility = 'hidden']],
   z: [[or(isAuto, eqN(0, 10, 20, 30, 40, 50)), (css, v) => css.zIndex = v]],
   basis: [[or(isAuto, isSize, isRatio), (css, v) => css.flexBasis = v]],
+  grow: [[map({ '': 1, '0': 0 }), (css, v) => css.flexGrow = v]],
+  shrink: [[map({ '': 1, '0': 0 }), (css, v) => css.flexShrink = v]],
+  order: [[or(eqNR(1, 12), map({ first: -9999, last: 9999, none: 0 })), (css, v) => css.order = v]],
   p: [[isSize, (css, v) => css.padding = v]],
   px: [[isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }]],
   py: [[isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }]],
@@ -922,7 +932,7 @@ const handlers: Dict<Handler[]> = {
   'will-change': [[map(willChangeMap), (css, v) => css.willChange = v]],
 }
 
-const tryApply = (css: CSS, handles: Handler[], arg: S): B => {
+const tryExpand = (css: CSS, handles: Handler[], arg: S): B => {
   if (!handles) return false
   for (const [match, apply] of handles) {
     const v = match(arg)
@@ -934,12 +944,12 @@ const tryApply = (css: CSS, handles: Handler[], arg: S): B => {
   return false
 }
 
-const applyStyle = (css: CSS, s: S): B => {
-  if (tryApply(css, handlers[s], '')) return true
+const expand = (s: S, css: CSS): B => {
+  if (tryExpand(css, handlers[s], '')) return true
   let pos = s.indexOf('-')
   while (pos >= 0 && pos < s.length) {
     const handles = handlers[s.substring(0, pos)]
-    if (tryApply(css, handles, s.substring(pos + 1))) return true
+    if (tryExpand(css, handles, s.substring(pos + 1))) return true
     pos = s.indexOf('-', pos + 1)
   }
   return false
@@ -947,6 +957,6 @@ const applyStyle = (css: CSS, s: S): B => {
 
 export const stylize = (css: CSS, spec: S) => {
   const styles = spec.split(/\s+/g)
-  for (const s of styles) if (!applyStyle(css, s)) console.warn(`Unknown style: "${s}"`)
+  for (const s of styles) if (!expand(s, css)) console.warn(`Unknown style: "${s}"`)
   return css
 }
