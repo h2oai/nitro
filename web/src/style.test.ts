@@ -533,7 +533,7 @@ it('style should match tailwind', () => {
   expect(stylize({}, 'order-10')).toStrictEqual({ order: 10 })
   expect(stylize({}, 'order-11')).toStrictEqual({ order: 11 })
   expect(stylize({}, 'order-12')).toStrictEqual({ order: 12 })
-  expect(stylize({}, 'order-first')).toStrictEqual({ order: '-9999' })
+  expect(stylize({}, 'order-first')).toStrictEqual({ order: -9999 })
   expect(stylize({}, 'order-last')).toStrictEqual({ order: 9999 })
   expect(stylize({}, 'order-none')).toStrictEqual({ order: 0 })
   expect(stylize({}, 'grid-cols-1')).toStrictEqual({ gridTemplateColumns: 'repeat(1, minmax(0, 1fr))' })

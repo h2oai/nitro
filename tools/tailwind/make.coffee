@@ -13,7 +13,7 @@ rgb_to_hex = (bs) ->
 to_rule = (line) ->
   [l, r] = line.split /\s*:\s*/
   r = r.replace /^(\d+)px$/g, '$1'
-  r = "'#{r}'" unless /^(\d+\.\d+|\d+)$/.test r
+  r = "'#{r}'" unless /^[-]?(\d+\.\d+|\d+)$/.test r
   "#{camel_case l}: #{r}"
 
 rem_to_px = (s) -> (16 * parseFloat(s)).toFixed 0
