@@ -648,16 +648,16 @@ rule('break-before', [isBreakAfter, (css, v) => css.breakBefore = v])
 rule('break-inside', [isBreakInside, (css, v) => css.breakInside = v])
 rule('box-decoration', [isIn('clone', 'slice'), (css, v) => css.boxDecorationBreak = v])
 rule('box', [isOf({ 'border': 'border-box', 'content': 'content-box' }), (css, v) => css.boxSizing = v])
-rule('block', [empty, (css, v) => css.display = 'block'])
-rule('inline-block', [empty, (css, v) => css.display = 'inline-block'])
-rule('inline', [empty, (css, v) => css.display = 'inline'])
+rule0('block', css => css.display = 'block')
+rule0('inline-block', css => css.display = 'inline-block')
+rule0('inline', css => css.display = 'inline')
 rule('flex',
   [empty, (css) => css.display = 'flex'],
   [either(isIn('row', 'row-reverse'), isOf({ 'col': 'column', 'col-reverse': 'column-reverse' })), (css, v) => css.flexDirection = v],
   [isIn('wrap', 'wrap-reverse', 'nowrap', ''), (css, v) => css.flexWrap = v],
   [isOf({ '1': '1 1 0%', 'auto': '1 1 auto', 'initial': '0 1 auto', 'none': 'none' }), (css, v) => css.flex = v]
 )
-rule('inline-flex', [empty, (css, v) => css.display = 'inline-flex'])
+rule0('inline-flex', css => css.display = 'inline-flex')
 rule('table', [isOf({
   '': 'table',
   caption: 'table-caption',
@@ -669,18 +669,17 @@ rule('table', [isOf({
   'row-group': 'table-row-group',
   row: 'table-row',
 }), (css, v) => css.display = v])
-// TODO condense rule(x, css.y =x)
-rule('inline-table', [empty, (css, v) => css.display = 'inline-table'])
-rule('flow-root', [empty, (css, v) => css.display = 'flow-root'])
-rule('grid', [empty, (css, v) => css.display = 'grid'])
-rule('inline-grid', [empty, (css, v) => css.display = 'inline-grid'])
-rule('contents', [empty, (css, v) => css.display = 'contents'])
-rule('list-item', [empty, (css, v) => css.display = 'list-item'])
-rule('hidden', [empty, (css, v) => css.display = 'none'])
+rule0('inline-table', css => css.display = 'inline-table')
+rule0('flow-root', css => css.display = 'flow-root')
+rule0('grid', css => css.display = 'grid')
+rule0('inline-grid', css => css.display = 'inline-grid')
+rule0('contents', css => css.display = 'contents')
+rule0('list-item', css => css.display = 'list-item')
+rule0('hidden', css => css.display = 'none')
 rule('float', [isIn('right', 'left', 'none'), (css, v) => css.float = v])
 rule('clear', [isIn('left', 'right', 'both', 'none'), (css, v) => css.clear = v])
-rule('isolate', [empty, css => css.isolation = 'isolate'])
-rule('isolation-auto', [empty, css => css.isolation = 'auto'])
+rule0('isolate', css => css.isolation = 'isolate')
+rule0('isolation-auto', css => css.isolation = 'auto')
 rule('object',
   [isObjectFit, (css, v) => css.objectFit = v],
   [isObjectPosition, (css, v) => css.objectPosition = v],
@@ -691,11 +690,11 @@ rule('overflow-y', [isOverflow, (css, v) => css.overflowY = v])
 rule('overscroll', [isOverscroll, (css, v) => css.overscrollBehavior = v])
 rule('overscroll-x', [isOverscroll, (css, v) => css.overscrollBehaviorX = v])
 rule('overscroll-y', [isOverscroll, (css, v) => css.overscrollBehaviorY = v])
-rule('static', [empty, (css, v) => css.position = 'static'])
-rule('fixed', [empty, (css, v) => css.position = 'fixed'])
-rule('absolute', [empty, (css, v) => css.position = 'absolute'])
-rule('relative', [empty, (css, v) => css.position = 'relative'])
-rule('sticky', [empty, (css, v) => css.position = 'sticky'])
+rule0('static', css => css.position = 'static')
+rule0('fixed', css => css.position = 'fixed')
+rule0('absolute', css => css.position = 'absolute')
+rule0('relative', css => css.position = 'relative')
+rule0('sticky', css => css.position = 'sticky')
 rule('inset', [isInset, (css, v) => { css.top = v; css.right = v; css.bottom = v; css.left = v }])
 rule('inset-x', [isInset, (css, v) => { css.left = v; css.right = v }])
 rule('inset-y', [isInset, (css, v) => { css.top = v; css.bottom = v }])
@@ -703,21 +702,21 @@ rule('top', [isInset, (css, v) => css.top = v])
 rule('right', [isInset, (css, v) => css.right = v])
 rule('bottom', [isInset, (css, v) => css.bottom = v])
 rule('left', [isInset, (css, v) => css.left = v])
-rule('visible', [empty, (css) => css.visibility = 'visible'])
-rule('invisible', [empty, (css) => css.visibility = 'hidden'])
+rule0('visible', (css) => css.visibility = 'visible')
+rule0('invisible', (css) => css.visibility = 'hidden')
 rule('z', [either(isAuto, isN(0, 10, 20, 30, 40, 50)), (css, v) => css.zIndex = v])
 rule('basis', [either(isAuto, isSize, isRatio), (css, v) => css.flexBasis = v])
 rule('grow', [isOf({ '': 1, '0': 0 }), (css, v) => css.flexGrow = v])
 rule('shrink', [isOf({ '': 1, '0': 0 }), (css, v) => css.flexShrink = v])
 rule('order', [either(isBetween(1, 12), isOf({ first: -9999, last: 9999, none: 0 })), (css, v) => css.order = v])
 rule('grid-cols', [either(isNone, isBetweenOf(1, 12, n => `repeat(${n}, minmax(0, 1fr))`)), (css, v) => css.gridTemplateColumns = v])
-rule('col-auto', [empty, (css) => css.gridColumn = 'auto'])
+rule0('col-auto', (css) => css.gridColumn = 'auto')
 rule('col-span', [either(isBetweenOf(1, 12, n => `span ${n} / span ${n}`), isOf({ full: '1 / -1' })), (css, v) => css.gridColumn = v])
 const isGridColStart = either(isAuto, isBetween(1, 13))
 rule('col-start', [isGridColStart, (css, v) => css.gridColumnStart = v])
 rule('col-end', [isGridColStart, (css, v) => css.gridColumnEnd = v])
 rule('grid-rows', [either(isBetweenOf(1, 6, n => `repeat(${n}, minmax(0, 1fr))`), isNone), (css, v) => css.gridTemplateRows = v])
-rule('row-auto', [empty, (css) => css.gridRow = 'auto'])
+rule0('row-auto', (css) => css.gridRow = 'auto')
 rule('row-span', [either(isBetweenOf(1, 6, n => `span ${n} / span ${n}`), isOf({ full: '1 / -1' })), (css, v) => css.gridRow = v])
 const isGridRowStart = either(isAuto, isBetween(1, 7))
 rule('row-start', [isGridRowStart, (css, v) => css.gridRowStart = v])
@@ -807,20 +806,20 @@ const textSizes: [S, U, S | U][] = [
   ['9xl', 128, 1],
 ]
 
-textSizes.forEach(([n, fs, lh]) => rule('text-' + n, [empty, (css) => { css.fontSize = fs; css.lineHeight = lh }]))
+textSizes.forEach(([n, fs, lh]) => rule0('text-' + n, (css) => { css.fontSize = fs; css.lineHeight = lh }))
 
 rule0('italic', (css) => css.fontStyle = 'italic')
 rule0('not-italic', (css) => css.fontStyle = 'normal')
 
-rule0('normal-nums', (css, v) => css.fontVariantNumeric = 'normal')
-rule0('ordinal', (css, v) => css.fontVariantNumeric = 'ordinal')
-rule0('slashed-zero', (css, v) => css.fontVariantNumeric = 'slashed-zero')
-rule0('lining-nums', (css, v) => css.fontVariantNumeric = 'lining-nums')
-rule0('oldstyle-nums', (css, v) => css.fontVariantNumeric = 'oldstyle-nums')
-rule0('proportional-nums', (css, v) => css.fontVariantNumeric = 'proportional-nums')
-rule0('tabular-nums', (css, v) => css.fontVariantNumeric = 'tabular-nums')
-rule0('diagonal-fractions', (css, v) => css.fontVariantNumeric = 'diagonal-fractions')
-rule0('stacked-fractions', (css, v) => css.fontVariantNumeric = 'stacked-fractions')
+rule0('normal-nums', css => css.fontVariantNumeric = 'normal')
+rule0('ordinal', css => css.fontVariantNumeric = 'ordinal')
+rule0('slashed-zero', css => css.fontVariantNumeric = 'slashed-zero')
+rule0('lining-nums', css => css.fontVariantNumeric = 'lining-nums')
+rule0('oldstyle-nums', css => css.fontVariantNumeric = 'oldstyle-nums')
+rule0('proportional-nums', css => css.fontVariantNumeric = 'proportional-nums')
+rule0('tabular-nums', css => css.fontVariantNumeric = 'tabular-nums')
+rule0('diagonal-fractions', css => css.fontVariantNumeric = 'diagonal-fractions')
+rule0('stacked-fractions', css => css.fontVariantNumeric = 'stacked-fractions')
 
 rule('tracking', [isOf({
   tighter: '-0.05em',
@@ -878,21 +877,21 @@ rule('text',
   [isColor, (css, v) => css.color = v],
   [isIn('ellipsis', 'clip'), (css, v) => css.textOverflow = v],
 )
-rule('underline', [empty, (css) => css.textDecorationLine = 'underline'])
-rule('overline', [empty, (css) => css.textDecorationLine = 'overline'])
-rule('line-through', [empty, (css) => css.textDecorationLine = 'line-through'])
-rule('no-underline', [empty, (css) => css.textDecorationLine = 'none'])
+rule0('underline', (css) => css.textDecorationLine = 'underline')
+rule0('overline', (css) => css.textDecorationLine = 'overline')
+rule0('line-through', (css) => css.textDecorationLine = 'line-through')
+rule0('no-underline', (css) => css.textDecorationLine = 'none')
 rule('decoration',
   [isColor, (css, v) => css.textDecorationColor = v],
   [isIn('solid', 'double', 'dotted', 'dashed', 'wavy'), (css, v) => css.textDecorationStyle = v],
   [either(isAuto, isEq('from-font'), is01248), (css, v) => css.textDecorationThickness = v]
 )
 rule('underline-offset', [either(isAuto, is01248), (css, v) => css.textUnderlineOffset = v])
-rule('uppercase', [empty, (css) => css.textTransform = 'uppercase'])
-rule('lowercase', [empty, (css) => css.textTransform = 'lowercase'])
-rule('capitalize', [empty, (css) => css.textTransform = 'capitalize'])
-rule('normal-case', [empty, (css) => css.textTransform = 'none'])
-rule('truncate', [empty, (css) => { css.overflow = 'hidden'; css.textOverflow = 'ellipsis'; css.whiteSpace = 'nowrap' }])
+rule0('uppercase', (css) => css.textTransform = 'uppercase')
+rule0('lowercase', (css) => css.textTransform = 'lowercase')
+rule0('capitalize', (css) => css.textTransform = 'capitalize')
+rule0('normal-case', (css) => css.textTransform = 'none')
+rule0('truncate', (css) => { css.overflow = 'hidden'; css.textOverflow = 'ellipsis'; css.whiteSpace = 'nowrap' })
 rule('indent', [isSize, (css, v) => css.textIndent = v])
 rule('align', [isIn('baseline', 'top', 'middle', 'bottom', 'text-top', 'text-bottom', 'sub', 'super'), (css, v) => css.verticalAlign = v])
 rule('whitespace', [isIn('normal', 'nowrap', 'pre', 'pre-line', 'pre-wrap'), (css, v) => css.whiteSpace = v])
