@@ -767,6 +767,31 @@ rule('place-content', [isOf({
 rule('self', [either(isAuto, isAlignItems), (css, v) => css.alignSelf = v])
 rule('place-items', [isFlexJustify, (css, v) => css.placeItems = v])
 rule('place-self', [either(isAuto, isFlexJustify), (css, v) => css.placeSelf = v])
+
+rule('font', [isOf({
+  sans: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+  serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+  mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+}), (css, v) => css.fontFamily = v])
+
+const textSizes: [S, U, S | U][] = [
+  ['xs', 12, '16px'],
+  ['sm', 14, '20px'],
+  ['base', 16, '24px'],
+  ['lg', 18, '28px'],
+  ['xl', 20, '28px'],
+  ['2xl', 24, '32px'],
+  ['3xl', 30, '36px'],
+  ['4xl', 36, '40px'],
+  ['5xl', 48, 1],
+  ['6xl', 60, 1],
+  ['7xl', 72, 1],
+  ['8xl', 96, 1],
+  ['9xl', 128, 1],
+]
+
+textSizes.forEach(([n, fs, lh]) => rule('text-' + n, [empty, (css, v) => { css.fontSize = fs; css.lineHeight = lh }]))
+
 rule('p', [isSize, (css, v) => css.padding = v])
 rule('px', [isSize, (css, v) => { css.paddingLeft = v; css.paddingRight = v }])
 rule('py', [isSize, (css, v) => { css.paddingTop = v; css.paddingBottom = v }])
