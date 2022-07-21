@@ -679,7 +679,7 @@ def _marshal_set(
         ))))
 
 
-def _marshal_switch(method: Union[V, Callable], params: Optional[dict]=None):
+def _marshal_switch(method: Union[V, Callable], params: Optional[dict] = None):
     return _marshal(dict(
         t=_MsgType.Switch,
         method=_qual_name_of(method) if isinstance(method, FunctionType) else str(method),
@@ -854,6 +854,7 @@ class View(_View):
 
     def jump(self, method: Union[V, Callable], **params):
         self._send(_marshal_switch(method, params))
+        self._read(_MsgType.Switch)
 
     def __call__(
             self,
@@ -1026,6 +1027,7 @@ class AsyncView(_View):
 
     async def jump(self, method: Union[V, Callable], **params):
         await self._send(_marshal_switch(method, params))
+        await self._read(_MsgType.Switch)
 
     async def __call__(
             self,
