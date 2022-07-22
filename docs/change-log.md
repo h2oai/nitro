@@ -17,6 +17,14 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.13.1
+
+Jul 21, 2022
+
+- Changed
+    - `view.jump()` now performs an implicit socket read, which can help prevent infinite loops in 
+      situations where application code does not peform an explicit read after a jump.
+
 ## v0.13.0
 
 Jul 16, 2022
