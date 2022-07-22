@@ -109,6 +109,7 @@ export const newClientContext = (server: Server, helpE: Signal<S>, onBusy: () =>
     },
     change = (m: S, p?: Dict<S>) => {
       onBusy()
+      inputs.length = 0 // clear any un-commit()-ed state.
       server.send({ t: MessageType.Switch, method: m, params: p })
     },
     scoped = (index: any, xid: S): Context => ({
