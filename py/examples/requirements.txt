@@ -1,3 +1,4 @@
+msgpack
 flask
 simple-websocket
 tornado

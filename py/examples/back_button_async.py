@@ -111,7 +111,7 @@ async def show_results(view: View):
         f"# Results",
         f"Your name: {state.person.first_name} {state.person.last_name}.",
         f"Your father's name: {state.father.first_name} {state.father.last_name}.",
-        f"Your mother's name: {state.mother.last_name} {state.mother.last_name}.",
+        f"Your mother's name: {state.mother.first_name} {state.mother.last_name}.",
         halt=True,
     )
 
