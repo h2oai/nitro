@@ -173,7 +173,7 @@ const computeStyle = (box: Partial<Box>, inRow: B) => {
   if (grow !== undefined) css.flexGrow = grow
   if (shrink !== undefined) css.flexShrink = shrink
 
-  if (style !== undefined) stylize(css, style)
+  if (style !== undefined && style.length) stylize(css, style)
 
   if (inRow && width === undefined && height === undefined && grow === undefined && shrink === undefined) {
     css.flexGrow = '1'
