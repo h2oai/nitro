@@ -17,6 +17,13 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.13.2
+
+Jul 22, 2022
+
+- Fixed
+    - Clear any stale / uncommitted state in front-end on `view.jump()`.
+
 ## v0.13.1
 
 Jul 21, 2022
