@@ -57,6 +57,35 @@ const makeSizeScale = () => {
   return d
 }
 const size = inn(makeSizeScale())
+const ratio = inn({
+  full: '100%',
+  '1/2': '50%',
+  '1/3': '33.333333%',
+  '2/3': '66.666667%',
+  '1/4': '25%',
+  '2/4': '50%',
+  '3/4': '75%',
+  '1/5': '20%',
+  '2/5': '40%',
+  '3/5': '60%',
+  '4/5': '80%',
+  '1/6': '16.666667%',
+  '2/6': '33.333333%',
+  '3/6': '50%',
+  '4/6': '66.666667%',
+  '5/6': '83.333333%',
+  '1/12': '8.333333%',
+  '2/12': '16.666667%',
+  '3/12': '25%',
+  '4/12': '33.333333%',
+  '5/12': '41.666667%',
+  '6/12': '50%',
+  '7/12': '58.333333%',
+  '8/12': '66.666667%',
+  '9/12': '75%',
+  '10/12': '83.333333%',
+  '11/12': '91.666667%',
+})
 const ratioSubset = inn({
   '1/2':`50%`,
   '1/3':`33.333333%`,
@@ -145,108 +174,23 @@ rule(`contents`, `display:contents`)
 rule(`list-item`, `display:list-item`)
 rule(`hidden`, `display:none`)
 rule(`aspect`, [inn({auto:'auto', square:'1 / 1', video: '16 / 9'}),v=>`aspect-ratio:${v}`])
-rule(`h-0`, `height:0px`)
-rule(`h-px`, `height:1px`)
-rule(`h-0.5`, `height:0.125rem`)
-rule(`h-1`, `height:0.25rem`)
-rule(`h-1.5`, `height:0.375rem`)
-rule(`h-2`, `height:0.5rem`)
-rule(`h-2.5`, `height:0.625rem`)
-rule(`h-3`, `height:0.75rem`)
-rule(`h-3.5`, `height:0.875rem`)
-rule(`h-4`, `height:1rem`)
-rule(`h-5`, `height:1.25rem`)
-rule(`h-6`, `height:1.5rem`)
-rule(`h-7`, `height:1.75rem`)
-rule(`h-8`, `height:2rem`)
-rule(`h-9`, `height:2.25rem`)
-rule(`h-10`, `height:2.5rem`)
-rule(`h-11`, `height:2.75rem`)
-rule(`h-12`, `height:3rem`)
-rule(`h-14`, `height:3.5rem`)
-rule(`h-16`, `height:4rem`)
-rule(`h-20`, `height:5rem`)
-rule(`h-24`, `height:6rem`)
-rule(`h-28`, `height:7rem`)
-rule(`h-32`, `height:8rem`)
-rule(`h-36`, `height:9rem`)
-rule(`h-40`, `height:10rem`)
-rule(`h-44`, `height:11rem`)
-rule(`h-48`, `height:12rem`)
-rule(`h-52`, `height:13rem`)
-rule(`h-56`, `height:14rem`)
-rule(`h-60`, `height:15rem`)
-rule(`h-64`, `height:16rem`)
-rule(`h-72`, `height:18rem`)
-rule(`h-80`, `height:20rem`)
-rule(`h-96`, `height:24rem`)
-rule(`h-auto`, `height:auto`)
-rule(`h-1/2`, `height:50%`)
-rule(`h-1/3`, `height:33.333333%`)
-rule(`h-2/3`, `height:66.666667%`)
-rule(`h-1/4`, `height:25%`)
-rule(`h-2/4`, `height:50%`)
-rule(`h-3/4`, `height:75%`)
-rule(`h-1/5`, `height:20%`)
-rule(`h-2/5`, `height:40%`)
-rule(`h-3/5`, `height:60%`)
-rule(`h-4/5`, `height:80%`)
-rule(`h-1/6`, `height:16.666667%`)
-rule(`h-2/6`, `height:33.333333%`)
-rule(`h-3/6`, `height:50%`)
-rule(`h-4/6`, `height:66.666667%`)
-rule(`h-5/6`, `height:83.333333%`)
-rule(`h-full`, `height:100%`)
-rule(`h-screen`, `height:100vh`)
-rule(`h-min`, `height:-webkit-min-content;height:-moz-min-content;height:min-content`)
-rule(`h-max`, `height:-webkit-max-content;height:-moz-max-content;height:max-content`)
-rule(`h-fit`, `height:-webkit-fit-content;height:-moz-fit-content;height:fit-content`)
-rule(`max-h-0`, `max-height:0px`)
-rule(`max-h-px`, `max-height:1px`)
-rule(`max-h-0.5`, `max-height:0.125rem`)
-rule(`max-h-1`, `max-height:0.25rem`)
-rule(`max-h-1.5`, `max-height:0.375rem`)
-rule(`max-h-2`, `max-height:0.5rem`)
-rule(`max-h-2.5`, `max-height:0.625rem`)
-rule(`max-h-3`, `max-height:0.75rem`)
-rule(`max-h-3.5`, `max-height:0.875rem`)
-rule(`max-h-4`, `max-height:1rem`)
-rule(`max-h-5`, `max-height:1.25rem`)
-rule(`max-h-6`, `max-height:1.5rem`)
-rule(`max-h-7`, `max-height:1.75rem`)
-rule(`max-h-8`, `max-height:2rem`)
-rule(`max-h-9`, `max-height:2.25rem`)
-rule(`max-h-10`, `max-height:2.5rem`)
-rule(`max-h-11`, `max-height:2.75rem`)
-rule(`max-h-12`, `max-height:3rem`)
-rule(`max-h-14`, `max-height:3.5rem`)
-rule(`max-h-16`, `max-height:4rem`)
-rule(`max-h-20`, `max-height:5rem`)
-rule(`max-h-24`, `max-height:6rem`)
-rule(`max-h-28`, `max-height:7rem`)
-rule(`max-h-32`, `max-height:8rem`)
-rule(`max-h-36`, `max-height:9rem`)
-rule(`max-h-40`, `max-height:10rem`)
-rule(`max-h-44`, `max-height:11rem`)
-rule(`max-h-48`, `max-height:12rem`)
-rule(`max-h-52`, `max-height:13rem`)
-rule(`max-h-56`, `max-height:14rem`)
-rule(`max-h-60`, `max-height:15rem`)
-rule(`max-h-64`, `max-height:16rem`)
-rule(`max-h-72`, `max-height:18rem`)
-rule(`max-h-80`, `max-height:20rem`)
-rule(`max-h-96`, `max-height:24rem`)
-rule(`max-h-full`, `max-height:100%`)
-rule(`max-h-screen`, `max-height:100vh`)
-rule(`max-h-min`, `max-height:-webkit-min-content;max-height:-moz-min-content;max-height:min-content`)
-rule(`max-h-max`, `max-height:-webkit-max-content;max-height:-moz-max-content;max-height:max-content`)
-rule(`max-h-fit`, `max-height:-webkit-fit-content;max-height:-moz-fit-content;max-height:fit-content`)
-rule(`min-h-0`, `min-height:0px`)
-rule(`min-h-full`, `min-height:100%`)
-rule(`min-h-screen`, `min-height:100vh`)
-rule(`min-h-min`, `min-height:-webkit-min-content;min-height:-moz-min-content;min-height:min-content`)
-rule(`min-h-max`, `min-height:-webkit-max-content;min-height:-moz-max-content;min-height:max-content`)
-rule(`min-h-fit`, `min-height:-webkit-fit-content;min-height:-moz-fit-content;min-height:fit-content`)
+rule(`h`, 
+     [either(size,ratio,auto),v=>`height:${v}`],
+       [eq('screen'), v=>`height:100vh`],
+       [eq('min'), v=>`height:-webkit-${v}-content;height:-moz-${v}-content;height:${v}-content`],
+       [eq('max'), v=>`height:-webkit-${v}-content;height:-moz-${v}-content;height:${v}-content`],
+       [eq('fit'), v=>`height:-webkit-${v}-content;height:-moz-${v}-content;height:${v}-content`],
+    )
+rule(`max-h`, 
+     [size,v=>`max-height:${v}`],
+     [inn({full:'100%',screen:'100vh'}),v=>`max-height:${v}`],
+     [has('min','max','fit'), v=>`max-height:-webkit-${v}-content;max-height:-moz-${v}-content;max-height:${v}-content`],
+    )
+rule(`min-h`, 
+     [inn({'0':'0px',full:'100%',screen:'100vh'}),v=>`min-height:${v}`],
+     [has('min','max','fit'), v=>`min-height:-webkit-${v}-content;min-height:-moz-${v}-content;min-height:${v}-content`],
+    )
+
 rule(`w-0`, `width:0px`)
 rule(`w-px`, `width:1px`)
 rule(`w-0.5`, `width:0.125rem`)
