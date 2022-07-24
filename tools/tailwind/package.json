@@ -4,7 +4,6 @@
   "description": "Generate test cases from Tailwind CSS samples",
   "main": "index.js",
   "scripts": {
-    "start": "coffee make.coffee",
     "html": "coffee html.coffee",
     "css": "tailwindcss -i input.css -o output.css",
     "tests": "coffee tests.coffee"
