@@ -1058,35 +1058,45 @@ repl('content-none', '--tw-content:none;content:var(--tw-content)')
 // --- end rules ---
 
 const pseudoClasses: Dict<S> = {
-  'hover': 'hover',
-  'focus': 'focus',
-  'focus-within': 'focus-within',
-  'focus-visible': 'focus-visible',
-  'active': 'active',
-  'visited': 'visited',
-  'target': 'target',
-  'first': 'first-child',
-  'last': 'last-child',
-  'only': 'only-child',
-  'odd': 'nth-child(odd)',
-  'even': 'nth-child(even)',
-  'first-of-type': 'first-of-type',
-  'last-of-type': 'last-of-type',
-  'only-of-type': 'only-of-type',
-  'empty': 'empty',
-  'disabled': 'disabled',
-  'enabled': 'enabled',
-  'checked': 'checked',
-  'indeterminate': 'indeterminate',
-  'default': 'default',
-  'required': 'required',
-  'valid': 'valid',
-  'invalid': 'invalid',
-  'in-range': 'in-range',
-  'out-of-range': 'out-of-range',
-  'placeholder-shown': 'placeholder-shown',
-  'autofill': 'autofill',
-  'read-only': 'read-only',
+  'hover': ':hover',
+  'focus': ':focus',
+  'focus-within': ':focus-within',
+  'focus-visible': ':focus-visible',
+  'active': ':active',
+  'visited': ':visited',
+  'target': ':target',
+  'first': ':first-child',
+  'last': ':last-child',
+  'only': ':only-child',
+  'odd': ':nth-child(odd)',
+  'even': ':nth-child(even)',
+  'first-of-type': ':first-of-type',
+  'last-of-type': ':last-of-type',
+  'only-of-type': ':only-of-type',
+  'empty': ':empty',
+  'disabled': ':disabled',
+  'enabled': ':enabled',
+  'checked': ':checked',
+  'indeterminate': ':indeterminate',
+  'default': ':default',
+  'required': ':required',
+  'valid': ':valid',
+  'invalid': ':invalid',
+  'in-range': ':in-range',
+  'out-of-range': ':out-of-range',
+  'placeholder-shown': ':placeholder-shown',
+  'autofill': ':autofill',
+  'read-only': ':read-only',
+  'open': '[open]',
+  'before': '::before',
+  'after': '::after',
+  'first-letter': '::first-letter',
+  'first-line': '::first-line',
+  'marker': '::marker',
+  'selection': '::selection',
+  'file': '::file-selector-button',
+  'backdrop': '::backdrop',
+  'placeholder': '::placeholder',
 }
 
 const tryExpand = (rules: Rule[], suffix: S): S | undefined => {
@@ -1159,7 +1169,7 @@ export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
         const style = stylize(base)
         if (style) {
           let ruleName = escape(name) // hover:only:px-3.5 -> hover\:only-child\:px-3\.5
-          if (pseudos) ruleName += ':' + pseudos.reverse().join(':') // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
+          if (pseudos) ruleName += pseudos.reverse().join(':') // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
           ss.insertRule(`.${ruleName}{${style}}`)
           classNames.push(name)
           continue
