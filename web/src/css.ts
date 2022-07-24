@@ -1064,7 +1064,7 @@ const tryExpand = (rules: Rule[], suffix: S): S | undefined => {
   }
 }
 
-const expand = (prefix: S): S | undefined => {
+export const stylize = (prefix: S): S | undefined => {
   let replacement = replacements.get(prefix)
   if (replacement) return replacement
 
@@ -1085,11 +1085,37 @@ const expand = (prefix: S): S | undefined => {
   }
 }
 
-export const stylize = (style: S): S | undefined => {
-  const names = style.split(/\s+/g)
-  for (const name of names) {
-    const css = expand(name)
-    if (css) return css
-    console.warn(`Unknown style: "${name}"`)
-  }
+
+const escape = (name: S): S => name.replace(/([.:])/g, '\\$1')
+
+export type StyleCache = {
+  put(klass: S): S | undefined
+}
+
+export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
+  const
+    cache = new Set(),
+    put = (klass: S): S | undefined => {
+      const names = klass.trim().split(/\s+/g)
+      if (!names.length) return
+      const classNames: S[] = []
+      for (const name of names) {
+        if (cache.has(name)) { // hit
+          classNames.push(name)
+          continue
+        }
+        // miss:
+        const style = stylize(name)
+        if (style) {
+          cache.add(name)
+          ss.insertRule(`.${escape(name)}{${style}}`)
+          classNames.push(name)
+          continue
+        }
+        // bad:
+        console.warn(`Unknown style: "${name}"`)
+      }
+      return classNames.join(' ')
+    }
+  return { put }
 }

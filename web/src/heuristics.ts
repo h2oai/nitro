@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, S, words, xid } from './core';
+import { StyleCache } from './css';
 import { markdown } from './markdown';
 import { Box, BoxMode, Header, Option } from './protocol';
 
@@ -184,12 +185,15 @@ const localizeHeader = (locale: Dict<S>, header: Header) => {
   if (text) header.text = translate(locale, text) ?? ''
 }
 
-export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
+export const sanitizeBox = (styleCache: StyleCache, locale: Dict<S>, box: Box): Box => {
   if (isS(box)) {
     box = { xid: xid(), index: 0, mode: 'md', text: box, options: [] }
   }
+
+  if (box.style) box.style = styleCache.put(box.style)
+
   if (box.items) {
-    box.items = box.items.map(b => sanitizeBox(locale, b))
+    box.items = box.items.map(b => sanitizeBox(styleCache, locale, b))
   } else {
     const { value, options } = box
     if (isB(value)) {

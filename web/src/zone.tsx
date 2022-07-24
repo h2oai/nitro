@@ -22,7 +22,6 @@ import { Expander } from './expander';
 import { Help } from './help';
 import { ImageBlock } from './image';
 import { Box } from './protocol';
-import { stylize } from './style';
 
 // http://www.w3.org/TR/AERT#color-contrast
 const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
@@ -41,7 +40,7 @@ const translate = (s: S): S => isS(s) ? s.replace(/\$([\w-]+)/gi, 'var(--$1)') :
 
 const computeStyle = (box: Partial<Box>, inRow: B) => {
   const
-    { mode, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis, style } = box,
+    { mode, tile, cross_tile, wrap, gap, align, width, height, margin, padding, color, background, border, grow, shrink, basis } = box,
     isRow = mode === 'row',
     css: React.CSSProperties = {
       position: 'relative',
@@ -173,8 +172,6 @@ const computeStyle = (box: Partial<Box>, inRow: B) => {
   if (grow !== undefined) css.flexGrow = grow
   if (shrink !== undefined) css.flexShrink = shrink
 
-  if (style !== undefined && style.length) stylize(css, style)
-
   if (inRow && width === undefined && height === undefined && grow === undefined && shrink === undefined) {
     css.flexGrow = '1'
     if (basis === undefined) {
@@ -206,7 +203,7 @@ const Container = styled.div`
 `
 export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box, inRow: B }) => {
   const
-    { mode, items, layout } = box,
+    { mode, items, layout, style: className } = box,
     isRow = mode === 'row',
     style = computeStyle(box, inRow)
 
@@ -220,7 +217,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
                 <Zone key={box.xid} context={context} box={box} inRow={isRow} />
               </Expander>
             ))
-            return <Container data-name={box.name ?? undefined} style={style}>{tabs}</Container>
+            return <Container className={className} data-name={box.name ?? undefined} style={style}>{tabs}</Container>
           } else {
             const tabs = items.map((box, i) => (
               <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
@@ -228,7 +225,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
               </PivotItem>
             ))
             return (
-              <Container data-name={box.name ?? undefined} style={style}>
+              <Container className={className} data-name={box.name ?? undefined} style={style}>
                 <Pivot>{tabs}</Pivot>
               </Container>
             )
@@ -240,7 +237,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
             <Zone key={box.xid} context={context} box={box} inRow={isRow} />
           ))
           return (
-            <Container data-name={box.name ?? undefined} style={style}>{children}</Container>
+            <Container className={className} data-name={box.name ?? undefined} style={style}>{children}</Container>
           )
         }
     }
@@ -250,6 +247,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
         {
           return (
             <ImageBlock
+              className={className}
               data-name={box.name ?? undefined}
               context={context.scoped(box.index, box.xid)}
               box={box}
@@ -264,7 +262,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
               ? <Help context={context} hint={box.hint} help={box.help} offset={hasLabel(box)}>{component}</Help>
               : component
           return (
-            <Container data-name={box.name ?? undefined} style={style}>{maybeWithHelp}</Container>
+            <Container className={className} data-name={box.name ?? undefined} style={style}>{maybeWithHelp}</Container>
           )
         }
     }

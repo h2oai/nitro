@@ -14,12 +14,12 @@
 
 import React from 'react';
 import { Context } from './client';
-import { B, Dict, Disposable, isSignal, on } from './core';
+import { B, Dict, Disposable, isSignal, on, S } from './core';
 import { Box } from './protocol';
 
 export type BoxProps = { context: Context, box: Box }
 
-export type StyledBoxProps = BoxProps & { style: React.CSSProperties }
+export type StyledBoxProps = BoxProps & { className?: S, style: React.CSSProperties }
 interface Renderable {
   render(): JSX.Element
   init?(): void
