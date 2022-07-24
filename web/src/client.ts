@@ -388,6 +388,7 @@ export const newClient = (server: Server) => {
 
   on(titleB, title => document.title = title)
   on(schemeB, scheme => window.setTimeout(() => loadScheme(scheme), 100))
+  window.addEventListener('hashchange', () => { bounce() })
 
   const client = {
     titleB,
@@ -402,7 +403,6 @@ export const newClient = (server: Server) => {
     popup,
     context,
     connect,
-    bounce,
     jump,
     stateB,
     busy: true,

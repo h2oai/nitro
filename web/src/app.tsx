@@ -73,7 +73,6 @@ export const App = make(({ client }: { client: Client }) => {
   const
     { stateB } = client,
     init = () => {
-      window.addEventListener('hashchange', () => { client.bounce() })
       client.connect()
     },
     render = () => {
