@@ -1057,6 +1057,38 @@ repl('content-none', '--tw-content:none;content:var(--tw-content)')
 
 // --- end rules ---
 
+const pseudoClasses: Dict<S> = {
+  'hover': 'hover',
+  'focus': 'focus',
+  'focus-within': 'focus-within',
+  'focus-visible': 'focus-visible',
+  'active': 'active',
+  'visited': 'visited',
+  'target': 'target',
+  'first': 'first-child',
+  'last': 'last-child',
+  'only': 'only-child',
+  'odd': 'nth-child(odd)',
+  'even': 'nth-child(even)',
+  'first-of-type': 'first-of-type',
+  'last-of-type': 'last-of-type',
+  'only-of-type': 'only-of-type',
+  'empty': 'empty',
+  'disabled': 'disabled',
+  'enabled': 'enabled',
+  'checked': 'checked',
+  'indeterminate': 'indeterminate',
+  'default': 'default',
+  'required': 'required',
+  'valid': 'valid',
+  'invalid': 'invalid',
+  'in-range': 'in-range',
+  'out-of-range': 'out-of-range',
+  'placeholder-shown': 'placeholder-shown',
+  'autofill': 'autofill',
+  'read-only': 'read-only',
+}
+
 const tryExpand = (rules: Rule[], suffix: S): S | undefined => {
   for (const [match, apply] of rules) {
     const s = match(suffix)
@@ -1105,10 +1137,30 @@ export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
           continue
         }
         // miss:
-        const style = stylize(name)
+        cache.add(name) // Add rightaway so that bad names are never attempted again.
+        let
+          base: S = name,
+          pseudos: S[] | null = null
+        if (name.indexOf(':') >= 0) {
+          const
+            tokens = name.split(':'),
+            prefixes = tokens.slice(0, tokens.length - 1)
+          base = tokens[tokens.length - 1]
+          pseudos = []
+          for (const prefix of prefixes) {
+            const pseudo = pseudoClasses[prefix]
+            if (pseudo) {
+              pseudos.push(pseudo)
+              continue
+            }
+            console.warn(`Unknown style prefix: "${prefix}"`)
+          }
+        }
+        const style = stylize(base)
         if (style) {
-          cache.add(name)
-          ss.insertRule(`.${escape(name)}{${style}}`)
+          let ruleName = escape(name) // hover:only:px-3.5 -> hover\:only-child\:px-3\.5
+          if (pseudos) ruleName += ':' + pseudos.reverse().join(':') // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
+          ss.insertRule(`.${ruleName}{${style}}`)
           classNames.push(name)
           continue
         }
