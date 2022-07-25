@@ -11,7 +11,7 @@
 # h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
-# ECHO Access your app at https://localhost:5000
+# ECHO Access your app at http://localhost:5000
 # START python back_button_async.py
 # ===
 import tornado.ioloop
