@@ -1099,6 +1099,22 @@ const pseudoClasses: Dict<S> = {
   'placeholder': '::placeholder',
 }
 
+const mediaQueries: Dict<S> = {
+  'sm': '(min-width: 640px)',
+  'md': '(min-width: 768px)',
+  'lg': '(min-width: 1024px)',
+  'xl': '(min-width: 1280px)',
+  '2xl': '(min-width: 1536px)',
+  'dark': '(prefers-color-scheme: dark)',
+  'portrait': '(orientation: portrait)',
+  'landscape': '(orientation: landscape)',
+  'motion-safe': '(prefers-reduced-motion: no-preference)',
+  'motion-reduce': '(prefers-reduced-motion: reduce)',
+  'contrast-more': '(prefers-contrast: more)',
+  'contrast-less': '(prefers-contrast: less)',
+  'print': 'print',
+}
+
 const tryExpand = (rules: Rule[], suffix: S): S | undefined => {
   for (const [match, apply] of rules) {
     const s = match(suffix)
@@ -1150,17 +1166,22 @@ export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
         cache.add(name) // Add rightaway so that bad names are never attempted again.
         let
           base: S = name,
-          pseudos: S[] | null = null
+          pseudos: S[] | null = null,
+          queries: S[] | null = null
         if (name.indexOf(':') >= 0) {
           const
             tokens = name.split(':'),
             prefixes = tokens.slice(0, tokens.length - 1)
           base = tokens[tokens.length - 1]
-          pseudos = []
           for (const prefix of prefixes) {
             const pseudo = pseudoClasses[prefix]
             if (pseudo) {
-              pseudos.push(pseudo)
+              (pseudos ?? (pseudos = [])).push(pseudo)
+              continue
+            }
+            const query = mediaQueries[prefix]
+            if (query) {
+              (queries ?? (queries = [])).push(query)
               continue
             }
             console.warn(`Unknown style prefix: "${prefix}"`)
@@ -1168,9 +1189,15 @@ export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
         }
         const style = stylize(base)
         if (style) {
-          let ruleName = escape(name) // hover:only:px-3.5 -> hover\:only-child\:px-3\.5
-          if (pseudos) ruleName += pseudos.reverse().join(':') // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
-          ss.insertRule(`.${ruleName}{${style}}`)
+          // hover:only:px-3.5 -> hover\:only-child\:px-3\.5
+          let ruleName = escape(name)
+          // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
+          if (pseudos) ruleName += pseudos.reverse().join(':')
+          // .rule { ... }
+          let rule = `.${ruleName}{${style}}`
+          // sm:lg:rule -> @media (min-width:640px) { @media (min-width:1024px) { .rule {...} } }
+          if (queries) for (const query of queries.reverse()) rule = `@media ${query} { ${rule} }`
+          ss.insertRule(rule, ss.cssRules.length) // always pass index, else API inserts at 0
           classNames.push(name)
           continue
         }

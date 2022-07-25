@@ -166,14 +166,10 @@ const getLocale = () => {
 }
 
 const createStyleSheet = (): CSSStyleSheet => {
-  const
-    el = document.createElement('style'),
-    head = document.getElementsByTagName('head')[0]
-  if (head) {
-    head.appendChild(el)
-    const ss = el.sheet
-    if (ss) return ss
-  }
+  const el = document.createElement('style')
+  document.head.appendChild(el)
+  const ss = el.sheet
+  if (ss) return ss
   throw new Error('Could not create stylesheet')
 }
 export const newClient = (server: Server) => {
