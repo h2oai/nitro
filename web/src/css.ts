@@ -1105,7 +1105,6 @@ const mediaQueries: Dict<S> = {
   'lg': '(min-width: 1024px)',
   'xl': '(min-width: 1280px)',
   '2xl': '(min-width: 1536px)',
-  'dark': '(prefers-color-scheme: dark)',
   'portrait': '(orientation: portrait)',
   'landscape': '(orientation: landscape)',
   'motion-safe': '(prefers-reduced-motion: no-preference)',
@@ -1166,6 +1165,7 @@ export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
         cache.add(name) // Add rightaway so that bad names are never attempted again.
         let
           base: S = name,
+          dark = false,
           pseudos: S[] | null = null,
           queries: S[] | null = null
         if (name.indexOf(':') >= 0) {
@@ -1177,6 +1177,10 @@ export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
             const pseudo = pseudoClasses[prefix]
             if (pseudo) {
               (pseudos ?? (pseudos = [])).push(pseudo)
+              continue
+            }
+            if (prefix === 'dark') {
+              dark = true
               continue
             }
             const query = mediaQueries[prefix]
@@ -1193,6 +1197,7 @@ export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
           let ruleName = escape(name)
           // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
           if (pseudos) ruleName += pseudos.reverse().join(':')
+          if (dark) ruleName = '.dark ' + ruleName
           // .rule { ... }
           let rule = `.${ruleName}{${style}}`
           // sm:lg:rule -> @media (min-width:640px) { @media (min-width:1024px) { .rule {...} } }
