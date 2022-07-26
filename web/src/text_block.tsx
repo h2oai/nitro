@@ -37,7 +37,13 @@ export const TextBlock = make(({ context, box }: BoxProps) => {
       })
     },
     render = () => {
-      return <div className='prose' ref={ref} dangerouslySetInnerHTML={{ __html: box.text ?? '' }} />
+      return (
+        <div
+          className={box.style ? 'prose ' + box.style : 'prose'}
+          ref={ref}
+          dangerouslySetInnerHTML={{ __html: box.text ?? '' }}
+        />
+      )
     }
   return { init: update, update, render }
 })
