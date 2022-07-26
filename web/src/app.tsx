@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import { Body, Popup } from './body';
 import { Client, ClientStateT } from './client';
 import { signal, U } from './core';
+import { css } from './css';
 import { Header } from './header';
 import { HelpPanel } from './help';
 import loadingAnimation from './loading.gif';
@@ -104,8 +105,8 @@ export const App = make(({ client }: { client: Client }) => {
               {busy && <Busy timeout={500} />}
               <HelpPanel helpE={client.helpE} />
               <div className='view'>
-                {!isChromeless && <div className='art' />}
-                <div className='page'>
+                {!isChromeless && <div className='stripe' />}
+                <div className={css('max-w-3xl mx-auto')}>
                   {!isChromeless && <Header client={client} />}
                   <Body client={client} />
                   {popup.length ? <Popup client={client} /> : <></>}

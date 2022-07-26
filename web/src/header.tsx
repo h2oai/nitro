@@ -15,20 +15,12 @@
 import { CommandBar, ContextualMenu } from '@fluentui/react';
 import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
-import styled from 'styled-components';
 import { Client } from './client';
 import { signal } from './core';
+import { css } from './css';
 import { toContextualMenuItem } from './options';
 import { Option } from './protocol';
 import { make } from './ui';
-
-const MenuContainer = styled.div`
-  cursor: pointer;
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-`
 
 const Menu = make(({ client, options }: { client: Client, options: Option[] }) => {
   const
@@ -41,7 +33,7 @@ const Menu = make(({ client, options }: { client: Client, options: Option[] }) =
     render = () => {
       const isMenuVisible = showMenuB()
       return (
-        <MenuContainer ref={containerRef} onClick={showMenu}>
+        <div ref={containerRef} className={css('flex items-center cursor-pointer w-6 h-6')} onClick={showMenu}>
           {
             hasMenu
               ? isMenuVisible
@@ -56,25 +48,19 @@ const Menu = make(({ client, options }: { client: Client, options: Option[] }) =
             onItemClick={hideMenu}
             onDismiss={hideMenu}
           />
-        </MenuContainer>
+        </div>
       )
     }
   return { render, showMenuB }
 })
 
-const NavBarContainer = styled.div`
-  display: flex;
-  flex-grow: 1;
-  justify-content: flex-end;
-`
-
 const NavBar = make(({ client, options }: { client: Client, options: Option[] }) => {
   const
     items = options.map(o => toContextualMenuItem(o, client.jump)),
     render = () => (
-      <NavBarContainer>
+      <div className={css('flex grow justify-end')}>
         <CommandBar items={items} />
-      </NavBarContainer>
+      </div>
     )
   return { render }
 })
@@ -89,10 +75,10 @@ export const Header = make(({ client }: { client: Client }) => {
         nav = client.navB() ?? []
 
       return (
-        <div className='header'>
+        <div className={css('flex flex-row mt-4 mb-6 gap-2 items-center')}>
           <Menu client={client} options={menu} />
-          <div className='title'>{title}</div>
-          <div className='caption'>{caption}</div>
+          <div className={css('text-sm font-extrabold tracking-wider uppercase')}>{title}</div>
+          <div className={css('text-sm')}>{caption}</div>
           <NavBar client={client} options={nav} />
         </div>
       )
