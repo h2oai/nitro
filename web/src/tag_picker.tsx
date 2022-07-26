@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { ITag, TagPicker as FTagPicker } from '@fluentui/react';
-import React from 'react';
 import { S } from './core';
 import { Labeled } from './label';
 import { selectedsOf } from './options';
@@ -23,7 +22,7 @@ const keysFromTags = (tags: ITag[]) => tags.map(tag => String(tag.key))
 
 export const TagPicker = make(({ context, box }: BoxProps) => {
   const
-    { text, options, live } = box,
+    { options, live } = box,
     selectedOptions = selectedsOf(box),
     selectedKeys = selectedOptions.map(o => String(o.value)),
     tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),
@@ -46,7 +45,7 @@ export const TagPicker = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Labeled label={text}>
+        <Labeled box={box}>
           <FTagPicker
             pickerSuggestionsProps={{
               suggestionsHeaderText: 'Suggestions',

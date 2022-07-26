@@ -12,21 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Label, Stack } from '@fluentui/react';
+import { Label } from '@fluentui/react';
 import React from 'react';
-import { S } from './core';
+import { B } from './core';
+import { css } from './css';
+import { Box } from './protocol';
 
+export const FormItem = ({ box, children }: { box: Box, children: React.ReactNode }) => (
+  <div className={css('flex flex-col', box.style)}>
+    {children}
+  </div>
+)
 
-export const Labeled = ({ label, children }: { label?: S, children: JSX.Element }) => (
-  label
-    ? (
-      <Stack>
-        <Stack.Item>
-          {label === ' ' ? <Label>&nbsp;</Label> : <Label>{label}</Label>}
-        </Stack.Item>
-        <Stack.Item>{children}</Stack.Item>
-      </Stack>
-    ) : (
-      children
-    )
+export const Labeled = ({ box, offset, children }: { box: Box, offset?: B, children: React.ReactNode }) => (
+  <FormItem box={box}>
+    {box.text
+      ? <Label>{box.text}</Label>
+      : offset
+        ? <Label>&nbsp;</Label>
+        : null}
+    {children}
+  </FormItem>
 )

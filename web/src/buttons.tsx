@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { CompoundButton, DefaultButton, IButtonStyles, PrimaryButton, Stack } from '@fluentui/react';
-import React from 'react';
 import { isB, V } from './core';
 import { Labeled } from './label';
 import { toContextualMenuProps } from './options';
@@ -25,7 +24,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
-        { text, layout, options, align } = box,
+        { layout, options, align } = box,
         horizontal = layout !== 'col',
         horizontalAlign = horizontal
           ? align === 'center'
@@ -61,7 +60,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
           return <Stack.Item key={o.value}>{button}</Stack.Item>
         })
       return (
-        <Labeled label={text ?? ' '}>
+        <Labeled box={box} offset={true}>
           <Stack horizontal={horizontal} horizontalAlign={horizontalAlign} tokens={{ childrenGap: 5 }} >{buttons}</Stack>
         </Labeled>
       )

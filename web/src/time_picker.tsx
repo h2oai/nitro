@@ -45,7 +45,7 @@ const
 
 export const TimePicker = make(({ context, box }: BoxProps) => {
   const
-    { text, value, live } = box,
+    { value, live } = box,
     clock = parseClock(String(value).toLowerCase()),
     capture = () => {
       context.record(clockToString(clock))
@@ -71,7 +71,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Labeled label={text}>
+        <Labeled box={box}>
           <Stack horizontal horizontalAlign='start' tokens={{ childrenGap: 5 }}>
             <Stack.Item styles={isNaN(clock.hh) ? hide : undefined}>
               <SpinButton

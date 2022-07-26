@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const ColorPicker = make(({ context, box }: BoxProps) => {
   const
-    { text, value, live } = box,
+    { value, live } = box,
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
     colorToTuple = ({ r, g, b, a }: IRGB) => [r, g, b, a ?? 100],
@@ -31,7 +31,7 @@ export const ColorPicker = make(({ context, box }: BoxProps) => {
     onChange = (_: React.SyntheticEvent<HTMLElement>, color: IColor) => record(color),
     render = () => {
       return (
-        <Labeled label={text}>
+        <Labeled box={box}>
           <FColorPicker
             color={colorValue}
             alphaType='alpha'

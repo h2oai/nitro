@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { Checkbox } from '@fluentui/react';
-import React from 'react';
 import styled from 'styled-components';
 import { B, S, V } from './core';
 import { Labeled } from './label';
@@ -25,7 +24,7 @@ const Container = styled.div`
 `
 export const Checklist = make(({ context, box }: BoxProps) => {
   const
-    { text, options, live } = box,
+    { options, live } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.record(Array.from(selection)),
@@ -51,7 +50,7 @@ export const Checklist = make(({ context, box }: BoxProps) => {
         ))
 
       return (
-        <Labeled label={text}><div>{checkboxes}</div></Labeled>
+        <Labeled box={box}><div>{checkboxes}</div></Labeled>
       )
     }
 

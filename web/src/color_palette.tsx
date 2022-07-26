@@ -23,7 +23,7 @@ import { BoxProps, make } from './ui';
 const swatchCellSize = 25
 export const ColorPalette = make(({ context, box }: BoxProps) => {
   const
-    { text, options, live } = box,
+    { options, live } = box,
     selected = selectedOf(box),
     cells: IColorCellProps[] = options.map(c => ({
       id: String(c.value),
@@ -38,7 +38,7 @@ export const ColorPalette = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Labeled label={text}>
+        <Labeled box={box}>
           <SwatchColorPicker
             columnCount={10}
             colorCells={cells}
