@@ -1143,7 +1143,7 @@ export const stylize = (prefix: S): S | undefined => {
 }
 
 
-const escape = (name: S): S => name.replace(/([.:])/g, '\\$1')
+const escape = (name: S): S => name.replace(/([.:/])/g, '\\$1')
 
 export type StyleCache = (klass: S) => S | undefined
 
