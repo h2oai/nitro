@@ -12,31 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
-import { xid } from './core';
+import { isN, isS, xid } from './core';
+import { css } from './css';
 import { BoxProps } from './ui';
-
-// Make sure iframe works in browsers where 100% width/height is not respected
-const Frame = styled.iframe`
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-`
 
 export const WebView = ({ box }: BoxProps) => {
   const
-    { name: rawName, path } = box,
-    name = rawName ?? xid()
+    { name: rawName, path, width: w, height: h } = box,
+    name = rawName ?? xid(),
+    width = isN(w) || isS(w) ? w : undefined,
+    height = isN(h) || isS(h) ? h : undefined
   return (
-    <Frame
-      name={name}
-      title={name}
-      src={path}
-      frameBorder="0"
-      width="100%"
-      height="100%" />
+    <div className={css('relative')} style={{ width, height }}>
+      <iframe
+        className={css('absolute inset-0')}
+        name={name}
+        title={name}
+        src={path}
+        width="100%"
+        height="100%"
+      />
+    </div>
   )
 }
 

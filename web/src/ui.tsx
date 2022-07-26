@@ -19,7 +19,7 @@ import { Box } from './protocol';
 
 export type BoxProps = { context: Context, box: Box }
 
-export type StyledBoxProps = BoxProps & { className?: S, style: React.CSSProperties }
+export type StyledBoxProps = BoxProps & { className?: S }
 interface Renderable {
   render(): JSX.Element
   init?(): void

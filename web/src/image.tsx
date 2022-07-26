@@ -20,6 +20,6 @@ const Container = styled.img`
   object-fit: cover;
 `
 
-export const ImageBlock = ({ box: { image }, className, style }: StyledBoxProps) => (
-  <Container className={className} src={image} style={style} />
+export const ImageBlock = ({ box: { image }, className }: StyledBoxProps) => (
+  <Container className={className} src={image} />
 )
