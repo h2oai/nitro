@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, S, words, xid } from './core';
-import { StyleCache } from './css';
+import { css } from './css';
 import { markdown } from './markdown';
 import { Box, BoxMode, Header, Option } from './protocol';
 
@@ -185,15 +185,18 @@ const localizeHeader = (locale: Dict<S>, header: Header) => {
   if (text) header.text = translate(locale, text) ?? ''
 }
 
-export const sanitizeBox = (styl: StyleCache, locale: Dict<S>, box: Box): Box => {
+const prefixStyle = (box: Box, prefix: S | undefined) => {
+  if (prefix) box.style = box.style ? prefix + ' ' + box.style : prefix
+}
+
+export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   if (isS(box)) {
     box = { xid: xid(), index: 0, mode: 'md', text: box, options: [] }
   }
 
   if (box.items) {
-    box.items = box.items.map(b => sanitizeBox(styl, locale, b))
-    const prefix = box.mode === 'row' ? 'flex flex-row' : box.mode === 'column' ? 'flex flex-col' : undefined
-    box.style = box.style ? `${prefix} ${box.style}` : prefix
+    box.items = box.items.map(b => sanitizeBox(locale, b))
+    prefixStyle(box, box.mode === 'row' ? 'flex flex-row' : box.mode === 'column' ? 'flex flex-col' : undefined)
   } else {
     const { value, options } = box
     if (isB(value)) {
@@ -238,7 +241,7 @@ export const sanitizeBox = (styl: StyleCache, locale: Dict<S>, box: Box): Box =>
     if (box.ignore) box.index = -1 // don't capture
   }
 
-  if (box.style) box.style = styl(box.style)
+  if (box.style) box.style = css(box.style)
 
   return box
 }
