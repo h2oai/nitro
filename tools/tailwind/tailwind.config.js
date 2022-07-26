@@ -2,7 +2,18 @@
 module.exports = {
   content: ['tailwind.html', 'prose.html'],
   theme: {
-    extend: {},
+    extend: {
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            /* Adjustments for Inter */
+            'h1, h2, h3': {
+              letterSpacing: '-0.025em',
+            },
+          }
+        }
+      })
+    },
   },
   plugins: [
     require('@tailwindcss/typography'),
