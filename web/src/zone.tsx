@@ -19,7 +19,6 @@ import { ClientContext } from './client';
 import { B, Dict, isS, S } from './core';
 import { Expander } from './expander';
 import { Help } from './help';
-import { ImageBlock } from './image';
 import { Box } from './protocol';
 
 // http://www.w3.org/TR/AERT#color-contrast
@@ -240,11 +239,10 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
       case 'image':
         {
           return (
-            <ImageBlock
+            <img
               className={className}
               data-name={box.name ?? undefined}
-              context={context.scoped(box.index, box.xid)}
-              box={box} />
+              src={box.image} />
           )
         }
       default:
