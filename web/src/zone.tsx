@@ -226,11 +226,13 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
         }
       default:
         {
-          const children = items.map(box => (
-            <Zone key={box.xid} context={context} box={box} inRow={isRow} />
-          ))
+          const
+            children = items.map(box => (
+              <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+            )),
+            style = box.image ? { backgroundImage: `url(${box.image})` } : undefined
           return (
-            <div className={className} data-name={box.name ?? undefined} >{children}</div>
+            <div className={className} data-name={box.name ?? undefined} style={style} >{children}</div>
           )
         }
     }
