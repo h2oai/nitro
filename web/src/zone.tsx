@@ -14,7 +14,6 @@
 
 import { cssColor, IRGB, Pivot, PivotItem } from '@fluentui/react';
 import React from 'react';
-import styled from 'styled-components';
 import { XBox } from './box';
 import { ClientContext } from './client';
 import { B, Dict, isS, S } from './core';
@@ -197,15 +196,10 @@ const hasLabel = (box: Box): B => {
   return false
 }
 
-const Container = styled.div`
-  display: flex;
-  box-sizing: border-box;
-`
 export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box, inRow: B }) => {
   const
     { mode, items, layout, style: className } = box,
-    isRow = mode === 'row',
-    style = computeStyle(box, inRow)
+    isRow = mode === 'row'
 
   if (items) {
     switch (mode) {
@@ -217,7 +211,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
                 <Zone key={box.xid} context={context} box={box} inRow={isRow} />
               </Expander>
             ))
-            return <Container className={className} data-name={box.name ?? undefined} style={style}>{tabs}</Container>
+            return <div className={className} data-name={box.name ?? undefined}>{tabs}</div>
           } else {
             const tabs = items.map((box, i) => (
               <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
@@ -225,9 +219,9 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
               </PivotItem>
             ))
             return (
-              <Container className={className} data-name={box.name ?? undefined} style={style}>
+              <div className={className} data-name={box.name ?? undefined} >
                 <Pivot>{tabs}</Pivot>
-              </Container>
+              </div>
             )
           }
         }
@@ -237,7 +231,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
             <Zone key={box.xid} context={context} box={box} inRow={isRow} />
           ))
           return (
-            <Container className={className} data-name={box.name ?? undefined} style={style}>{children}</Container>
+            <div className={className} data-name={box.name ?? undefined} >{children}</div>
           )
         }
     }
@@ -250,8 +244,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
               className={className}
               data-name={box.name ?? undefined}
               context={context.scoped(box.index, box.xid)}
-              box={box}
-              style={style} />
+              box={box} />
           )
         }
       default:
@@ -262,7 +255,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
               ? <Help context={context} hint={box.hint} help={box.help} offset={hasLabel(box)}>{component}</Help>
               : component
           return (
-            <Container className={className} data-name={box.name ?? undefined} style={style}>{maybeWithHelp}</Container>
+            <div className={className} data-name={box.name ?? undefined}>{maybeWithHelp}</div>
           )
         }
     }

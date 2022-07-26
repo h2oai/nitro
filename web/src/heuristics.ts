@@ -185,15 +185,15 @@ const localizeHeader = (locale: Dict<S>, header: Header) => {
   if (text) header.text = translate(locale, text) ?? ''
 }
 
-export const sanitizeBox = (styleCache: StyleCache, locale: Dict<S>, box: Box): Box => {
+export const sanitizeBox = (styl: StyleCache, locale: Dict<S>, box: Box): Box => {
   if (isS(box)) {
     box = { xid: xid(), index: 0, mode: 'md', text: box, options: [] }
   }
 
-  if (box.style) box.style = styleCache.put(box.style)
-
   if (box.items) {
-    box.items = box.items.map(b => sanitizeBox(styleCache, locale, b))
+    box.items = box.items.map(b => sanitizeBox(styl, locale, b))
+    const prefix = box.mode === 'row' ? 'flex flex-row' : box.mode === 'column' ? 'flex flex-col' : undefined
+    box.style = box.style ? `${prefix} ${box.style}` : prefix
   } else {
     const { value, options } = box
     if (isB(value)) {
@@ -237,6 +237,8 @@ export const sanitizeBox = (styleCache: StyleCache, locale: Dict<S>, box: Box): 
 
     if (box.ignore) box.index = -1 // don't capture
   }
+
+  if (box.style) box.style = styl(box.style)
 
   return box
 }
