@@ -194,6 +194,8 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     box = { xid: xid(), index: 0, mode: 'md', text: box, options: [] }
   }
 
+  if (box.mode as any === 'column') box.mode = 'col'
+  if (box.layout as any === 'column') box.layout = 'col'
   if (box.items) {
     box.items = box.items.map(b => sanitizeBox(locale, b))
     prefixStyle(box, box.mode === 'row' ? 'flex flex-row' : box.mode === 'column' ? 'flex flex-col' : undefined)

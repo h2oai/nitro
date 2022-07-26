@@ -26,7 +26,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
     render = () => {
       const
         { text, layout, options, align } = box,
-        horizontal = layout !== 'column',
+        horizontal = layout !== 'col',
         horizontalAlign = horizontal
           ? align === 'center'
             ? 'center'

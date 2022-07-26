@@ -204,7 +204,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
     switch (mode) {
       case 'tabs':
         {
-          if (layout === 'column') {
+          if (layout === 'col') {
             const tabs = items.map((box, i) => (
               <Expander key={box.xid} headerText={box.text ?? `Tab ${i + 1}`}>
                 <Zone key={box.xid} context={context} box={box} inRow={isRow} />

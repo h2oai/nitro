@@ -21,6 +21,7 @@ from collections import OrderedDict
 from enum import Enum, IntEnum
 from .version import __version__
 
+# noinspection PyBroadException
 try:
     import msgpack
 
@@ -250,6 +251,7 @@ class Theme:
 
 
 class Script:
+    # noinspection PyShadowingBuiltins
     def __init__(
             self,
             source: str,
@@ -290,6 +292,7 @@ class Plugin:
 
 
 class Box:
+    # noinspection PyShadowingBuiltins
     def __init__(
             self,
             text: Optional[Union[str, Options]] = None,
@@ -365,7 +368,7 @@ class Box:
                 DeprecationWarning,
             )
             if layout is None:
-                layout = 'row' if row else 'column'
+                layout = 'row' if row else 'col'
 
         self.text = label
         self.name = name
@@ -483,7 +486,7 @@ box = Box
 
 class BoxLayout(Enum):
     Row = 'row'
-    Column = 'column'
+    Column = 'col'
 
 
 class BoxArrange(Enum):
@@ -575,6 +578,7 @@ def col(
 ) -> Box:
     return Box(
         items=items,
+        mode='col',
         name=name,
         style=style,
         tile=tile,
@@ -768,6 +772,7 @@ class EditPositionType(IntEnum):
 
 
 class Edit:
+    # noinspection PyShadowingBuiltins
     def __init__(self, type: EditType, position: EditPositionType, selector: Optional[str] = None):
         self.t = type
         self.p = position
@@ -900,7 +905,7 @@ class View(_View):
 
         b = Box(
             items=items,
-            mode=mode,
+            mode=mode or 'col',
             halt=halt,
             title=title,
             popup=popup,
@@ -1156,6 +1161,7 @@ excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserun
 _lorems = set([w.strip() for w in _lorem.split(' ')])
 
 
+# noinspection PyShadowingBuiltins
 def _sentence(min: int, max: int):
     return ' '.join(random.sample(_lorems, random.randint(min, max))).capitalize()
 
@@ -1163,5 +1169,5 @@ def _sentence(min: int, max: int):
 def lorem(sentences: int = 0):
     if sentences == 0:
         return _sentence(4, 5)
-    lines = [_sentence(5, 9) for i in range(sentences)]
+    lines = [_sentence(5, 9) for _ in range(sentences)]
     return '. '.join(lines) + '.'
