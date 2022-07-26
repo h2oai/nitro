@@ -202,7 +202,7 @@ def build_funcs(groups: List[Group]) -> str:
             p()
             p(f'{doc_var} = (')
             p('"""')
-            p(f'## {e.qualified_title}')
+            p(f'# {e.qualified_title}')
             for block in e.blocks:
                 if isinstance(block, Comment):
                     for line in block.lines:
@@ -215,17 +215,15 @@ def build_funcs(groups: List[Group]) -> str:
             p('""",')
 
             if not e.name.endswith('_noop'):
-                p("    '### Preview',")
-                p(f"    box(mode='web', name='output', path='/#!docs.{e.name}?mode=chromeless', height='{int(e.opts.get('height', '6')) * 100}px', border='$neutral-secondary transparent transparent'),")
+                p("    box('## Preview', style='mt-6 mb-2'),")
+                p(f"    box(mode='web', name='output', path='/#!docs.{e.name}?mode=chromeless', height='{int(e.opts.get('height', '6')) * 100}px', style='border p-4'),")
 
             p(f"    row(")
             if e.prev:
-                p(f"        box('[🡠 {e.prev.qualified_title}](#!docs.{doc_of(e.prev.name)})'),")
+                p(f"        box('[🡠 {e.prev.qualified_title}](#!docs.{doc_of(e.prev.name)})', style='grow'),")
             if e.next:
-                p(f"        box('[{e.next.qualified_title} 🡢](#!docs.{doc_of(e.next.name)})', align='right'),")
-            p(f"        border='$neutral-secondary transparent transparent',")
-            p(f"        margin='2em 0',")
-            p(f"        padding='1em 0',")
+                p(f"        box('[{e.next.qualified_title} 🡢](#!docs.{doc_of(e.next.name)})', style='grow text-right'),")
+            p(f"        style='my-4 py-2',")
             p(f"    ),")
 
             p(')')
@@ -257,7 +255,7 @@ def build_toc(groups: List[Group]) -> str:
     p = Printer()
     for g in groups:
         p()
-        p(f'### {g.title}')
+        p(f'## {g.title}')
         p()
         p(g.description)
         p()
