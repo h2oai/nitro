@@ -1,7 +1,8 @@
 import { Dict, S, U } from "./core"
 
-type Match = (s: S) => S | undefined
-type Apply = (s: S) => S | undefined
+type Style = S | undefined
+type Match = (s: S) => Style
+type Apply = (s: S) => Style
 type Rule = [Match, Apply]
 
 const shades = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900']
@@ -1145,71 +1146,69 @@ export const stylize = (prefix: S): S | undefined => {
 
 const escape = (name: S): S => name.replace(/([.:/])/g, '\\$1')
 
-export type StyleCache = (klass: S) => S | undefined
+export type PredefineCSS = (...classes: Style[]) => Style
 
-const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
-  const
-    cache = new Set(),
-    put = (klass: S): S | undefined => {
-      const names = klass.trim().split(/\s+/g)
-      if (!names.length) return
-      const classNames: S[] = []
-      for (const name of names) {
-        if (cache.has(name)) { // hit
-          classNames.push(name)
-          continue
-        }
-        // miss:
-        cache.add(name) // Add rightaway so that bad names are never attempted again.
-        let
-          base: S = name,
-          dark = false,
-          pseudos: S[] | null = null,
-          queries: S[] | null = null
-        if (name.indexOf(':') >= 0) {
-          const
-            tokens = name.split(':'),
-            prefixes = tokens.slice(0, tokens.length - 1)
-          base = tokens[tokens.length - 1]
-          for (const prefix of prefixes) {
-            const pseudo = pseudoClasses[prefix]
-            if (pseudo) {
-              (pseudos ?? (pseudos = [])).push(pseudo)
-              continue
-            }
-            if (prefix === 'dark') {
-              dark = true
-              continue
-            }
-            const query = mediaQueries[prefix]
-            if (query) {
-              (queries ?? (queries = [])).push(query)
-              continue
-            }
-            console.warn(`Unknown style prefix: "${prefix}"`)
-          }
-        }
-        const style = stylize(base)
-        if (style) {
-          // hover:only:px-3.5 -> hover\:only-child\:px-3\.5
-          let ruleName = escape(name)
-          // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
-          if (pseudos) ruleName += pseudos.reverse().join(':')
-          if (dark) ruleName = '.dark ' + ruleName
-          // .rule { ... }
-          let rule = `.${ruleName}{${style}}`
-          // sm:lg:rule -> @media (min-width:640px) { @media (min-width:1024px) { .rule {...} } }
-          if (queries) for (const query of queries.reverse()) rule = `@media ${query} { ${rule} }`
-          ss.insertRule(rule, ss.cssRules.length) // always pass index, else API inserts at 0
-          classNames.push(name)
-          continue
-        }
-        // bad:
-        console.warn(`Unknown style: "${name}"`)
+const newCSSCache = (ss: CSSStyleSheet): PredefineCSS => {
+  const cache = new Set()
+  return (...classes: Style[]): Style => {
+    const names = classes.filter(k => k ? true : false).join(' ').trim().split(/\s+/g) // TODO perf
+    if (!names.length) return
+    const classNames: S[] = []
+    for (const name of names) {
+      if (cache.has(name)) { // hit
+        classNames.push(name)
+        continue
       }
-      return classNames.join(' ')
+      // miss:
+      cache.add(name) // Add rightaway so that bad names are never attempted again.
+      let
+        base: S = name,
+        dark = false,
+        pseudos: S[] | null = null,
+        queries: S[] | null = null
+      if (name.indexOf(':') >= 0) {
+        const
+          tokens = name.split(':'),
+          prefixes = tokens.slice(0, tokens.length - 1)
+        base = tokens[tokens.length - 1]
+        for (const prefix of prefixes) {
+          const pseudo = pseudoClasses[prefix]
+          if (pseudo) {
+            (pseudos ?? (pseudos = [])).push(pseudo)
+            continue
+          }
+          if (prefix === 'dark') {
+            dark = true
+            continue
+          }
+          const query = mediaQueries[prefix]
+          if (query) {
+            (queries ?? (queries = [])).push(query)
+            continue
+          }
+          console.warn(`Unknown style prefix: "${prefix}"`)
+        }
+      }
+      const style = stylize(base)
+      if (style) {
+        // hover:only:px-3.5 -> hover\:only-child\:px-3\.5
+        let ruleName = escape(name)
+        // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
+        if (pseudos) ruleName += pseudos.reverse().join(':')
+        if (dark) ruleName = '.dark ' + ruleName
+        // .rule { ... }
+        let rule = `.${ruleName}{${style}}`
+        // sm:lg:rule -> @media (min-width:640px) { @media (min-width:1024px) { .rule {...} } }
+        if (queries) for (const query of queries.reverse()) rule = `@media ${query} { ${rule} }`
+        ss.insertRule(rule, ss.cssRules.length) // always pass index, else API inserts at 0
+        classNames.push(name)
+        continue
+      }
+      // bad:
+      console.warn(`Unknown style: "${name}"`)
     }
-  return put
+    return classNames.join(' ')
+  }
 }
 
 const createStyleSheet = (): CSSStyleSheet => {
@@ -1220,4 +1219,4 @@ const createStyleSheet = (): CSSStyleSheet => {
   throw new Error('Could not create stylesheet')
 }
 
-export const css = newStyleCache(createStyleSheet())
+export const css = newCSSCache(createStyleSheet())
