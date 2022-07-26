@@ -1,7 +1,13 @@
 :root {
+  /* Theme Fonts */
   --font-serif: 'Roboto Slab';
   --font-sans: 'Inter';
-  --font-mono: 'Fira Sans';
+  --font-mono: 'Roboto Mono';
+
+  /* Theme Colors */
+  --text: #232329;
+  --bg: #ffffff;
+  --accent: #5a64f0;
 }
 
 /*
@@ -630,6 +636,7 @@ video {
   font-size: 0.875em;
 }
 
+/*
 .prose :where(code):not(:where([class~="not-prose"] *))::before {
   content: "`";
 }
@@ -637,7 +644,7 @@ video {
 .prose :where(code):not(:where([class~="not-prose"] *))::after {
   content: "`";
 }
-
+*/
 .prose :where(a code):not(:where([class~="not-prose"] *)) {
   color: inherit;
 }
@@ -2150,4 +2157,11 @@ video {
   --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
   --tw-prose-invert-th-borders: #57534e;
   --tw-prose-invert-td-borders: #44403c;
+}
+
+.stripe {
+  height: 1rem;
+  background-color: var(--accent);
+  background-size: 5px 5px;
+  background-image: radial-gradient(var(--bg) 1px, transparent 1px);
 }
