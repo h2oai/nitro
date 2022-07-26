@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import hljs from 'highlight.js';
-import 'highlight.js/styles/github.css';
+import 'highlight.js/styles/base16/bright.css';
 import { micromark, Options } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import { B, Dict, S, U } from './core';
