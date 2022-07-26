@@ -87,19 +87,17 @@ view('Then stop.')
 
 ## Style text
 
-To style text, put it in a `box()`, and style the box.
-
-`view(text)` is in fact shorthand for `view(box(text))`.
+To style text, wrap it in `box()`, and set `style=`. Nitro supports [Tailwind](https://tailwindcss.com/) styles.
 
 
 ```py
 view(
-    box('Hello World!', color='red', border='red'),
-    box('Hello World!', color='white', background='red'),
-    box('Hello World!', width='50%', background='#eee'),
+    box('Hello World!', style='font-semibold p-4 shadow-lg bg-slate-50 rounded-lg'),
 )
 ```
 
+
+`view(text)` is in fact shorthand for `view(box(text))`.
 
 In general, `box()` can be used to create all kinds of content, like text blocks, dropdowns,
 spinboxes, checklists, buttons, calendars, and so on.
