@@ -1127,16 +1127,16 @@ export const stylize = (prefix: S): S | undefined => {
 
   let rules = evaluations.get(prefix)
   if (rules) {
-    const css = tryExpand(rules, '')
-    if (css) return css
+    const styles = tryExpand(rules, '')
+    if (styles) return styles
   }
 
   let pos = prefix.indexOf('-')
   while (pos >= 0 && pos < prefix.length) {
     rules = evaluations.get(prefix.substring(0, pos))
     if (rules) {
-      const css = tryExpand(rules, prefix.substring(pos + 1))
-      if (css) return css
+      const styles = tryExpand(rules, prefix.substring(pos + 1))
+      if (styles) return styles
     }
     pos = prefix.indexOf('-', pos + 1)
   }
@@ -1145,11 +1145,9 @@ export const stylize = (prefix: S): S | undefined => {
 
 const escape = (name: S): S => name.replace(/([.:])/g, '\\$1')
 
-export type StyleCache = {
-  put(klass: S): S | undefined
-}
+export type StyleCache = (klass: S) => S | undefined
 
-export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
+const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
   const
     cache = new Set(),
     put = (klass: S): S | undefined => {
@@ -1211,5 +1209,15 @@ export const newStyleCache = (ss: CSSStyleSheet): StyleCache => {
       }
       return classNames.join(' ')
     }
-  return { put }
+  return put
 }
+
+const createStyleSheet = (): CSSStyleSheet => {
+  const el = document.createElement('style')
+  document.head.appendChild(el)
+  const ss = el.sheet
+  if (ss) return ss
+  throw new Error('Could not create stylesheet')
+}
+
+export const css = newStyleCache(createStyleSheet())

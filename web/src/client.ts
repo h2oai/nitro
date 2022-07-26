@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
-import { newStyleCache } from './css';
+import { css } from './css';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditPosition, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT } from './protocol';
@@ -165,13 +165,6 @@ const getLocale = () => {
   return ''
 }
 
-const createStyleSheet = (): CSSStyleSheet => {
-  const el = document.createElement('style')
-  document.head.appendChild(el)
-  const ss = el.sheet
-  if (ss) return ss
-  throw new Error('Could not create stylesheet')
-}
 export const newClient = (server: Server) => {
   const
     body: Box[] = [],
@@ -192,7 +185,6 @@ export const newClient = (server: Server) => {
     connect = () => {
       server.connect(handleEvent)
     },
-    styleCache = newStyleCache(createStyleSheet()),
     jump = (v: V, params?: Dict<S>) => {
       if (isS(v) && /^http[s]*:\/\//.test(v)) {
         const
@@ -249,7 +241,7 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { box: rawBox, edit: rawEdit } = msg,
-                    box = sanitizeBox(styleCache, localeB(), rawBox),
+                    box = sanitizeBox(css, localeB(), rawBox),
                     boxes = box.items ?? [],
                     root = body[0]?.items ?? []
                   if (box.popup) {
