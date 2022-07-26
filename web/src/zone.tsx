@@ -244,6 +244,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
             <img
               className={className}
               data-name={box.name ?? undefined}
+              alt={box.text}
               src={box.image} />
           )
         }
