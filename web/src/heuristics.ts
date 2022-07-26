@@ -196,9 +196,18 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
 
   if (box.mode as any === 'column') box.mode = 'col'
   if (box.layout as any === 'column') box.layout = 'col'
+
   if (box.items) {
+    if (box.mode === 'tabs') {
+      box.items.forEach(box => prefixStyle(box, 'flex flex-col gap-2 my-2'))
+    }
+    const prefix = box.mode === 'col'
+      ? 'flex flex-col gap-2'
+      : box.mode === 'row'
+        ? 'flex flex-row gap-2'
+        : undefined
+    prefixStyle(box, prefix)
     box.items = box.items.map(b => sanitizeBox(locale, b))
-    prefixStyle(box, box.mode === 'row' ? 'flex flex-row' : box.mode === 'column' ? 'flex flex-col' : undefined)
   } else {
     const { value, options } = box
     if (isB(value)) {
