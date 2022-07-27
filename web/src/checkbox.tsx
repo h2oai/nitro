@@ -13,13 +13,10 @@
 // limitations under the License.
 
 import { Checkbox as FCheckbox } from '@fluentui/react';
-import styled from 'styled-components';
 import { B } from './core';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
-const Container = styled.div`
-  margin: 0.5rem 0;
-`
 export const Checkbox = make(({ context, box }: BoxProps) => {
   const
     { value, text, live } = box,
@@ -29,13 +26,13 @@ export const Checkbox = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Container>
+        <div className={css(box.style)}>
           <FCheckbox
             label={text}
             defaultChecked={value ? true : false}
             onChange={(_, checked) => onChecked(checked)}
           />
-        </Container>
+        </div>
       )
     }
 

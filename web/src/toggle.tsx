@@ -13,14 +13,10 @@
 // limitations under the License.
 
 import { Toggle as FToggle } from '@fluentui/react';
-import React from 'react';
-import styled from 'styled-components';
 import { B } from './core';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
-const Container = styled.div`
-  margin: 0.5rem 0;
-`
 export const Toggle = make(({ context, box }: BoxProps) => {
   const
     { value, text } = box,
@@ -30,14 +26,14 @@ export const Toggle = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Container>
+        <div className={css(box.style)}>
           <FToggle
             label={text}
             defaultChecked={value ? true : false}
             onChange={(_, checked) => onChecked(checked)}
             inlineLabel
           />
-        </Container>
+        </div>
       )
     }
 
