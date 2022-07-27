@@ -196,6 +196,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
 
   if (box.mode as any === 'column') box.mode = 'col'
   if (box.layout as any === 'column') box.layout = 'col'
+  if (isS(box.variant)) box.variants = new Set(words(box.variant))
 
   if (box.items) {
     if (box.mode === 'tabs') {
