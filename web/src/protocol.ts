@@ -157,6 +157,8 @@ export type Box = {
   wrap?: S
   gap?: S
   align?: S // CSS text-align
+  variant?: S
+  variants?: Set<S> // front-end only
   width?: S | [S] | Pair<S> | Triple<S> // CSS width / [min] / [min, max] / [min, max, initial]
   height?: S | [S] | Pair<S> | Triple<S> // CSS height / [min] / [min, max] / [min, max, initial]
   margin?: S // CSS margin

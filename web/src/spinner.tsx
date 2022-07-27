@@ -13,20 +13,19 @@
 // limitations under the License.
 
 import { Spinner as FSpinner, SpinnerLabelPosition } from '@fluentui/react';
+import { has } from './core';
 import { BoxProps } from './ui';
 
 export const Spinner = ({ box }: BoxProps) => {
   const
-    { text, align } = box,
-    labelPosition: SpinnerLabelPosition | undefined = align === 'left'
-      ? 'left'
-      : align === 'right'
+    { text, variants } = box,
+    labelPosition = has(variants, 'label-top')
+      ? 'top'
+      : has(variants, 'label-right')
         ? 'right'
-        : align === 'top'
-          ? 'top'
-          : align === 'bottom'
-            ? 'bottom'
-            : undefined
+        : has(variants, 'label-left')
+          ? 'left'
+          : undefined
 
   return (
     <FSpinner label={text ?? undefined} labelPosition={labelPosition} />
