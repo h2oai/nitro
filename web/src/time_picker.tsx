@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ISpinButtonStyles, IStackItemStyles, Position, SpinButton, Stack, Toggle } from '@fluentui/react';
+import { ISpinButtonStyles, IStackItemStyles, Label, Position, SpinButton, Stack, Toggle } from '@fluentui/react';
 import React from 'react';
 import { B, leftPad, S, U } from './core';
+import { css } from './css';
 import { Labeled } from './label';
 import { BoxProps, make } from './ui';
 
@@ -45,7 +46,7 @@ const
 
 export const TimePicker = make(({ context, box }: BoxProps) => {
   const
-    { value, live } = box,
+    { text, value, live, style } = box,
     clock = parseClock(String(value).toLowerCase()),
     capture = () => {
       context.record(clockToString(clock))
@@ -71,7 +72,8 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Labeled box={box}>
+        <div className={css('flex flex-col', style)}>
+          {text && <Label>{text}</Label>}
           <Stack horizontal horizontalAlign='start' tokens={{ childrenGap: 5 }}>
             <Stack.Item styles={isNaN(clock.hh) ? hide : undefined}>
               <SpinButton
@@ -115,7 +117,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
               />
             </Stack.Item>
           </Stack>
-        </Labeled>
+        </div>
       )
     }
 
