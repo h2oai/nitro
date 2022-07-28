@@ -13,12 +13,13 @@
 // limitations under the License.
 
 import { Spinner as FSpinner } from '@fluentui/react';
+import { css } from './css';
 import { BoxProps } from './ui';
 
 // TODO add size variants 
 export const Spinner = ({ box }: BoxProps) => {
   const
-    { text, modes } = box,
+    { text, modes, style } = box,
     labelPosition = modes.has('text-top')
       ? 'top'
       : modes.has('text-right')
@@ -28,7 +29,9 @@ export const Spinner = ({ box }: BoxProps) => {
           : undefined
 
   return (
-    <FSpinner label={text ?? undefined} labelPosition={labelPosition} />
+    <div className={css(style)}>
+      <FSpinner label={text ?? undefined} labelPosition={labelPosition} />
+    </div>
   )
 }
 
