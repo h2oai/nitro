@@ -150,27 +150,10 @@ export type Box = {
   hint?: S
   help?: S
   popup?: B
-  layout?: 'row' | 'col'
   style?: S
-  tile?: S
-  cross_tile?: S
-  wrap?: S
-  gap?: S
-  align?: S // CSS text-align
-  variant?: S
-  variants?: Set<S> // front-end only
   width?: S | [S] | Pair<S> | Triple<S> // CSS width / [min] / [min, max] / [min, max, initial]
   height?: S | [S] | Pair<S> | Triple<S> // CSS height / [min] / [min, max] / [min, max, initial]
-  margin?: S // CSS margin
-  padding?: S // CSS padding
-  border?: S // CSS border 1px solid ~
-  color?: S  // CSS color
-  background?: S // CSS background
   image?: S // img tag or CSS background-image
-  fit?: S // CSS object-fit or background-size
-  grow?: U // CSS flex-grow
-  shrink?: U // CSS flex-shrink
-  basis?: S // CSS flex-basis
   icon?: S
   min?: V
   max?: V
