@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ColorPicker as FColorPicker, cssColor, IColor, IRGB } from '@fluentui/react';
+import { ColorPicker as FColorPicker, cssColor, IColor, IRGB, Label } from '@fluentui/react';
 import React from 'react';
-import { Labeled } from './label';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
 
 export const ColorPicker = make(({ context, box }: BoxProps) => {
   const
-    { value, live } = box,
+    { text, value, live, style } = box,
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
     colorToTuple = ({ r, g, b, a }: IRGB) => [r, g, b, a ?? 100],
@@ -31,14 +31,15 @@ export const ColorPicker = make(({ context, box }: BoxProps) => {
     onChange = (_: React.SyntheticEvent<HTMLElement>, color: IColor) => record(color),
     render = () => {
       return (
-        <Labeled box={box}>
+        <div className={css('flex flex-col', style)}>
+          {text && <Label>{text}</Label>}
           <FColorPicker
             color={colorValue}
             alphaType='alpha'
             onChange={onChange}
             showPreview
           />
-        </Labeled>
+        </div>
       )
     }
 
