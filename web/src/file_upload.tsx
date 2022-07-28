@@ -14,25 +14,10 @@
 
 import { FontIcon, Label, MessageBar, MessageBarType, ProgressIndicator } from '@fluentui/react';
 import React from 'react';
-import styled from 'styled-components';
 import { F, S, signal, Signal, xid } from './core';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
-const Container = styled.div`
-  margin: 0.5rem 0;
-`
-const FileList = styled.div`
-  margin: 1rem 0;
-`
-const FileItemContainer = styled.div`
-  display: flex;
-`
-const FileDetail = styled.div`
-  flex-grow: 1;
-`
-const FileIcon = styled.div`
-  margin-right: 0.8rem;
-`
 const fileIconSize = 24
 const fileIconStyle = {
   fontSize: fileIconSize,
@@ -40,33 +25,6 @@ const fileIconStyle = {
   height: fileIconSize,
 }
 
-const FileDropZone = styled.div`
-  border: 1px dashed var(--neutral-secondary);
-  border-radius: 1.2rem;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`
-const FileDropZoneLabel = styled.div`
-  font-size: 1.6rem;
-  margin-bottom: 1.2rem;
-`
-const FileInputLabel = styled.label`
-  display: inline-block;
-  cursor: pointer;
-  background: var(--accent);
-  color: var(--background);
-  border-radius: 2px;
-  box-sizing: border-box;
-  height: 3.2rem;
-  line-height: 3.2rem;
-  padding: 0 1.6rem;
-  font-size: 1.4rem;
-  font-weight: 600;
-  text-align: center;
-`
 
 enum UploadResultT { Success, Failure }
 type UploadResult = { t: UploadResultT.Success, key: S } | { t: UploadResultT.Failure, error: S }
@@ -100,9 +58,9 @@ const FileItem = make(({ label, progressB, errorB }: { label: S, progressB: Sign
         error = errorB(),
         iconName = error ? 'FileOff' : progress < 1 ? 'OpenFile' : 'DocumentApproval'
       return (
-        <FileItemContainer>
-          <FileIcon><FontIcon iconName={iconName} style={fileIconStyle} /></FileIcon>
-          <FileDetail>
+        <div className={css('flex')}>
+          <div className={css('mr-2')}><FontIcon iconName={iconName} style={fileIconStyle} /></div>
+          <div className={css('grow')}>
             {
               error
                 ? <MessageBar messageBarType={MessageBarType.error}>{`${label}: ${error}`}</MessageBar>
@@ -110,8 +68,8 @@ const FileItem = make(({ label, progressB, errorB }: { label: S, progressB: Sign
                   ? <ProgressIndicator label={label} percentComplete={progress} />
                   : <Label>{label}</Label>
             }
-          </FileDetail>
-        </FileItemContainer>
+          </div>
+        </div>
       )
     }
   return { render, progressB, errorB }
@@ -127,7 +85,7 @@ type Uploadable = {
 
 export const FileUpload = make(({ context, box }: BoxProps) => {
   const
-    { text, path } = box,
+    { text, path, style } = box,
     multiple = box.multiple ? true : false,
     label = multiple ? 'Drag files here, or' : 'Drag a file here, or',
     inputID = xid(),
@@ -195,25 +153,28 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
         ))
 
       return (
-        <Container>
-          <form
-            onDragStart={onDrag}
-            onDragEnter={onDrag}
-            onDragEnd={onDrag}
-            onDragLeave={onDrag}
-            onDragOver={onDrag}
-            onDrop={onDrop}
-          >
+        <form
+          onDragStart={onDrag}
+          onDragEnter={onDrag}
+          onDragEnd={onDrag}
+          onDragLeave={onDrag}
+          onDragOver={onDrag}
+          onDrop={onDrop}
+        >
+          <div className={css('flex flex-col gap-1', style)}>
             <Label>{text}</Label>
             {warning ? <MessageBar messageBarType={MessageBarType.severeWarning}>{warning}</MessageBar> : <></>}
-            <FileList>{items}</FileList>
-            <FileDropZone>
+            <div className={css('flex flex-col gap-1')}>{items}</div>
+            <div className={css('flex flex-col gap-2 justify-center items-center h-48 border border-dashed rounded-xl')}>
               <input id={inputID} type='file' onChange={onChange} multiple={multiple} style={{ opacity: 0 }} />
-              <FileDropZoneLabel>{label}</FileDropZoneLabel>
-              <FileInputLabel htmlFor={inputID}>Browse...</FileInputLabel>
-            </FileDropZone>
-          </form>
-        </Container>
+              <div>{label}</div>
+              <label
+                className={css('flex justify-center items-center cursor-pointer text-sm font-bold text-center rounded-sm h-8 px-4 bg-red-500')}
+                htmlFor={inputID}
+              ><span>Browse...</span></label>
+            </div>
+          </div>
+        </form>
       )
     }
 
