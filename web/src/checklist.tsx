@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Checkbox } from '@fluentui/react';
-import styled from 'styled-components';
+import { Checkbox, Label } from '@fluentui/react';
 import { B, S, V } from './core';
-import { Labeled } from './label';
+import { css } from './css';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
-const Container = styled.div`
-  margin: 1rem 0;
-`
 export const Checklist = make(({ context, box }: BoxProps) => {
   const
-    { options, live } = box,
+    { text, options, live, style } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     capture = () => context.record(Array.from(selection)),
@@ -40,17 +36,20 @@ export const Checklist = make(({ context, box }: BoxProps) => {
     render = () => {
       const
         checkboxes = options.map(c => (
-          <Container key={c.value}>
+          <div key={c.value}>
             <Checkbox
               label={c.text}
               defaultChecked={selection.has(String(c.value))}
               onChange={(_, checked) => onChecked(c.value, checked)}
             />
-          </Container>
+          </div>
         ))
 
       return (
-        <Labeled box={box}><div>{checkboxes}</div></Labeled>
+        <div className={css('flex flex-col gap-2')}>
+          {text && <Label>{text}</Label>}
+          <div className={css('flex flex-col gap-2', style)}>{checkboxes}</div>
+        </div>
       )
     }
 
