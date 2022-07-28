@@ -14,13 +14,14 @@
 
 import { Dropdown as FDropdown, IDropdownOption } from '@fluentui/react';
 import React from 'react';
+import { css } from './css';
 import { selectedOf, toDropdownOption, toGroupedDropdownOptions } from './options';
 import { BoxProps, make } from './ui';
 
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
 export const Dropdown = make(({ context, box }: BoxProps) => {
   const
-    { text, placeholder, error, required, options, live } = box,
+    { text, placeholder, error, required, options, live, style } = box,
     selected = selectedOf(box),
     hasGroups = options.some(c => c.options?.length ? true : false),
     items: IDropdownOption[] = hasGroups ? toGroupedDropdownOptions(options) : options.map(toDropdownOption),
@@ -31,8 +32,8 @@ export const Dropdown = make(({ context, box }: BoxProps) => {
         if (live) context.commit()
       }
     },
-    render = () => {
-      return (
+    render = () => (
+      <div className={css(style)}>
         <FDropdown
           label={text}
           placeholder={placeholder}
@@ -42,8 +43,9 @@ export const Dropdown = make(({ context, box }: BoxProps) => {
           required={required ? true : false}
           onChange={onChange}
         />
-      )
-    }
+      </div>
+    )
+
 
   context.record(selected ? selected.value : null)
 
