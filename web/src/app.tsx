@@ -12,63 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import styled from 'styled-components';
+import { FontIcon } from '@fluentui/react';
+import React from 'react';
 import { Body, Popup } from './body';
 import { Client, ClientStateT } from './client';
-import { signal, U } from './core';
+import { S, signal, U } from './core';
 import { css } from './css';
 import { Header } from './header';
 import { HelpPanel } from './help';
 import loadingAnimation from './loading.gif';
 import { make } from './ui';
 
-const Overlay = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
-const Danger = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: 2rem;
-  color: #842029;
-  background-color: #f8d7da;
-  border: 1px solid #f5c2c7;
-`
-const Warning = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: 2rem;
-  color: #664d03;
-  background-color: #fff3cd;
-  border: 1px solid #ffecb5;
-`
-const Blocker = styled(Overlay)`
-  z-index: 1000;
-  background-color: #000;
-  opacity: 0;
-  transition: opacity 0.3s
-`
-
 const Busy = make(({ timeout }: { timeout: U }) => {
   const
     visibleB = signal(false),
     render = () => (
-      <Blocker style={{ opacity: visibleB() ? 0.5 : 0 }}>
+      <div
+        className={css('absolute inset-0 flex flex-col justify-center items-center bg-black opacity-0 transition-opacity')}
+        style={{ zIndex: 1000, opacity: visibleB() ? 0.5 : 0 }}
+      >
         <img alt='Busy' src={loadingAnimation} />
-      </Blocker>
+      </div>
     )
 
   setTimeout(() => { visibleB(true) }, timeout)
 
   return { render, visibleB }
 })
+
+const Signage = ({ title, icon, children }: { title: S, icon: S, children: React.ReactNode }) => (
+  <div className={css('absolute inset-0 flex justify-center items-center')}>
+    <div className={css('flex gap-4')}>
+      <FontIcon className={css('text-5xl text-red-500 animate-pulse')} iconName={icon} />
+      <div className={css('')}>
+        <div className={css('text-4xl font-black tracking-tight')}>{title}</div>
+        <div>{children}</div>
+      </div>
+    </div>
+  </div>
+)
 
 export const App = make(({ client }: { client: Client }) => {
   const
@@ -81,19 +63,15 @@ export const App = make(({ client }: { client: Client }) => {
       switch (state.t) {
         case ClientStateT.Connecting:
           return (
-            <Busy timeout={100} />
+            <Busy timeout={500000} />
           )
         case ClientStateT.Disconnected:
           return (
-            <Overlay>
-              <Warning>Disconnected, retrying in {state.retry} seconds...</Warning>
-            </Overlay>
+            <Signage title='Disconnected' icon='PlugDisconnected'>Retrying in {state.retry} seconds...</Signage>
           )
         case ClientStateT.Invalid:
           return (
-            <Overlay>
-              <Danger>Error: {state.error}</Danger>
-            </Overlay>
+            <Signage title='Error' icon='Error'>Error: {state.error}</Signage>
           )
         case ClientStateT.Connected:
           const
