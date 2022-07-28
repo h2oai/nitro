@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ITag, TagPicker as FTagPicker } from '@fluentui/react';
+import { ITag, Label, TagPicker as FTagPicker } from '@fluentui/react';
 import { S } from './core';
-import { Labeled } from './label';
+import { css } from './css';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
@@ -22,7 +22,7 @@ const keysFromTags = (tags: ITag[]) => tags.map(tag => String(tag.key))
 
 export const TagPicker = make(({ context, box }: BoxProps) => {
   const
-    { options, live } = box,
+    { text, options, live, style } = box,
     selectedOptions = selectedsOf(box),
     selectedKeys = selectedOptions.map(o => String(o.value)),
     tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),
@@ -45,7 +45,8 @@ export const TagPicker = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Labeled box={box}>
+        <div className={css('flex flex-col', style)}>
+          {text && <Label>{text}</Label>}
           <FTagPicker
             pickerSuggestionsProps={{
               suggestionsHeaderText: 'Suggestions',
@@ -57,7 +58,7 @@ export const TagPicker = make(({ context, box }: BoxProps) => {
             defaultSelectedItems={initialTags}
             onChange={onChange}
           />
-        </Labeled>
+        </div>
       )
     }
 
