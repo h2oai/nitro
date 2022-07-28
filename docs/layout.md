@@ -45,7 +45,8 @@ view(box(
         box('Left', style='border p-2'),
         box('Center', style='border p-2'),
         box('Right', style='border p-2'),
-    ]
+    ],
+    style='flex flex-row gap-2',
 ))
 ```
 
@@ -133,7 +134,8 @@ box(
         box(value='North'),
         box(value='Center'),
         box(value='South'),
-    ]
+    ],
+    style='flex flex-col gap-2',
 )
 ```
 
@@ -226,14 +228,13 @@ view(
 
 ## Accordion layout
 
-Set `layout='col'` with `mode='tabs'` to lay out tabs one below the other, commonly known as an accordion.
+Set `mode='vertical tabs'` to lay out tabs one below the other, commonly known as an accordion.
 
 
 ```py
 view(
     box(
-        mode='tabs',
-        layout='col',
+        mode='vertical tabs',
         items=[
             box(
                 'Profile',

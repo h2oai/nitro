@@ -26,21 +26,23 @@ def spinner_basic(view: View):  # height 2
 
 
 # ## Set alignment
-# Set `align=` to align the text to the `left`, `right`, `top`, or `bottom` of the spinner.
+# Add `text-left`, `text-right`, `text-top` or `text-bottom` to the `mode` to align the text
+# to the `left`, `right`, `top`, or `bottom` of the spinner.
 def spinner_align(view: View):  # height 7
-    view(col(
-        'Default:',
-        box('Reticulating splines...', mode='spinner'),
-        'Left:',
-        box('Reticulating splines...', mode='spinner', align='left'),
-        'Top:',
-        box('Reticulating splines...', mode='spinner', align='top'),
-        'Right:',
-        box('Reticulating splines...', mode='spinner', align='right'),
-        'Bottom:',
-        box('Reticulating splines...', mode='spinner', align='bottom'),
-        gap=30,
-    ))
+    view(
+        col(
+            'Default:',
+            box('Reticulating splines...', mode='spinner'),
+            'Left:',
+            box('Reticulating splines...', mode='spinner text-left'),
+            'Top:',
+            box('Reticulating splines...', mode='spinner text-top'),
+            'Right:',
+            box('Reticulating splines...', mode='spinner text-right'),
+            'Bottom:',
+            box('Reticulating splines...', mode='spinner text-bottom'),
+        )
+    )
 
 
 # ## Remove text

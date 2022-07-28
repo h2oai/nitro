@@ -8,7 +8,12 @@ Set `mode='check'` to show a checkbox.
 
 
 ```py
-keep_signed_in = view(box('Keep me signed in', mode='check'))
+keep_signed_in = view(
+    box('Keep me signed in', mode='check'),
+    box('Keep me signed in', mode='check'),
+    box('Keep me signed in', mode='check'),
+    box('Keep me signed in', mode='check'),
+)
 view(f'Keep me signed in: {keep_signed_in}.')
 ```
 

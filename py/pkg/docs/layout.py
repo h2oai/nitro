@@ -48,7 +48,8 @@ def layout_row_alt(view: View):
             box('Left', style='border p-2'),
             box('Center', style='border p-2'),
             box('Right', style='border p-2'),
-        ]
+        ],
+        style='flex flex-row gap-2',
     ))
 
 
@@ -112,7 +113,8 @@ def layout_col_alt2(view: View):
             box(value='North'),
             box(value='Center'),
             box(value='South'),
-        ]
+        ],
+        style='flex flex-col gap-2',
     )
 
 
@@ -186,12 +188,11 @@ def layout_tabs(view: View):  # height 5
 
 
 # ## Accordion layout
-# Set `layout='col'` with `mode='tabs'` to lay out tabs one below the other, commonly known as an accordion.
+# Set `mode='vertical tabs'` to lay out tabs one below the other, commonly known as an accordion.
 def layout_tabs_vertical(view: View):  # height 5
     view(
         box(
-            mode='tabs',
-            layout='col',
+            mode='vertical tabs',
             items=[
                 box(
                     'Profile',

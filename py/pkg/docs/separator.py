@@ -25,14 +25,31 @@ def separator_basic(view: View):  # height 2
 
 
 # ## Set text alignment
-# A separator's label is centered by default.
-# Set `align=` to left- or right-align the label.
+# A separator's text is centered by default.
+#
+# - Set `text-start` to show text at the start of the separator.
+# - Set `text-end` to show text at the end of the separator.
 def separator_align(view: View):  # height 4
     view(
-        box('Left-aligned', mode='separator', align='left'),
+        box('Left-aligned', mode='separator text-start'),
         box(lorem(3)),
         box('Center-aligned', mode='separator'),
         box(lorem(3)),
-        box('Right-aligned', mode='separator', align='right'),
+        box('Right-aligned', mode='separator text-end'),
         box(lorem(3)),
+    )
+
+
+# ## Vertical
+# Set `vertical` to show a vertical separator
+def separator_vertical(view: View):  # height 4
+    view(
+        row(
+            box('Left-aligned', mode='vertical separator text-start'),
+            box(lorem(3)),
+            box('Center-aligned', mode='vertical separator'),
+            box(lorem(3)),
+            box('Right-aligned', mode='vertical separator text-end'),
+            box(lorem(3)),
+        )
     )
