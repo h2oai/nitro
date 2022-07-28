@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CompoundButton, DefaultButton, IButtonStyles, PrimaryButton, Stack } from '@fluentui/react';
+import { CompoundButton, DefaultButton, IButtonStyles, Label, PrimaryButton } from '@fluentui/react';
 import { isB, V } from './core';
-import { Labeled } from './label';
+import { css } from './css';
 import { toContextualMenuProps } from './options';
 import { BoxProps, make } from './ui';
 
@@ -24,13 +24,8 @@ export const Buttons = make(({ context, box }: BoxProps) => {
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
-        { layout, options, align } = box,
-        horizontal = layout !== 'col',
-        horizontalAlign = horizontal
-          ? align === 'center'
-            ? 'center'
-            : align === 'right' ? 'end' : undefined
-          : undefined,
+        { text, options, style, modes } = box,
+        horizontal = !modes.has('vertical'),
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
         capture = (value: V) => {
@@ -41,28 +36,28 @@ export const Buttons = make(({ context, box }: BoxProps) => {
         buttons = options.map((o, i) => {
           const
             text = o.text,
-            onClick = () => capture(o.value),
-            button = (hasNoPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
-              ? o.options
-                ? o.value === ''
-                  ? <PrimaryButton data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
-                  : <PrimaryButton data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
-                : o.caption
-                  ? <CompoundButton data-name={o.name} primary text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
-                  : <PrimaryButton data-name={o.name} text={text} styles={styles} onClick={onClick} />
-              : o.options
-                ? o.value === ''
-                  ? <DefaultButton data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
-                  : <DefaultButton data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
-                : o.caption
-                  ? <CompoundButton data-name={o.name} text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
-                  : <DefaultButton data-name={o.name} text={text} styles={styles} onClick={onClick} />
-          return <Stack.Item key={o.value}>{button}</Stack.Item>
+            onClick = () => capture(o.value)
+          return (hasNoPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
+            ? o.options
+              ? o.value === ''
+                ? <PrimaryButton key={o.value} data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
+                : <PrimaryButton key={o.value} data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
+              : o.caption
+                ? <CompoundButton key={o.value} data-name={o.name} primary text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
+                : <PrimaryButton key={o.value} data-name={o.name} text={text} styles={styles} onClick={onClick} />
+            : o.options
+              ? o.value === ''
+                ? <DefaultButton key={o.value} data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
+                : <DefaultButton key={o.value} data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
+              : o.caption
+                ? <CompoundButton key={o.value} data-name={o.name} text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
+                : <DefaultButton key={o.value} data-name={o.name} text={text} styles={styles} onClick={onClick} />
         })
       return (
-        <Labeled box={box} offset={true}>
-          <Stack horizontal={horizontal} horizontalAlign={horizontalAlign} tokens={{ childrenGap: 5 }} >{buttons}</Stack>
-        </Labeled>
+        <div className={css('flex flex-col')}>
+          {text ? <Label>{text}</Label> : <Label>&nbsp;</Label>}
+          <div className={css('flex gap-2', horizontal ? 'flex-row' : 'flex-col', style)}>{buttons}</div>
+        </div>
       )
     }
   context.record(null)
