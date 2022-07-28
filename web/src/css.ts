@@ -1151,7 +1151,9 @@ export type PredefineCSS = (...classes: Style[]) => Style
 const newCSSCache = (ss: CSSStyleSheet): PredefineCSS => {
   const cache = new Set()
   return (...classes: Style[]): Style => {
-    const names = classes.filter(k => k ? true : false).join(' ').trim().split(/\s+/g) // TODO perf
+    classes = classes.filter(k => k ? true : false)
+    if (!classes.length) return
+    const names = classes.join(' ').trim().split(/\s+/g) // TODO perf
     if (!names.length) return
     const classNames: S[] = []
     for (const name of names) {
