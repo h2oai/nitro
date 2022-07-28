@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Spinner as FSpinner, SpinnerLabelPosition } from '@fluentui/react';
-import { has } from './core';
+import { Spinner as FSpinner } from '@fluentui/react';
 import { BoxProps } from './ui';
 
+// TODO add size variants 
 export const Spinner = ({ box }: BoxProps) => {
   const
-    { text, variants } = box,
-    labelPosition = has(variants, 'label-top')
+    { text, modes } = box,
+    labelPosition = modes.has('text-top')
       ? 'top'
-      : has(variants, 'label-right')
+      : modes.has('text-right')
         ? 'right'
-        : has(variants, 'label-left')
+        : modes.has('text-left')
           ? 'left'
           : undefined
 
