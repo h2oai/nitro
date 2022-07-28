@@ -23,7 +23,7 @@ import { Zone } from './zone';
 const
   continueButton: Box = {
     xid: xid(),
-    mode: 'button',
+    modes: new Set(['button']),
     index: -1, //don't capture
     options: [{ value: 'continue', text: 'Continue' }],
   },
@@ -33,7 +33,7 @@ export const Body = ({ client }: { client: Client }) => {
   const boxes: Box[] = makeContinuable(client.body)
   return (
     <div className='main'>
-      <Zone context={client.context} box={{ items: boxes } as Box} inRow={false} />
+      <Zone context={client.context} box={{ xid: 'main', index: -1, modes: new Set(['col']), items: boxes, options: [] }} inRow={false} />
     </div>
   )
 }

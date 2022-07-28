@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { moveSyntheticComments } from 'typescript';
 import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, S, words, xid } from './core';
 import { css } from './css';
 import { markdown } from './markdown';
@@ -189,22 +190,46 @@ const prefixStyle = (box: Box, prefix: S | undefined) => {
   if (prefix) box.style = box.style ? prefix + ' ' + box.style : prefix
 }
 
+const knownModes = new Set([
+  'row', 'col', 'tabs', 'md', 'button', 'menu', 'radio', 'check', 'toggle'
+  , 'text', 'range', 'number', 'time', 'date', 'day', 'week', 'month', 'tag', 'color'
+  , 'rating', 'table', 'file', 'progress', 'spinner', 'separator', 'image', 'web',
+  'info', 'success', 'warning', 'critical', 'blocked', 'error'
+])
+
+const readonlyBoxes = [
+  'progress',
+  'spinner',
+  'separator',
+  'info',
+  'success',
+  'warning',
+  'critical',
+  'blocked',
+  'error',
+  'image',
+  'web',
+]
+
 export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   if (isS(box)) {
-    box = { xid: xid(), index: 0, mode: 'md', text: box, options: [] }
+    box = { xid: xid(), index: 0, modes: new Set(['md']), text: box, options: [] }
+  } else {
+    const mode: any = (box as any).mode
+    box.modes = isS(mode) ? new Set(words(mode)) : new Set()
   }
 
-  if (box.mode as any === 'column') box.mode = 'col'
-  if (box.layout as any === 'column') box.layout = 'col'
-  if (isS(box.variant)) box.variants = new Set(words(box.variant))
+  const { modes } = box
+
+  if (modes.has('column')) modes.add('col') // QOL
 
   if (box.items) {
-    if (box.mode === 'tabs') {
+    if (modes.has('tabs')) {
       box.items.forEach(box => prefixStyle(box, 'flex flex-col gap-2 my-2'))
     }
-    const prefix = box.mode === 'col'
+    const prefix = modes.has('col')
       ? 'flex flex-col gap-2'
-      : box.mode === 'row'
+      : modes.has('row')
         ? 'flex flex-row gap-2'
         : undefined
     prefixStyle(box, prefix)
@@ -213,43 +238,29 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     const { value, options } = box
     if (isB(value)) {
       box.value = value ? 1 : 0 // TODO ugly: protocol should accept boolean
-      if (!box.mode) box.mode = 'check'
+      if (!modes.size) modes.add('check')
     }
     box.options = sanitizeOptions(options)
     box.index = 0
     sanitizeRange(box)
-    if (!box.mode) box.mode = determineMode(box)
+
+    if (!modes.size) modes.add(determineMode(box))
 
     localizeBox(locale, box)
 
-    switch (box.mode) {
-      case 'md':
-        {
-          const [md, hasLinks] = markdown(box.text ?? '')
-          box.text = md
-          if (!hasLinks) box.index = -1 // don't capture
-        }
-        break
-      case 'progress':
-      case 'spinner':
-      case 'separator':
-      case 'info':
-      case 'success':
-      case 'warning':
-      case 'critical':
-      case 'blocked':
-      case 'error':
-      case 'image':
-        box.index = -1 // don't capture
-        break
-      case 'web':
-        box.index = -1 // don't capture
+    if (modes.has('md')) {
+      const [md, hasLinks] = markdown(box.text ?? '')
+      box.text = md
+      if (!hasLinks) box.index = -1 // don't capture
+    } else {
+      for (const t of readonlyBoxes) if (modes.has(t)) box.index = -1 // don't capture
+
+      if (modes.has('web')) {
         // Set a height if missing, otherwise iframe won't flow.
         // iframe widths are already set to 100% in webview.
         if (!box.height) box.height = '400px'
-        break
+      }
     }
-
     if (box.ignore) box.index = -1 // don't capture
   }
 
@@ -276,21 +287,16 @@ export const hasActions = (boxes: Box[]): B => { // recursive
     if (box.items) {
       if (hasActions(box.items)) return true
     } else {
-      const { mode } = box
-      switch (mode) {
-        case 'button':
-          if (box.options.length) return true
-          break
-        case 'md':
-          if (box.index >= 0) return true
-          break
-        case 'toggle':
-        case 'progress':
-        case 'spinner':
-          return true
-        case 'table':
-          if (isB(box.multiple)) return false
-          if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
+      const { modes } = box
+      if (modes.has('button')) {
+        if (box.options.length) return true
+      } else if (modes.has('md')) {
+        if (box.index >= 0) return true
+      } else if (modes.has('toggle') || modes.has('progress') || modes.has('spinner')) {
+        return true
+      } else if (modes.has('table')) {
+        if (isB(box.multiple)) return false
+        if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
       }
     }
   }

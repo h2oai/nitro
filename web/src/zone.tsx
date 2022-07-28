@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { cssColor, IRGB, Pivot, PivotItem } from '@fluentui/react';
-import React from 'react';
+import { IRGB, Pivot, PivotItem } from '@fluentui/react';
 import { XBox } from './box';
 import { ClientContext } from './client';
-import { B, Dict, isS, S } from './core';
+import { B, isS, S } from './core';
 import { Expander } from './expander';
 import { Help } from './help';
 import { Box } from './protocol';
@@ -26,81 +25,65 @@ const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 1
 
 const translate = (s: S): S => isS(s) ? s.replace(/\$([\w-]+)/gi, 'var(--$1)') : s
 
+const labeledBoxes = ['text', 'number', 'menu', 'date', 'button', 'tag', 'rating']
 const hasLabel = (box: Box): B => {
-  switch (box.mode) {
-    case 'text':
-    case 'number':
-    case 'menu':
-    case 'date':
-    case 'button':
-    case 'tag':
-    case 'rating':
-      if (box.text) return true
-  }
+  const { modes } = box
+  for (const t of labeledBoxes) if (modes.has(t) && box.text) return true
   return false
 }
 
 export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box, inRow: B }) => {
   const
-    { mode, items, layout, style: className } = box,
-    isRow = mode === 'row'
+    { modes, items, style: className } = box,
+    isRow = modes.has('row')
 
   if (items) {
-    switch (mode) {
-      case 'tabs':
-        {
-          if (layout === 'col') {
-            const tabs = items.map((box, i) => (
-              <Expander key={box.xid} headerText={box.text ?? `Tab ${i + 1}`}>
-                <Zone key={box.xid} context={context} box={box} inRow={isRow} />
-              </Expander>
-            ))
-            return <div className={className} data-name={box.name ?? undefined}>{tabs}</div>
-          } else {
-            const tabs = items.map((box, i) => (
-              <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
-                <Zone key={box.xid} context={context} box={box} inRow={isRow} />
-              </PivotItem>
-            ))
-            return (
-              <div className={className} data-name={box.name ?? undefined} >
-                <Pivot>{tabs}</Pivot>
-              </div>
-            )
-          }
-        }
-      default:
-        {
-          const
-            children = items.map(box => (
-              <Zone key={box.xid} context={context} box={box} inRow={isRow} />
-            )),
-            style = box.image ? { backgroundImage: `url(${box.image})` } : undefined
-          return (
-            <div className={className} data-name={box.name ?? undefined} style={style} >{children}</div>
-          )
-        }
+    if (modes.has('tabs')) {
+      if (modes.has('vertical')) {
+        const tabs = items.map((box, i) => (
+          <Expander key={box.xid} headerText={box.text ?? `Tab ${i + 1}`}>
+            <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+          </Expander>
+        ))
+        return <div className={className} data-name={box.name ?? undefined}>{tabs}</div>
+      } else {
+        const tabs = items.map((box, i) => (
+          <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
+            <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+          </PivotItem>
+        ))
+        return (
+          <div className={className} data-name={box.name ?? undefined} >
+            <Pivot>{tabs}</Pivot>
+          </div>
+        )
+      }
+    } else {
+      const
+        children = items.map(box => (
+          <Zone key={box.xid} context={context} box={box} inRow={isRow} />
+        )),
+        style = box.image ? { backgroundImage: `url(${box.image})` } : undefined
+      return (
+        <div className={className} data-name={box.name ?? undefined} style={style} >{children}</div>
+      )
     }
   } else {
-    switch (mode) {
-      case 'image':
-        {
-          return (
-            <img
-              className={className}
-              data-name={box.name ?? undefined}
-              alt={box.text}
-              src={box.image} />
-          )
-        }
-      default:
-        {
-          const
-            component = <XBox context={context.scoped(box.index, box.xid)} box={box} />
-          return box.hint || box.help
-            ? <Help context={context} hint={box.hint} help={box.help} offset={hasLabel(box)}>{component}</Help>
-            : component
-        }
+    if (modes.has('image')) {
+      return (
+        <img
+          className={className}
+          data-name={box.name ?? undefined}
+          alt={box.text}
+          src={box.image} />
+      )
+    } else {
+      const
+        component = <XBox context={context.scoped(box.index, box.xid)} box={box} />
+      return box.hint || box.help
+        ? <Help context={context} hint={box.hint} help={box.help} offset={hasLabel(box)}>{component}</Help>
+        : component
+
     }
   }
 }

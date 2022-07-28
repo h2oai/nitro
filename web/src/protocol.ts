@@ -138,7 +138,7 @@ export type Box = {
   ignore?: B // true => don't capture
   text?: S
   name?: S
-  mode?: BoxMode
+  modes: Set<S>
   value?: V | Pair<V>
   options: Option[]
   headers?: Header[]

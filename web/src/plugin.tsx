@@ -166,10 +166,9 @@ export const
       })
     })
   },
-  PluginBox = make(({ context, box }: BoxProps) => {
+  PluginBox = make(({ context, box, name }: BoxProps & { name: S }) => {
     const
-      sig = (box.mode ?? ':.').split(':')[1],
-      [plugin, method] = sig.split('.'),
+      [plugin, method] = name.split('.'),
       id = xid(),
       ref = React.createRef<HTMLDivElement>(),
       init = () => {

@@ -42,72 +42,70 @@ import { BoxProps } from './ui';
 import { WebView } from './webview';
 
 export const XBox = ({ context, box }: BoxProps) => { // recursive
-  const { mode, options, editable, multiple } = box
-  switch (mode) {
-    case 'md':
-      return <TextBlock context={context} box={box} />
-    case 'button':
-      return <Buttons context={context} box={box} />
-    case 'check':
-      return options.length
-        ? <Checklist context={context} box={box} />
-        : <Checkbox context={context} box={box} />
-    case 'toggle':
-      return <Toggle context={context} box={box} />
-    case 'color':
-      return options.length
-        ? <ColorPalette context={context} box={box} />
-        : <ColorPicker context={context} box={box} />
-    case 'date':
-      return <DatePicker context={context} box={box} />
-    case 'day':
-    case 'month':
-    case 'week':
-      return <Calendar context={context} box={box} />
-    case 'file':
-      return <FileUpload context={context} box={box} />
-    case 'menu':
-      return editable
-        ? <ComboBox context={context} box={box} />
-        : multiple
-          ? <Droplist context={context} box={box} />
-          : <Dropdown context={context} box={box} />
-    case 'number':
-      return <Spinbox context={context} box={box} />
-    case 'radio':
-      return <ChoiceGroup context={context} box={box} />
-    case 'range':
-      return <Slider context={context} box={box} />
-    case 'rating':
-      return <Rating context={context} box={box} />
-    case 'progress':
-      return <ProgressBar context={context} box={box} />
-    case 'spinner':
-      return <Spinner context={context} box={box} />
-    case 'separator':
-      return <Separator context={context} box={box} />
-    case 'info':
-    case 'success':
-    case 'warning':
-    case 'critical':
-    case 'blocked':
-    case 'error':
-      return <Banner context={context} box={box} />
-    case 'table':
-      return <Table context={context} box={box} />
-    case 'tag':
-      return <TagPicker context={context} box={box} />
-    case 'text':
-      return <Textbox context={context} box={box} />
-    case 'time':
-      return <TimePicker context={context} box={box} />
-    case 'web':
-      return <WebView context={context} box={box} />
+  const { modes, options, editable, multiple } = box
+  if (modes.has('md')) {
+    return <TextBlock context={context} box={box} />
+  } else if (modes.has('button')) {
+    return <Buttons context={context} box={box} />
+  } else if (modes.has('check')) {
+    return options.length
+      ? <Checklist context={context} box={box} />
+      : <Checkbox context={context} box={box} />
+  } else if (modes.has('toggle')) {
+    return <Toggle context={context} box={box} />
+  } else if (modes.has('color')) {
+    return options.length
+      ? <ColorPalette context={context} box={box} />
+      : <ColorPicker context={context} box={box} />
+  } else if (modes.has('date')) {
+    return <DatePicker context={context} box={box} />
+  } else if (modes.has('day') || modes.has('month') || modes.has('week')) {
+    return <Calendar context={context} box={box} />
+  } else if (modes.has('file')) {
+    return <FileUpload context={context} box={box} />
+  } else if (modes.has('menu')) {
+    return editable
+      ? <ComboBox context={context} box={box} />
+      : multiple
+        ? <Droplist context={context} box={box} />
+        : <Dropdown context={context} box={box} />
+  } else if (modes.has('number')) {
+    return <Spinbox context={context} box={box} />
+  } else if (modes.has('radio')) {
+    return <ChoiceGroup context={context} box={box} />
+  } else if (modes.has('range')) {
+    return <Slider context={context} box={box} />
+  } else if (modes.has('rating')) {
+    return <Rating context={context} box={box} />
+  } else if (modes.has('progress')) {
+    return <ProgressBar context={context} box={box} />
+  } else if (modes.has('spinner')) {
+    return <Spinner context={context} box={box} />
+  } else if (modes.has('separator')) {
+    return <Separator context={context} box={box} />
+  } else if (modes.has('info') || modes.has('success') || modes.has('warning') || modes.has('critical') || modes.has('blocked') || modes.has('error')) {
+    return <Banner context={context} box={box} />
+  } else if (modes.has('table')) {
+    return <Table context={context} box={box} />
+  } else if (modes.has('tag')) {
+    return <TagPicker context={context} box={box} />
+  } else if (modes.has('text')) {
+    return <Textbox context={context} box={box} />
+  } else if (modes.has('time')) {
+    return <TimePicker context={context} box={box} />
+  } else if (modes.has('web')) {
+    return <WebView context={context} box={box} />
   }
 
-  if (mode?.startsWith('plugin:')) return <PluginBox context={context} box={box} />
+  for (const mode of modes) {
+    const i = mode.indexOf(':')
+    if (i >= 0) {
+      const type = mode.substring(0, i), name = mode.substring(i + 1)
+      if (type === 'plugin') return <PluginBox context={context} box={box} name={name} />
+    }
+  }
 
-  console.error(`Cannot render box: unknown mode "${mode}".`)
+  console.error(`Cannot render box: unknown mode "${[...modes.values()].join(' ')}".`)
 
   return null
 }
