@@ -14,22 +14,21 @@
 
 import { ActionButton, IButtonStyles, IIconProps } from '@fluentui/react';
 import React from 'react';
-import styled from 'styled-components';
 import { S, signal } from './core';
+import { css } from './css';
 import { make } from './ui';
 
 const
-  iconOpen: IIconProps = { iconName: 'ChevronDownMed' },
-  iconClose: IIconProps = { iconName: 'ChevronRightMed' },
-  bodyOpenStyle: React.CSSProperties = { display: 'block' },
-  bodyCloseStyle: React.CSSProperties = { display: 'none' },
-  buttonStyles: IButtonStyles = { root: { padding: 0 } }
+  down: IIconProps = { iconName: 'ChevronDownMed' },
+  right: IIconProps = { iconName: 'ChevronRightMed' },
+  open: React.CSSProperties = { display: 'block' },
+  close: React.CSSProperties = { display: 'none' },
+  buttonStyles: IButtonStyles = {
+    root: { padding: 0 },
+    label: { fontWeight: 600 },
+  }
 
-const
-  Body = styled.div`
-    padding: 0 0 10px 30px;
-  `
-
+// TODO  mode=`expander`, mode=`open expander`
 export const Expander = make(({ headerText, children }: { headerText: S, children: JSX.Element }) => {
   const
     expandedB = signal(false),
@@ -40,12 +39,12 @@ export const Expander = make(({ headerText, children }: { headerText: S, childre
         <div>
           <div>
             <ActionButton
-              iconProps={expanded ? iconOpen : iconClose}
+              iconProps={expanded ? down : right}
               onClick={toggle}
               styles={buttonStyles}
             >{headerText}</ActionButton>
           </div>
-          <Body style={expanded ? bodyOpenStyle : bodyCloseStyle}>{children}</Body>
+          <div className={css('pb-3 pl-8')} style={expanded ? open : close}>{children}</div>
         </div>
       )
     }
