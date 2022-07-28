@@ -14,6 +14,7 @@
 
 import { MessageBar, MessageBarType } from '@fluentui/react';
 import { Dict, S } from './core';
+import { css } from './css';
 import { BoxProps } from './ui';
 
 const types: Dict<MessageBarType> = {
@@ -35,12 +36,14 @@ const typeFrom = (modes: Set<S>) => {
 
 export const Banner = ({ box }: BoxProps) => {
   const
-    { modes, text } = box,
+    { modes, text, style } = box,
     type = typeFrom(modes)
 
   // TODO include link
   return (
-    <MessageBar messageBarType={type}>{text}</MessageBar>
+    <div className={css(style)}>
+      <MessageBar messageBarType={type}>{text}</MessageBar>
+    </div>
   )
 }
 
