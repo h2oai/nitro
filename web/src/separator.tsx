@@ -13,11 +13,12 @@
 // limitations under the License.
 
 import { Separator as FSeparator } from '@fluentui/react';
+import { css } from './css';
 import { BoxProps } from './ui';
 
 export const Separator = ({ box }: BoxProps) => {
   const
-    { text, modes } = box,
+    { text, modes, style } = box,
     vertical = modes.has('vertical'),
     align = modes.has('text-start')
       ? 'start'
@@ -26,7 +27,9 @@ export const Separator = ({ box }: BoxProps) => {
         : undefined
 
   return (
-    <FSeparator vertical={vertical} alignContent={align} >{text}</FSeparator>
+    <div className={css(style)}>
+      <FSeparator vertical={vertical} alignContent={align} >{text}</FSeparator>
+    </div>
   )
 }
 
