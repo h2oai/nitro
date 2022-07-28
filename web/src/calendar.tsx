@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Calendar as FCalendar, DateRangeType } from '@fluentui/react';
+import { Calendar as FCalendar, DateRangeType, Label } from '@fluentui/react';
 import { dateToString, signal, toDate } from './core';
-import { Labeled } from './label';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
 export const Calendar = make(({ context, box }: BoxProps) => {
   const
-    { mode, value, min, max, live } = box,
+    { modes, text, value, min, max, live, style } = box,
     dateB = signal(toDate(value) ?? new Date()),
     minDate = toDate(min),
     maxDate = toDate(max),
-    dateRangeType = mode === 'week'
+    dateRangeType = modes.has('week')
       ? DateRangeType.Week
-      : mode === 'month'
+      : modes.has('month')
         ? DateRangeType.Month
         : DateRangeType.Day,
     onSelectDate = (d?: Date) => {
@@ -39,18 +39,19 @@ export const Calendar = make(({ context, box }: BoxProps) => {
       // TODO firstDayOfWeek, firstWeekOfYear customization
       // TODO pass strings for localization
       return (
-        <Labeled box={box}>
+        <div className={css('flex flex-col', style)}>
+          {text && <Label>{text}</Label>}
           <FCalendar
             dateRangeType={dateRangeType}
             value={dateB()}
             minDate={minDate}
             maxDate={maxDate}
-            isDayPickerVisible={mode !== 'month'}
+            isDayPickerVisible={!modes.has('month')}
             onSelectDate={onSelectDate}
             highlightSelectedMonth
             showGoToToday
           />
-        </Labeled>
+        </div>
       )
     }
 
