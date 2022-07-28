@@ -14,11 +14,12 @@
 
 import { ISliderProps, Slider as FSlider } from '@fluentui/react';
 import { isN, isPair, toN, U, valueFromRange } from './core';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
 export const Slider = make(({ context, box }: BoxProps) => {
   const
-    { text, value, placeholder, min, max, step, live } = box,
+    { text, value, placeholder, min, max, step, live, style } = box,
     originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
     ranged = isPair(value) && isN(value[0]) && isN(value[1]),
     defaultValue = ranged ? 0 : valueFromRange(value, min, max, step),
@@ -41,7 +42,7 @@ export const Slider = make(({ context, box }: BoxProps) => {
           onChanged,
         }
 
-      return ranged
+      const slider = ranged
         ? (
           <FSlider
             {...props}
@@ -54,6 +55,8 @@ export const Slider = make(({ context, box }: BoxProps) => {
             defaultValue={defaultValue}
           />
         )
+
+      return <div className={css(style)}>{slider}</div>
     }
 
   if (ranged) {
