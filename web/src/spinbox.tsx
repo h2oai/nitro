@@ -15,11 +15,12 @@
 import { Position, SpinButton } from '@fluentui/react';
 import React from 'react';
 import { isS, toN, valueFromRange } from './core';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
 export const Spinbox = make(({ context, box }: BoxProps) => {
   const
-    { text, value, min, max, step, precision, placeholder, live } = box,
+    { text, value, min, max, step, precision, placeholder, live, style } = box,
     defaultValue = valueFromRange(value, min, max, step),
     onChange = (_: React.SyntheticEvent<HTMLElement>, value?: string): void => {
       let v = isS(value) ? parseFloat(value) : NaN
@@ -28,8 +29,8 @@ export const Spinbox = make(({ context, box }: BoxProps) => {
         if (live) context.commit()
       }
     },
-    render = () => {
-      return (
+    render = () => (
+      <div className={css(style)}>
         <SpinButton
           label={text}
           placeholder={placeholder}
@@ -42,8 +43,9 @@ export const Spinbox = make(({ context, box }: BoxProps) => {
           styles={{ labelWrapper: { marginBottom: -4 } }} // Make textbox top match textfield
           onChange={onChange}
         />
-      )
-    }
+      </div>
+    )
+
 
   context.record(defaultValue ?? 0)
 
