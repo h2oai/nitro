@@ -13,16 +13,15 @@
 // limitations under the License.
 
 import { Separator as FSeparator } from '@fluentui/react';
-import { has } from './core';
 import { BoxProps } from './ui';
 
 export const Separator = ({ box }: BoxProps) => {
   const
-    { text, variants } = box,
-    vertical = has(variants, 'vertical'),
-    align = has(variants, 'align-start')
+    { text, modes } = box,
+    vertical = modes.has('vertical'),
+    align = modes.has('text-start')
       ? 'start'
-      : has(variants, 'align-end')
+      : modes.has('text-end')
         ? 'end'
         : undefined
 
