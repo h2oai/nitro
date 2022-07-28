@@ -15,11 +15,12 @@
 import { ITextFieldProps, MaskedTextField, TextField } from '@fluentui/react';
 import React from 'react';
 import { isN, isS, S } from './core';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
 export const Textbox = make(({ context, box }: BoxProps) => {
   const
-    { text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password } = box,
+    { text, value, placeholder, icon, mask, prefix, suffix, error, lines, required, password, style } = box,
     onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
       v = v ?? (target as HTMLInputElement).value ?? value ?? ''
       // TODO live?
@@ -38,13 +39,14 @@ export const Textbox = make(({ context, box }: BoxProps) => {
           required: required === true,
           onChange,
         }
-      return password === true
+      const textbox = password === true
         ? <TextField {...field} type='password' canRevealPassword revealPasswordAriaLabel='Show password' />
         : mask
           ? <MaskedTextField {...field} mask={mask} />
           : lines && (lines >= 1)
             ? <TextField {...field} multiline resizable autoAdjustHeight rows={lines} />
             : <TextField {...field} />
+      return <div className={css(style)}>{textbox}</div>
     }
 
   context.record((value as any) ?? '')
