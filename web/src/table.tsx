@@ -15,6 +15,7 @@
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, DetailsRow, IColumn, IDetailsRowProps, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
 import { areSetsEqual, B, Dict, isN, S, signal, U } from './core';
+import { css } from './css';
 import { markdown } from './markdown';
 import { selectedOf, selectedsOf } from './options';
 import { Header, Option } from './protocol';
@@ -26,7 +27,7 @@ type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
 export const Table = make(({ context, box }: BoxProps) => {
   const
-    { headers, options, multiple, live } = box,
+    { headers, options, multiple, live, style } = box,
     isMultiple = multiple === true,
     isSingle = multiple === false,
     isList = isMultiple || isSingle,
@@ -231,22 +232,24 @@ export const Table = make(({ context, box }: BoxProps) => {
     render = () => {
       const [columns, rows] = contentB()
       return (
-        <DetailsList
-          items={rows}
-          groups={groups.length ? groups : undefined}
-          columns={columns}
-          setKey="set"
-          layoutMode={DetailsListLayoutMode.justified}
-          selection={selection}
-          selectionPreservedOnEmptyClick={true}
-          ariaLabelForSelectionColumn="Toggle selection"
-          ariaLabelForSelectAllCheckbox="Select All"
-          checkButtonAriaLabel="Select"
-          onRenderItemColumn={onRenderItemColumn}
-          onRenderRow={onRenderRow}
-          selectionMode={isMultiple ? SelectionMode.multiple : isSingle ? SelectionMode.single : SelectionMode.none}
-          checkboxVisibility={isList ? CheckboxVisibility.always : CheckboxVisibility.hidden}
-        />
+        <div className={css(style)}>
+          <DetailsList
+            items={rows}
+            groups={groups.length ? groups : undefined}
+            columns={columns}
+            setKey="set"
+            layoutMode={DetailsListLayoutMode.justified}
+            selection={selection}
+            selectionPreservedOnEmptyClick={true}
+            ariaLabelForSelectionColumn="Toggle selection"
+            ariaLabelForSelectAllCheckbox="Select All"
+            checkButtonAriaLabel="Select"
+            onRenderItemColumn={onRenderItemColumn}
+            onRenderRow={onRenderRow}
+            selectionMode={isMultiple ? SelectionMode.multiple : isSingle ? SelectionMode.single : SelectionMode.none}
+            checkboxVisibility={isList ? CheckboxVisibility.always : CheckboxVisibility.hidden}
+          />
+        </div>
       )
     }
 
