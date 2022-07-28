@@ -15,12 +15,13 @@
 import { Dropdown, IDropdownOption } from '@fluentui/react';
 import React from 'react';
 import { S } from './core';
+import { css } from './css';
 import { selectedsOf } from './options';
 import { BoxProps, make } from './ui';
 
 export const Droplist = make(({ context, box }: BoxProps) => {
   const
-    { text, placeholder, error, required, options, live } = box,
+    { text, placeholder, error, required, options, live, style } = box,
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
@@ -38,8 +39,8 @@ export const Droplist = make(({ context, box }: BoxProps) => {
         if (live) context.commit()
       }
     },
-    render = () => {
-      return (
+    render = () => (
+      <div className={css(style)}>
         <Dropdown
           multiSelect
           label={text}
@@ -50,8 +51,9 @@ export const Droplist = make(({ context, box }: BoxProps) => {
           required={required ? true : false}
           onChange={onChange}
         />
-      )
-    }
+      </div>
+    )
+
 
   capture()
 
