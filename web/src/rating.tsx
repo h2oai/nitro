@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Rating as FRating } from '@fluentui/react';
+import { Label, Rating as FRating } from '@fluentui/react';
 import React from 'react';
 import { isN, toN } from './core';
-import { Labeled } from './label';
+import { css } from './css';
 import { BoxProps, make } from './ui';
 
 export const Rating = make(({ context, box }: BoxProps) => {
   const
-    { placeholder, min, max, value, live } = box,
+    { text, placeholder, min, max, value, live, style } = box,
     allowZeroStars = isN(min) && min <= 0,
     defaultRating = toN(value) ?? (allowZeroStars ? 0 : 1),
     onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {
@@ -30,7 +30,8 @@ export const Rating = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Labeled box={box}>
+        <div className={css('flex flex-col', style)}>
+          {text && <Label>{text}</Label>}
           <FRating
             defaultRating={defaultRating}
             allowZeroStars={allowZeroStars}
@@ -38,7 +39,7 @@ export const Rating = make(({ context, box }: BoxProps) => {
             onChange={onChange}
             placeholder={placeholder}
           />
-        </Labeled>
+        </div>
       )
     }
 
