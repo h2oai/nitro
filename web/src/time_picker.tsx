@@ -16,7 +16,6 @@ import { ISpinButtonStyles, IStackItemStyles, Label, Position, SpinButton, Stack
 import React from 'react';
 import { B, leftPad, S, U } from './core';
 import { css } from './css';
-import { Labeled } from './label';
 import { BoxProps, make } from './ui';
 
 const lpad2 = leftPad('0', 2)
