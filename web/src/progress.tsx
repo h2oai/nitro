@@ -14,12 +14,15 @@
 
 import { ProgressIndicator } from '@fluentui/react';
 import { isN } from './core';
+import { css } from './css';
 import { BoxProps } from './ui';
 
 export const ProgressBar = ({ box }: BoxProps) => {
-  const { text, caption, value } = box
+  const { text, caption, value, style } = box
   return (
-    <ProgressIndicator label={text} description={caption ?? ''} percentComplete={isN(value) ? value : undefined} />
+    <div className={css(style)}>
+      <ProgressIndicator label={text} description={caption ?? ''} percentComplete={isN(value) ? value : undefined} />
+    </div>
   )
 }
 
