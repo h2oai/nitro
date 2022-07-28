@@ -15,12 +15,13 @@
 import { ComboBox as FComboBox, IComboBox, IComboBoxOption } from '@fluentui/react';
 import React from 'react';
 import { N, S } from './core';
+import { css } from './css';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
 
 export const ComboBox = make(({ context, box }: BoxProps) => {
   const
-    { value, text, placeholder, required, error, options } = box,
+    { value, text, placeholder, required, error, options, style } = box,
     items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
     selected = selectedOf(box),
     selectedKey = selected ? String(selected.value) : undefined,
@@ -30,8 +31,8 @@ export const ComboBox = make(({ context, box }: BoxProps) => {
       const v = option ? option.text : value
       if (v) context.record(v)
     },
-    render = () => {
-      return (
+    render = () => (
+      <div className={css(style)}>
         <FComboBox
           label={text}
           text={initialValue}
@@ -44,8 +45,9 @@ export const ComboBox = make(({ context, box }: BoxProps) => {
           allowFreeform
           autoComplete='on'
         />
-      )
-    }
+      </div>
+    )
+
 
   context.record(initialValue ?? null)
 
