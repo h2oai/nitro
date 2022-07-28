@@ -15,12 +15,13 @@
 import { ChoiceGroup as FChoiceGroup, IChoiceGroupOption } from '@fluentui/react';
 import React from 'react';
 import { isB } from './core';
+import { css } from './css';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
 
 export const ChoiceGroup = make(({ context, box }: BoxProps) => {
   const
-    { text, placeholder, required, options, live } = box,
+    { text, placeholder, required, options, live, style } = box,
     hasNoPrimary = options.every(o => !isB(o.selected)),
     selected = selectedOf(box),
     items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
@@ -35,8 +36,8 @@ export const ChoiceGroup = make(({ context, box }: BoxProps) => {
         if (live) context.commit()
       }
     },
-    render = () => {
-      return (
+    render = () => (
+      <div className={css(style)}>
         <FChoiceGroup
           label={text}
           placeholder={placeholder}
@@ -45,8 +46,9 @@ export const ChoiceGroup = make(({ context, box }: BoxProps) => {
           required={required ? true : false}
           onChange={onChange}
         />
-      )
-    }
+      </div>
+    )
+
 
   context.record(selectedKey ?? null)
 
