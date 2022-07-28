@@ -25,22 +25,22 @@ const types: Dict<MessageBarType> = {
   error: MessageBarType.error,
 }
 
+const typeFrom = (modes: Set<S>) => {
+  for (const m of modes.values()) {
+    const t = types[m]
+    if (t) return t
+  }
+  return undefined
+}
+
 export const Banner = ({ box }: BoxProps) => {
   const
-    { mode, text } = box,
-    type = types[mode as S] ?? undefined
+    { modes, text } = box,
+    type = typeFrom(modes)
 
   // TODO include link
   return (
-    <MessageBar
-      messageBarType={type}
-      styles={{
-        innerText: {
-          fontFamily: 'var(--font-secondary)',
-          fontSize: 14,
-        }
-      }}
-    >{text}</MessageBar>
+    <MessageBar messageBarType={type}>{text}</MessageBar>
   )
 }
 
