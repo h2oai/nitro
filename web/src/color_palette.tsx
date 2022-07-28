@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { IColorCellProps, SwatchColorPicker } from '@fluentui/react';
+import { IColorCellProps, Label, SwatchColorPicker } from '@fluentui/react';
 import React from 'react';
 import { S } from './core';
-import { Labeled } from './label';
+import { css } from './css';
 import { selectedOf } from './options';
 import { BoxProps, make } from './ui';
-
 
 const swatchCellSize = 25
 export const ColorPalette = make(({ context, box }: BoxProps) => {
   const
-    { options, live } = box,
+    { text, options, live, style } = box,
     selected = selectedOf(box),
     cells: IColorCellProps[] = options.map(c => ({
       id: String(c.value),
@@ -38,7 +37,8 @@ export const ColorPalette = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <Labeled box={box}>
+        <div className={css('flex flex-col', style)}>
+          {text && <Label>{text}</Label>}
           <SwatchColorPicker
             columnCount={10}
             colorCells={cells}
@@ -47,7 +47,7 @@ export const ColorPalette = make(({ context, box }: BoxProps) => {
             defaultSelectedId={selected ? String(selected.value) : undefined}
             onChange={onChange}
           />
-        </Labeled>
+        </div>
       )
     }
 
