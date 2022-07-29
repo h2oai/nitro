@@ -1197,7 +1197,7 @@ const newCSSCache = (ss: CSSStyleSheet): PredefineCSS => {
         let ruleName = escape(name)
         // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
         if (pseudos) ruleName += pseudos.reverse().join(':')
-        if (dark) ruleName = '.dark ' + ruleName
+        if (dark) ruleName = 'dark .' + ruleName
         // .rule { ... }
         let rule = `.${ruleName}{${style}}`
         // sm:lg:rule -> @media (min-width:640px) { @media (min-width:1024px) { .rule {...} } }

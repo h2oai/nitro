@@ -353,11 +353,11 @@ export const newClient = (server: Server) => {
                     const
                       d = defaultScheme,
                       scheme: Scheme = {
-                        primaryFont: d.primaryFont,
+                        sansFont: d.sansFont,
                         monospaceFont: d.monospaceFont,
                         backgroundColor: theme.background_color ?? d.backgroundColor,
                         foregroundColor: theme.foreground_color ?? d.foregroundColor,
-                        primaryColor: theme.accent_color ?? d.primaryColor,
+                        accentColor: theme.accent_color ?? d.accentColor,
                       }
                     schemeB(scheme)
                   }

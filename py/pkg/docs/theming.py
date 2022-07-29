@@ -75,29 +75,33 @@ def theme_switching(view: View):  # height 2
 # ## Dark mode
 # A simple way to allow switching between dark and light modes is to exchange the `background_color` and
 # `foreground_color` in the theme, provided the `accent_color` works with both dark and light backgrounds.
-def theme_dark_mode(view: View):  # height 2
+def theme_dark_mode(view: View):  # height 12
     dark_mode = False
     while True:
-        dark_mode, done = view(
+        response = view(
             box('Dark Mode', mode='toggle', value=dark_mode),
-            box(['Done'])
+            # Sample text
+            '## This is not a drill',
+            lorem(5),
+            # Sample fields
+            box('Enter text', placeholder='Enter some text'),
+            box('Enter a number', value=42),
+            box('Check this', mode='check', value=True),
+            box('Toggle this', mode='toggle', value=True),
+            box('Are you sure?', mode='radio', options=['Yes', 'No']),
+            box('Pick a flavor', mode='menu', options=['Chocolate', 'Vanilla'], value='Chocolate'),
+            box('Pick a value', mode='range', value=42, range=(0, 100)),
+            box('Pick a day', mode='day'),
+            box('Rate this', mode='rating'),
+            box(["Let's go!", 'Not now']),
+            style='p-4'
         )
-
-        if done:
-            break
-
-        if dark_mode:
-            view.set(theme=Theme(
-                background_color='#fff',  # white
-                foreground_color='#3f3f46',  # zinc-700
-                accent_color='#6366f1',  # indigo-500
-            ))
-        else:
-            view.set(theme=Theme(
-                background_color='#3f3f46',  # reverse
-                foreground_color='#fff',  # reverse
-                accent_color='#6366f1',  # indigo-500
-            ))
+        dark_mode = response[0]
+        view.set(theme=Theme(
+            background_color='#3f3f46' if dark_mode else '#fff',
+            foreground_color='#fff' if dark_mode else '#3f3f46',
+            accent_color='#6366f1',  # indigo-500
+        ))
 
 
 # ## Use color variables
@@ -287,5 +291,4 @@ def theme_samples(view: View):  # height 11
             ),
         )
         theme_name = response[0]
-        action = response[len(response) - 1]
         view.set(theme=theme_lookup.get(theme_name))

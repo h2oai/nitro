@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { BaseSlots, createTheme, getColorFromString, hsv2hsl, IColor, isDark, loadTheme, Theme, ThemeGenerator, themeRulesStandardCreator } from '@fluentui/react';
-import { Dict, S, U } from './core';
+import { BaseSlots, createTheme, getColorFromString, IColor, isDark, loadTheme, Theme, ThemeGenerator, themeRulesStandardCreator } from '@fluentui/react';
+import { B, Dict, S } from './core';
 
 export type Scheme = {
-  primaryFont: S
+  sansFont: S
   monospaceFont: S
-  primaryColor: S
   foregroundColor: S
   backgroundColor: S
+  accentColor: S
 }
 
 export const defaultScheme: Scheme = {
-  primaryFont: 'inherit',
+  sansFont: 'inherit',
   monospaceFont: 'inherit',
-  primaryColor: '#6366f1', // indigo-500
   foregroundColor: '#3f3f46', // zinc-700
   backgroundColor: '#ffffff',
+  accentColor: '#6366f1', // indigo-500
 }
 
 const
@@ -39,9 +39,9 @@ const
     const
       foregroundColor = getColorFromString(scheme.foregroundColor)!,
       backgroundColor = getColorFromString(scheme.backgroundColor)!,
-      primaryColor = getColorFromString(scheme.primaryColor)!,
+      accentColor = getColorFromString(scheme.accentColor)!,
       slots: [BaseSlots, IColor][] = [
-        [BaseSlots.primaryColor, primaryColor],
+        [BaseSlots.primaryColor, accentColor],
         [BaseSlots.foregroundColor, foregroundColor],
         [BaseSlots.backgroundColor, backgroundColor]
       ],
@@ -64,7 +64,7 @@ const
       })
     return theme
   },
-  defineSwatches = (swatches: [S, S][]) => {
+  exportSwatches = (swatches: [S, S][]) => {
     const
       root = document.querySelector(':root') as HTMLElement,
       s = root.style
@@ -142,11 +142,21 @@ const
       }
 
     return dict2Swatches(colors, '')
+  },
+  exportDarkMode = (enable: B) => {
+    const root = document.querySelector('html') as HTMLElement
+    if (root) {
+      if (enable) {
+        root.classList.add('dark')
+      } else {
+        root.classList.remove('dark')
+      }
+    }
   }
 
 export const loadScheme = (scheme: Scheme) => {
   const theme = generateTheme(scheme)
-  defineSwatches(extractSwatches(theme))
-
+  exportSwatches(extractSwatches(theme))
+  exportDarkMode(theme.isInverted)
   loadTheme(theme)
 }
