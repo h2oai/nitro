@@ -358,7 +358,6 @@ export const newClient = (server: Server) => {
                         backgroundColor: theme.background_color ?? d.backgroundColor,
                         foregroundColor: theme.foreground_color ?? d.foregroundColor,
                         primaryColor: theme.accent_color ?? d.primaryColor,
-                        primaryColorName: theme.accent_color_name ?? d.primaryColorName,
                       }
                     schemeB(scheme)
                   }

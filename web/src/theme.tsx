@@ -18,7 +18,6 @@ import { Dict, S, U } from './core';
 export type Scheme = {
   primaryFont: S
   monospaceFont: S
-  primaryColorName: S
   primaryColor: S
   foregroundColor: S
   backgroundColor: S
@@ -27,59 +26,12 @@ export type Scheme = {
 export const defaultScheme: Scheme = {
   primaryFont: 'inherit',
   monospaceFont: 'inherit',
-  primaryColor: '#5a64f0',
-  primaryColorName: 'indigo',
-  foregroundColor: '#3e3f4a',
+  primaryColor: '#6366f1', // indigo-500
+  foregroundColor: '#3f3f46', // zinc-700
   backgroundColor: '#ffffff',
 }
 
 const
-  hueNames = [
-    'lava',
-    'orange',
-    'amber',
-    'yellow',
-    'lime',
-    'mint',
-    'green',
-    'teal',
-    'cyan',
-    'sky',
-    'blue',
-    'indigo',
-    'purple',
-    'violet',
-    'pink',
-    'red',
-  ],
-  makeSwatches = (names: S[], colors: S[], startAt: S): [S, S][] => {
-    const
-      startIndex = hueNames.indexOf(startAt),
-      k = startIndex < 0 ? 0 : startIndex,
-      n = names.length
-    return colors.map((color, i) => ([names[(k + i) % n], color]))
-  },
-  cycleHues = (color: S, n: U) => {
-    const
-      c = getColorFromString(color) ?? getColorFromString(defaultScheme.primaryColor)!,
-      hsl = hsv2hsl(c.h, c.s, c.v),
-      h = hsl.h,
-      s = Math.round(hsl.s),
-      l = Math.round(hsl.l),
-      dh = 360 / n,
-      hues = new Array<S>(n)
-    for (let i = 0; i < n; i++) {
-      hues[i] = `hsl(${Math.floor(h + dh * i) % 360}, ${s}%, ${l}%)`
-    }
-    return hues
-  },
-  generateHues = (scheme: Scheme) => {
-    const
-      { primaryColor, primaryColorName } = scheme,
-      hues = cycleHues(primaryColor, hueNames.length),
-      swatches = makeSwatches(hueNames, hues, primaryColorName)
-    return swatches
-  },
   generateTheme = (scheme: Scheme) => {
     //
     // Adapted from https://github.com/microsoft/fluentui/blob/master/apps/theming-designer/src/components/ThemingDesigner.tsx
@@ -193,8 +145,6 @@ const
   }
 
 export const loadScheme = (scheme: Scheme) => {
-  defineSwatches(generateHues(scheme))
-
   const theme = generateTheme(scheme)
   defineSwatches(extractSwatches(theme))
 

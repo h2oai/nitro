@@ -94,7 +94,6 @@ export type Theme = {
   foreground_color?: S
   background_color?: S
   accent_color?: S
-  accent_color_name?: S
 }
 
 export type Plugin = {
