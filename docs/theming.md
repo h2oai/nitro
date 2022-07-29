@@ -10,11 +10,6 @@ Use `Theme()` to define a theme.
 - `background_color` sets the color of the page background.
 - `foreground_color` sets the color of the page text.
 - `accent_color` sets the accent color.
-- `accent_color_name` describes the accent color.
-
-`accent_color_name` must be one of `red`, `lava`, `orange`, `amber`, `yellow`, `lime`, `mint`, `green`, `teal`,
-`cyan`, `sky`, `blue`, `indigo`, `purple`, `violet`, or `pink`.
-This is used to automatically pick matching spectrum colors, useful for visualizations and infographics.
 
 
 ```py
@@ -24,10 +19,9 @@ def main(view: View):
 
 # Create theme
 my_theme = Theme(
-    background_color='#fff',
-    foreground_color='#3e3f4a',
-    accent_color='#ef534f',
-    accent_color_name='green'
+    background_color='#fff',  # white
+    foreground_color='#3f3f46',  # zinc-700
+    accent_color='#ef4444',  # red-500
 )
 
 # Set theme when creating the View()
@@ -57,17 +51,15 @@ while True:
 
     if make_red:
         view.set(theme=Theme(
-            background_color='#fff',
-            foreground_color='#3e3f4a',
-            accent_color='#ef534f',
-            accent_color_name='red'
+            background_color='#fff',  # white
+            foreground_color='#3f3f46',  # zinc-700
+            accent_color='#ef4444',  # red-500
         ))
     else:
         view.set(theme=Theme(
-            background_color='#fff',
-            foreground_color='#3e3f4a',
-            accent_color='#5a64f0',
-            accent_color_name='indigo'
+            background_color='#fff',  # white
+            foreground_color='#3f3f46',  # zinc-700
+            accent_color='#6366f1',  # indigo-500
         ))
 ```
 
@@ -94,17 +86,15 @@ while True:
 
     if dark_mode:
         view.set(theme=Theme(
-            background_color='#3e3f4a',  # dark background
-            foreground_color='#fff',  # light foreground
-            accent_color='#ef534f',
-            accent_color_name='red'
+            background_color='#fff',  # white
+            foreground_color='#3f3f46',  # zinc-700
+            accent_color='#6366f1',  # indigo-500
         ))
     else:
         view.set(theme=Theme(
-            background_color='#fff',  # light background
-            foreground_color='#3e3f4a',  # dark foreground
-            accent_color='#ef534f',
-            accent_color_name='red'
+            background_color='#3f3f46',  # reverse
+            foreground_color='#fff',  # reverse
+            accent_color='#6366f1',  # indigo-500
         ))
 ```
 
@@ -208,108 +198,92 @@ themes = [
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#ef5350',
-        accent_color_name='red',
     ),
     Theme(
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#ec407a',
-        accent_color_name='pink',
     ),
     Theme(
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#ab47bc',
-        accent_color_name='violet',
     ),
     Theme(
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#7e57c2',
-        accent_color_name='purple',
     ),
     Theme(
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#5c6bc0',
-        accent_color_name='indigo',
     ),
     Theme(
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#42a5f5',
-        accent_color_name='blue',
     ),
     Theme(
         background_color='#3e3f4a',
         foreground_color='#fff',
         accent_color='#29b6f6',
-        accent_color_name='sky',
     ),
     Theme(
         background_color='#3e3f4a',
         foreground_color='#fff',
         accent_color='#26c6da',
-        accent_color_name='cyan',
     ),
     Theme(
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#26a69a',
-        accent_color_name='teal',
     ),
     Theme(
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#66bb6a',
-        accent_color_name='green',
     ),
     Theme(
         background_color='#3e3f4a',
         foreground_color='#fff',
         accent_color='#9ccc65',
-        accent_color_name='mint',
     ),
     Theme(
         background_color='#3e3f4a',
         foreground_color='#fff',
         accent_color='#d4e157',
-        accent_color_name='lime',
     ),
     Theme(
         background_color='#3e3f4a',
         foreground_color='#fff',
         accent_color='#ffee58',
-        accent_color_name='yellow',
     ),
     Theme(
         background_color='#3e3f4a',
         foreground_color='#fff',
         accent_color='#ffca28',
-        accent_color_name='amber',
     ),
     Theme(
         background_color='#3e3f4a',
         foreground_color='#fff',
         accent_color='#ffa726',
-        accent_color_name='orange',
     ),
     Theme(
         background_color='#fff',
         foreground_color='#3e3f4a',
         accent_color='#ff7043',
-        accent_color_name='lava',
     ),
 ]
 
-theme_lookup = {theme.accent_color_name: theme for theme in themes}
+theme_lookup = {theme.accent_color: theme for theme in themes}
 theme_names = list(theme_lookup.keys())
 theme_names.sort()
 theme_name = theme_names[0]
 
 while True:
     response = view(
-        box('Pick a theme', value=theme_name, options=theme_names),
+        box('Pick a theme', mode='color', value=theme_name, options=theme_names, live=True),
         col(
             # Sample fields
             box('Enter text', placeholder='Enter some text'),
@@ -321,15 +295,11 @@ while True:
             box('Pick a value', mode='range', value=42, range=(0, 100)),
             box('Pick a day', mode='day'),
             box('Rate this', mode='rating'),
-            padding='2rem', border='$neutral-tertiary'
+            box(["Let's go!", 'Not now'])
         ),
-        box(['Apply Theme', 'Done'])
     )
     theme_name = response[0]
     action = response[len(response) - 1]
-
-    if action == 'Done':
-        break
     view.set(theme=theme_lookup.get(theme_name))
 ```
 
