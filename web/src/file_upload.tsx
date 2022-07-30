@@ -169,7 +169,7 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
               <input id={inputID} type='file' onChange={onChange} multiple={multiple} style={{ opacity: 0 }} />
               <div>{label}</div>
               <label
-                className={css('flex justify-center items-center cursor-pointer text-sm font-bold text-center rounded-sm h-8 px-4 bg-red-500')}
+                className={css('flex justify-center items-center cursor-pointer text-sm font-bold text-center rounded-sm h-8 px-4 bg-ui-accent text-ui-background')}
                 htmlFor={inputID}
               ><span>Browse...</span></label>
             </div>
