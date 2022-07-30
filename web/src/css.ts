@@ -1,5 +1,6 @@
 import { Dict, S, U } from "./core"
 import { spectrum, shades } from "./color"
+import { themeColorNames } from "./theme"
 
 type Style = S | undefined
 type Match = (s: S) => Style
@@ -592,11 +593,20 @@ rule('border-l', [borderWidth, v => `border-left-width:${v}`])
 
 rule('border', [any('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), v => `border-style:${v}`])
 
-const namedColor = map({
+const namedColors: Dict<S> = {
   inherit: 'inherit',
   current: 'currentColor',
   transparent: 'transparent',
-})
+}
+
+const createUIColorMap = () => {
+  for (const c of themeColorNames) namedColors[`ui-${c}`] = `var(--ui-${c})`
+}
+
+const namedColor = map(namedColors)
+
+createUIColorMap()
+
 const color = either(map(palette), map({ white: '255 255 255', black: '0 0 0' }))
 
 const borderRule = (n: S, t: S) =>

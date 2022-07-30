@@ -25,6 +25,33 @@ export type Scheme = {
   accentColor: S
 }
 
+export const themeColorNames = [
+  'foreground',
+  'background',
+  'accent',
+  'accent-darker',
+  'accent-dark',
+  'accent-dark-alt',
+  'accent-primary',
+  'accent-secondary',
+  'accent-tertiary',
+  'accent-light',
+  'accent-lighter',
+  'accent-lighter-alt',
+  'neutral-dark',
+  'neutral-primary',
+  'neutral-primary-alt',
+  'neutral-secondary',
+  'neutral-secondary-alt',
+  'neutral-tertiary',
+  'neutral-tertiary-alt',
+  'neutral-quaternary',
+  'neutral-quaternary-alt',
+  'neutral-light',
+  'neutral-lighter',
+  'neutral-lighter-alt',
+]
+
 const
   generateTheme = (scheme: Scheme) => {
     //
@@ -63,7 +90,7 @@ const
       root = document.querySelector(':root') as HTMLElement,
       s = root.style
     for (const [name, color] of swatches) {
-      s.setProperty(`--${name}`, `${color}`)
+      s.setProperty(`--ui-${name}`, `${color}`)
     }
   },
   hyphenCase = (s: S) => s.replace(/[A-Z]/g, x => '-' + x.toLowerCase()),
