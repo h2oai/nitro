@@ -32,7 +32,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
           context.record(value)
           context.commit()
         },
-        hasNoPrimary = options.every(o => !isB(o.selected)),
+        hasNoPrimary = options.every(o => !isB(o.selected)) && selection.size === 0,
         buttons = options.map((o, i) => {
           const
             text = o.text,
