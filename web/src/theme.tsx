@@ -137,27 +137,23 @@ const
 
     return dict2Swatches(colors, '')
   },
-  exportDarkMode = (enable: B) => {
+  exportTheme = (prose: S, dark: B) => {
     const root = document.querySelector('html') as HTMLElement
     if (root) {
-      if (enable) {
-        root.classList.add('dark')
-      } else {
-        root.classList.remove('dark')
+      const add: S[] = [], remove: S[] = []
+      for (const gray of grays) {
+        const klass = 'prose-' + gray
+        if (gray === prose) add.push(klass); else remove.push(klass)
       }
+      if (dark) add.push('dark'); else remove.push('dark')
+      if (add.length) root.classList.add(...add)
+      if (remove.length) root.classList.remove(...remove)
+      console.log(add, remove)
     }
-  },
-  loadScheme = (scheme: Scheme) => {
-    const theme = generateTheme(scheme)
-    exportSwatches(extractSwatches(theme))
-    exportDarkMode(theme.isInverted)
-    loadTheme(theme)
   }
 
-export const applyTheme = (theme: ProtocolTheme) => {
-  let
-    { mode, accent } = theme,
-    prose = 'gray'
+export const applyTheme = ({ mode, accent }: ProtocolTheme) => {
+  let prose = 'gray'
 
   if (!mode) mode = 'light'
 
@@ -165,7 +161,7 @@ export const applyTheme = (theme: ProtocolTheme) => {
     modes = new Set(words(mode)),
     isDarkMode = modes.has('dark')
 
-  for (const m of grays) if (modes.has(m)) prose = m
+  for (const shade of grays) if (modes.has(shade)) prose = shade
 
   const
     foregroundColor = rgbToHex(fromSpectrum(prose, isDarkMode ? '300' : '700') ?? [0, 0, 0]), // Mimic Tailwind prose.
@@ -179,5 +175,8 @@ export const applyTheme = (theme: ProtocolTheme) => {
       accentColor,
     }
 
-  loadScheme(scheme)
+  const theme = generateTheme(scheme)
+  exportSwatches(extractSwatches(theme))
+  exportTheme(prose, theme.isInverted)
+  loadTheme(theme)
 }

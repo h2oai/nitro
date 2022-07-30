@@ -73,6 +73,34 @@ while True:
 ![Screenshot](assets/screenshots/theme_dark_mode.png)
 
 
+## Prose theme sampler
+
+The example below shows all the prose theme variations.
+
+
+```py
+modes = [
+    'light', 'dark',
+    'light gray', 'light slate', 'light zinc', 'light neutral', 'light stone',
+    'dark gray', 'dark slate', 'dark zinc', 'dark neutral', 'dark stone',
+]
+
+sample_text = f'## {lorem()}\n### {lorem()}\n{lorem(5)}\n### {lorem()}\n{lorem(5)}'
+
+mode = modes[0]
+while True:
+    mode = view(
+        box('Mode', mode='menu', options=modes, value=mode, live=True),
+        sample_text,
+        style='p-4'
+    )
+    view.set(theme=Theme(mode=mode))
+```
+
+
+![Screenshot](assets/screenshots/theme_prose_modes.png)
+
+
 ## Use color variables
 
 *Color variables* are pre-defined, named colors that match the app's theme.
