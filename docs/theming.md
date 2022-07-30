@@ -73,7 +73,7 @@ while True:
 ![Screenshot](assets/screenshots/theme_dark_mode.png)
 
 
-## Prose theme sampler
+## Prose color sampler
 
 The example below shows all the prose theme variations.
 
@@ -186,119 +186,42 @@ view(
 ![Screenshot](assets/screenshots/theme_colors.png)
 
 
-## Some sample themes
+## Accent color sampler
 
 This example provides some sample themes that you can use in your own app.
 
 
 ```py
-themes = [
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#ef5350',
-    ),
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#ec407a',
-    ),
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#ab47bc',
-    ),
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#7e57c2',
-    ),
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#5c6bc0',
-    ),
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#42a5f5',
-    ),
-    Theme(
-        background_color='#3e3f4a',
-        foreground_color='#fff',
-        accent_color='#29b6f6',
-    ),
-    Theme(
-        background_color='#3e3f4a',
-        foreground_color='#fff',
-        accent_color='#26c6da',
-    ),
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#26a69a',
-    ),
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#66bb6a',
-    ),
-    Theme(
-        background_color='#3e3f4a',
-        foreground_color='#fff',
-        accent_color='#9ccc65',
-    ),
-    Theme(
-        background_color='#3e3f4a',
-        foreground_color='#fff',
-        accent_color='#d4e157',
-    ),
-    Theme(
-        background_color='#3e3f4a',
-        foreground_color='#fff',
-        accent_color='#ffee58',
-    ),
-    Theme(
-        background_color='#3e3f4a',
-        foreground_color='#fff',
-        accent_color='#ffca28',
-    ),
-    Theme(
-        background_color='#3e3f4a',
-        foreground_color='#fff',
-        accent_color='#ffa726',
-    ),
-    Theme(
-        background_color='#fff',
-        foreground_color='#3e3f4a',
-        accent_color='#ff7043',
-    ),
+accents = [
+    'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan',
+    'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose',
 ]
-
-theme_lookup = {theme.accent_color: theme for theme in themes}
-theme_names = list(theme_lookup.keys())
-theme_names.sort()
-theme_name = theme_names[0]
-
+accent = accents[0]
+dark_mode = False
 while True:
     response = view(
-        box('Pick a theme', mode='color', value=theme_name, options=theme_names, live=True),
-        col(
-            # Sample fields
-            box('Enter text', placeholder='Enter some text'),
-            box('Enter a number', value=42),
-            box('Check this', mode='check', value=True),
-            box('Toggle this', mode='toggle', value=True),
-            box('Are you sure?', mode='radio', options=['Yes', 'No']),
-            box('Pick a flavor', mode='menu', options=['Chocolate', 'Vanilla'], value='Chocolate'),
-            box('Pick a value', mode='range', value=42, range=(0, 100)),
-            box('Pick a day', mode='day'),
-            box('Rate this', mode='rating'),
-            box(["Let's go!", 'Not now'])
+        row(
+            box('Accent color', mode='menu', value=accent, options=accents, live=True),
+            box('Dark Mode', mode='toggle', value=dark_mode),
+            style='items-end'
         ),
+        # Sample fields
+        box('Preview', mode='separator'),
+        box('Enter text', placeholder='Enter some text'),
+        box('Enter a number', value=42),
+        box('Check this', mode='check', value=True),
+        box('Toggle this', mode='toggle', value=True),
+        box('Are you sure?', mode='radio', options=['Yes', 'No']),
+        box('Pick a flavor', mode='menu', options=['Chocolate', 'Vanilla'], value='Chocolate'),
+        box('Pick a value', mode='range', value=42, range=(0, 100)),
+        box('Pick a day', mode='day'),
+        box('Rate this', mode='rating'),
+        box(["Let's go!", 'Not now']),
+        style='p-4',
     )
-    theme_name = response[0]
-    view.set(theme=theme_lookup.get(theme_name))
+    accent = response[0]
+    dark_mode = response[1]
+    view.set(theme=Theme(mode='dark' if dark_mode else 'light', accent=accent))
 ```
 
 

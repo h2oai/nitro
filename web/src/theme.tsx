@@ -141,14 +141,13 @@ const
     const root = document.querySelector('html') as HTMLElement
     if (root) {
       const add: S[] = [], remove: S[] = []
-      for (const gray of grays) {
-        const klass = 'prose-' + gray
-        if (gray === prose) add.push(klass); else remove.push(klass)
+      for (const shade of grays) {
+        const klass = 'prose-' + shade
+        if (shade === prose) add.push(klass); else remove.push(klass)
       }
       if (dark) add.push('dark'); else remove.push('dark')
       if (add.length) root.classList.add(...add)
       if (remove.length) root.classList.remove(...remove)
-      console.log(add, remove)
     }
   }
 
