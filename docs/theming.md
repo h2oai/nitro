@@ -4,12 +4,19 @@ Learn how to customize your app's color scheme.
 
 ## Set initial theme
 
-Pass `theme=` when creating the app's `View()`.
+To set the theme, set `theme=Theme(mode, accent)` when creating the app's `View()`.
 
-Use `Theme()` to define a theme.
-- `background_color` sets the color of the page background.
-- `foreground_color` sets the color of the page text.
-- `accent_color` sets the accent color.
+`mode` sets the color scheme for prose, and `accent` sets the accent color for UI components.
+
+- For light mode, set `mode` to one of `light` (default), `light gray`, `light slate`, `light zinc`, `light neutral`, or `light stone`.
+- For dark mode, set `mode` to one of `dark` (default), `dark gray`, `dark slate`, `dark zinc`, `dark neutral`, or `dark stone`.
+
+`light` is shorthand for `light gray`, and `dark` is shorthand for `dark gray`.
+The colors `gray`, `slate`, `zinc`, `neutral`, and `stone` indicate the text color. The background color for dark mode is automatically chosen for you.
+
+`accent` must be one of `red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, 
+`cyan`, `sky`, `blue`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`, `slate`, `gray`, 
+`zinc`, `neutral`, or `stone`.
 
 
 ```py
@@ -19,9 +26,8 @@ def main(view: View):
 
 # Create theme
 my_theme = Theme(
-    background_color='#fff',  # white
-    foreground_color='#3f3f46',  # zinc-700
-    accent_color='#ef4444',  # red-500
+    mode='dark zinc',
+    accent='indigo',
 )
 
 # Set theme when creating the View()
@@ -31,46 +37,11 @@ nitro = View(main, title='My App', caption='v1.0', theme=my_theme)
 
 
 
-## Switch theme dynamically
+## Switch themes dynamically
 
-Use `view.set(theme=)` to change the theme dynamically.
+Call `view.set(theme=Theme(...))` to change the theme dynamically.
 
-This is useful when you want to allow the app's end-users to switch app's theme.
-
-
-```py
-make_red = False
-while True:
-    make_red, done = view(
-        box('Apply red theme', mode='toggle', value=make_red),
-        box(['Done'])
-    )
-
-    if done:
-        break
-
-    if make_red:
-        view.set(theme=Theme(
-            background_color='#fff',  # white
-            foreground_color='#3f3f46',  # zinc-700
-            accent_color='#ef4444',  # red-500
-        ))
-    else:
-        view.set(theme=Theme(
-            background_color='#fff',  # white
-            foreground_color='#3f3f46',  # zinc-700
-            accent_color='#6366f1',  # indigo-500
-        ))
-```
-
-
-![Screenshot](assets/screenshots/theme_switching.png)
-
-
-## Dark mode
-
-A simple way to allow switching between dark and light modes is to exchange the `background_color` and
-`foreground_color` in the theme, provided the `accent_color` works with both dark and light backgrounds.
+The example below switches between light and dark modes.
 
 
 ```py
@@ -95,11 +66,7 @@ while True:
         style='p-4'
     )
     dark_mode = response[0]
-    view.set(theme=Theme(
-        background_color='#3f3f46' if dark_mode else '#fff',
-        foreground_color='#fff' if dark_mode else '#3f3f46',
-        accent_color='#6366f1',  # indigo-500
-    ))
+    view.set(theme=Theme(mode='dark' if dark_mode else 'light'))
 ```
 
 
