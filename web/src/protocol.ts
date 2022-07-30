@@ -91,9 +91,8 @@ export type Client = {
 }
 
 export type Theme = {
-  foreground_color?: S
-  background_color?: S
-  accent_color?: S
+  mode?: S // light [gray] | dark [gray] | dark gray | dark slate | ...
+  accent?: S // red | orange | amber | ...
 }
 
 export type Plugin = {

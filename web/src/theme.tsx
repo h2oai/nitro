@@ -13,7 +13,9 @@
 // limitations under the License.
 
 import { BaseSlots, createTheme, getColorFromString, IColor, isDark, loadTheme, Theme, ThemeGenerator, themeRulesStandardCreator } from '@fluentui/react';
-import { B, Dict, S } from './core';
+import { fromSpectrum, grays, isColor, rgbToHex } from './color';
+import { B, Dict, S, words } from './core';
+import { Theme as ProtocolTheme } from './protocol'
 
 export type Scheme = {
   sansFont: S
@@ -21,14 +23,6 @@ export type Scheme = {
   foregroundColor: S
   backgroundColor: S
   accentColor: S
-}
-
-export const defaultScheme: Scheme = {
-  sansFont: 'inherit',
-  monospaceFont: 'inherit',
-  foregroundColor: '#3f3f46', // zinc-700
-  backgroundColor: '#ffffff',
-  accentColor: '#6366f1', // indigo-500
 }
 
 const
@@ -152,11 +146,38 @@ const
         root.classList.remove('dark')
       }
     }
+  },
+  loadScheme = (scheme: Scheme) => {
+    const theme = generateTheme(scheme)
+    exportSwatches(extractSwatches(theme))
+    exportDarkMode(theme.isInverted)
+    loadTheme(theme)
   }
 
-export const loadScheme = (scheme: Scheme) => {
-  const theme = generateTheme(scheme)
-  exportSwatches(extractSwatches(theme))
-  exportDarkMode(theme.isInverted)
-  loadTheme(theme)
+export const applyTheme = (theme: ProtocolTheme) => {
+  let
+    { mode, accent } = theme,
+    prose = 'gray'
+
+  if (!mode) mode = 'light'
+
+  const
+    modes = new Set(words(mode)),
+    isDarkMode = modes.has('dark')
+
+  for (const m of grays) if (modes.has(m)) prose = m
+
+  const
+    foregroundColor = rgbToHex(fromSpectrum(prose, isDarkMode ? '300' : '700') ?? [0, 0, 0]), // Mimic Tailwind prose.
+    backgroundColor = rgbToHex(isDarkMode ? fromSpectrum(prose, '900') ?? [255, 255, 255] : [255, 255, 255]),
+    accentColor = rgbToHex(fromSpectrum(accent && isColor(accent) ? accent : 'indigo', isDarkMode ? '400' : '600') ?? [99, 102, 241]),
+    scheme: Scheme = {
+      sansFont: 'inherit',
+      monospaceFont: 'inherit',
+      backgroundColor,
+      foregroundColor,
+      accentColor,
+    }
+
+  loadScheme(scheme)
 }

@@ -20,7 +20,7 @@ import { icons } from './icons';
 import { newLocalServer } from './nitride';
 import reportWebVitals from './reportWebVitals';
 import { newSocketServer } from './socket';
-import { loadScheme } from './theme';
+import { applyTheme } from './theme';
 
 registerIcons({ icons })
 
@@ -30,7 +30,7 @@ const
   server = endpoint ? newSocketServer(endpoint) : newLocalServer(),
   client = newClient(server)
 
-loadScheme(client.schemeB())
+applyTheme(client.themeB())
 ReactDOM.render(<App client={client} />, root);
 
 // If you want to start measuring performance in your app, pass a function

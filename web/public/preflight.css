@@ -5,10 +5,11 @@
   --font-mono: 'Roboto Mono';
 
   /* Theme Colors */
-  --foreground: #232329;
   --background: #ffffff;
-  --accent: #6366f1;
+  /* gray-700 - prose default */
+  --foreground: #374151;
   /* indigo-500 */
+  --accent: #6366f1;
 }
 
 /*

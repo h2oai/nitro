@@ -16,8 +16,8 @@ import { Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
 import { css } from './css';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
-import { Box, DisplayMode, Edit, EditPosition, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT } from './protocol';
-import { defaultScheme, loadScheme, Scheme } from './theme';
+import { Box, DisplayMode, Edit, EditPosition, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
+import { applyTheme } from './theme';
 
 export enum ClientStateT { Connecting, Disconnected, Invalid, Connected }
 
@@ -173,7 +173,7 @@ export const newClient = (server: Server) => {
     captionB = signal('v0.1.0'),
     menuB = signal<Option[]>([]),
     navB = signal<Option[]>([]),
-    schemeB = signal(defaultScheme),
+    themeB = signal<Theme>({}),
     modeB = signal<DisplayMode>('normal'),
     localeB = signal<Dict<S>>({}),
     helpE = signal<S>(),
@@ -349,18 +349,7 @@ export const newClient = (server: Server) => {
                   if (caption) captionB(caption)
                   if (menu) menuB(sanitizeOptions(menu))
                   if (nav) navB(sanitizeOptions(nav))
-                  if (theme) {
-                    const
-                      d = defaultScheme,
-                      scheme: Scheme = {
-                        sansFont: d.sansFont,
-                        monospaceFont: d.monospaceFont,
-                        backgroundColor: theme.background_color ?? d.backgroundColor,
-                        foregroundColor: theme.foreground_color ?? d.foregroundColor,
-                        accentColor: theme.accent_color ?? d.accentColor,
-                      }
-                    schemeB(scheme)
-                  }
+                  if (theme) themeB(theme)
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)
                   if (locale) localeB(locale)
@@ -387,7 +376,7 @@ export const newClient = (server: Server) => {
     }
 
   on(titleB, title => document.title = title)
-  on(schemeB, scheme => window.setTimeout(() => loadScheme(scheme), 100))
+  on(themeB, theme => window.setTimeout(() => applyTheme(theme), 100))
   window.addEventListener('hashchange', () => { bounce() })
 
   const client = {
@@ -395,7 +384,7 @@ export const newClient = (server: Server) => {
     captionB,
     menuB,
     navB,
-    schemeB,
+    themeB,
     modeB,
     localeB,
     helpE,
