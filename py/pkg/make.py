@@ -216,7 +216,7 @@ def build_funcs(groups: List[Group]) -> str:
 
             if not e.name.endswith('_noop'):
                 p("    box('## Preview', style='mt-6 mb-2'),")
-                p(f"    box(mode='web', name='output', path='/#!docs.{e.name}?mode=chromeless', height='{int(e.opts.get('height', '6')) * 100}px', style='border p-4'),")
+                p(f"    box(mode='web', name='output', path='/#!docs.{e.name}?mode=chromeless', style='border p-4 h-[{int(e.opts.get('height', '6')) * 100}px]'),")
 
             p(f"    row(")
             if e.prev:
