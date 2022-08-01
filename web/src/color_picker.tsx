@@ -20,7 +20,8 @@ import { BoxProps, make } from './ui';
 
 export const ColorPicker = make(({ context, box }: BoxProps) => {
   const
-    { text, value, live, style } = box,
+    { modes, text, value, style } = box,
+    live = modes.has('live'),
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
     colorToTuple = ({ r, g, b, a }: IRGB) => [r, g, b, a ?? 100],

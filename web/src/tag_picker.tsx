@@ -22,7 +22,8 @@ const keysFromTags = (tags: ITag[]) => tags.map(tag => String(tag.key))
 
 export const TagPicker = make(({ context, box }: BoxProps) => {
   const
-    { text, options, live, style } = box,
+    { modes, text, options, style } = box,
+    live = modes.has('live'),
     selectedOptions = selectedsOf(box),
     selectedKeys = selectedOptions.map(o => String(o.value)),
     tags: ITag[] = options.map(o => ({ key: o.value, name: String(o.text) })),

@@ -85,8 +85,8 @@ type Uploadable = {
 
 export const FileUpload = make(({ context, box }: BoxProps) => {
   const
-    { text, path, style } = box,
-    multiple = box.multiple ? true : false,
+    { modes, text, path, style } = box,
+    multiple = modes.has('multi'),
     label = multiple ? 'Drag files here, or' : 'Drag a file here, or',
     inputID = xid(),
     itemsB = signal<Uploadable[]>([]),

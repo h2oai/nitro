@@ -27,10 +27,11 @@ type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
 export const Table = make(({ context, box }: BoxProps) => {
   const
-    { headers, options, multiple, live, style } = box,
-    isMultiple = multiple === true,
-    isSingle = multiple === false,
-    isList = isMultiple || isSingle,
+    { modes, headers, options, style } = box,
+    live = modes.has('live'),
+    isMultiple = modes.has('multi'),
+    isList = isMultiple || modes.has('selectable'),
+    isSingle = isList && !isMultiple,
     selectedOne = selectedOf(box),
     selecteds = isSingle && selectedOne ? [selectedOne] : selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),

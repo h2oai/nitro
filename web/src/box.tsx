@@ -42,7 +42,10 @@ import { BoxProps } from './ui';
 import { WebView } from './webview';
 
 export const XBox = ({ context, box }: BoxProps) => { // recursive
-  const { modes, options, editable, multiple } = box
+  const
+    { modes, options } = box,
+    editable = modes.has('editable'),
+    multiple = modes.has('multi')
   if (modes.has('md')) {
     return <TextBlock context={context} box={box} />
   } else if (modes.has('button')) {
@@ -89,7 +92,7 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     return <Table context={context} box={box} />
   } else if (modes.has('tag')) {
     return <TagPicker context={context} box={box} />
-  } else if (modes.has('text')) {
+  } else if (modes.has('text') || modes.has('password')) {
     return <Textbox context={context} box={box} />
   } else if (modes.has('time')) {
     return <TimePicker context={context} box={box} />

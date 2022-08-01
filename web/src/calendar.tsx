@@ -19,7 +19,8 @@ import { BoxProps, make } from './ui';
 
 export const Calendar = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, value, min, max, live, style } = box,
+    { modes, text, value, min, max, style } = box,
+    live = modes.has('live'),
     dateB = signal(toDate(value) ?? new Date()),
     minDate = toDate(min),
     maxDate = toDate(max),

@@ -45,7 +45,8 @@ const
 
 export const TimePicker = make(({ context, box }: BoxProps) => {
   const
-    { text, value, live, style } = box,
+    { modes, text, value, style } = box,
+    live = modes.has('live'),
     clock = parseClock(String(value).toLowerCase()),
     capture = () => {
       context.record(clockToString(clock))

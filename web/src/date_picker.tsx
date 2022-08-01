@@ -19,7 +19,9 @@ import { BoxProps, make } from './ui';
 
 export const DatePicker = make(({ context, box }: BoxProps) => {
   const
-    { text, placeholder, value, min, max, required, live, style } = box,
+    { modes, text, placeholder, value, min, max, style } = box,
+    required = modes.has('required'),
+    live = modes.has('live'),
     defaultDate = toDate(value) ?? new Date(),
     defaultValue = dateToString(defaultDate),
     minDate = toDate(min),

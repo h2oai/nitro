@@ -21,7 +21,8 @@ import { BoxProps, make } from './ui';
 
 export const ComboBox = make(({ context, box }: BoxProps) => {
   const
-    { value, text, placeholder, required, error, options, style } = box,
+    { modes, value, text, placeholder, error, options, style } = box,
+    required = modes.has('required'),
     items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
     selected = selectedOf(box),
     selectedKey = selected ? String(selected.value) : undefined,

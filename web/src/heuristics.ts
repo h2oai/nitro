@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { moveSyntheticComments } from 'typescript';
 import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, S, words, xid } from './core';
 import { css } from './css';
 import { markdown } from './markdown';
 import { Box, BoxMode, Header, Option } from './protocol';
 
 const determineMode = (box: Box): BoxMode => {
-  const { options, editable, multiple } = box
+  const { modes, options } = box
 
   if (options.length) {
-    if (editable) {
+    if (modes.has('editable')) {
       return 'menu'
     }
-    if (multiple) {
+    if (modes.has('multi')) {
       const hasShortLabels = options.some(({ text }) => text && (text.length <= 50))
       if (hasShortLabels && options.length > 7) {
         return 'menu'
@@ -48,6 +47,8 @@ const determineMode = (box: Box): BoxMode => {
 
   const { value, min, max, step, precision } = box
 
+  if (isB(value)) return 'check'
+
   if (isPair(value)) {
     const [a, b] = value
     if (isN(a) && isN(b)) {
@@ -59,8 +60,9 @@ const determineMode = (box: Box): BoxMode => {
     return 'number'
   }
 
-  const { mask, prefix, suffix, placeholder, error, lines, required, password, icon } = box
-  if (anyD(value, mask, prefix, suffix, placeholder, error, lines, required, password, icon)) {
+  const { mask, prefix, suffix, placeholder, error, lines, icon } = box
+
+  if (anyD(value, mask, prefix, suffix, placeholder, error, lines, icon) || modes.has('required')) {
     return 'text'
   }
 
@@ -190,12 +192,12 @@ const prefixStyle = (box: Box, prefix: S | undefined) => {
   if (prefix) box.style = box.style ? prefix + ' ' + box.style : prefix
 }
 
-const knownModes = new Set([
-  'row', 'col', 'tabs', 'md', 'button', 'menu', 'radio', 'check', 'toggle'
-  , 'text', 'range', 'number', 'time', 'date', 'day', 'week', 'month', 'tag', 'color'
-  , 'rating', 'table', 'file', 'progress', 'spinner', 'separator', 'image', 'web',
+const knownModes = [
+  'row', 'col', 'tabs', 'md', 'button', 'menu', 'radio', 'check', 'toggle', 'password',
+  'text', 'range', 'number', 'time', 'date', 'day', 'week', 'month', 'tag', 'color',
+  'rating', 'table', 'file', 'progress', 'spinner', 'separator', 'image', 'web',
   'info', 'success', 'warning', 'critical', 'blocked', 'error'
-])
+]
 
 const readonlyBoxes = [
   'progress',
@@ -210,6 +212,14 @@ const readonlyBoxes = [
   'image',
   'web',
 ]
+
+const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
+  if (modes.size === 0) return true
+  for (const m of knownModes) if (modes.has(m)) return false
+  for (const m of modes.values()) if (m.startsWith('plugin:')) return false
+  return true
+}
+
 
 export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   if (isS(box)) {
@@ -236,15 +246,15 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     box.items = box.items.map(b => sanitizeBox(locale, b))
   } else {
     const { value, options } = box
-    if (isB(value)) {
-      box.value = value ? 1 : 0 // TODO ugly: protocol should accept boolean
-      if (!modes.size) modes.add('check')
-    }
+
     box.options = sanitizeOptions(options)
     box.index = 0
-    sanitizeRange(box)
 
-    if (!modes.size) modes.add(determineMode(box))
+    if (hasNoMode(modes)) modes.add(determineMode(box))
+
+    if (isB(value)) box.value = value ? 1 : 0 // TODO ugly: protocol should accept boolean
+
+    sanitizeRange(box)
 
     localizeBox(locale, box)
 
@@ -277,11 +287,11 @@ export const reIndex = (boxes: Box[], incr: Incr) => {
 
 export const hasActions = (boxes: Box[]): B => { // recursive
   for (const box of boxes) {
-    if (box.halt || box.live) return true
+    const { modes } = box
+    if (box.halt || modes.has('live')) return true
     if (box.items) {
       if (hasActions(box.items)) return true
     } else {
-      const { modes } = box
       if (modes.has('button')) {
         if (box.options.length) return true
       } else if (modes.has('md')) {
@@ -289,7 +299,7 @@ export const hasActions = (boxes: Box[]): B => { // recursive
       } else if (modes.has('toggle') || modes.has('progress') || modes.has('spinner')) {
         return true
       } else if (modes.has('table')) {
-        if (isB(box.multiple)) return false
+        if (modes.has('selectable') || modes.has('multi')) return false
         if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
       }
     }

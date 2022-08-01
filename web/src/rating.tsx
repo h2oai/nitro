@@ -20,7 +20,8 @@ import { BoxProps, make } from './ui';
 
 export const Rating = make(({ context, box }: BoxProps) => {
   const
-    { text, placeholder, min, max, value, live, style } = box,
+    { modes, text, placeholder, min, max, value, style } = box,
+    live = modes.has('live'),
     allowZeroStars = isN(min) && min <= 0,
     defaultRating = toN(value) ?? (allowZeroStars ? 0 : 1),
     onChange = (event: React.FormEvent<HTMLElement>, rating?: number) => {

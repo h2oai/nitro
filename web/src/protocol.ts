@@ -164,11 +164,6 @@ export type Box = {
   path?: S // file upload path or web view path
   error?: S
   lines?: U
-  multiple?: B
-  required?: B
-  password?: B
-  editable?: B
-  live?: B
 }
 
 export type Option = {

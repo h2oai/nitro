@@ -21,7 +21,9 @@ import { BoxProps, make } from './ui';
 
 export const ChoiceGroup = make(({ context, box }: BoxProps) => {
   const
-    { text, placeholder, required, options, live, style } = box,
+    { modes, text, placeholder, options, style } = box,
+    required = modes.has('required'),
+    live = modes.has('live'),
     hasNoPrimary = options.every(o => !isB(o.selected)),
     selected = selectedOf(box),
     items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({

@@ -21,7 +21,9 @@ import { BoxProps, make } from './ui';
 
 export const Droplist = make(({ context, box }: BoxProps) => {
   const
-    { text, placeholder, error, required, options, live, style } = box,
+    { modes, text, placeholder, error, options, style } = box,
+    required = modes.has('required'),
+    live = modes.has('live'),
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
