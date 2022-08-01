@@ -150,13 +150,13 @@ def layout_row_col(view: View):  # height 3
 
 
 # ## Tabbed layout
-# Set mode='tabs' on a box to lay out its items in tabs.
+# Set mode='tab' on a box to lay out its items in tabs.
 #
 # The `text` of each child item is used as the tab's label.
 def layout_tabs(view: View):  # height 5
     view(
         box(
-            mode='tabs',
+            mode='tab',
             items=[
                 box(
                     'Profile',
@@ -188,11 +188,11 @@ def layout_tabs(view: View):  # height 5
 
 
 # ## Accordion layout
-# Set `mode='vertical tabs'` to lay out tabs one below the other, commonly known as an accordion.
+# Set `mode='vertical tab'` to lay out tabs one below the other, commonly known as an accordion.
 def layout_tabs_vertical(view: View):  # height 5
     view(
         box(
-            mode='vertical tabs',
+            mode='vertical tab',
             items=[
                 box(
                     'Profile',
@@ -231,7 +231,7 @@ def layout_tabs_vertical(view: View):  # height 5
 def layout_tabs_icons(view: View):  # height 5
     view(
         box(
-            mode='tabs',
+            mode='tab',
             items=[
                 box(
                     'Profile',

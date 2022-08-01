@@ -193,7 +193,7 @@ const prefixStyle = (box: Box, prefix: S | undefined) => {
 }
 
 const knownModes = [
-  'row', 'col', 'tabs', 'md', 'button', 'menu', 'radio', 'check', 'toggle', 'password',
+  'row', 'col', 'tab', 'md', 'button', 'menu', 'radio', 'check', 'toggle', 'password',
   'text', 'range', 'number', 'time', 'date', 'day', 'week', 'month', 'tag', 'color',
   'rating', 'table', 'file', 'progress', 'spinner', 'separator', 'image', 'web',
   'info', 'success', 'warning', 'critical', 'blocked', 'error'
@@ -234,7 +234,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   if (modes.has('column')) modes.add('col') // QOL
 
   if (box.items) {
-    if (modes.has('tabs')) {
+    if (modes.has('tab')) {
       box.items.forEach(box => prefixStyle(box, 'flex flex-col gap-2 my-2'))
     }
     const prefix = modes.has('col')

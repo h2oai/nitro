@@ -183,7 +183,7 @@ view(
 
 ## Tabbed layout
 
-Set mode='tabs' on a box to lay out its items in tabs.
+Set mode='tab' on a box to lay out its items in tabs.
 
 The `text` of each child item is used as the tab's label.
 
@@ -191,7 +191,7 @@ The `text` of each child item is used as the tab's label.
 ```py
 view(
     box(
-        mode='tabs',
+        mode='tab',
         items=[
             box(
                 'Profile',
@@ -228,13 +228,13 @@ view(
 
 ## Accordion layout
 
-Set `mode='vertical tabs'` to lay out tabs one below the other, commonly known as an accordion.
+Set `mode='vertical tab'` to lay out tabs one below the other, commonly known as an accordion.
 
 
 ```py
 view(
     box(
-        mode='vertical tabs',
+        mode='vertical tab',
         items=[
             box(
                 'Profile',
@@ -280,7 +280,7 @@ Set `icon=` on each tab to show an icon on the tab.
 ```py
 view(
     box(
-        mode='tabs',
+        mode='tab',
         items=[
             box(
                 'Profile',

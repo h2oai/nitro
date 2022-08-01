@@ -38,7 +38,7 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
     isRow = modes.has('row')
 
   if (items) {
-    if (modes.has('tabs')) {
+    if (modes.has('tab')) {
       if (modes.has('vertical')) {
         const tabs = items.map((box, i) => (
           <Expander key={box.xid} headerText={box.text ?? `Tab ${i + 1}`}>
