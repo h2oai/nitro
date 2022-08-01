@@ -149,8 +149,6 @@ export type Box = {
   help?: S
   popup?: B
   style?: S
-  width?: S | [S] | Pair<S> | Triple<S> // CSS width / [min] / [min, max] / [min, max, initial]
-  height?: S | [S] | Pair<S> | Triple<S> // CSS height / [min] / [min, max] / [min, max, initial]
   image?: S // img tag or CSS background-image
   icon?: S
   min?: V
