@@ -24,21 +24,24 @@ const palette = createPalette()
 const
   strs = (xs: U[]) => xs.map(x => '' + x),
   eq = (k: S) => (x: S) => { if (x === k) return x },
-  empty = eq(''),
-  none = eq('none'),
-  auto = eq('auto'),
-  full = eq('full'),
-  map = (dict: Dict<any>) => (x: S) => { if (x in dict) return dict[x] },
-  any = (...xs: S[]) => {
-    const set = new Set(xs)
-    return (x: S) => { if (set.has(x)) return x }
-  },
   either = (...matchers: Match[]) => (x: S) => {
     for (const m of matchers) {
       const v = m(x)
       if (v !== undefined) return v
     }
   },
+  custom = (x: S) => { if (/^\[.+\]$/.test(x)) return x.substring(1, x.length - 1) },
+  empty = eq(''),
+  none = eq('none'),
+  auto = eq('auto'),
+  full = eq('full'),
+  map = (dict: Dict<any>) => (x: S) => { if (x in dict) return dict[x] },
+  mapC = (dict: Dict<any>) => either(map(dict), custom),
+  any = (...xs: S[]) => {
+    const set = new Set(xs)
+    return (x: S) => { if (set.has(x)) return x }
+  },
+  anyC = (...xs: S[]) => either(any(...xs), custom),
   mapF = (xs: S[], f: (x: S) => S) => {
     const d: Dict<S> = {}
     for (const x of xs) d[x] = f(x)
@@ -68,7 +71,7 @@ const makeSizeScale = () => {
   sizePresets.forEach(f => { d['' + f] = `${f * 0.25}rem` })
   return d
 }
-const size = map(makeSizeScale())
+const size = mapC(makeSizeScale())
 const ratio = map({
   full: '100%',
   '1/2': '50%',
@@ -1128,7 +1131,7 @@ export const stylize = (prefix: S): S | undefined => {
 }
 
 
-const escape = (name: S): S => name.replace(/([.:/])/g, '\\$1')
+const escape = (name: S): S => name.replace(/([.:/\[\]])/g, '\\$1')
 
 export type PredefineCSS = (...classes: Style[]) => Style
 

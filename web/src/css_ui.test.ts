@@ -1,7 +1,13 @@
-
 import { stylize as c } from './css'
 
-it('style should match tailwind', () => {
+it('should translate arbitrary values', () => {
+  expect(c('w-[117px]')).toEqual('width:117px')
+  // TODO
+  // expect(c('grid-cols-[1fr_500px_2fr]')).toEqual('grid-template-columns:1fr 500px 2fr')
+  // expect(c("bg-[#bada55]")).toEqual('--tw-bg-opacity:1;background-color:rgb(186 218 85 / var(--tw-bg-opacity)')
+})
+
+it('should translate UI colors', () => {
   expect(c('bg-ui-foreground')).toEqual('background-color:var(--ui-foreground)')
   expect(c('bg-ui-background')).toEqual('background-color:var(--ui-background)')
   expect(c('bg-ui-accent')).toEqual('background-color:var(--ui-accent)')
