@@ -12,27 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { isN, isS, xid } from './core';
+import { xid } from './core';
 import { css } from './css';
 import { BoxProps } from './ui';
 
 export const WebView = ({ box }: BoxProps) => {
   const
-    { name: rawName, path, width: w, height: h } = box,
-    name = rawName ?? xid(),
-    width = isN(w) || isS(w) ? w : undefined,
-    height = isN(h) || isS(h) ? h : undefined
+    { name: rawName, path, style } = box,
+    name = rawName ?? xid()
   return (
-    <div className={css('relative')} style={{ width, height }}>
-      <iframe
-        className={css('absolute inset-0')}
-        name={name}
-        title={name}
-        src={path}
-        width="100%"
-        height="100%"
-      />
-    </div>
+    <iframe
+      className={css(style)}
+      name={name}
+      title={name}
+      src={path}
+    />
   )
 }
 

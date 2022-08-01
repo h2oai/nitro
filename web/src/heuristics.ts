@@ -254,12 +254,6 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
       if (!hasLinks) box.index = -1 // don't capture
     } else {
       for (const t of readonlyBoxes) if (modes.has(t)) box.index = -1 // don't capture
-
-      if (modes.has('web')) {
-        // Set a height if missing, otherwise iframe won't flow.
-        // iframe widths are already set to 100% in webview.
-        if (!box.height) box.height = '400px'
-      }
     }
     if (box.ignore) box.index = -1 // don't capture
   }
