@@ -90,48 +90,18 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/table_markdown.png)
 
 
-## Enable multi-select
-
-Set `multiple=True` to allow rows to be selected. This effectively allow a table to be used in place of a
-dropdown menu, especially useful when each item has multiple attributes.
-
-The return value is a collection of the values of the selected rows.
-
-
-```py
-choices = view(box(
-    mode='table',
-    headers=[
-        header('Flavor'),
-        header('Super cheap!'),
-        header('Extras'),
-    ],
-    options=[
-        option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
-        option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
-        option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
-        option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
-        option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
-    ],
-    multiple=True,
-))
-view(f'You chose {choices}.')
-```
-
-
-![Screenshot](assets/screenshots/table_multiselect.png)
-
-
 ## Enable single select
 
-Set `multiple=False` to allow at most one row to be selected.
+Add `selectable` to `mode` to allow at most one row to be selected.
+
+The `selectable table` is a good replacement for a `menu` when you need to display multiple attributes for each item.
 
 The return value is the `value` of the selected row.
 
 
 ```py
 choice = view(box(
-    mode='table',
+    mode='selectable table',
     headers=[
         header('Flavor'),
         header('Super cheap!'),
@@ -144,13 +114,45 @@ choice = view(box(
         option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
         option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
     ],
-    multiple=False,
 ))
 view(f'You chose {choice}.')
 ```
 
 
 ![Screenshot](assets/screenshots/table_singleselect.png)
+
+
+## Enable multi-select
+
+Add `multi` to `mode` to allow multiple rows to be selected.
+`mode='multi table'` is shorthand for `mode='multi selectable table'`
+
+The `multi table` is a good replacement for a `multi menu` when you need to display multiple attributes for each item.
+
+The return value is a collection of the values of the selected rows.
+
+
+```py
+choices = view(box(
+    mode='multi table',
+    headers=[
+        header('Flavor'),
+        header('Super cheap!'),
+        header('Extras'),
+    ],
+    options=[
+        option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
+        option('sugar', options=['Powdered Sugar', '$1.99', 'Served warm']),
+        option('vanilla', options=['Vanilla', '$2.99', 'With cookie crumbles']),
+        option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
+        option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
+    ],
+))
+view(f'You chose {choices}.')
+```
+
+
+![Screenshot](assets/screenshots/table_multiselect.png)
 
 
 ## Set initial selection
@@ -160,7 +162,7 @@ Set `value=` to pre-select one or more rows.
 
 ```py
 choices = view(box(
-    mode='table',
+    mode='multi table',
     headers=[
         header('Flavor'),
         header('Super cheap!'),
@@ -173,7 +175,6 @@ choices = view(box(
         option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
         option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry']),
     ],
-    multiple=True,
     value=['vanilla', 'blueberry'],
 ))
 view(f'You chose {choices}.')
@@ -190,7 +191,7 @@ Alternatively, set `selected=True` on a row to pre-select the row.
 
 ```py
 choices = view(box(
-    mode='table',
+    mode='multi table',
     headers=[
         header('Flavor'),
         header('Super cheap!'),
@@ -203,7 +204,6 @@ choices = view(box(
         option('chocolate', options=['Chocolate', '$2.99', 'With sprinkles']),
         option('blueberry', options=['Blueberry', '$2.99', 'With real blueberry'], selected=True),
     ],
-    multiple=True,
 ))
 view(f'You chose {choices}.')
 ```
@@ -396,7 +396,7 @@ view(box(
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
@@ -404,10 +404,8 @@ choice = 'sugar'  # Initial choice
 while True:
     choice = view(
         box(
-            mode='table',
+            mode='live multi table',
             value=choice,
-            multiple=False,
-            live=True,
             headers=[
                 header('Flavor'),
                 header('Super cheap!'),

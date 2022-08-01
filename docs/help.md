@@ -173,7 +173,7 @@ view(
     box('Add sprinkles', mode='toggle', value=True, hint=hint),
     box('Choose a flavor', mode='button', options=flavors, hint=hint),
     box('Choose a flavor', mode='menu', options=flavors, hint=hint),
-    box('Choose a flavor', mode='menu', options=flavors, multiple=True, hint=hint),
+    box('Choose a flavor', mode='multi menu', options=flavors,  hint=hint),
     box('Choose a flavor', mode='radio', options=flavors, hint=hint),
     box('Choose a flavor', mode='check', options=flavors, hint=hint),
     box('How many donuts?', mode='range', value=5, hint=hint),

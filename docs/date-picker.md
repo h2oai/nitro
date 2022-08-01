@@ -107,11 +107,11 @@ view(f'You picked {date}.')
 
 ## Mark as required
 
-Set `required=True` to indicate that input is required.
+Add `required` to `mode` to indicate that input is required.
 
 
 ```py
-date = view(box('Pick a date', mode='date', required=True))
+date = view(box('Pick a date', mode='required date'))
 view(f'You picked {date}.')
 ```
 
@@ -121,14 +121,14 @@ view(f'You picked {date}.')
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
 date = '2021-10-10'  # Initial value (UTC)
 while True:
     date = view(
-        box('Pick a date', mode='date', value=date, live=True),
+        box('Pick a date', mode='live date', value=date),
         f'You picked {date} (UTC).',
     )
 ```

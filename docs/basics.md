@@ -193,8 +193,8 @@ items = view(
     '### What would you like to order today?',
     box(
         'Donuts, coffee, or both?',
+        mode='check',
         options=list(menu.keys()),  # Menu item names.
-        multiple=True,  # Allow multiple selections.
     ),
 )
 

@@ -73,18 +73,18 @@ def date_range(view: View):  # height 3
 
 
 # ## Mark as required
-# Set `required=True` to indicate that input is required.
+# Add `required` to `mode` to indicate that input is required.
 def date_required(view: View):  # height 3
-    date = view(box('Pick a date', mode='date', required=True))
+    date = view(box('Pick a date', mode='required date'))
     view(f'You picked {date}.')
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def date_live(view: View):  # height 3
     date = '2021-10-10'  # Initial value (UTC)
     while True:
         date = view(
-            box('Pick a date', mode='date', value=date, live=True),
+            box('Pick a date', mode='live date', value=date),
             f'You picked {date} (UTC).',
         )

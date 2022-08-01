@@ -4,7 +4,7 @@ Use a dropdown list to pick one or more options from a large number of options.
 
 ## Basic
 
-Set `mode='menu'` with `multiple=True` to show a dropdown menu that allows multiple options to be selected.
+Set `mode='multi menu'` to show a dropdown menu that allows multiple options to be selected.
 
 `mode=` can be elided when there are more than 7 options.
 
@@ -12,8 +12,7 @@ Set `mode='menu'` with `multiple=True` to show a dropdown menu that allows multi
 ```py
 choices = view(box(
     'Choose some colors',
-    mode='menu',
-    multiple=True,
+    mode='multi menu',
     options=['green', 'yellow', 'orange', 'red']
 ))
 view(f'You chose {choices}.')
@@ -31,8 +30,7 @@ Set `value=` to pre-select options having those values.
 ```py
 choices = view(box(
     'Choose some colors',
-    mode='menu',
-    multiple=True,
+    mode='multi menu',
     value=['yellow', 'red'],
     options=['green', 'yellow', 'orange', 'red']
 ))
@@ -51,8 +49,7 @@ Alternatively, set `selected=True` to pre-select one or more options.
 ```py
 choices = view(box(
     'Choose some colors',
-    mode='menu',
-    multiple=True,
+    mode='multi menu',
     options=[
         option('green', 'Green'),
         option('yellow', 'Yellow', selected=True),
@@ -69,7 +66,7 @@ view(f'You chose {choices}.')
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
@@ -78,10 +75,8 @@ while True:
     choices = view(
         box(
             'Choose some colors',
-            mode='menu',
+            mode='live multi menu',
             value=choices,
-            multiple=True,
-            live=True,
             options=['green', 'yellow', 'orange', 'red'],
         ),
         f'You chose {choices}.'

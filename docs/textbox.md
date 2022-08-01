@@ -64,11 +64,11 @@ view(f'Your speed is {speed} km/h.')
 
 ## Mark as required
 
-Set `required=True` to indicate that input is required.
+Add `required` to `mode` to indicate that input is required.
 
 
 ```py
-speed = view(box('Speed (km/h)', required=True))
+speed = view(box('Speed (km/h)', mode='required'))
 view(f'Your speed is {speed} km/h.')
 ```
 
@@ -172,11 +172,11 @@ speed = view(box('Speed (km/h)', error='Invalid input'))
 
 ## Accept a password
 
-Set `password=True` when accepting passwords and other confidential inputs.
+Add `password` to `mode` when accepting passwords and other confidential inputs.
 
 
 ```py
-password = view(box('Password field', password=True))
+password = view(box('Password field', mode='password'))
 view(f'Your password `{password}` is not strong enough!')
 ```
 

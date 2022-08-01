@@ -65,11 +65,11 @@ def rating_range(view: View):  # height 2
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def rating_live(view: View):  # height 2
     stars = 3
     while True:
         stars = view(
-            box('Rate your experience', mode='rating', value=stars, live=True),
+            box('Rate your experience', mode='live rating', value=stars),
             f'Your rating was {stars} stars.'
         )

@@ -60,16 +60,15 @@ def checklist_selected(view: View):  # height 3
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def checklist_live(view: View):  # height 3
     choices = ['yellow', 'red']  # Initial selection
     while True:
         choices = view(
             box(
                 'Choose some colors',
-                mode='check',
+                mode='live check',
                 value=choices,
-                live=True,
                 options=['green', 'yellow', 'orange', 'red']
             ),
             f'You chose {choices}.'

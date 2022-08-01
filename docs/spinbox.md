@@ -193,14 +193,14 @@ view(f'Your speed is {speed} m/s')
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
 speed = 42  # Starting value
 while True:
     speed = view(
-        box('Speed (km/h)', value=speed, live=True),
+        box('Speed (km/h)', mode='live', value=speed),
         f'Your speed is {speed} km/h',
     )
 ```

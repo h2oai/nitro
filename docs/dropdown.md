@@ -87,13 +87,13 @@ view(f'You chose {choice}.')
 
 ## Enable arbitrary input
 
-Set `editable=True` to allow arbitrary input in addition to the presented options.
+Add `editable` to `mode` to allow arbitrary input in addition to the presented options.
 
-`mode=menu` is implied if `editable=True`.
+`mode=menu` is implied if `editable` is set, and the box has `options`.
 
 
 ```py
-choice = view(box('Choose a color', editable=True, options=[
+choice = view(box('Choose a color', mode='editable', options=[
     'yellow', 'orange', 'red', 'black'
 ]))
 view(f'You chose {choice}.')
@@ -105,7 +105,7 @@ view(f'You chose {choice}.')
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
@@ -114,9 +114,8 @@ while True:
     choice = view(
         box(
             'Choose a color',
-            mode='menu',
+            mode='live menu',
             value=choice,
-            live=True,
             options=['green', 'yellow', 'orange', 'red'],
         ),
         f'You chose {choice}.'

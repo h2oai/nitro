@@ -66,11 +66,11 @@ def month_range(view: View):  # height 4
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def month_live(view: View):  # height 4
     month = '2021-10-10'
     while True:
         month = view(
-            box('Pick a month', mode='month', value=month, live=True),
+            box('Pick a month', mode='live month', value=month),
             f'You picked {month} (UTC).'
         )

@@ -67,11 +67,11 @@ def day_range(view: View):  # height 4
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def day_live(view: View):  # height 4
     date = '2021-10-10'
     while True:
         date = view(
-            box('Pick a date', mode='day', value=date, live=True),
+            box('Pick a date', mode='live day', value=date),
             f'You picked {date} (UTC).'
         )

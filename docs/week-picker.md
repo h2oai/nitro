@@ -93,14 +93,14 @@ view(f'You picked {week}.')
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
 week = '2021-10-10'
 while True:
     week = view(
-        box('Pick a week', mode='week', value=week, live=True),
+        box('Pick a week', mode='live week', value=week),
         f'You picked {week} (UTC).'
     )
 ```

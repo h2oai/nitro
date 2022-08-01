@@ -51,9 +51,9 @@ def textbox_placeholder(view: View):  # height 2
 
 
 # ## Mark as required
-# Set `required=True` to indicate that input is required.
+# Add `required` to `mode` to indicate that input is required.
 def textbox_required(view: View):  # height 2
-    speed = view(box('Speed (km/h)', required=True))
+    speed = view(box('Speed (km/h)', mode='required'))
     view(f'Your speed is {speed} km/h.')
 
 
@@ -109,9 +109,9 @@ def textbox_error(view: View):  # height 2
 
 
 # ## Accept a password
-# Set `password=True` when accepting passwords and other confidential inputs.
+# Add `password` to `mode` when accepting passwords and other confidential inputs.
 def textbox_password(view: View):  # height 2
-    password = view(box('Password field', password=True))
+    password = view(box('Password field', mode='password'))
     view(f'Your password `{password}` is not strong enough!')
 
 

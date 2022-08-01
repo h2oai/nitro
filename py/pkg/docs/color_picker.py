@@ -53,16 +53,15 @@ def color_value(view: View):  # height 6
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def color_live(view: View):  # height 6
     color = [162, 65, 232, 100]
     while True:
         color = view(
             box(
                 'Choose a color',
-                mode='color',
+                mode='live color',
                 value=f'rgba({color[0]},{color[1]},{color[2]},{color[3]}%)',
-                live=True,
             ),
             f'You chose {color}.'
         )

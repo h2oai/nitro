@@ -23,9 +23,6 @@ from h2o_nitro import View, box, row, col, option, lorem
 def checkbox_basic(view: View):  # height 2
     keep_signed_in = view(
         box('Keep me signed in', mode='check'),
-        box('Keep me signed in', mode='check'),
-        box('Keep me signed in', mode='check'),
-        box('Keep me signed in', mode='check'),
     )
     view(f'Keep me signed in: {keep_signed_in}.')
 
@@ -40,11 +37,11 @@ def checkbox_value(view: View):  # height 2
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def checkbox_live(view: View):  # height 2
     keep_signed_in = True
     while True:
         keep_signed_in = view(
-            box('Remember me', value=keep_signed_in, live=True),
+            box('Remember me', mode='live', value=keep_signed_in),
             "Keep me signed in." if keep_signed_in else "Don't keep me signed in.",
         )

@@ -65,14 +65,14 @@ def palette_selected(view: View):  # height 2
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def palette_live(view: View):  # height 2
     color = '#0000ff'
     while True:
         color = view(
             box(
                 'Choose a color',
-                mode='color',
+                mode='live color',
                 value=color,
                 options=[
                     option('#ff0000', 'Red'),
@@ -82,7 +82,6 @@ def palette_live(view: View):  # height 2
                     option('#00ffff', 'Cyan'),
                     option('#ff00ff', 'Magenta'),
                 ],
-                live=True,
             ),
             f'You chose {color}.'
         )

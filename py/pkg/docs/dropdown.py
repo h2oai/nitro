@@ -74,27 +74,26 @@ def dropdown_grouped(view: View):  # height 2
 
 
 # ## Enable arbitrary input
-# Set `editable=True` to allow arbitrary input in addition to the presented options.
+# Add `editable` to `mode` to allow arbitrary input in addition to the presented options.
 #
-# `mode=menu` is implied if `editable=True`.
+# `mode=menu` is implied if `editable` is set, and the box has `options`.
 def dropdown_editable(view: View):  # height 2
-    choice = view(box('Choose a color', editable=True, options=[
+    choice = view(box('Choose a color', mode='editable', options=[
         'yellow', 'orange', 'red', 'black'
     ]))
     view(f'You chose {choice}.')
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def dropdown_live(view: View):  # height 3
     choice = 'yellow'
     while True:
         choice = view(
             box(
                 'Choose a color',
-                mode='menu',
+                mode='live menu',
                 value=choice,
-                live=True,
                 options=['green', 'yellow', 'orange', 'red'],
             ),
             f'You chose {choice}.'

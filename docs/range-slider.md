@@ -173,14 +173,14 @@ view(f'Your speed ranges between {start} and {end} m/s')
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
 start, end = 3, 7  # Starting values
 while True:
     start, end = view(
-        box('Speed range (km/h)', value=(start, end), live=True),
+        box('Speed range (km/h)', mode='live', value=(start, end)),
         f'Your speed ranges between {start} and {end} km/h',
     )
 ```

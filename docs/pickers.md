@@ -88,7 +88,7 @@ view(f'You chose {choice}.')
 
 ## Show a dropdown list
 
-Set `multiple=True` to allow choosing more than one option. The return value is a list of choices made.
+Add `multi` to `mode` to allow choosing more than one option. The return value is a list of choices made.
 
 By default, this displays checkboxes for up to 7 options, or a dropdown menu for more than 7 options.
 
@@ -96,7 +96,7 @@ Set `mode='menu'` to display a dropdown menu regardless of the number of options
 
 
 ```py
-choices = view(box('Choose some colors', multiple=True, options=[
+choices = view(box('Choose some colors', mode='multi', options=[
     'violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'black'
 ]))
 view(f'You chose {choices}.')
@@ -108,13 +108,13 @@ view(f'You chose {choices}.')
 
 ## Show a checklist
 
-A checklist is shown for up to 7 options when `multiple=True`.
+A checklist is shown for up to 7 options when `multi` is set.
 
 Set `mode='check'` to display a checklist regardless of the number of options.
 
 
 ```py
-choices = view(box('Choose some colors', mode='check', multiple=True, options=[
+choices = view(box('Choose some colors', mode='multi check', options=[
     'yellow', 'orange', 'red', 'black'
 ]))
 view(f'You chose {choices}.')
@@ -126,11 +126,11 @@ view(f'You chose {choices}.')
 
 ## Mark as required
 
-Set `required=True` to indicate that input is required.
+Add `required` to `mode` to indicate that input is required.
 
 
 ```py
-choice = view(box('Choose a color', mode='menu', required=True, options=[
+choice = view(box('Choose a color', mode='required menu', options=[
     'yellow', 'orange', 'red', 'black'
 ]))
 view(f'You chose {choice}.')

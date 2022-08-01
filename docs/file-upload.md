@@ -27,11 +27,11 @@ view(f'You uploaded {filename}.')
 
 ## Allow multiple files
 
-Set `multiple=True` to allow uploading multiple files.
+Add `multi` to `mode` to allow uploading multiple files.
 
 
 ```py
-filenames = view(box('Upload some documents', mode='file', multiple=True))
+filenames = view(box('Upload some documents', mode='multi file'))
 view(f'You uploaded {filenames}.')
 ```
 

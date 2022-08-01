@@ -10,7 +10,7 @@ To create a form, simply lay out all the inputs you need inside a view, then des
 ```py
 username, password, action = view(
     box('Username', value='someone@company.com'),
-    box('Password', value='pa55w0rd', password=True),
+    box('Password', mode='password', value='pa55w0rd'),
     box(['Login']),
 )
 view(f'You entered `{username}`/`{password}` and then clicked on {action}.')
@@ -30,7 +30,7 @@ There is no change to the way the return values are destructured.
 username, password, action = view(
     row(
         box('Username', value='someone@company.com'),
-        box('Password', value='pa55w0rd', password=True),
+        box('Password', mode='password', value='pa55w0rd'),
         box(['Login']),
     )
 )

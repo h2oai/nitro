@@ -35,9 +35,9 @@ def file_upload_basic(view: View):  # height 4
 
 
 # ## Allow multiple files
-# Set `multiple=True` to allow uploading multiple files.
+# Add `multi` to `mode` to allow uploading multiple files.
 def file_upload_multiple(view: View):  # height 4
-    filenames = view(box('Upload some documents', mode='file', multiple=True))
+    filenames = view(box('Upload some documents', mode='multi file'))
     view(f'You uploaded {filenames}.')
 
 

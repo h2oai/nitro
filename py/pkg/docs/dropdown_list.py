@@ -19,14 +19,13 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Use a dropdown list to pick one or more options from a large number of options.
 
 # ## Basic
-# Set `mode='menu'` with `multiple=True` to show a dropdown menu that allows multiple options to be selected.
+# Set `mode='multi menu'` to show a dropdown menu that allows multiple options to be selected.
 #
 # `mode=` can be elided when there are more than 7 options.
 def multi_dropdown_basic(view: View):  # height 2
     choices = view(box(
         'Choose some colors',
-        mode='menu',
-        multiple=True,
+        mode='multi menu',
         options=['green', 'yellow', 'orange', 'red']
     ))
     view(f'You chose {choices}.')
@@ -37,8 +36,7 @@ def multi_dropdown_basic(view: View):  # height 2
 def multi_dropdown_value(view: View):  # height 2
     choices = view(box(
         'Choose some colors',
-        mode='menu',
-        multiple=True,
+        mode='multi menu',
         value=['yellow', 'red'],
         options=['green', 'yellow', 'orange', 'red']
     ))
@@ -50,8 +48,7 @@ def multi_dropdown_value(view: View):  # height 2
 def multi_dropdown_selected(view: View):  # height 2
     choices = view(box(
         'Choose some colors',
-        mode='menu',
-        multiple=True,
+        mode='multi menu',
         options=[
             option('green', 'Green'),
             option('yellow', 'Yellow', selected=True),
@@ -63,17 +60,15 @@ def multi_dropdown_selected(view: View):  # height 2
 
 
 # ## Handle changes immediately
-# Set `live=True` to handle changes immediately.
+# Add `live` to `mode` to handle changes immediately.
 def multi_dropdown_live(view: View):  # height 3
     choices = ['green', 'yellow']
     while True:
         choices = view(
             box(
                 'Choose some colors',
-                mode='menu',
+                mode='live multi menu',
                 value=choices,
-                multiple=True,
-                live=True,
                 options=['green', 'yellow', 'orange', 'red'],
             ),
             f'You chose {choices}.'

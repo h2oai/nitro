@@ -71,7 +71,7 @@ view(f'You chose {color}.')
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
@@ -80,7 +80,7 @@ while True:
     color = view(
         box(
             'Choose a color',
-            mode='color',
+            mode='live color',
             value=color,
             options=[
                 option('#ff0000', 'Red'),
@@ -90,7 +90,6 @@ while True:
                 option('#00ffff', 'Cyan'),
                 option('#ff00ff', 'Magenta'),
             ],
-            live=True,
         ),
         f'You chose {color}.'
     )

@@ -23,7 +23,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 def form_basic(view: View):  # height 3
     username, password, action = view(
         box('Username', value='someone@company.com'),
-        box('Password', value='pa55w0rd', password=True),
+        box('Password', mode='password', value='pa55w0rd'),
         box(['Login']),
     )
     view(f'You entered `{username}`/`{password}` and then clicked on {action}.')
@@ -36,7 +36,7 @@ def form_horizontal(view: View):  # height 2
     username, password, action = view(
         row(
             box('Username', value='someone@company.com'),
-            box('Password', value='pa55w0rd', password=True),
+            box('Password', mode='password', value='pa55w0rd'),
             box(['Login']),
         )
     )

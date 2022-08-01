@@ -92,14 +92,14 @@ view(f'Your rating was {stars} stars.')
 
 ## Handle changes immediately
 
-Set `live=True` to handle changes immediately.
+Add `live` to `mode` to handle changes immediately.
 
 
 ```py
 stars = 3
 while True:
     stars = view(
-        box('Rate your experience', mode='rating', value=stars, live=True),
+        box('Rate your experience', mode='live rating', value=stars),
         f'Your rating was {stars} stars.'
     )
 ```
