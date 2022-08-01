@@ -43,7 +43,7 @@ export const Table = make(({ context, box }: BoxProps) => {
         context.record(null)
       }
     },
-    linkColumnIndex = headers ? headers.findIndex(h => h.mode === 'link') : -1,
+    linkColumnIndex = headers ? headers.findIndex(h => h.modes.has('link')) : -1,
     linkColumnKey = `f${linkColumnIndex}`,
     sortRows = (rows: TableRow[], key: S, descending?: B): TableRow[] => {
       return rows.slice(0).sort((a: any, b: any) => ((descending ? a[key] < b[key] : a[key] > b[key]) ? 1 : -1));
@@ -70,7 +70,7 @@ export const Table = make(({ context, box }: BoxProps) => {
     },
     columns = (headers ?? []).map((h, i): IColumn => {
       const
-        { text, icon, width, resizable, multiline } = h,
+        { modes, text, icon, width } = h,
         iconName = icon ?? undefined,
         isIconOnly = icon ? true : false
 
@@ -113,8 +113,8 @@ export const Table = make(({ context, box }: BoxProps) => {
         isIconOnly,
         onColumnClick,
         data: h,
-        isResizable: resizable ?? true,
-        isMultiline: multiline,
+        isResizable: !modes.has('fixed'),
+        isMultiline: modes.has('multiline'),
       }
     }),
     isRow = ({ options }: Option) => {
@@ -200,14 +200,9 @@ export const Table = make(({ context, box }: BoxProps) => {
     },
     selection = initSelection(),
     renderCell = (text: S, h?: Header) => {
-      if (h) {
-        switch (h.mode) {
-          case 'md':
-            {
-              const __html = markdown(text)[0]
-              return <span className='table-md' dangerouslySetInnerHTML={{ __html }} />
-            }
-        }
+      if (h && h.modes.has('md')) {
+        const __html = markdown(text)[0]
+        return <span className='table-md' dangerouslySetInnerHTML={{ __html }} />
       }
       return <span>{text}</span>
     },

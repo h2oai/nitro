@@ -280,13 +280,13 @@ def table_header_icon(view: View):  # height 4
 
 
 # ## Disable column resizing
-# Set `resizable=False` to prevent a column from being resized.
+# Add `fixed` to `mode` to prevent a column from being resized.
 def table_header_resizable(view: View):  # height 4
     view(box(
         mode='table',
         headers=[
             header('Flavor'),
-            header('Super cheap!', resizable=False),
+            header('Super cheap!', mode='fixed'),
             header('Extras'),
         ],
         options=[
@@ -300,14 +300,14 @@ def table_header_resizable(view: View):  # height 4
 
 
 # ## Enable multiline cells
-# Set `Multiline=True` to allow multiline text in a column's cells
+# Add `multiline` to `mode` to allow multiline text in a column's cells
 def table_column_multiline(view: View):  # height 4
     view(box(
         mode='table',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
-            header('Extras', multiline=True),
+            header('Extras', mode='multiline'),
         ],
         options=[
             option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),

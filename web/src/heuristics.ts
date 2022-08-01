@@ -265,6 +265,16 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     } else {
       for (const t of readonlyBoxes) if (modes.has(t)) box.index = -1 // don't capture
     }
+
+    if (modes.has('table')) {
+      if (box.headers) {
+        for (const h of box.headers) {
+          const mode: any = (h as any).mode
+          h.modes = isS(mode) ? new Set(words(mode)) : new Set()
+        }
+      }
+    }
+
     if (box.ignore) box.index = -1 // don't capture
   }
 
@@ -300,7 +310,7 @@ export const hasActions = (boxes: Box[]): B => { // recursive
         return true
       } else if (modes.has('table')) {
         if (modes.has('selectable') || modes.has('multi')) return false
-        if (box.headers) for (const header of box.headers) if (header.mode === 'link') return true
+        if (box.headers) for (const header of box.headers) if (header.modes.has('link')) return true
       }
     }
   }

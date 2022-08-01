@@ -342,7 +342,7 @@ view(box(
 
 ## Disable column resizing
 
-Set `resizable=False` to prevent a column from being resized.
+Add `fixed` to `mode` to prevent a column from being resized.
 
 
 ```py
@@ -350,7 +350,7 @@ view(box(
     mode='table',
     headers=[
         header('Flavor'),
-        header('Super cheap!', resizable=False),
+        header('Super cheap!', mode='fixed'),
         header('Extras'),
     ],
     options=[
@@ -369,7 +369,7 @@ view(box(
 
 ## Enable multiline cells
 
-Set `Multiline=True` to allow multiline text in a column's cells
+Add `multiline` to `mode` to allow multiline text in a column's cells
 
 
 ```py
@@ -378,7 +378,7 @@ view(box(
     headers=[
         header('Flavor'),
         header('Super cheap!'),
-        header('Extras', multiline=True),
+        header('Extras', mode='multiline'),
     ],
     options=[
         option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),
