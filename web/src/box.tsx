@@ -32,6 +32,7 @@ import { Separator } from './separator';
 import { Slider } from './slider';
 import { Spinbox } from './spinbox';
 import { Spinner } from './spinner';
+import { SVGBox } from './svg';
 import { Table } from './table';
 import { TagPicker } from './tag_picker';
 import { Textbox } from './textbox';
@@ -82,10 +83,12 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     return <Rating context={context} box={box} />
   } else if (modes.has('progress')) {
     return <ProgressBar context={context} box={box} />
-  } else if (modes.has('spinner')) {
-    return <Spinner context={context} box={box} />
   } else if (modes.has('separator')) {
     return <Separator context={context} box={box} />
+  } else if (modes.has('spinner')) {
+    return <Spinner context={context} box={box} />
+  } else if (modes.has('svg')) {
+    return <SVGBox context={context} box={box} />
   } else if (modes.has('info') || modes.has('success') || modes.has('warning') || modes.has('critical') || modes.has('blocked') || modes.has('error')) {
     return <Banner context={context} box={box} />
   } else if (modes.has('table')) {

@@ -196,7 +196,7 @@ const knownModes = [
   'row', 'col', 'tab', 'md', 'button', 'menu', 'radio', 'check', 'toggle', 'password',
   'text', 'range', 'number', 'time', 'date', 'day', 'week', 'month', 'tag', 'color',
   'rating', 'table', 'file', 'progress', 'spinner', 'separator', 'image', 'web',
-  'info', 'success', 'warning', 'critical', 'blocked', 'error'
+  'info', 'success', 'warning', 'critical', 'blocked', 'error', 'svg',
 ]
 
 const readonlyBoxes = [
@@ -211,6 +211,7 @@ const readonlyBoxes = [
   'error',
   'image',
   'web',
+  'svg',
 ]
 
 const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
