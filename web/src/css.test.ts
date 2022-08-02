@@ -6,7 +6,6 @@
 import { stylize as c } from './css'
 
 it('style should match tailwind', () => {
-  expect(c('container')).toEqual('width:100%')
   expect(c('pointer-events-none')).toEqual('pointer-events:none')
   expect(c('pointer-events-auto')).toEqual('pointer-events:auto')
   expect(c('visible')).toEqual('visibility:visible')

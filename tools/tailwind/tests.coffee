@@ -2,7 +2,7 @@ fs = require 'fs'
 
 cases = []
 css = fs.readFileSync 'output.css', 'utf8'
-css = css.substring css.indexOf '.container'
+css = css.substring css.indexOf '.pointer-events'
 
 toRGB = (r, g, b) ->
   [r, g, b] = [r, g, b].map (x) -> parseInt x, 16
@@ -19,9 +19,13 @@ tests = []
 for c in classes
   [_, name, body] = c
   continue unless name.startsWith '.'
+
   name = name
     .substring 1
     .replace /\\\./g, '.'
+
+  continue if name.startsWith 'prose'
+
   lines = body
     .trim()
     .split ';'

@@ -122,7 +122,6 @@ const rule = (find: S, ...rule: Rule[]) => {
 
 // --- begin rules ---
 
-repl('container', 'width:100%')
 rule('pointer-events', [any('none', 'auto'), v => `pointer-events:${v}`])
 repl('visible', 'visibility:visible')
 repl('invisible', 'visibility:hidden')
