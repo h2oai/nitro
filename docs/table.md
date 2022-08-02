@@ -286,9 +286,7 @@ choice = view(box(
 
 ## Set column width
 
-Set `width=` to set the minimum width of the column.
-
-To set both minimum and maximum widths, set `width=` to a `(min, max)` tuple.
+Set `min-w-*` and `max-w-*` styles to control the minimum and maximum widths of each column.
 
 
 ```py
@@ -296,8 +294,8 @@ view(box(
     mode='table',
     headers=[
         header('Flavor'),
-        header('Super cheap!', width=100),
-        header('Extras', width=(200, 300)),
+        header('Super cheap!', style='min-w-24'),  # 96px wide
+        header('Extras', style='min-w-52 max-w-72'),  # Between 208px and 288px wide
     ],
     options=[
         option('cinnamon', options=['Cinnamon Sugar', '$1.99', 'Sugar and spice']),

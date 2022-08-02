@@ -179,6 +179,6 @@ export type Option = {
 export type Header = {
   text: S
   modes: Set<S>
+  style?: S
   icon?: S
-  width?: S | [S] | Pair<S> | Triple<S> // CSS width / [min] / [min, max] / [min, max, initial]
 }

@@ -14,7 +14,7 @@
 
 import { CheckboxVisibility, DetailsList, DetailsListLayoutMode, DetailsRow, IColumn, IDetailsRowProps, IGroup, Link, Selection, SelectionMode } from '@fluentui/react';
 import React from 'react';
-import { areSetsEqual, B, Dict, isN, S, signal, U } from './core';
+import { areSetsEqual, B, Dict, isS, S, signal, U, words } from './core';
 import { css } from './css';
 import { markdown } from './markdown';
 import { selectedOf, selectedsOf } from './options';
@@ -68,43 +68,47 @@ export const Table = make(({ context, box }: BoxProps) => {
 
       contentB([columns, rows])
     },
-    columns = (headers ?? []).map((h, i): IColumn => {
-      const
-        { modes, text, icon, width } = h,
-        iconName = icon ?? undefined,
-        isIconOnly = icon ? true : false
-
-      let
-        minWidth: U = 0,
-        maxWidth: U | undefined = undefined
-
-      if (width !== undefined) {
-        if (Array.isArray(width)) {
-          switch (width.length) {
-            case 1:
-              {
-                const [min] = width
-                if (isN(min)) minWidth = min
-                break
-              }
-            case 2:
-              {
-                const [min, max] = width
-                if (isN(min)) minWidth = min
-                if (isN(max)) maxWidth = max
-                break
-              }
+    parseSize = (styles: S[], prefix: S): U | undefined => {
+      for (const style of styles) {
+        if (style.indexOf(prefix) === 0) {
+          let suffix = style.substring(prefix.length)
+          if (suffix === 'px') { // foo-px
+            return 4 // tw 1 -> 4
           }
-        } else {
-          minWidth = width as any
+          if (/^\[.+px\]$/.test(suffix)) { // foo-[42px]
+            suffix = suffix.substring(1, suffix.length - 3)
+            const size = parseFloat(suffix)
+            return isNaN(size) ? undefined : size
+          }
+          // foo-32
+          const size = parseFloat(suffix)
+          if (!isNaN(size)) return size * 4 // tw 1 -> 4
         }
       }
+      return undefined
+    },
+    // Emulate Tailwind styles.
+    parseWidths = (style?: S): [U | undefined, U | undefined] => {
+      let min: U | undefined = undefined, max: U | undefined = undefined
+      if (isS(style)) {
+        const styles = words(style)
+        min = parseSize(styles, 'min-w-')
+        max = parseSize(styles, 'max-w-')
+      }
+      return [min, max]
+    },
+    columns = (headers ?? []).map((h, i): IColumn => {
+      const
+        { modes, text, icon, style } = h,
+        iconName = icon ?? undefined,
+        isIconOnly = icon ? true : false,
+        [minWidth, maxWidth] = parseWidths(style)
 
       return {
         key: `f${i}`,
         name: text,
         ariaLabel: text,
-        minWidth,
+        minWidth: minWidth ?? 0,
         maxWidth,
         fieldName: `f${i}`,
         isSorted: false,
