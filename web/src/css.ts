@@ -41,7 +41,6 @@ const
     const set = new Set(xs)
     return (x: S) => { if (set.has(x)) return x }
   },
-  anyC = (...xs: S[]) => either(any(...xs), custom),
   mapF = (xs: S[], f: (x: S) => S) => {
     const d: Dict<S> = {}
     for (const x of xs) d[x] = f(x)
@@ -530,6 +529,48 @@ rule('justify-items', [flexJustify, v => `justify-items:${v}`])
 rule('gap', [size, v => `gap:${v}`])
 rule('gap-x', [size, v => `-moz-column-gap:${v};column-gap:${v}`])
 rule('gap-y', [size, v => `row-gap:${v}`])
+const reverse = eq('reverse')
+rule('space-x',
+  [size, v => `--tw-space-x-reverse:0;margin-right:calc(${v} * var(--tw-space-x-reverse));margin-left:calc(${v} * calc(1 - var(--tw-space-x-reverse)))`],
+  [reverse, () => `--tw-space-x-reverse:1`],
+)
+rule('space-y',
+  [size, v => `--tw-space-y-reverse:0;margin-top:calc(${v} * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(${v} * var(--tw-space-y-reverse))`],
+  [reverse, () => `--tw-space-y-reverse:1`],
+)
+
+const borderWidth = map({
+  '0': '0px',
+  '': '1px',
+  '2': '2px',
+  '4': '4px',
+  '8': '8px',
+})
+const borderStyle = any('solid', 'dashed', 'dotted', 'double', 'hidden', 'none')
+const namedColors: Dict<S> = {
+  inherit: 'inherit',
+  current: 'currentColor',
+  transparent: 'transparent',
+};
+(() => { for (const c of themeColorNames) namedColors[`ui-${c}`] = `var(--ui-${c})` })()
+
+const namedColor = map(namedColors)
+const color = either(map(palette), map({ white: '255 255 255', black: '0 0 0' }))
+
+rule('divide-x',
+  [borderWidth, v => `--tw-divide-x-reverse:0;border-right-width:calc(${v} * var(--tw-divide-x-reverse));border-left-width:calc(${v} * calc(1 - var(--tw-divide-x-reverse)))`],
+  [reverse, () => `--tw-divide-x-reverse:1`],
+)
+rule('divide-y',
+  [borderWidth, v => `--tw-divide-y-reverse:0;border-top-width:calc(${v} * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(${v} * var(--tw-divide-y-reverse))`],
+  [reverse, () => `--tw-divide-y-reverse:1`],
+)
+rule('divide',
+  [borderStyle, v => `border-style:${v}`],
+  [namedColor, v => `border-color:${v}`],
+  [color, v => `--tw-divide-opacity:1;border-color:rgb(${v} / var(--tw-divide-opacity))`],
+)
+
 rule('place-self', [either(auto, flexJustify), v => `place-self:${v}`])
 rule('self', [either(auto, alignItems), v => `align-self:${v}`])
 rule('justify-self', [either(auto, flexJustify), v => `justify-self:${v}`])
@@ -578,13 +619,6 @@ rule('rounded-tr', [rounded, v => `border-top-right-radius:${v}`])
 rule('rounded-br', [rounded, v => `border-bottom-right-radius:${v}`])
 rule('rounded-bl', [rounded, v => `border-bottom-left-radius:${v}`])
 
-const borderWidth = map({
-  '0': '0px',
-  '': '1px',
-  '2': '2px',
-  '4': '4px',
-  '8': '8px',
-})
 rule('border', [borderWidth, v => `border-width:${v}`])
 rule('border-x', [borderWidth, v => `border-left-width:${v};border-right-width:${v}`])
 rule('border-y', [borderWidth, v => `border-top-width:${v};border-bottom-width:${v}`])
@@ -593,23 +627,7 @@ rule('border-r', [borderWidth, v => `border-right-width:${v}`])
 rule('border-b', [borderWidth, v => `border-bottom-width:${v}`])
 rule('border-l', [borderWidth, v => `border-left-width:${v}`])
 
-rule('border', [any('solid', 'dashed', 'dotted', 'double', 'hidden', 'none'), v => `border-style:${v}`])
-
-const namedColors: Dict<S> = {
-  inherit: 'inherit',
-  current: 'currentColor',
-  transparent: 'transparent',
-}
-
-const createUIColorMap = () => {
-  for (const c of themeColorNames) namedColors[`ui-${c}`] = `var(--ui-${c})`
-}
-
-const namedColor = map(namedColors)
-
-createUIColorMap()
-
-const color = either(map(palette), map({ white: '255 255 255', black: '0 0 0' }))
+rule('border', [borderStyle, v => `border-style:${v}`])
 
 const borderRule = (n: S, t: S) =>
   rule(`border${n}`,
@@ -1183,7 +1201,10 @@ const newCSSCache = (ss: CSSStyleSheet): PredefineCSS => {
         let ruleName = escape(name)
         // hover:px-3.5 -> hover\:px-3\.5:only-child:hover
         if (pseudos) ruleName += pseudos.reverse().join(':')
+        // foo -> dark .foo
         if (dark) ruleName = 'dark .' + ruleName
+        // space-foo -> space-foo > :not([hidden]) ~ :not([hidden])
+        if (/^(space|divide)-/.test(base)) ruleName += ' > :not([hidden]) ~ :not([hidden])'
         // .rule { ... }
         let rule = `.${ruleName}{${style}}`
         // sm:lg:rule -> @media (min-width:640px) { @media (min-width:1024px) { .rule {...} } }

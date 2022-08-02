@@ -13,18 +13,17 @@ replaceHex = (s) ->
     .replace /#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})\b/gi, (_, r, g, b) -> toRGB r, g, b
     .replace /#([a-f\d])([a-f\d])([a-f\d])\b/gi, (_, r, g, b) -> toRGB r+r, g+g, b+b
 
-classes = [...css.matchAll /^(\S+?)\s*\{(.+?)\}/gms]
+classes = [...css.matchAll /^([^\n]+?)\s*\{(.+?)\}/gms]
 
 tests = []
 for c in classes
   [_, name, body] = c
   continue unless name.startsWith '.'
+  continue if name.startsWith '.prose'
 
-  name = name
-    .substring 1
-    .replace /\\\./g, '.'
-
-  continue if name.startsWith 'prose'
+  name = name.split(' ', 1)[0] # ".foo > * ~ *" -> ".foo"
+    .substring 1 # .foo -> foo
+    .replace /\\\./g, '.' # foo\.bar -> foo.bar
 
   lines = body
     .trim()
