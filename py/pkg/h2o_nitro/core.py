@@ -354,16 +354,18 @@ class Box:
 
         k = len(args)
         if k > 0:
-            if k == 1 and text is None and isinstance(args[0], str):
-                text = args[0]
-            elif k == 1 and options is None and isinstance(args[0], (tuple, set, list, dict, OrderedDict)):
-                options = args[0]
+            arg0 = args[0]
+            if k == 1 and text is None and isinstance(arg0, str):
+                text = arg0
+            elif k == 1 and options is None and isinstance(arg0, (tuple, set, list, dict, OrderedDict)):
+                options = arg0
                 if mode is None:
                     mode = 'button'
-            elif items is None:
-                items = args
             else:
-                warnings.warn('box(*args) ignored')
+                if items is None:
+                    items = args
+                else:
+                    raise ValueError('box(): *args ignored because items= was set.')
 
         if row is not None:
             warnings.warn(
