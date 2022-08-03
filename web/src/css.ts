@@ -1,5 +1,5 @@
 import { Dict, S, U } from "./core"
-import { spectrum, shades } from "./color"
+import { spectrum, shades, spectrumHues, fromSpectrum } from "./color"
 import { themeColorNames } from "./theme"
 
 type Style = S | undefined
@@ -1059,6 +1059,16 @@ rule('will-change', [map({
 }), v => `will-change:${v}`])
 
 repl('content-none', '--tw-content:none;content:var(--tw-content)')
+
+// Non-standard, could evolve into pattern lib.
+// Source: https://github.com/tailwindlabs/tailwindcss.com/blob/master/tailwind.config.js
+const hue = any(...spectrumHues)
+rule('bg-stripes', [hue, v => {
+  const
+    bg = (fromSpectrum(v, '400') ?? [0, 0, 0]).join(' ') + '/.1',
+    fg = (fromSpectrum(v, '500') ?? [0, 0, 0]).join(' ') + '/.5'
+  return `background-color:rgb(${bg});background-image:linear-gradient(135deg,rgb(${fg}) 10%,transparent 0,transparent 50%,rgb(${fg}) 0,rgb(${fg}) 60%,transparent 0,transparent);background-size:7.07px 7.07px`
+}])
 
 // --- end rules ---
 

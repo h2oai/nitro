@@ -40,6 +40,7 @@ export const rgbToHex = (rgb: RGBTriplet) =>
     return h.length === 1 ? '0' + h : h
   }).join('')
 
+export const spectrumHues = Object.keys(spectrum)
 export const grays = new Set(['slate', 'gray', 'zinc', 'neutral', 'stone'])
 export const isColor = (name: S) => spectrum[name] ? true : false
 

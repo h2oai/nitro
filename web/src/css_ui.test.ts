@@ -7,6 +7,10 @@ it('should translate arbitrary values', () => {
   // expect(c("bg-[#bada55]")).toEqual('--tw-bg-opacity:1;background-color:rgb(186 218 85 / var(--tw-bg-opacity)')
 })
 
+it('should translate stripes', () => {
+  expect(c('bg-stripes-blue')).toEqual('background-color:rgb(96 165 250/.1);background-image:linear-gradient(135deg,rgb(59 130 246/.5) 10%,transparent 0,transparent 50%,rgb(59 130 246/.5) 0,rgb(59 130 246/.5) 60%,transparent 0,transparent);background-size:7.07px 7.07px')
+})
+
 it('should translate UI colors', () => {
   expect(c('bg-ui-foreground')).toEqual('background-color:var(--ui-foreground)')
   expect(c('bg-ui-background')).toEqual('background-color:var(--ui-background)')
