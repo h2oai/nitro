@@ -21,6 +21,7 @@ import { ChoiceGroup } from './choice_group';
 import { ColorPalette } from './color_palette';
 import { ColorPicker } from './color_picker';
 import { ComboBox } from './combobox';
+import { css } from './css';
 import { DatePicker } from './date_picker';
 import { Dropdown } from './dropdown';
 import { Droplist } from './droplist';
@@ -111,7 +112,8 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     }
   }
 
-  console.error(`Cannot render box: unknown mode "${[...modes.values()].join(' ')}".`)
-
-  return null
+  const className = box.style ? css(box.style) : undefined
+  return box.text
+    ? <div className={className}>{box.text}</div>
+    : <div className={className} />
 }

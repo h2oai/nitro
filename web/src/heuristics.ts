@@ -17,6 +17,29 @@ import { css } from './css';
 import { markdown } from './markdown';
 import { Box, BoxMode, Header, Option } from './protocol';
 
+const knownModes = [
+  'box', 'row', 'col', 'tab', 'md', 'button', 'menu', 'radio', 'check', 'toggle', 'password',
+  'text', 'range', 'number', 'time', 'date', 'day', 'week', 'month', 'tag', 'color',
+  'rating', 'table', 'file', 'progress', 'spinner', 'separator', 'image', 'web',
+  'info', 'success', 'warning', 'critical', 'blocked', 'error', 'svg',
+]
+
+const readonlyBoxes = [
+  'box',
+  'progress',
+  'spinner',
+  'separator',
+  'info',
+  'success',
+  'warning',
+  'critical',
+  'blocked',
+  'error',
+  'image',
+  'web',
+  'svg',
+]
+
 const determineMode = (box: Box): BoxMode => {
   const { modes, options } = box
 
@@ -66,7 +89,7 @@ const determineMode = (box: Box): BoxMode => {
     return 'text'
   }
 
-  if (box.text) {
+  if (box.text && !box.style) {
     return 'md'
   }
 
@@ -74,7 +97,7 @@ const determineMode = (box: Box): BoxMode => {
     return 'image'
   }
 
-  return 'none'
+  return 'box'
 }
 
 const sanitizeRange = (box: Box) => {
@@ -191,28 +214,6 @@ const localizeHeader = (locale: Dict<S>, header: Header) => {
 const prefixStyle = (box: Box, prefix: S | undefined) => {
   if (prefix) box.style = box.style ? prefix + ' ' + box.style : prefix
 }
-
-const knownModes = [
-  'row', 'col', 'tab', 'md', 'button', 'menu', 'radio', 'check', 'toggle', 'password',
-  'text', 'range', 'number', 'time', 'date', 'day', 'week', 'month', 'tag', 'color',
-  'rating', 'table', 'file', 'progress', 'spinner', 'separator', 'image', 'web',
-  'info', 'success', 'warning', 'critical', 'blocked', 'error', 'svg',
-]
-
-const readonlyBoxes = [
-  'progress',
-  'spinner',
-  'separator',
-  'info',
-  'success',
-  'warning',
-  'critical',
-  'blocked',
-  'error',
-  'image',
-  'web',
-  'svg',
-]
 
 const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
   if (modes.size === 0) return true
