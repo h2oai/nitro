@@ -295,6 +295,7 @@ class Box:
     # noinspection PyShadowingBuiltins
     def __init__(
             self,
+            *args,
             text: Optional[Union[str, Options]] = None,
             name: Optional[str] = None,
             mode: Optional[str] = None,
@@ -351,15 +352,18 @@ class Box:
     ):
         self.xid = _xid()
 
-        if isinstance(text, (tuple, set, list, dict, OrderedDict)):
-            if options is not None:
-                raise ValueError('options= must not be set if first argument is a collection.')
-            label = None
-            opts = text
-            mode = 'button'
-        else:
-            label = text
-            opts = options
+        k = len(args)
+        if k > 0:
+            if k == 1 and text is None and isinstance(args[0], str):
+                text = args[0]
+            elif k == 1 and options is None and isinstance(args[0], (tuple, set, list, dict, OrderedDict)):
+                options = args[0]
+                if mode is None:
+                    mode = 'button'
+            elif items is None:
+                items = args
+            else:
+                warnings.warn('box(*args) ignored')
 
         if row is not None:
             warnings.warn(
@@ -370,11 +374,11 @@ class Box:
             if layout is None:
                 layout = 'row' if row else 'col'
 
-        self.text = label
+        self.text = text
         self.name = name
         self.mode = mode
         self.value = value
-        self.options = opts
+        self.options = options
         self.headers = headers
         self.items = items
         self.data = data
