@@ -168,6 +168,73 @@ def styling_alert_strip(view: View):
             style='p-4 text-red-700 border-l-4 border-red-700 bg-red-50 text-sm font-medium'),
     )
 
+
+# ## Alert with icon
+def styling_alert_icons(view: View):
     text = lorem(3)
+    info_icon = '''
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    '''
+    warning_icon = '''
+     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+     </svg>
+    '''
+    success_icon = '''
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    '''
+    critical_icon = '''
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01" />
+    </svg>
+    '''
     view(
+        row(
+            box(
+                box(info_icon, mode='svg', style='w-5 h-5'),
+                style='p-2 text-white bg-sky-600 rounded-full',
+            ),
+            col(
+                box('Your system is up to date.', style='text-sm font-medium'),
+                box(text, style='text-xs opacity-90'),
+            ),
+            style='items-center justify-between gap-4 p-4 text-sky-700 border rounded border-sky-200 bg-sky-50',
+        ),
+        row(
+            box(
+                box(warning_icon, mode='svg', style='w-5 h-5'),
+                style='p-2 text-white bg-amber-600 rounded-full',
+            ),
+            col(
+                box('A system update is available.', style='text-sm font-medium'),
+                box(text, style='text-xs opacity-90'),
+            ),
+            style='items-center justify-between gap-4 p-4 text-amber-700 border rounded border-amber-200 bg-amber-50',
+        ),
+        row(
+            box(
+                box(success_icon, mode='svg', style='w-5 h-5'),
+                style='p-2 text-white bg-green-600 rounded-full',
+            ),
+            col(
+                box('System update successful!', style='text-sm font-medium'),
+                box(text, style='text-xs opacity-90'),
+            ),
+            style='items-center justify-between gap-4 p-4 text-green-700 border rounded border-green-200 bg-green-50',
+        ),
+        row(
+            box(
+                box(critical_icon, mode='svg', style='w-5 h-5'),
+                style='p-2 text-white bg-red-600 rounded-full',
+            ),
+            col(
+                box('System update failed.', style='text-sm font-medium'),
+                box(text, style='text-xs opacity-90'),
+            ),
+            style='items-center justify-between gap-4 p-4 text-red-700 border rounded border-red-200 bg-red-50',
+        ),
     )
