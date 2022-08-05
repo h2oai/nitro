@@ -71,6 +71,33 @@ def styling_persona(view: View):
         ),
     )
 
+
+# ## Badge
+def styling_badges(view: View):
+    view(
+        row(
+            row(
+                box('Status: ', style='text-gray-700'),
+                box('System available', style='text-sky-700'),
+                style='items-center border border-gray-200 rounded text-xs font-medium px-2.5 py-1.5',
+            ),
+            row(
+                box('Status: ', style='text-gray-700'),
+                box('System paused', style='text-amber-700'),
+                style='items-center border border-gray-200 rounded text-xs font-medium px-2.5 py-1.5',
+            ),
+            row(
+                box('Status: ', style='text-gray-700'),
+                box('System normal', style='text-green-700'),
+                style='items-center border border-gray-200 rounded text-xs font-medium px-2.5 py-1.5',
+            ),
+            row(
+                box('Status: ', style='text-gray-700'),
+                box('System overload', style='text-red-700'),
+                style='items-center border border-gray-200 rounded text-xs font-medium px-2.5 py-1.5',
+            )
+        )
+    )
     )
 
     text = lorem(3)
