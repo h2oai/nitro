@@ -17,28 +17,76 @@ import { css } from './css';
 import { markdown } from './markdown';
 import { Box, BoxMode, Header, Option } from './protocol';
 
-const knownModes = [
-  'box', 'row', 'col', 'tab', 'md', 'button', 'menu', 'radio', 'check', 'toggle', 'password',
-  'text', 'range', 'number', 'time', 'date', 'day', 'week', 'month', 'tag', 'color',
-  'rating', 'table', 'file', 'progress', 'spinner', 'separator', 'image', 'web',
-  'info', 'success', 'warning', 'critical', 'blocked', 'error', 'svg',
+const knownModes: BoxMode[] = [
+  'box',
+  'info',
+  'rating',
+  'text',
+  'blocked',
+  'button',
+  'check',
+  'col',
+  'color',
+  'critical',
+  'date',
+  'day',
+  'error',
+  'file',
+  'image',
+  'md',
+  'menu',
+  'month',
+  'number',
+  'password',
+  'progress',
+  'radio',
+  'range',
+  'row',
+  'separator',
+  'spinner',
+  'success',
+  'svg',
+  'tab',
+  'table',
+  'tag',
+  'time',
+  'toggle',
+  'warning',
+  'web',
+  'week',
 ]
 
-const readonlyBoxes = [
-  'box',
-  'progress',
-  'spinner',
-  'separator',
-  'info',
-  'success',
-  'warning',
-  'critical',
-  'blocked',
-  'error',
-  'image',
-  'web',
-  'svg',
+const interactiveModes: BoxMode[] = [
+  'button',
+  'check',
+  'date',
+  'md', // conditional: only if it has hyperlinks
+  'menu',
+  'number',
+  'password',
+  'radio',
+  'range',
+  'text',
+  'time',
+  'toggle',
+  'color',
+  'day',
+  'file',
+  'month',
+  'rating',
+  'table',
+  'tag',
+  'week',
 ]
+
+const invert = <T>(xs: T[], ys: T[]) => {
+  const exclude = new Set(ys)
+  const include: T[] = []
+  for (const x of xs) if (!exclude.has(x)) include.push(x)
+  return include
+}
+
+const readonlyModes = invert(knownModes, interactiveModes)
 
 const determineMode = (box: Box): BoxMode => {
   const { modes, options } = box
@@ -250,7 +298,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     const { value, options } = box
 
     box.options = sanitizeOptions(options)
-    box.index = 0
+    let ignore = false
 
     if (hasNoMode(modes)) modes.add(determineMode(box))
 
@@ -263,9 +311,9 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     if (modes.has('md')) {
       const [md, hasLinks] = markdown(box.text ?? '')
       box.text = md
-      if (!hasLinks) box.index = -1 // don't capture
+      if (!hasLinks) ignore = true  // don't record
     } else {
-      for (const t of readonlyBoxes) if (modes.has(t)) box.index = -1 // don't capture
+      for (const t of readonlyModes) if (modes.has(t)) ignore = true // don't record
     }
 
     if (modes.has('table')) {
@@ -277,7 +325,8 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
       }
     }
 
-    if (box.ignore) box.index = -1 // don't capture
+    // if 0, box.index is set to a 1-up index later during re-indexing.
+    box.index = ignore || box.ignore ? -1 : 0
   }
 
   if (box.style) box.style = css(box.style)
