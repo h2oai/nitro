@@ -257,8 +257,8 @@ def styling_timeline(view: View):
     def step(number: str, label: str, is_current: bool = False):
         color = 'text-white bg-indigo-600' if is_current else 'bg-gray-100'
         return row(
-            box(number, style=f'w-6 h-6 text-xs font-bold leading-6 text-center rounded-full {color}'),
-            box(label, mode='box'),
+            box(number, style=f'w-6 h-6 text-xs leading-6 font-bold text-center rounded-full {color}'),
+            box(label, style='text-sm font-medium'),
             style='items-center p-2 bg-white',
         )
 
@@ -270,7 +270,7 @@ def styling_timeline(view: View):
                 step('2', 'Shipping', is_current=True),
                 step('3', 'Payment'),
                 step('4', 'Confirm'),
-                style='relative justify-between text-sm font-medium text-gray-500',
+                style='relative justify-between text-gray-500',
             ),
             style='relative',
         ),
