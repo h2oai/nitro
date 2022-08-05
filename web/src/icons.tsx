@@ -1732,8 +1732,10 @@ import {
   ZoomOutIcon,
   ZoomToFitIcon,
 } from '@fluentui/react-icons-mdl2'
+import React from 'react'
+import { Dict } from './core'
 
-export const icons = {
+export const icons: Dict<React.ReactElement> = {
   Accept: <AcceptIcon />,
   AcceptMedium: <AcceptMediumIcon />,
   AccessibiltyChecker: <AccessibiltyCheckerIcon />,

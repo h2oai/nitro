@@ -202,6 +202,7 @@ export const debounce = (ms: U, f: () => void) => {
 export const splitLines = (x: S) => x.split(/\r?\n/)
 export const words = (x: S) => x.trim().split(/\s+/g)
 export const snakeToCamelCase = (s: S): S => s.replace(/(_\w)/g, m => m[1].toUpperCase())
+export const kebabToPascalCase = (s: S): S => s.replace(/(-\w)/g, m => m[1].toUpperCase()).replace(/^./, m => m.toUpperCase())
 export const valueFromRange = (value: any, min: any, max: any, step: any): N | undefined => {
   if (isN(value)) return value
   if (isN(min)) return Math.max(0, min)

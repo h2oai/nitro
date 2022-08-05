@@ -37,8 +37,10 @@ const
     'import {',
     importing.join('\n'),
     "} from '@fluentui/react-icons-mdl2'",
+    "import React from 'react'",
+    "import { Dict } from './core'",
     '',
-    'export const icons = {',
+    'export const icons: Dict<React.ReactElement> = {',
     listing.join('\n'),
     '}',
     ''

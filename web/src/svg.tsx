@@ -17,9 +17,21 @@ import { BoxProps } from './ui';
 
 export const SVGBox = ({ box }: BoxProps) => {
   const { text, style } = box
-  return (
-    <div className={css(style)} dangerouslySetInnerHTML={{ __html: text ?? '' }} />
-  )
+  if (text) {
+    // TODO: clean up asset lookup implementation. 
+    // TODO: look up assets on a different dict. 
+    // The Fluent icons are pre-wrapped in a <span/> with preset classes that interfere with tailwind, hence unusable.
+    // if (text.startsWith('@')) {
+    //   const
+    //     iconName = kebabToPascalCase(text.substring(1)),
+    //     icon = icons[iconName]
+    //   if (icon) return <div className={css(style)}>{icon}</div>
+    // }
+    return (
+      <div className={css(style)} dangerouslySetInnerHTML={{ __html: text ?? '' }} />
+    )
+  }
+  return <span className={css(style)} />
 }
 
 
