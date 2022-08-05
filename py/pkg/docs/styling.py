@@ -128,6 +128,32 @@ def style_cta_dark(view: View):
         style='text-white bg-gray-900 px-4 py-32 text-center',
     )
 
+
+# ## Alert
+def styling_alert(view: View):
+    view(
+        col(
+            box('Your system is up to date.', style='text-sm font-medium'),
+            box(lorem(5), style='text-xs'),
+            style='p-4 text-sky-700 border rounded border-sky-200 bg-sky-50',
+        ),
+        col(
+            box('A system update is available.', style='text-sm font-medium'),
+            box(lorem(5), style='text-xs'),
+            style='p-4 text-amber-700 border rounded border-amber-200 bg-amber-50',
+        ),
+        col(
+            box('System update successful!', style='text-sm font-medium'),
+            box(lorem(5), style='text-xs'),
+            style='p-4 text-green-700 border rounded border-green-200 bg-green-50',
+        ),
+        col(
+            box('System update failed.', style='text-sm font-medium'),
+            box(lorem(5), style='text-xs'),
+            style='p-4 text-red-700 border rounded border-red-200 bg-red-50',
+        ),
+    )
+
     )
 
     text = lorem(3)
