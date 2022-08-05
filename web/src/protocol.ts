@@ -122,18 +122,49 @@ export type Settings = {
   locale?: Dict<S>
 }
 
-export type BannerMode = 'info' | 'success' | 'warning' | 'critical' | 'blocked' | 'error'
-
 // *** Warning ***
 // If you add a new mode here, update heuristics.tsx to mark it as non-interactive (index=0) if applicable.
-export type BoxMode = 'box' | 'row' | 'col' | 'tab' | 'md' | 'button' | 'menu' | 'radio' | 'check' | 'toggle'
-  | 'text' | 'range' | 'number' | 'time' | 'date' | 'day' | 'week' | 'month' | 'tag' | 'color'
-  | 'rating' | 'table' | 'file' | 'progress' | 'spinner' | 'separator' | 'image' | 'web' | BannerMode
+export type BoxMode = 'box'
+  | 'blocked'
+  | 'button'
+  | 'check'
+  | 'col'
+  | 'color'
+  | 'critical'
+  | 'date'
+  | 'day'
+  | 'error'
+  | 'file'
+  | 'image'
+  | 'info'
+  | 'md'
+  | 'menu'
+  | 'month'
+  | 'number'
+  | 'password'
+  | 'progress'
+  | 'radio'
+  | 'range'
+  | 'rating'
+  | 'row'
+  | 'separator'
+  | 'spinner'
+  | 'success'
+  | 'svg'
+  | 'tab'
+  | 'table'
+  | 'tag'
+  | 'text'
+  | 'time'
+  | 'toggle'
+  | 'warning'
+  | 'web'
+  | 'week'
 
 export type Box = {
   xid: S
-  index: I // front-end only -1 => don't capture
-  ignore?: B // true => don't capture
+  index: I // (front-end only) don't record if -1
+  ignore?: B // don't record if true
   text?: S
   name?: S
   modes: Set<S>
