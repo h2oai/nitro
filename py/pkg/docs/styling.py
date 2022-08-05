@@ -243,12 +243,37 @@ def styling_alert_icons(view: View):
 # ## Pagination
 def styling_pagination(view: View):
     def link(text: str, selected: bool):
-        color = 'text-white bg-indigo-600 border-blue-600' if selected else 'border'
+        color = 'text-white bg-indigo-600 border-indigo-600' if selected else 'border'
         return box(text, style=f'w-8 h-8 leading-8 text-center rounded {color}')
 
     links = [link(text, text == '2') for text in ['←', '1', '2', '3', '4', '5', '→']]
     view(
         row(*links, style='justify-center gap-1 text-xs font-medium')
+    )
+
+
+# ## Timeline
+def styling_timeline(view: View):
+    def step(number: str, label: str, is_current: bool = False):
+        color = 'text-white bg-indigo-600' if is_current else 'bg-gray-100'
+        return row(
+            box(number, style=f'w-6 h-6 text-xs font-bold leading-6 text-center rounded-full {color}'),
+            box(label, mode='box'),
+            style='items-center p-2 bg-white',
+        )
+
+    view(
+        box(
+            box(style='absolute bg-gray-100 top-1/2 inset-x-0 h-0.5'),
+            row(
+                step('1', 'Cart'),
+                step('2', 'Shipping', is_current=True),
+                step('3', 'Payment'),
+                step('4', 'Confirm'),
+                style='relative justify-between text-sm font-medium text-gray-500',
+            ),
+            style='relative',
+        ),
     )
 
 
@@ -283,7 +308,7 @@ def styling_stat_icon(view: View):
             row(
                 box(
                     box(icon, mode='svg', style='w-8 h-8'),
-                    style='p-3 text-blue-600 bg-indigo-100 rounded-full',
+                    style='p-3 text-indigo-600 bg-indigo-100 rounded-full',
                 ),
                 col(
                     box('$4.2M', style='text-2xl font-medium text-gray-900'),
@@ -300,7 +325,7 @@ def styling_stat_icon(view: View):
                 ),
                 box(
                     box(icon, mode='svg', style='w-8 h-8'),
-                    style='p-3 text-blue-600 bg-indigo-100 rounded-full',
+                    style='p-3 text-indigo-600 bg-indigo-100 rounded-full',
                 ),
                 style='items-center justify-between gap-4 p-6 bg-white border rounded-lg',
             ),
