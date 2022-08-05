@@ -24,14 +24,14 @@ export const Checklist = make(({ context, box }: BoxProps) => {
     live = modes.has('live'),
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),
-    capture = () => context.record(Array.from(selection)),
+    record = () => context.record(Array.from(selection)),
     onChecked = (value?: V, checked?: B) => {
       if (checked) {
         selection.add(String(value))
       } else {
         selection.delete(String(value))
       }
-      capture()
+      record()
       if (live) context.commit()
     },
     render = () => {
@@ -54,7 +54,7 @@ export const Checklist = make(({ context, box }: BoxProps) => {
       )
     }
 
-  capture()
+  record()
 
   return { render }
 })

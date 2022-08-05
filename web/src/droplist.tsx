@@ -28,7 +28,7 @@ export const Droplist = make(({ context, box }: BoxProps) => {
     selection = new Set<S>(selecteds.map(s => String(s.value))),
     items: IDropdownOption[] = options.map(c => ({ key: c.value, text: String(c.text) })),
     selectedKeys = selecteds.map(c => String(c.value)),
-    capture = () => context.record(Array.from(selection)),
+    record = () => context.record(Array.from(selection)),
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IDropdownOption) => {
       if (option) {
         const key = String(option.key)
@@ -37,7 +37,7 @@ export const Droplist = make(({ context, box }: BoxProps) => {
         } else {
           selection.delete(key)
         }
-        capture()
+        record()
         if (live) context.commit()
       }
     },
@@ -57,7 +57,7 @@ export const Droplist = make(({ context, box }: BoxProps) => {
     )
 
 
-  capture()
+  record()
 
   return { render }
 })

@@ -24,7 +24,7 @@ const
   continueButton: Box = {
     xid: xid(),
     modes: new Set(['button']),
-    index: -1, //don't capture
+    index: -1, //don't record
     options: [{ value: 'continue', text: 'Continue' }],
   },
   makeContinuable = (boxes: Box[]): Box[] => hasActions(boxes) ? boxes : [...boxes, continueButton]

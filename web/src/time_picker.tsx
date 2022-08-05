@@ -48,7 +48,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
     { modes, text, value, style } = box,
     live = modes.has('live'),
     clock = parseClock(String(value).toLowerCase()),
-    capture = () => {
+    record = () => {
       context.record(clockToString(clock))
       if (live) context.commit()
     },
@@ -56,19 +56,19 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
     narrow: Partial<ISpinButtonStyles> = { labelWrapper: { marginBottom: -4 }, spinButtonWrapper: { width: 50 } },
     onHoursChange = (_: React.SyntheticEvent<HTMLElement>, value?: S): void => {
       if (value) clock.hh = parseInt(value)
-      capture()
+      record()
     },
     onMinutesChange = (_: React.SyntheticEvent<HTMLElement>, value?: S): void => {
       if (value) clock.mm = parseInt(value)
-      capture()
+      record()
     },
     onSecondsChange = (_: React.SyntheticEvent<HTMLElement>, value?: S): void => {
       if (value) clock.ss = parseInt(value)
-      capture()
+      record()
     },
     onToggleChange = (_: React.SyntheticEvent<HTMLElement>, checked?: B): void => {
       if (checked !== undefined) clock.pm = checked
-      capture()
+      record()
     },
     render = () => {
       return (

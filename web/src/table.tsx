@@ -35,7 +35,7 @@ export const Table = make(({ context, box }: BoxProps) => {
     selectedOne = selectedOf(box),
     selecteds = isSingle && selectedOne ? [selectedOne] : selectedsOf(box),
     selectedValues = new Set<S>(selecteds.map(s => String(s.value))),
-    capture = () => {
+    record = () => {
       if (isList) {
         const vs = Array.from(selectedValues)
         context.record(isMultiple ? vs : vs.length ? vs[0] : null)
@@ -190,7 +190,7 @@ export const Table = make(({ context, box }: BoxProps) => {
           if (!areSetsEqual(selectedValues, newSelectedValues)) {
             selectedValues.clear()
             for (const v of newSelectedValues) selectedValues.add(v)
-            capture()
+            record()
             if (live) context.commit()
           }
         }
@@ -253,7 +253,7 @@ export const Table = make(({ context, box }: BoxProps) => {
       )
     }
 
-  capture()
+  record()
 
   return { render, contentB }
 })

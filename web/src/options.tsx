@@ -17,23 +17,23 @@ import { gensym, V, xid } from './core';
 import { Box, Option } from './protocol';
 
 export const
-  toContextualMenuItem = ({ name, value, text, caption, icon, options }: Option, capture: (v: V) => void): IContextualMenuItem => {
+  toContextualMenuItem = ({ name, value, text, caption, icon, options }: Option, record: (v: V) => void): IContextualMenuItem => {
     return text
       ? {
         key: String(value),
         text,
         title: caption,
         iconProps: icon ? { iconName: icon } : undefined,
-        subMenuProps: options ? toContextualMenuProps(options, capture) : undefined,
-        onClick: () => capture(value),
+        subMenuProps: options ? toContextualMenuProps(options, record) : undefined,
+        onClick: () => record(value),
         'data-name': name,
       } : {
         key: xid(),
         itemType: ContextualMenuItemType.Divider,
       }
   },
-  toContextualMenuProps = (cs: Option[], capture: (v: V) => void): IContextualMenuProps => ({
-    items: cs.map(c => toContextualMenuItem(c, capture))
+  toContextualMenuProps = (cs: Option[], record: (v: V) => void): IContextualMenuProps => ({
+    items: cs.map(c => toContextualMenuItem(c, record))
   }),
   toDropdownOption = (c: Option): IDropdownOption => ({
     key: c.value,

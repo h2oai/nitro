@@ -28,7 +28,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
         horizontal = !modes.has('vertical'),
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
-        capture = (value: V) => {
+        record = (value: V) => {
           context.record(value)
           context.commit()
         },
@@ -36,19 +36,19 @@ export const Buttons = make(({ context, box }: BoxProps) => {
         buttons = options.map((o, i) => {
           const
             text = o.text,
-            onClick = () => capture(o.value)
+            onClick = () => record(o.value)
           return (hasNoPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
             ? o.options
               ? o.value === ''
-                ? <PrimaryButton key={o.value} data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
-                : <PrimaryButton key={o.value} data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
+                ? <PrimaryButton key={o.value} data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, record)} />
+                : <PrimaryButton key={o.value} data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, record)} onClick={onClick} />
               : o.caption
                 ? <CompoundButton key={o.value} data-name={o.name} primary text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
                 : <PrimaryButton key={o.value} data-name={o.name} text={text} styles={styles} onClick={onClick} />
             : o.options
               ? o.value === ''
-                ? <DefaultButton key={o.value} data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, capture)} />
-                : <DefaultButton key={o.value} data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, capture)} onClick={onClick} />
+                ? <DefaultButton key={o.value} data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, record)} />
+                : <DefaultButton key={o.value} data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, record)} onClick={onClick} />
               : o.caption
                 ? <CompoundButton key={o.value} data-name={o.name} text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
                 : <DefaultButton key={o.value} data-name={o.name} text={text} styles={styles} onClick={onClick} />
