@@ -51,5 +51,6 @@ from h2o_nitro import View, box, row, col, option, lorem
 # #include progress_bar.py
 # #include spinner.py
 # #include separator.py
+# #include cards.py
 # #include theming.py
 # #include advanced_layout.py
