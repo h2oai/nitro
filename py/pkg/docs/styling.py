@@ -154,6 +154,18 @@ def styling_alert(view: View):
         ),
     )
 
+
+# ## Alert strip
+def styling_alert_strip(view: View):
+    view(
+        box('Your system is up to date.',
+            style='p-4 text-sky-700 border-l-4 border-sky-700 bg-sky-50 text-sm font-medium'),
+        box('A system update is available.',
+            style='p-4 text-amber-700 border-l-4 border-amber-700 bg-amber-50 text-sm font-medium'),
+        box('System update successful!',
+            style='p-4 text-green-700 border-l-4 border-green-700 bg-green-50 text-sm font-medium'),
+        box('System update failed.',
+            style='p-4 text-red-700 border-l-4 border-red-700 bg-red-50 text-sm font-medium'),
     )
 
     text = lorem(3)
