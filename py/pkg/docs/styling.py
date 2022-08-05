@@ -79,22 +79,22 @@ def styling_badges(view: View):
             row(
                 box('Status: ', style='text-gray-700'),
                 box('System available', style='text-sky-700'),
-                style='items-center border border-gray-200 rounded text-xs font-medium px-2.5 py-1.5',
+                style='items-center border rounded text-xs font-medium px-2.5 py-1.5',
             ),
             row(
                 box('Status: ', style='text-gray-700'),
                 box('System paused', style='text-amber-700'),
-                style='items-center border border-gray-200 rounded text-xs font-medium px-2.5 py-1.5',
+                style='items-center border rounded text-xs font-medium px-2.5 py-1.5',
             ),
             row(
                 box('Status: ', style='text-gray-700'),
                 box('System normal', style='text-green-700'),
-                style='items-center border border-gray-200 rounded text-xs font-medium px-2.5 py-1.5',
+                style='items-center border rounded text-xs font-medium px-2.5 py-1.5',
             ),
             row(
                 box('Status: ', style='text-gray-700'),
                 box('System overload', style='text-red-700'),
-                style='items-center border border-gray-200 rounded text-xs font-medium px-2.5 py-1.5',
+                style='items-center border rounded text-xs font-medium px-2.5 py-1.5',
             )
         )
     )
@@ -238,3 +238,16 @@ def styling_alert_icons(view: View):
             style='items-center justify-between gap-4 p-4 text-red-700 border rounded border-red-200 bg-red-50',
         ),
     )
+
+
+# ## Pagination
+def styling_pagination(view: View):
+    def link(text: str, selected: bool):
+        color = 'text-white bg-indigo-600 border-blue-600' if selected else 'border'
+        return box(text, style=f'w-8 h-8 leading-8 text-center rounded {color}')
+
+    links = [link(text, text == '2') for text in ['←', '1', '2', '3', '4', '5', '→']]
+    view(
+        row(*links, style='justify-center gap-1 text-xs font-medium')
+    )
+
