@@ -251,3 +251,143 @@ def styling_pagination(view: View):
         row(*links, style='justify-center gap-1 text-xs font-medium')
     )
 
+
+# ## Stat
+def styling_stat(view: View):
+    def stat(label: str, value: str):
+        return col(
+            box(value, style='text-4xl font-extrabold text-indigo-600'),
+            box(label, style='text-lg font-medium text-gray-500'),
+            style='gap-0 px-4 py-8 text-center border rounded-lg'
+        )
+
+    view(
+        box(
+            stat('Donut Sales', '$4.2M'),
+            stat('Flavors', '24'),
+            stat('Locations', '89'),
+            style='grid grid-cols-3 gap-2',
+        )
+    )
+
+
+# ## Stat with icon
+def styling_stat_icon(view: View):
+    icon = '''
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+    '''
+    view(
+        box(
+            row(
+                box(
+                    box(icon, mode='svg', style='w-8 h-8'),
+                    style='p-3 text-blue-600 bg-indigo-100 rounded-full',
+                ),
+                col(
+                    box('$4.2M', style='text-2xl font-medium text-gray-900'),
+                    box('Annual Donut Sales', style='text-sm text-gray-400'),
+                    style='gap-0',
+                ),
+                style='items-center gap-4 p-6 bg-white border rounded-lg',
+            ),
+            row(
+                col(
+                    box('$4.2M', style='text-2xl font-medium text-gray-900'),
+                    box('Annual Donut Sales', style='text-sm text-gray-400'),
+                    style='gap-0',
+                ),
+                box(
+                    box(icon, mode='svg', style='w-8 h-8'),
+                    style='p-3 text-blue-600 bg-indigo-100 rounded-full',
+                ),
+                style='items-center justify-between gap-4 p-6 bg-white border rounded-lg',
+            ),
+            style='grid grid-cols-2 gap-2',
+        ),
+    )
+
+
+# ## Stat with change
+def styling_stat_change(view: View):
+    increase_icon = '''
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+    </svg>
+    '''
+    decrease_icon = '''
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+    </svg>
+    '''
+    view(
+        box(
+            col(
+                box('Donut Sales', style='text-sm text-gray-400'),
+                box('$452.2K', style='text-2xl font-medium text-gray-900'),
+                row(
+                    box(increase_icon, mode='svg', style='w-4 h-4 text-green-600'),
+                    box('6.5%', style='font-medium'),
+                    box('Since last month', style='text-gray-400'),
+                    style='gap-1 mt-1 text-xs',
+                ),
+                style='gap-0 p-6 bg-white border rounded-lg',
+            ),
+            col(
+                box('Donut Sales', style='text-sm text-gray-400'),
+                box('$452.2K', style='text-2xl font-medium text-gray-900'),
+                row(
+                    box(decrease_icon, mode='svg', style='w-4 h-4 text-red-600'),
+                    box('6.5%', style='font-medium'),
+                    box('Since last month', style='text-gray-400'),
+                    style='gap-1 mt-1 text-xs',
+                ),
+                style='gap-0 p-6 bg-white border rounded-lg',
+            ),
+            style='grid grid-cols-2 gap-2',
+        ),
+    )
+
+
+# ## Stat with floating change
+def styling_stat_change_floating(view: View):
+    increase_icon = '''
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+    </svg>
+    '''
+    decrease_icon = '''
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+    </svg>
+    '''
+    view(
+        box(
+            row(
+                box(
+                    box('Donut Sales', style='text-sm text-gray-400'),
+                    box('$452.2K', style='text-2xl font-medium text-gray-900'),
+                ),
+                row(
+                    box(increase_icon, mode='svg', style='w-4 h-4'),
+                    box('6.5%', style='text-xs font-medium'),
+                    style='p-1 text-green-600 bg-green-100 rounded',
+                ),
+                style='items-start justify-between p-6 bg-white border rounded-lg',
+            ),
+            row(
+                box(
+                    box('Donut Sales', style='text-sm text-gray-400'),
+                    box('$452.2K', style='text-2xl font-medium text-gray-900'),
+                ),
+                row(
+                    box(decrease_icon, mode='svg', style='w-4 h-4'),
+                    box('6.5%', style='text-xs font-medium'),
+                    style='p-1 text-red-600 bg-red-100 rounded',
+                ),
+                style='items-start justify-between p-6 bg-white border rounded-lg',
+            ),
+            style='grid grid-cols-2 gap-2',
+        ),
+    )
