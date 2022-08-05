@@ -98,6 +98,36 @@ def styling_badges(view: View):
             )
         )
     )
+
+
+# ## CTA
+def style_cta_light(view: View):
+    view(
+        col(
+            box('Handcrafted Espresso Drinks', mode='box'),
+            box('Sipping is believing', style='text-indigo-700'),
+            style='text-5xl font-extrabold tracking-tight',
+        ),
+        box(lorem(5), style='mt-4'),
+        box(['Get Started', 'Learn More'], style='justify-center'),
+        style='bg-gray-50 px-4 py-32 text-center',
+
+    )
+
+
+# ## Dark CTA
+def style_cta_dark(view: View):
+    view(
+        col(
+            box('Handcrafted Espresso Drinks', mode='box'),
+            box('Sipping is believing', mode='box'),
+            style='text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600',
+        ),
+        box(lorem(5), style='mt-4'),
+        box(['Get Started', 'Learn More'], style='justify-center'),
+        style='text-white bg-gray-900 px-4 py-32 text-center',
+    )
+
     )
 
     text = lorem(3)
