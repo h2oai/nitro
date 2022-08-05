@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
+import { Dict, isS, isURL, newIncr, on, S, Signal, signal, U, V } from './core';
 import { css } from './css';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
@@ -186,17 +186,15 @@ export const newClient = (server: Server) => {
       server.connect(handleEvent)
     },
     jump = (v: V, params?: Dict<S>) => {
-      if (isS(v) && /^http[s]*:\/\//.test(v)) {
+      if (isS(v) && isURL(v)) {
         const
           p = params ?? {},
-          target = p['target'] ?? '_self',
+          target = p['target'] ?? '_blank',
           features: S[] = []
         for (const k in p) if (k !== 'target') features.push(`${k}=${p[k]}`)
         if (features.length) {
-          console.log(v, target, features)
           window.open(v, target, features.join(','))
         } else {
-          console.log(v, target)
           window.open(v, target)
         }
         return
