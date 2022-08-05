@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import React from 'react';
 import { Banner } from './banner';
 import { Buttons } from './buttons';
 import { Calendar } from './calendar';
@@ -21,6 +22,7 @@ import { ChoiceGroup } from './choice_group';
 import { ColorPalette } from './color_palette';
 import { ColorPicker } from './color_picker';
 import { ComboBox } from './combobox';
+import { isS, isURL, S } from './core';
 import { css } from './css';
 import { DatePicker } from './date_picker';
 import { Dropdown } from './dropdown';
@@ -28,6 +30,7 @@ import { Droplist } from './droplist';
 import { FileUpload } from './file_upload';
 import { PluginBox } from './plugin';
 import { ProgressBar } from './progress';
+import { Box } from './protocol';
 import { Rating } from './rating';
 import { Separator } from './separator';
 import { Slider } from './slider';
@@ -40,7 +43,7 @@ import { Textbox } from './textbox';
 import { TextBlock } from './text_block';
 import { TimePicker } from './time_picker';
 import { Toggle } from './toggle';
-import { BoxProps } from './ui';
+import { BoxProps, make } from './ui';
 import { WebView } from './webview';
 
 export const XBox = ({ context, box }: BoxProps) => { // recursive
@@ -112,8 +115,27 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     }
   }
 
-  const className = box.style ? css(box.style) : undefined
-  return box.text
-    ? <div className={className}>{box.text}</div>
-    : <div className={className} />
+  return box.path
+    ? <Link box={box} path={box.path} />
+    : box.text
+      ? <div className={css(box.style)}>{box.text}</div>
+      : <div className={css(box.style)} />
 }
+
+const Link = make(({ box, path }: { box: Box, path: S }) => {
+  const
+    { text, style } = box,
+    isExternal = isURL(path),
+    onClick: React.MouseEventHandler<HTMLDivElement> = e => {
+      if (isExternal) {
+        window.open(path, '_blank')
+      } else {
+        window.location.hash = '!' + path
+      }
+      e.preventDefault()
+    },
+    render = () => (
+      <div className={style ? css('cursor-pointer', style) : undefined} onClick={onClick}>{text ?? ''}</div>
+    )
+  return { render }
+})
