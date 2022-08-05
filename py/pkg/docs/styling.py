@@ -54,6 +54,23 @@ def styling_tag(view: View):
                 style='border text-red-500 border-red-500 bg-red-100 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
         ),
     )
+
+
+# ## Persona
+def styling_persona(view: View):
+    view(
+        row(
+            box(image='sample.jpg', style='object-cover w-6 h-6 rounded-full'),
+            box('Boaty McBoatface', style='text-xs font-medium'),
+            style='items-center bg-gray-100 pl-2 pr-3 py-1.5 rounded-full',
+        ),
+        row(
+            box('Boaty McBoatface', style='text-xs font-medium'),
+            box(image='sample.jpg', style='object-cover w-6 h-6 rounded-full'),
+            style='items-center bg-gray-100 pr-2 pl-3 py-1.5 rounded-full',
+        ),
+    )
+
     )
 
     text = lorem(3)
