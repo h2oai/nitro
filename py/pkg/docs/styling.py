@@ -18,6 +18,44 @@ from h2o_nitro import View, box, row, col, option, lorem
 # # Styling
 # Change how boxes look: colors, borders, sizing, margins, and padding.
 
+# ## Tag
+def styling_tag(view: View):
+    view(
+        row(
+            box('Info',
+                style='border text-sky-500 border-current uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+            box('Info',
+                style='border text-white border-sky-500 bg-sky-500 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+            box('Info',
+                style='border text-sky-500 border-sky-500 bg-sky-100 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+        ),
+        row(
+            box('Warning',
+                style='border text-amber-500 border-current uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+            box('Warning',
+                style='border text-white border-amber-500 bg-amber-500 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+            box('Warning',
+                style='border text-amber-500 border-amber-500 bg-amber-100 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+        ),
+        row(
+            box('Success',
+                style='border text-green-500 border-current uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+            box('Success',
+                style='border text-white border-green-500 bg-green-500 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+            box('Success',
+                style='border text-green-500 border-green-500 bg-green-100 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+        ),
+        row(
+            box('Critical',
+                style='border text-red-500 border-current uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+            box('Critical',
+                style='border text-white border-red-500 bg-red-500 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+            box('Critical',
+                style='border text-red-500 border-red-500 bg-red-100 uppercase px-5 py-1.5 rounded-full text-xs tracking-wide'),
+        ),
+    )
+    )
+
     text = lorem(3)
     view(
     )
