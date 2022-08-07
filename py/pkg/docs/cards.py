@@ -126,3 +126,34 @@ def card_dark_image(view: View):
         )
     )
 
+
+# ## With stats
+def card_stats(view: View):
+    view(
+        box(
+            row(
+                box(
+                    box('To space and beyond', style='text-xl font-bold text-gray-900'),
+                    box('By Boaty McBoatface', style='mt-1 text-xs font-medium text-gray-600')
+                ),
+                box(
+                    box(image='sample.jpg', style='object-cover w-16 h-16 rounded-lg shadow-sm'),
+                    style='flex-shrink-0 ml-3',
+                ),
+                style='justify-between',
+            ),
+            box(lorem(7), style='mt-4 pr-12 text-sm text-gray-500'),
+            row(
+                box(
+                    box('2nd Apr 2024', style='text-xs text-gray-500'),
+                    box('Published', style='text-sm font-medium text-gray-600'),
+                ),
+                box(
+                    box('42 minutes', style='text-xs text-gray-500'),
+                    box('Reading time', style='text-sm font-medium text-gray-600'),
+                ),
+                style='mt-6'),
+            box(style='absolute inset-x-0 bottom-0 h-2  bg-gradient-to-r from-green-300 via-blue-500 to-purple-600'),
+            style='relative p-8 overflow-hidden border border-gray-100 rounded-lg',
+        ),
+    )
