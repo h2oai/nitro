@@ -49,3 +49,29 @@ def card_basic(view: View):
         )
     )
 
+
+# ## With gradient border
+def card_gradient_border(view: View):
+    def card(title, caption):
+        return box(
+            box(
+                box(
+                    box(title, style='text-xl font-bold text-gray-900'),
+                    box(caption, style='mt-2 text-sm text-gray-500'),
+                    style='mt-16 pr-8',
+                ),
+                style='absolute inset-1 bg-white p-8 rounded-xl'
+            ),
+            style='relative h-72 shadow-xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-2xl',
+        )
+
+    view(
+        box(
+            card(lorem(), lorem(2)),
+            card(lorem(), lorem(2)),
+            card(lorem(), lorem(2)),
+            card(lorem(), lorem(2)),
+            style='grid grid-cols-2 grid-rows-2 gap-4',
+        )
+    )
+
