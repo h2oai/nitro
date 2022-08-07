@@ -75,3 +75,29 @@ def card_gradient_border(view: View):
         )
     )
 
+
+# ## With image
+def card_image(view: View):
+    def card(title, caption, image):
+        return box(
+            box(image=image, style='object-cover w-full h-56'),
+            box(
+                box(title, style='text-xl font-bold'),
+                box(caption, style='mt-2 text-sm text-gray-500'),
+                box('Find out more →',
+                    style='inline-block pb-1 mt-4 font-medium text-indigo-600 border-b border-indigo-500'),
+                style='p-6',
+            ),
+            style='overflow-hidden border border-gray-100 rounded-lg shadow-sm',
+        )
+
+    view(
+        box(
+            card(lorem(), lorem(2), 'sample.jpg'),
+            card(lorem(), lorem(2), 'sample.jpg'),
+            card(lorem(), lorem(2), 'sample.jpg'),
+            card(lorem(), lorem(2), 'sample.jpg'),
+            style='grid grid-cols-2 grid-rows-2 gap-4',
+        )
+    )
+
