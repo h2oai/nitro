@@ -20,8 +20,8 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Embed web pages in a view
 # Set `mode='web'` to embed external web pages.
-def embed_iframe(view: View):
-    view(box(mode='web', path='https://example.com'))
+def embed_iframe(view: View):  # height 5
+    view(box(mode='web', path='https://example.com', style='h-96'))
 
 
 # ## Open web pages in a new view
@@ -40,7 +40,7 @@ def open_web_page_popup(view: View):  # height 2
 
 # ## Open web pages in the current view
 # Pass a URL to `view.jump()` to open web pages in the current view.
-def open_web_page(view: View):  # height 4
+def open_web_page(view: View):  # height 2
     view('Click Continue to open https://example.com in the current view.')
     view.jump('https://example.com', target='_self')
 
