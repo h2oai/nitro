@@ -160,40 +160,39 @@ def layout_grid(view: View):  # height 3
     # Place the boxes in a 4-column grid.
     view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-indigo'))
 
+
 # ## Tabbed layout
-# Set mode='tab' on a box to lay out its items in tabs.
+# Set `mode='tab'` on a box to lay out its items in tabs.
 #
 # The `text` of each child item is used as the tab's label.
-def layout_tabs(view: View):  # height 5
+def layout_tabs(view: View):  # height 4
     view(
         box(
+            box(
+                'Profile',
+                items=[
+                    box('First name', value='Boaty'),
+                    box('Last name', value='McBoatface'),
+                    box('Age', value=42)
+                ],
+            ),
+            box(
+                'Billing Address',
+                items=[
+                    box('Billing address line 1', value=''),
+                    box('Billing address line 2', value=''),
+                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                ],
+            ),
+            box(
+                'Shipping Address',
+                items=[
+                    box('Shipping address line 1', value=''),
+                    box('Shipping address line 2', value=''),
+                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                ],
+            ),
             mode='tab',
-            items=[
-                box(
-                    'Profile',
-                    items=[
-                        box('First name', value='Boaty'),
-                        box('Last name', value='McBoatface'),
-                        box('Age', value=42)
-                    ],
-                ),
-                box(
-                    'Billing Address',
-                    items=[
-                        box('Billing address line 1', value=''),
-                        box('Billing address line 2', value=''),
-                        row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                    ],
-                ),
-                box(
-                    'Shipping Address',
-                    items=[
-                        box('Shipping address line 1', value=''),
-                        box('Shipping address line 2', value=''),
-                        row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                    ],
-                ),
-            ]
         )
     )
 
