@@ -55,23 +55,25 @@ def styling_tag(view: View):  # height 3
 
 
 # ## Persona
-def styling_persona(view: View):
+def styling_persona(view: View):  # height 2
     view(
         row(
-            box(image='sample.jpg', style='object-cover w-6 h-6 rounded-full'),
-            box('Boaty McBoatface', style='text-xs font-medium'),
-            style='items-center bg-gray-100 pl-2 pr-3 py-1.5 rounded-full',
-        ),
-        row(
-            box('Boaty McBoatface', style='text-xs font-medium'),
-            box(image='sample.jpg', style='object-cover w-6 h-6 rounded-full'),
-            style='items-center bg-gray-100 pr-2 pl-3 py-1.5 rounded-full',
+            row(
+                box(image='sample.jpg', style='object-cover w-6 h-6 rounded-full'),
+                box('Boaty McBoatface', style='text-xs font-medium'),
+                style='items-center bg-gray-100 pl-2 pr-3 py-1.5 rounded-full',
+            ),
+            row(
+                box('Boaty McBoatface', style='text-xs font-medium'),
+                box(image='sample.jpg', style='object-cover w-6 h-6 rounded-full'),
+                style='items-center bg-gray-100 pr-2 pl-3 py-1.5 rounded-full',
+            ),
         ),
     )
 
 
 # ## Badge
-def styling_badges(view: View):
+def styling_badges(view: View):  # height 2
     view(
         row(
             row(
