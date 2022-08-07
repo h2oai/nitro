@@ -92,24 +92,13 @@ def layout_gap(view: View):  # height 2
 #
 # The example shows one row split into three columns containing three rows each.
 def layout_col(view: View):  # height 3
-    style = 'border p-2'
+    style = 'p-2 rounded bg-indigo-500 text-white'
     view(
-        row(
-            col(
-                box('North-west', style=style),
-                box('West', style=style),
-                box('South-west', style=style),
-            ),
-            col(
-                box('North', style=style),
-                box('Center', style=style),
-                box('South', style=style),
-            ),
-            col(
-                box('North-east', style=style),
-                box('East', style=style),
-                box('South-east', style=style),
-            ),
+        col(
+            box('North', style=style),
+            box('Center', style=style),
+            box('South', style=style),
+            style='bg-stripes-indigo',
         ),
     )
 
@@ -132,28 +121,28 @@ def layout_col_alt2(view: View):
 #
 # The example shows one row split into three columns containing three rows each.
 def layout_row_col(view: View):  # height 3
-    style = 'border p-2'
+    style = 'p-2 rounded bg-indigo-500 text-white'
     view(
         row(
             col(
                 box('North-west', style=style),
                 box('West', style=style),
                 box('South-west', style=style),
-                style='grow gap-2'
+                style='grow'
             ),
             col(
                 box('North', style=style),
                 box('Center', style=style),
                 box('South', style=style),
-                style='grow gap-2'
+                style='grow'
             ),
             col(
                 box('North-east', style=style),
                 box('East', style=style),
                 box('South-east', style=style),
-                style='grow gap-2'
+                style='grow'
             ),
-            style='gap-2'
+            style='bg-stripes-indigo'
         ),
     )
 
