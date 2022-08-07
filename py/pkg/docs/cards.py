@@ -36,15 +36,16 @@ def card_basic(view: View):
                 box(caption, style='text-sm'),
                 style='text-gray-500 pr-8',
             ),
-            style='relative p-8 border shadow-md hover:shadow-xl rounded-xl',
+            style='relative p-8 border shadow hover:shadow-xl rounded-xl',
         )
 
     view(
         box(
-            card('The science of donuts', lorem(2), '4.2'),
-            card('The science of coffee', lorem(2), '2.6'),
-            card('The science of cream', lorem(2), '3.9'),
-            card('The science of chocolate', lorem(2), '5.0'),
+            card(lorem(), lorem(2), '4.2'),
+            card(lorem(), lorem(2), '2.6'),
+            card(lorem(), lorem(2), '3.9'),
+            card(lorem(), lorem(2), '5.0'),
             style='grid grid-cols-2 grid-rows-2 gap-4',
         )
     )
+
