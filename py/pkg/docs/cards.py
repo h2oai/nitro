@@ -101,3 +101,28 @@ def card_image(view: View):
         )
     )
 
+
+# ## Dark with image
+def card_dark_image(view: View):
+    def card(category, title, caption, image):
+        return box(
+            box(image=image, style='object-cover w-full h-56'),
+            box(
+                box(category, style='text-xs text-gray-400'),
+                box(title, style='text-sm text-white'),
+                box(caption, style='mt-1 text-xs text-gray-300'),
+                style='p-4 bg-gray-900',
+            ),
+            style='overflow-hidden rounded-2xl',
+        )
+
+    view(
+        box(
+            card('Travel', lorem(), lorem(2), 'sample.jpg'),
+            card('Rocketry', lorem(), lorem(2), 'sample.jpg'),
+            card('Space', lorem(), lorem(2), 'sample.jpg'),
+            card('Food', lorem(), lorem(2), 'sample.jpg'),
+            style='grid grid-cols-2 grid-rows-2 gap-4',
+        )
+    )
+
