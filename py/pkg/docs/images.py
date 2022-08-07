@@ -34,7 +34,7 @@ def image_basic(view: View):
 # - `object-contain` scales and *letterboxes* the image while preserving its aspect ratio.
 # - `object-none` clips the image without resizing.
 # - `object-scale-down` behaves like either `contain` or `none`, whichever results in a smaller image.
-def image_fit(view: View):  # height 4
+def image_fit(view: View):  # height 3
     view(
         row(
             box(image='sample.jpg', style='w-32 h-32 border object-cover'),

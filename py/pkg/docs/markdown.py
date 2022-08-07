@@ -86,7 +86,7 @@ def markdown_links(view: View):  # height 3
 # - Use `:---` to left-align text.
 # - Use `:---:` to center text.
 # - Use `---:` to right-align text.
-def markdown_table(view: View):  # height 9
+def markdown_table(view: View):  # height 7
     view('''
     
     ### Basic Tables
@@ -114,7 +114,7 @@ def markdown_table(view: View):  # height 9
 
 # ## Create tables from lists
 # It's often easier to construct tables from lists of things, as shown below.
-def show_table(view: View):  # height 5
+def show_table(view: View):  # height 4
     view(make_table([
         ['Flavor', 'Super cheap!'],
         ['Cinnamon Sugar', '$1.99'],
