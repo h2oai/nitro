@@ -12,35 +12,34 @@ to edit the view.
 
 
 ```py
-# Display some boxes:
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+
+# Show some boxes:
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Blue 2', background='$blue', color='white', name='blue2'),
-    box('Blue 3', background='$blue', color='white'),
+    box('Blue 1', style=blue),
+    box('Amber', style=amber, name='amber'),
+    box('Blue 2', style=blue),
 )
 
 # Append a box:
+view(box('Appended', style=red), insert=True)
+
+# Insert a box before `amber`:
+view(box('Inserted', style=green), insert=True, before='amber')
+
+# Overwrite two boxes with three boxes after `amber`:
 view(
-    box('Appended', background='$lava', color='white'),
-    insert=True,
+    box('Overwritten 1', style=green),
+    box('Overwritten 2', style=green),
+    box('Overwritten 3', style=green),
+    after='amber',
 )
 
-# Insert a box before `blue2`:
-view(
-    box('Inserted', background='$lava', color='white'),
-    insert=True, before='blue2',
-)
-
-# Overwrite two boxes with three boxes after `blue2`:
-view(
-    box('Overwritten 1', background='$lava', color='white'),
-    box('Overwritten 2', background='$lava', color='white'),
-    box('Overwritten 3', background='$lava', color='white'),
-    after='blue2',
-)
-
-# Remove everything before `blue2`:
-view(remove=True, before='blue2')
+# Remove everything before `amber`:
+view(remove=True, before='amber')
 ```
 
 
@@ -53,16 +52,19 @@ Set `at=` to overwrite boxes starting at an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue', style=blue),
+    box('Red 1', style=red, name='red1'),
+    box('Red 2', style=red),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
-    at='indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    box('Green 3', style=green),
+    at='red1',
 )
 ```
 
@@ -76,16 +78,20 @@ Set `before=` to overwrite boxes before an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 2', background='$blue', color='white'),
+    box('Red', style=red),
+    box('Amber', style=amber, name='amber'),
+    box('Blue', style=blue),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
-    before='indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    box('Green 3', style=green),
+    before='amber',
 )
 ```
 
@@ -99,16 +105,20 @@ Set `after=` to overwrite boxes after an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue', style=blue),
+    box('Amber', style=amber, name='amber'),
+    box('Red', style=red),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
-    after='indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    box('Green 3', style=green),
+    after='amber',
 )
 ```
 
@@ -122,21 +132,26 @@ Set `inside=` to overwrite boxes inside an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
+    box('Blue 1', style=blue),
     col(
-        box('Indigo 1', background='$indigo', color='white'),
-        box('Indigo 2', background='$indigo', color='white'),
-        box('Indigo 3', background='$indigo', color='white'),
-        name='indigo'
+        box('Red 1', style=red),
+        box('Red 2', style=red),
+        box('Red 3', style=red),
+        style=amber,
+        name='amber'
     ),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue 2', style=blue),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
-    inside='indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    box('Green 3', style=green),
+    inside='amber',
 )
 ```
 
@@ -152,15 +167,17 @@ By default, new boxes are appended to the bottom of the view.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Blue 2', background='$blue', color='white'),
-    box('Blue 3', background='$blue', color='white'),
+    box('Blue 1', style=blue),
+    box('Blue 2', style=blue),
+    box('Blue 3', style=blue),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    box('Green 3', style=green),
     insert=True,
 )
 ```
@@ -171,20 +188,23 @@ view(
 
 ## Insert before
 
-Set `insert=True` and `before=` to insert boxes before an existing box.
+Set `insert=True` with `before=` to insert boxes before an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue 1', style=blue),
+    box('Amber', style=amber, name='amber'),
+    box('Blue 2', style=blue),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
-    insert=True, before='indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    box('Green 3', style=green),
+    insert=True, before='amber',
 )
 ```
 
@@ -198,16 +218,19 @@ Setting `at=` has the same effect as `before=` when `Insert=True`.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue 1', style=blue),
+    box('Amber', style=amber, name='amber'),
+    box('Blue 2', style=blue),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
-    insert=True, at='indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    box('Green 3', style=green),
+    insert=True, at='amber',
 )
 ```
 
@@ -217,20 +240,23 @@ view(
 
 ## Insert after
 
-Set `insert=True` and `after=` to insert boxes after an existing box.
+Set `insert=True` with `after=` to insert boxes after an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue 1', style=blue),
+    box('Amber', style=amber, name='amber'),
+    box('Blue 2', style=blue),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    box('Red 3', background='$lava', color='white'),
-    insert=True, after='indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    box('Green 3', style=green),
+    insert=True, after='amber',
 )
 ```
 
@@ -240,44 +266,50 @@ view(
 
 ## Insert inside
 
-Set `insert=True` and `inside=` to insert boxes inside an existing box.
+Set `insert=True` with `inside=` to insert boxes inside an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
+    box('Blue 1', style=blue),
     col(
-        box('Indigo 1', background='$indigo', color='white'),
-        box('Indigo 2', background='$indigo', color='white'),
-        name='indigo'
+        box('Blue 2', style=blue),
+        box('Blue 3', style=blue),
+        style=amber,
+        name='amber',
     ),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue 4', style=blue),
 )
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    insert=True, inside='indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    insert=True, inside='amber',
 )
 ```
 
 
-![Screenshot](assets/screenshots/insert_update_inside.png)
+![Screenshot](assets/screenshots/edit_insert_inside.png)
 
 
 ## Remove at
 
-Set `remove=True` and `at=` to remove an existing box.
+Set `remove=True` with `at=` to remove an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Blue 2', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 3', background='$blue', color='white'),
-    box('Blue 4', background='$blue', color='white'),
+    box('Blue 1', style=blue),
+    box('Blue 2', style=blue),
+    box('Red', style=red, name='red'),
+    box('Blue 3', style=blue),
+    box('Blue 4', style=blue),
 )
-view(remove=True, at='indigo')
+view(remove=True, at='red')
 ```
 
 
@@ -286,38 +318,44 @@ view(remove=True, at='indigo')
 
 ## Remove before
 
-Set `remove=True` and `before=` to remove boxes before an existing box.
+Set `remove=True` with `before=` to remove boxes before an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Blue 2', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 3', background='$blue', color='white'),
-    box('Blue 4', background='$blue', color='white'),
+    box('Red 1', style=red),
+    box('Red 2', style=red),
+    box('Amber', style=amber, name='amber'),
+    box('Blue 1', style=blue),
+    box('Blue 2', style=blue),
 )
-view(remove=True, before='indigo')
+view(remove=True, before='amber')
 ```
 
 
 ![Screenshot](assets/screenshots/edit_remove_before.png)
 
 
-## Remove before
+## Remove after
 
-Set `remove=True` and `after=` to remove boxes after an existing box.
+Set `remove=True` with `after=` to remove boxes after an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Blue 2', background='$blue', color='white'),
-    box('Indigo', name='indigo', background='$indigo', color='white'),
-    box('Blue 3', background='$blue', color='white'),
-    box('Blue 4', background='$blue', color='white'),
+    box('Blue 1', style=blue),
+    box('Blue 2', style=blue),
+    box('Amber', style=amber, name='amber'),
+    box('Red 1', style=red),
+    box('Red 2', style=red),
 )
-view(remove=True, after='indigo')
+view(remove=True, after='amber')
 ```
 
 
@@ -326,21 +364,27 @@ view(remove=True, after='indigo')
 
 ## Remove inside
 
-Set `remove=True` and `inside=` to remove boxes inside an existing box.
+Set `remove=True` with `inside=` to remove boxes inside an existing box.
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 view(
-    box('Blue 1', background='$blue', color='white'),
+    box('Blue 1', style=blue),
+    box('Blue 2', style=blue),
     col(
-        box('Indigo 1', background='$indigo', color='white'),
-        box('Indigo 2', background='$indigo', color='white'),
-        box('Indigo 3', background='$indigo', color='white'),
-        name='indigo'
+        box('Red 1', style=red),
+        box('Red 2', style=red),
+        box('Red 3', style=red),
+        style=amber,
+        name='amber'
     ),
-    box('Blue 2', background='$blue', color='white'),
+    box('Blue 2', style=blue),
 )
-view(remove=True, inside='indigo')
+view(remove=True, inside='amber')
 ```
 
 
@@ -358,40 +402,48 @@ Set `at=`, `before=`, or `after=` to space-separated names to select nested item
 
 
 ```py
+blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
+amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
+red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
 # Show a 3x3 grid
 view(
-    row(
+    box(
         col(
-            box('Yellow 1', background='$yellow', color='black'),
-            box('Yellow 2', background='$yellow', color='black'),
-            box('Yellow 3', background='$yellow', color='black'),
+            box('Blue 1', style=blue),
+            box('Blue 2', style=blue),
+            box('Blue 3', style=blue),
+            style=blue,
         ),
         col(
-            box('Lime 1', background='$lime', color='black'),
-            box('Indigo', name='indigo', background='$indigo', color='white'),
-            box('Lime 3', background='$lime', color='black'),
-            name='lime',
+            box('Blue 4', style=blue),
+            box('Amber', style=amber, name='amber'),
+            box('Red', style=red),
+            style=amber,
+            name='col2',
         ),
         col(
-            box('Sky 1', background='$sky', color='black'),
-            box('Sky 2', background='$sky', color='black'),
-            box('Sky 3', background='$sky', color='black'),
+            box('Blue 5', style=blue),
+            box('Blue 6', style=blue),
+            box('Blue 7', style=blue),
+            style=blue,
         ),
+        style='grid grid-cols-3 gap-2'
     ),
 )
 
-# Insert 2 boxes before 'indigo'.
+# Insert 2 boxes before `amber` inside `col2`.
 view(
-    box('Red 1', background='$lava', color='white'),
-    box('Red 2', background='$lava', color='white'),
-    insert=True, before='lime indigo',
+    box('Green 1', style=green),
+    box('Green 2', style=green),
+    insert=True, before='col2 amber',
 )
 
-# Overwrite everything after 'indigo'.
+# Overwrite everything after `indigo` inside `col2`.
 view(
-    box('Blue 1', background='$blue', color='white'),
-    box('Blue 2', background='$blue', color='white'),
-    after='lime indigo',
+    box('Green 3', style=green),
+    box('Green 4', style=green),
+    after='col2 amber',
 )
 
 # Remove 'indigo'.
