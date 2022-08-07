@@ -147,6 +147,19 @@ def layout_row_col(view: View):  # height 3
     )
 
 
+# ## Grid layout
+# A simple way to lay out items in a grid is use the `grid` style.
+#
+# The example below lays out 12 boxes in a 4-column grid.
+def layout_grid(view: View):  # height 3
+    style = 'p-2 rounded bg-indigo-500 text-white'
+
+    # Create some boxes.
+    boxes = [box(f'Box {i}', style=style) for i in range(1, 13)]
+
+    # Place the boxes in a 4-column grid.
+    view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-indigo'))
+
 # ## Tabbed layout
 # Set mode='tab' on a box to lay out its items in tabs.
 #
@@ -226,7 +239,7 @@ def layout_tabs_vertical(view: View):  # height 5
 
 # ## Show icons on tabs
 # Set `icon=` on each tab to show an icon on the tab.
-def layout_tabs_icons(view: View):  # height 5
+def layout_tabs_icons(view: View):  # height 4
     view(
         box(
             mode='tab',
@@ -259,18 +272,5 @@ def layout_tabs_icons(view: View):  # height 5
                     ],
                 ),
             ]
-        )
-    )
-
-
-# ## Advanced layouts
-# For explicit control over layouts, use `box(items=[...])` instead of `row(...)` or `col(...)`.
-#
-# The example below creates a 4-column grid layout using `style='grid'`.
-def layout_grid(view: View):  # height 5
-    view(
-        box(
-            items=[box(f'Box {i}', style='p-2 border') for i in range(1, 13)],
-            style='grid grid-cols-4 gap-2',
         )
     )
