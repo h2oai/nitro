@@ -129,6 +129,25 @@ def style_cta_dark(view: View):
     )
 
 
+# ## CTA with image
+def style_cta_image(view: View):
+    view(
+        box(
+            box(
+                box(
+                    box('To space and beyond', style='font-bold text-gray-900 text-3xl'),
+                    box(lorem(3), style='text-gray-500 mt-4'),
+                    box(box(['Get Started']), style='mt-8'),
+                    style='max-w-xl mx-auto',
+                ),
+                style='px-16 py-24',
+            ),
+            box(image='sample.jpg', style='object-cover w-full h-full'),
+            style='overflow-hidden bg-gray-50 grid grid-cols-2',
+        )
+    )
+
+
 # ## Alert
 def styling_alert(view: View):
     view(
@@ -241,7 +260,7 @@ def styling_alert_icons(view: View):
 
 
 # ## Pagination
-def styling_pagination(view: View):
+def styling_pagination(view: View):  # height 2
     def link(text: str, selected: bool):
         color = 'text-white bg-indigo-600 border-indigo-600' if selected else 'border'
         return box(text, style=f'w-8 h-8 leading-8 text-center rounded {color}')
@@ -253,7 +272,7 @@ def styling_pagination(view: View):
 
 
 # ## Timeline
-def styling_timeline(view: View):
+def styling_timeline(view: View):  # height 2
     def step(number: str, label: str, is_current: bool = False):
         color = 'text-white bg-indigo-600' if is_current else 'bg-gray-100'
         return row(
@@ -278,7 +297,7 @@ def styling_timeline(view: View):
 
 
 # ## Stat
-def styling_stat(view: View):
+def styling_stat(view: View): # height 3
     def stat(label: str, value: str):
         return col(
             box(value, style='text-4xl font-extrabold text-indigo-600'),
@@ -297,7 +316,7 @@ def styling_stat(view: View):
 
 
 # ## Stat with icon
-def styling_stat_icon(view: View):
+def styling_stat_icon(view: View):# height 3
     icon = '''
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -335,7 +354,7 @@ def styling_stat_icon(view: View):
 
 
 # ## Stat with change
-def styling_stat_change(view: View):
+def styling_stat_change(view: View):# height 3
     increase_icon = '''
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -376,7 +395,7 @@ def styling_stat_change(view: View):
 
 
 # ## Stat with floating change
-def styling_stat_change_floating(view: View):
+def styling_stat_change_floating(view: View):# height 3
     increase_icon = '''
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
