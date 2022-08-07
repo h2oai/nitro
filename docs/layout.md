@@ -8,10 +8,12 @@ By default, items passed to `view()` are laid out one below the other.
 
 
 ```py
+style = 'p-2 rounded bg-indigo-500 text-white'
 view(
-    box('Top', style='border p-2'),
-    box('Middle', style='border p-2'),
-    box('Bottom', style='border p-2'),
+    box('Top', style=style),
+    box('Middle', style=style),
+    box('Bottom', style=style),
+    style='bg-stripes-indigo',
 )
 ```
 
@@ -25,29 +27,33 @@ Use `row()` to lay out multiple items horizontally, left to right.
 
 
 ```py
+style = 'p-2 rounded bg-indigo-500 text-white'
 view(
     row(
-        box('Left', style='border p-2'),
-        box('Center', style='border p-2'),
-        box('Right', style='border p-2'),
+        box('Left', style=style),
+        box('Center', style=style),
+        box('Right', style=style),
+        style='bg-stripes-indigo',
     )
 )
 ```
 
 
-`row(x, y, z)` is shorthand for `box(mode='row', items=[x, y, z], style='flex flex-row gap-2')`.
+`row(x, y, z)` is in fact shorthand for `box(x, y, z, mode='row', style='flex flex-row gap-2')`.
+The following code produces the same results.
 
 
 ```py
-view(box(
-    mode='row',
-    items=[
-        box('Left', style='border p-2'),
-        box('Center', style='border p-2'),
-        box('Right', style='border p-2'),
-    ],
-    style='flex flex-row gap-2',
-))
+style = 'p-2 rounded bg-indigo-500 text-white'
+view(
+    box(
+        box('Left', style=style),
+        box('Center', style=style),
+        box('Right', style=style),
+        mode='row',
+        style='flex flex-row gap-2 bg-stripes-indigo',
+    ),
+)
 ```
 
 
@@ -60,11 +66,13 @@ Set the `grow` style to expand items to fit.
 
 
 ```py
+style = 'p-2 rounded bg-indigo-500 text-white grow'
 view(
     row(
-        box('Left', style='border p-2 grow'),
-        box('Center', style='border p-2 grow'),
-        box('Right', style='border p-2 grow'),
+        box('Left', style=style),
+        box('Center', style=style),
+        box('Right', style=style),
+        style='bg-stripes-indigo',
     )
 )
 ```
@@ -79,12 +87,13 @@ Set a `gap` style to change the gap between items. The default gap is `gap-2`.
 
 
 ```py
+style = 'p-2 rounded bg-indigo-500 text-white grow'
 view(
     row(
-        box('Left', style='border p-2 grow'),
-        box('Center', style='border p-2 grow'),
-        box('Right', style='border p-2 grow'),
-        style='gap-8',
+        box('Left', style=style),
+        box('Center', style=style),
+        box('Right', style=style),
+        style='gap-8 bg-stripes-indigo',
     )
 )
 ```
@@ -101,24 +110,13 @@ The example shows one row split into three columns containing three rows each.
 
 
 ```py
-style = 'border p-2'
+style = 'p-2 rounded bg-indigo-500 text-white'
 view(
-    row(
-        col(
-            box('North-west', style=style),
-            box('West', style=style),
-            box('South-west', style=style),
-        ),
-        col(
-            box('North', style=style),
-            box('Center', style=style),
-            box('South', style=style),
-        ),
-        col(
-            box('North-east', style=style),
-            box('East', style=style),
-            box('South-east', style=style),
-        ),
+    col(
+        box('North', style=style),
+        box('Center', style=style),
+        box('South', style=style),
+        style='bg-stripes-indigo',
     ),
 )
 ```
@@ -151,28 +149,28 @@ The example shows one row split into three columns containing three rows each.
 
 
 ```py
-style = 'border p-2'
+style = 'p-2 rounded bg-indigo-500 text-white'
 view(
     row(
         col(
             box('North-west', style=style),
             box('West', style=style),
             box('South-west', style=style),
-            style='grow gap-2'
+            style='grow'
         ),
         col(
             box('North', style=style),
             box('Center', style=style),
             box('South', style=style),
-            style='grow gap-2'
+            style='grow'
         ),
         col(
             box('North-east', style=style),
             box('East', style=style),
             box('South-east', style=style),
-            style='grow gap-2'
+            style='grow'
         ),
-        style='gap-2'
+        style='bg-stripes-indigo'
     ),
 )
 ```
@@ -181,9 +179,30 @@ view(
 ![Screenshot](assets/screenshots/layout_row_col.png)
 
 
+## Grid layout
+
+A simple way to lay out items in a grid is use the `grid` style.
+
+The example below lays out 12 boxes in a 4-column grid.
+
+
+```py
+style = 'p-2 rounded bg-indigo-500 text-white'
+
+# Create some boxes.
+boxes = [box(f'Box {i}', style=style) for i in range(1, 13)]
+
+# Place the boxes in a 4-column grid.
+view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-indigo'))
+```
+
+
+![Screenshot](assets/screenshots/layout_grid.png)
+
+
 ## Tabbed layout
 
-Set mode='tab' on a box to lay out its items in tabs.
+Set `mode='tab'` on a box to lay out its items in tabs.
 
 The `text` of each child item is used as the tab's label.
 
@@ -191,33 +210,31 @@ The `text` of each child item is used as the tab's label.
 ```py
 view(
     box(
+        box(
+            'Profile',
+            items=[
+                box('First name', value='Boaty'),
+                box('Last name', value='McBoatface'),
+                box('Age', value=42)
+            ],
+        ),
+        box(
+            'Billing Address',
+            items=[
+                box('Billing address line 1', value=''),
+                box('Billing address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+            ],
+        ),
+        box(
+            'Shipping Address',
+            items=[
+                box('Shipping address line 1', value=''),
+                box('Shipping address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+            ],
+        ),
         mode='tab',
-        items=[
-            box(
-                'Profile',
-                items=[
-                    box('First name', value='Boaty'),
-                    box('Last name', value='McBoatface'),
-                    box('Age', value=42)
-                ],
-            ),
-            box(
-                'Billing Address',
-                items=[
-                    box('Billing address line 1', value=''),
-                    box('Billing address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
-            ),
-            box(
-                'Shipping Address',
-                items=[
-                    box('Shipping address line 1', value=''),
-                    box('Shipping address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
-            ),
-        ]
     )
 )
 ```
@@ -234,36 +251,34 @@ Set `mode='vertical tab'` to lay out tabs one below the other, commonly known as
 ```py
 view(
     box(
+        box(
+            'Profile',
+            icon='Contact',
+            items=[
+                box('First name', value='Boaty'),
+                box('Last name', value='McBoatface'),
+                box('Age', value=42)
+            ],
+        ),
+        box(
+            'Billing Address',
+            icon='PaymentCard',
+            items=[
+                box('Billing address line 1', value=''),
+                box('Billing address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+            ],
+        ),
+        box(
+            'Shipping Address',
+            icon='DeliveryTruck',
+            items=[
+                box('Shipping address line 1', value=''),
+                box('Shipping address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+            ],
+        ),
         mode='vertical tab',
-        items=[
-            box(
-                'Profile',
-                icon='Contact',
-                items=[
-                    box('First name', value='Boaty'),
-                    box('Last name', value='McBoatface'),
-                    box('Age', value=42)
-                ],
-            ),
-            box(
-                'Billing Address',
-                icon='PaymentCard',
-                items=[
-                    box('Billing address line 1', value=''),
-                    box('Billing address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
-            ),
-            box(
-                'Shipping Address',
-                icon='DeliveryTruck',
-                items=[
-                    box('Shipping address line 1', value=''),
-                    box('Shipping address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
-            ),
-        ]
     )
 )
 ```
@@ -316,23 +331,3 @@ view(
 
 
 ![Screenshot](assets/screenshots/layout_tabs_icons.png)
-
-
-## Advanced layouts
-
-For explicit control over layouts, use `box(items=[...])` instead of `row(...)` or `col(...)`.
-
-The example below creates a 4-column grid layout using `style='grid'`.
-
-
-```py
-view(
-    box(
-        items=[box(f'Box {i}', style='p-2 border') for i in range(1, 13)],
-        style='grid grid-cols-4 gap-2',
-    )
-)
-```
-
-
-![Screenshot](assets/screenshots/layout_grid.png)

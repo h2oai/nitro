@@ -92,7 +92,17 @@ To style text, wrap it in `box()`, and set `style=`. Nitro supports [Tailwind](h
 
 ```py
 view(
-    box('Hello World!', style='font-semibold p-4 shadow-lg bg-slate-50 rounded-lg'),
+    box(
+        'Hello world!',
+        # p-4: Padding, 4 units wide.
+        # border-l-4: Border on the left, 4 pixels thick.
+        # text-sky-700: Dark blue text
+        # bg-sky-50: Light blue background
+        # border-sky-700: Dark blue border
+        # text-sm: Small text
+        # font-medium: Medium font
+        style='p-4 border-l-4 text-sky-700 bg-sky-50 border-sky-700 text-sm font-medium',
+    ),
 )
 ```
 
