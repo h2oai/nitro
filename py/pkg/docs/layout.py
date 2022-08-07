@@ -21,46 +21,54 @@ from h2o_nitro import View, box, row, col, option, lorem
 # ## Basic
 # By default, items passed to `view()` are laid out one below the other.
 def layout_basic(view: View):  # height 3
+    style = 'p-2 rounded bg-indigo-500 text-white'
     view(
-        box('Top', style='border p-2'),
-        box('Middle', style='border p-2'),
-        box('Bottom', style='border p-2'),
+        box('Top', style=style),
+        box('Middle', style=style),
+        box('Bottom', style=style),
+        style='bg-stripes-indigo',
     )
 
 
 # ## Horizontal layout
 # Use `row()` to lay out multiple items horizontally, left to right.
 def layout_row(view: View):  # height 2
+    style = 'p-2 rounded bg-indigo-500 text-white'
     view(
         row(
-            box('Left', style='border p-2'),
-            box('Center', style='border p-2'),
-            box('Right', style='border p-2'),
+            box('Left', style=style),
+            box('Center', style=style),
+            box('Right', style=style),
+            style='bg-stripes-indigo',
         )
     )
 
 
-# `row(x, y, z)` is shorthand for `box(mode='row', items=[x, y, z], style='flex flex-row gap-2')`.
+# `row(x, y, z)` is in fact shorthand for `box(x, y, z, mode='row', style='flex flex-row gap-2')`.
+# The following code produces the same results.
 def layout_row_alt(view: View):
-    view(box(
-        mode='row',
-        items=[
-            box('Left', style='border p-2'),
-            box('Center', style='border p-2'),
-            box('Right', style='border p-2'),
-        ],
-        style='flex flex-row gap-2',
-    ))
+    style = 'p-2 rounded bg-indigo-500 text-white'
+    view(
+        box(
+            box('Left', style=style),
+            box('Center', style=style),
+            box('Right', style=style),
+            mode='row',
+            style='flex flex-row gap-2 bg-stripes-indigo',
+        ),
+    )
 
 
 # ## Adjust items to fit
 # Set the `grow` style to expand items to fit.
 def layout_grow(view: View):  # height 2
+    style = 'p-2 rounded bg-indigo-500 text-white grow'
     view(
         row(
-            box('Left', style='border p-2 grow'),
-            box('Center', style='border p-2 grow'),
-            box('Right', style='border p-2 grow'),
+            box('Left', style=style),
+            box('Center', style=style),
+            box('Right', style=style),
+            style='bg-stripes-indigo',
         )
     )
 
@@ -68,12 +76,13 @@ def layout_grow(view: View):  # height 2
 # ## Adjust spacing
 # Set a `gap` style to change the gap between items. The default gap is `gap-2`.
 def layout_gap(view: View):  # height 2
+    style = 'p-2 rounded bg-indigo-500 text-white grow'
     view(
         row(
-            box('Left', style='border p-2 grow'),
-            box('Center', style='border p-2 grow'),
-            box('Right', style='border p-2 grow'),
-            style='gap-8',
+            box('Left', style=style),
+            box('Center', style=style),
+            box('Right', style=style),
+            style='gap-8 bg-stripes-indigo',
         )
     )
 
