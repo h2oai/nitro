@@ -93,7 +93,7 @@ def theme_prose_modes(view: View):  # height 5
     mode = modes[0]
     while True:
         mode = view(
-            box('Mode', mode='menu', options=modes, value=mode, live=True),
+            box('Mode', mode='live menu', options=modes, value=mode),
             sample_text,
             style='p-4'
         )
@@ -190,7 +190,7 @@ def theme_samples(view: View):  # height 11
     while True:
         response = view(
             row(
-                box('Accent color', mode='menu', value=accent, options=accents, live=True),
+                box('Accent color', mode='live menu', value=accent, options=accents),
                 box('Dark Mode', mode='toggle', value=dark_mode),
                 style='items-end'
             ),
