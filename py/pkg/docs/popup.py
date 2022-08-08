@@ -39,7 +39,7 @@ def popup_buttons(view: View):  # height 3
     view(box(['Show a popup']))
     response = view(
         box('Call us now for free donuts!'),
-        box(dict(yes='Yes, now!', no='Maybe later')),
+        box(options=dict(yes='Yes, now!', no='Maybe later')),
         title='Wait!', popup=True,
     )
     if response == 'yes':

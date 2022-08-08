@@ -40,7 +40,7 @@ buttons are to accept, cancel or close a popup.
 view(box(['Show a popup']))
 response = view(
     box('Call us now for free donuts!'),
-    box(dict(yes='Yes, now!', no='Maybe later')),
+    box(options=dict(yes='Yes, now!', no='Maybe later')),
     title='Wait!', popup=True,
 )
 if response == 'yes':
