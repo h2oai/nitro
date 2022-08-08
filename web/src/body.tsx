@@ -67,7 +67,7 @@ export const Popup = make(({ client }: { client: Client }) => {
           modalProps={modalProps}
           hidden={hidden}
         >
-          <Zone context={client.context} box={{ items: boxes } as Box} inRow={false} />
+          <Zone context={client.context} box={{ xid: 'popup', index: -1, modes: new Set(['col']), items: boxes, options: [] }} inRow={false} />
         </Dialog >
       )
     }
