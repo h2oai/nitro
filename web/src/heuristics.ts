@@ -307,6 +307,16 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
           }
         }
         break
+      case 2:
+        {
+          const item0 = items[0], item1 = items[1]
+          if (isS(item0) && Array.isArray(item1)) { // box('foo', [a, b, c])
+            box.text = item0
+            box.options = item1
+            box.items = undefined
+          }
+        }
+        break
     }
   }
 
