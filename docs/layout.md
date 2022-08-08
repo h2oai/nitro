@@ -8,12 +8,12 @@ By default, items passed to `view()` are laid out one below the other.
 
 
 ```py
-style = 'p-2 rounded bg-indigo-500 text-white'
+style = 'p-2 rounded bg-accent-500 text-white'
 view(
     box('Top', style=style),
     box('Middle', style=style),
     box('Bottom', style=style),
-    style='bg-stripes-indigo',
+    style='bg-stripes-accent',
 )
 ```
 
@@ -27,13 +27,13 @@ Use `row()` to lay out multiple items horizontally, left to right.
 
 
 ```py
-style = 'p-2 rounded bg-indigo-500 text-white'
+style = 'p-2 rounded bg-accent-500 text-white'
 view(
     row(
         box('Left', style=style),
         box('Center', style=style),
         box('Right', style=style),
-        style='bg-stripes-indigo',
+        style='bg-stripes-accent',
     )
 )
 ```
@@ -44,14 +44,14 @@ The following code produces the same results.
 
 
 ```py
-style = 'p-2 rounded bg-indigo-500 text-white'
+style = 'p-2 rounded bg-accent-500 text-white'
 view(
     box(
         box('Left', style=style),
         box('Center', style=style),
         box('Right', style=style),
         mode='row',
-        style='flex flex-row gap-2 bg-stripes-indigo',
+        style='flex flex-row gap-2 bg-stripes-accent',
     ),
 )
 ```
@@ -66,13 +66,13 @@ Set the `grow` style to expand items to fit.
 
 
 ```py
-style = 'p-2 rounded bg-indigo-500 text-white grow'
+style = 'p-2 rounded bg-accent-500 text-white grow'
 view(
     row(
         box('Left', style=style),
         box('Center', style=style),
         box('Right', style=style),
-        style='bg-stripes-indigo',
+        style='bg-stripes-accent',
     )
 )
 ```
@@ -87,13 +87,13 @@ Set a `gap` style to change the gap between items. The default gap is `gap-2`.
 
 
 ```py
-style = 'p-2 rounded bg-indigo-500 text-white grow'
+style = 'p-2 rounded bg-accent-500 text-white grow'
 view(
     row(
         box('Left', style=style),
         box('Center', style=style),
         box('Right', style=style),
-        style='gap-8 bg-stripes-indigo',
+        style='gap-8 bg-stripes-accent',
     )
 )
 ```
@@ -110,13 +110,13 @@ The example shows one row split into three columns containing three rows each.
 
 
 ```py
-style = 'p-2 rounded bg-indigo-500 text-white'
+style = 'p-2 rounded bg-accent-500 text-white'
 view(
     col(
         box('North', style=style),
         box('Center', style=style),
         box('South', style=style),
-        style='bg-stripes-indigo',
+        style='bg-stripes-accent',
     ),
 )
 ```
@@ -147,7 +147,7 @@ The example shows one row split into three columns containing three rows each.
 
 
 ```py
-style = 'p-2 rounded bg-indigo-500 text-white'
+style = 'p-2 rounded bg-accent-500 text-white'
 view(
     row(
         col(
@@ -168,7 +168,7 @@ view(
             box('South-east', style=style),
             style='grow'
         ),
-        style='bg-stripes-indigo'
+        style='bg-stripes-accent'
     ),
 )
 ```
@@ -185,13 +185,13 @@ The example below lays out 12 boxes in a 4-column grid.
 
 
 ```py
-style = 'p-2 rounded bg-indigo-500 text-white'
+style = 'p-2 rounded bg-accent-500 text-white'
 
 # Create some boxes.
 boxes = [box(f'Box {i}', style=style) for i in range(1, 13)]
 
 # Place the boxes in a 4-column grid.
-view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-indigo'))
+view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-accent'))
 ```
 
 

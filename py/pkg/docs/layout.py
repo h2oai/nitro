@@ -21,25 +21,25 @@ from h2o_nitro import View, box, row, col, option, lorem
 # ## Basic
 # By default, items passed to `view()` are laid out one below the other.
 def layout_basic(view: View):  # height 3
-    style = 'p-2 rounded bg-indigo-500 text-white'
+    style = 'p-2 rounded bg-accent-500 text-white'
     view(
         box('Top', style=style),
         box('Middle', style=style),
         box('Bottom', style=style),
-        style='bg-stripes-indigo',
+        style='bg-stripes-accent',
     )
 
 
 # ## Horizontal layout
 # Use `row()` to lay out multiple items horizontally, left to right.
 def layout_row(view: View):  # height 2
-    style = 'p-2 rounded bg-indigo-500 text-white'
+    style = 'p-2 rounded bg-accent-500 text-white'
     view(
         row(
             box('Left', style=style),
             box('Center', style=style),
             box('Right', style=style),
-            style='bg-stripes-indigo',
+            style='bg-stripes-accent',
         )
     )
 
@@ -47,14 +47,14 @@ def layout_row(view: View):  # height 2
 # `row(x, y, z)` is in fact shorthand for `box(x, y, z, mode='row', style='flex flex-row gap-2')`.
 # The following code produces the same results.
 def layout_row_alt(view: View):
-    style = 'p-2 rounded bg-indigo-500 text-white'
+    style = 'p-2 rounded bg-accent-500 text-white'
     view(
         box(
             box('Left', style=style),
             box('Center', style=style),
             box('Right', style=style),
             mode='row',
-            style='flex flex-row gap-2 bg-stripes-indigo',
+            style='flex flex-row gap-2 bg-stripes-accent',
         ),
     )
 
@@ -62,13 +62,13 @@ def layout_row_alt(view: View):
 # ## Adjust items to fit
 # Set the `grow` style to expand items to fit.
 def layout_grow(view: View):  # height 2
-    style = 'p-2 rounded bg-indigo-500 text-white grow'
+    style = 'p-2 rounded bg-accent-500 text-white grow'
     view(
         row(
             box('Left', style=style),
             box('Center', style=style),
             box('Right', style=style),
-            style='bg-stripes-indigo',
+            style='bg-stripes-accent',
         )
     )
 
@@ -76,13 +76,13 @@ def layout_grow(view: View):  # height 2
 # ## Adjust spacing
 # Set a `gap` style to change the gap between items. The default gap is `gap-2`.
 def layout_gap(view: View):  # height 2
-    style = 'p-2 rounded bg-indigo-500 text-white grow'
+    style = 'p-2 rounded bg-accent-500 text-white grow'
     view(
         row(
             box('Left', style=style),
             box('Center', style=style),
             box('Right', style=style),
-            style='gap-8 bg-stripes-indigo',
+            style='gap-8 bg-stripes-accent',
         )
     )
 
@@ -92,13 +92,13 @@ def layout_gap(view: View):  # height 2
 #
 # The example shows one row split into three columns containing three rows each.
 def layout_col(view: View):  # height 3
-    style = 'p-2 rounded bg-indigo-500 text-white'
+    style = 'p-2 rounded bg-accent-500 text-white'
     view(
         col(
             box('North', style=style),
             box('Center', style=style),
             box('South', style=style),
-            style='bg-stripes-indigo',
+            style='bg-stripes-accent',
         ),
     )
 
@@ -119,7 +119,7 @@ def layout_col_alt2(view: View):
 #
 # The example shows one row split into three columns containing three rows each.
 def layout_row_col(view: View):  # height 3
-    style = 'p-2 rounded bg-indigo-500 text-white'
+    style = 'p-2 rounded bg-accent-500 text-white'
     view(
         row(
             col(
@@ -140,7 +140,7 @@ def layout_row_col(view: View):  # height 3
                 box('South-east', style=style),
                 style='grow'
             ),
-            style='bg-stripes-indigo'
+            style='bg-stripes-accent'
         ),
     )
 
@@ -150,13 +150,13 @@ def layout_row_col(view: View):  # height 3
 #
 # The example below lays out 12 boxes in a 4-column grid.
 def layout_grid(view: View):  # height 3
-    style = 'p-2 rounded bg-indigo-500 text-white'
+    style = 'p-2 rounded bg-accent-500 text-white'
 
     # Create some boxes.
     boxes = [box(f'Box {i}', style=style) for i in range(1, 13)]
 
     # Place the boxes in a 4-column grid.
-    view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-indigo'))
+    view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-accent'))
 
 
 # ## Tabbed layout
