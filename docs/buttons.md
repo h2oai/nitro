@@ -25,9 +25,7 @@ view(f'You chose {choice}.')
 
 Most often, it doesn't make sense to show a text prompt above a set of buttons.
 
-In such cases, `box(mode='button', options=X)` can be shortened to `box(X)`.
-
-In other words, if the first argument to `box()` is a sequence of options, then `mode='button'` is implied.
+In such cases, `box(options=X)` can be shortened to `box(X)`.
 
 
 ```py

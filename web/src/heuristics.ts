@@ -283,6 +283,33 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
 
   if (modes.has('column')) modes.add('col') // QOL
 
+  const isContainer = modes.has('row') || modes.has('col') || modes.has('tab')
+
+  if (box.items && !isContainer) {
+    const
+      { items } = box,
+      k = items.length
+    switch (k) {
+      case 0:
+        {
+          box.items = undefined // box()
+        }
+        break
+      case 1:
+        {
+          const item0 = items[0]
+          if (isS(item0)) { // box('foo')
+            box.text = item0
+            box.items = undefined
+          } else if (Array.isArray(item0)) { // box([a, b, c])
+            box.options = item0
+            box.items = undefined
+          }
+        }
+        break
+    }
+  }
+
   if (box.items) {
     if (modes.has('tab')) {
       box.items.forEach(box => prefixStyle(box, 'flex flex-col gap-2 my-2'))

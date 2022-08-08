@@ -33,9 +33,7 @@ def buttons_basic(view: View):  # height 1
 # ## Shorthand notation
 # Most often, it doesn't make sense to show a text prompt above a set of buttons.
 #
-# In such cases, `box(mode='button', options=X)` can be shortened to `box(X)`.
-#
-# In other words, if the first argument to `box()` is a sequence of options, then `mode='button'` is implied.
+# In such cases, `box(options=X)` can be shortened to `box(X)`.
 def buttons_shorthand(view: View):  # height 1
     # Longer
     choice = view(box(mode='button', options=['auto', 'yellow', 'orange', 'red']))

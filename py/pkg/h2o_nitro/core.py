@@ -11,14 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import warnings
 from typing import Callable, Optional, Sequence, Set, Tuple, List, Dict, Union, Iterable
 from types import FunctionType
 import random
 import asyncio
 import collections
 from collections import OrderedDict
-from enum import Enum, IntEnum
+from enum import IntEnum
 from .version import __version__
 
 # noinspection PyBroadException
@@ -283,16 +282,13 @@ class Box:
     # noinspection PyShadowingBuiltins
     def __init__(
             self,
-            *args,
-            text: Optional[Union[str, Options]] = None,
+            *items,
             name: Optional[str] = None,
             mode: Optional[str] = None,
             value: Optional[Value] = None,
             options: Optional[Options] = None,
             headers: Optional[Headers] = None,
-            items: Optional[Items] = None,
             data: Optional[dict] = None,
-            row: Optional[bool] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             caption: Optional[str] = None,
@@ -317,29 +313,6 @@ class Box:
             ignore: Optional[bool] = None,
     ):
         self.xid = _xid()
-
-        k = len(args)
-        if k > 0:
-            arg0 = args[0]
-            if k == 1 and text is None and isinstance(arg0, str):
-                text = arg0
-            elif k == 1 and options is None and isinstance(arg0, (tuple, set, list, dict, OrderedDict)):
-                options = arg0
-                if mode is None:
-                    mode = 'button'
-            else:
-                if items is None:
-                    items = args
-                else:
-                    raise ValueError('box(): *args ignored because items= was set.')
-
-        if row is not None:
-            warnings.warn(
-                "The 'row' argument will be removed in a future version.",
-                DeprecationWarning,
-            )
-
-        self.text = text
         self.name = name
         self.mode = mode
         self.value = value
@@ -373,7 +346,6 @@ class Box:
     def dump(self) -> dict:
         return _clean(dict(
             xid=self.xid,
-            text=self.text,
             name=self.name,
             mode=self.mode,
             value=self.value,
@@ -414,13 +386,15 @@ def row(
         name: Optional[str] = None,
         style: Optional[str] = None,
         image: Optional[str] = None,
+        path: Optional[str] = None,
 ) -> Box:
     return Box(
-        items=items,
+        *items,
         mode='row',
         name=name,
         style=style,
         image=image,
+        path=path,
     )
 
 
@@ -429,13 +403,15 @@ def col(
         name: Optional[str] = None,
         style: Optional[str] = None,
         image: Optional[str] = None,
+        path: Optional[str] = None,
 ) -> Box:
     return Box(
-        items=items,
+        *items,
         mode='col',
         name=name,
         style=style,
         image=image,
+        path=path,
     )
 
 
@@ -715,7 +691,7 @@ class View(_View):
             style: Optional[str] = None,
     ):
         b = Box(
-            items=items,
+            *items,
             mode='col',
             halt=halt,
             title=title,
@@ -844,7 +820,7 @@ class AsyncView(_View):
             style: Optional[str] = None,
     ):
         b = Box(
-            items=items,
+            *items,
             mode='col',
             halt=halt,
             title=title,

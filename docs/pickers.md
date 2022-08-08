@@ -124,6 +124,19 @@ view(f'You chose {choices}.')
 ![Screenshot](assets/screenshots/picker_checklist.png)
 
 
+## Shorthand
+
+`box([a, b, c])` is shorthand for `box(options=[a, b, c])`.
+
+
+```py
+choice = view(box(['green', 'yellow', 'orange', 'red']))
+view(f'You chose {choice}.')
+```
+
+
+![Screenshot](assets/screenshots/picker_shorthand.png)
+
 ## Mark as required
 
 Add `required` to `mode` to indicate that input is required.
