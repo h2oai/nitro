@@ -290,29 +290,29 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
       { items } = box,
       k = items.length
     switch (k) {
-      case 0:
+      case 0: // box()
         {
-          box.items = undefined // box()
+          box.items = undefined
         }
         break
       case 1:
         {
-          const item0 = items[0]
-          if (isS(item0)) { // box('foo')
-            box.text = item0
+          const [x] = items
+          if (isS(x)) { // box('foo')
+            box.text = x
             box.items = undefined
-          } else if (Array.isArray(item0)) { // box([a, b, c])
-            box.options = item0
+          } else if (Array.isArray(x)) { // box([a, b, c])
+            box.options = x
             box.items = undefined
           }
         }
         break
       case 2:
         {
-          const item0 = items[0], item1 = items[1]
-          if (isS(item0) && Array.isArray(item1)) { // box('foo', [a, b, c])
-            box.text = item0
-            box.options = item1
+          const [x, y] = items
+          if (isS(x) && Array.isArray(y)) { // box('foo', [a, b, c])
+            box.text = x
+            box.options = y
             box.items = undefined
           }
         }
