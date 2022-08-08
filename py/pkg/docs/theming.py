@@ -100,82 +100,57 @@ def theme_prose_modes(view: View):  # height 5
         view.set(theme=Theme(mode=mode))
 
 
-# ## Use color variables
-# *Color variables* are pre-defined, named colors that match the app's theme.
+# ## Color palette
+# Use the following code to reproduce the entire active color palette for reference.
+def theme_colors(view: View):  # height 15
+    shades = '50 100 200 300 400 500 600 700 800 900'.split()
+    accents = [
+        'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan',
+        'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose',
+    ]
+
+    def swatch(color, shade):
+        return box(
+            box(style=f'rounded w-14 h-10 bg-{color}-{shade}'),
+            box(shade, style='text-xs font-medium'),
+        )
+
+    def swatches(color):
+        return row(
+            box(color, style='w-16 text-sm font-semibold'),
+            row(*[swatch(color, shade) for shade in shades])
+        )
+
+    return view(*[swatches(color) for color in accents])
+
+
+# ## Accent color styles
+# To apply the active accent color, use `accent` as the name of the color.
 #
-# Color variables take the form `var(--name)`, or simply `$name`. For example, you can use
-# `var(--red)` or `$red` instead of hard-coded colors like `red` or `#ff0000` or `rgb(255,0,0)`.
-#
-# Color variables can be passed wherever colors are accepted, like `background=`, `border=`, `color=`, and so on.
-#
-# There are 16 pre-defined *spectrum colors*, derived automatically from the theme's accent color by matching its
-# saturation and lightness. Spectrum colors are useful for data visualizations and infographics. The naming of each
-# color is only indicative, and its hue might appear off depending on the position of the accent color's hue along the
-# color spectrum. For example, `$red` could appear pink or orange!
-#
-# Additionally, there are pre-defined color variables for various *tones* of the theme's foreground (`$foreground`),
-# background (`$background`) and accent (`$accent`) colors.
-# Accent tones are prefixed with `$accent-`, and neutral tones (grays) are prefixed with `$neutral-`.
-def theme_colors(view: View):
-    style = dict(width=30, height=30, border='#777', margin='0 0 2.5rem 0')
-    view(
-        '### Spectrum Colors',
-        row(
-            box(background='$red', **style),
-            box(background='$lava', **style),
-            box(background='$orange', **style),
-            box(background='$amber', **style),
-            box(background='$yellow', **style),
-            box(background='$lime', **style),
-            box(background='$mint', **style),
-            box(background='$green', **style),
-            box(background='$teal', **style),
-            box(background='$cyan', **style),
-            box(background='$sky', **style),
-            box(background='$blue', **style),
-            box(background='$indigo', **style),
-            box(background='$purple', **style),
-            box(background='$violet', **style),
-            box(background='$pink', **style),
-            wrap='normal',
-        ),
-        '### Theme Colors',
-        row(
-            box(background='$foreground', **style),
-            box(background='$background', **style),
-            box(background='$accent', **style),
-            wrap='normal',
-        ),
-        '### Accent Tones',
-        row(
-            box(background='$accent-darker', **style),
-            box(background='$accent-dark', **style),
-            box(background='$accent-dark-alt', **style),
-            box(background='$accent-primary', **style),
-            box(background='$accent-secondary', **style),
-            box(background='$accent-tertiary', **style),
-            box(background='$accent-light', **style),
-            box(background='$accent-lighter', **style),
-            box(background='$accent-lighter-alt', **style),
-            wrap='normal',
-        ),
-        '### Neutral Tones',
-        row(
-            box(background='$neutral-dark', **style),
-            box(background='$neutral-primary', **style),
-            box(background='$neutral-primary-alt', **style),
-            box(background='$neutral-secondary', **style),
-            box(background='$neutral-secondary-alt', **style),
-            box(background='$neutral-tertiary', **style),
-            box(background='$neutral-tertiary-alt', **style),
-            box(background='$neutral-quaternary', **style),
-            box(background='$neutral-quaternary-alt', **style),
-            box(background='$neutral-light', **style),
-            box(background='$neutral-lighter', **style),
-            box(background='$neutral-lighter-alt', **style),
-            wrap='normal',
-        ),
-    )
+# For example, if you've set the theme's accent color to `indigo`, you can use `bg-accent-500` instead of
+# `bg-indigo-500` to change the background color of a box.
+def theme_accent_colors(view: View):  # height 3
+
+    def swatch(shade):
+        return box(
+            box(style=f'rounded h-10 bg-accent-{shade}'),
+            box(f'accent-{shade}', style='text-xs font-medium'),
+        )
+
+    accents = [
+        'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan',
+        'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose',
+    ]
+    shades = '50 100 200 300 400 500 600 700 800 900'.split()
+    swatches = [swatch(shade) for shade in shades]
+    accent = 'indigo'
+
+    while True:
+        accent = view(
+            box('Accent color', mode='live menu', value=accent, options=accents),
+            box(*swatches, style='grid grid-cols-5 gap-2'),
+        )
+        view.set(theme=Theme(mode='light', accent=accent))
 
 
 # ## Accent color sampler
