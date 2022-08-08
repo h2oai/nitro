@@ -337,11 +337,11 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     box.options = sanitizeOptions(options)
     let ignore = false
 
+    sanitizeRange(box)
+
     if (hasNoMode(modes)) modes.add(determineMode(box))
 
     if (isB(value)) box.value = value ? 1 : 0 // TODO ugly: protocol should accept boolean
-
-    sanitizeRange(box)
 
     localizeBox(locale, box)
 
