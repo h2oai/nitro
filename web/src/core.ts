@@ -231,3 +231,11 @@ export function areSetsEqual<T>(xs: Set<T>, ys: Set<T>) {
   for (const x of xs) if (!ys.has(x)) return false
   return true
 }
+export function mapd<T, V>(xs: T[], f: (x: T) => [S, V]): Dict<V> {
+  const d: Dict<V> = {}
+  for (const x of xs) {
+    const [k, v] = f(x)
+    d[k] = v
+  }
+  return d
+}

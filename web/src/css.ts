@@ -1,6 +1,5 @@
-import { Dict, S, U } from "./core"
-import { spectrum, shades, spectrumHues, fromSpectrum } from "./color"
-import { themeColorNames } from "./theme"
+import { fromSpectrum, shades, spectrum, spectrumHues } from "./color"
+import { Dict, mapd, S, U } from "./core"
 
 type Style = S | undefined
 type Match = (s: S) => Style
@@ -547,15 +546,13 @@ const borderWidth = map({
   '8': '8px',
 })
 const borderStyle = any('solid', 'dashed', 'dotted', 'double', 'hidden', 'none')
-const namedColors: Dict<S> = {
+const namedColor = map({
   inherit: 'inherit',
   current: 'currentColor',
   transparent: 'transparent',
-};
-(() => { for (const c of themeColorNames) namedColors[`ui-${c}`] = `var(--ui-${c})` })()
-
-const namedColor = map(namedColors)
-const color = either(map(palette), map({ white: '255 255 255', black: '0 0 0' }))
+})
+const accentColor = map(mapd(shades, s => [`accent-${s}`, `var(--ui-accent-${s})`]))
+const color = either(map(palette), map({ white: '255 255 255', black: '0 0 0' }), accentColor)
 
 rule('divide-x',
   [borderWidth, v => `--tw-divide-x-reverse:0;border-right-width:calc(${v} * var(--tw-divide-x-reverse));border-left-width:calc(${v} * calc(1 - var(--tw-divide-x-reverse)))`],
@@ -1062,11 +1059,11 @@ repl('content-none', '--tw-content:none;content:var(--tw-content)')
 
 // Non-standard, could evolve into pattern lib.
 // Source: https://github.com/tailwindlabs/tailwindcss.com/blob/master/tailwind.config.js
-const hue = any(...spectrumHues)
+const hue = any('accent', ...spectrumHues)
 rule('bg-stripes', [hue, v => {
   const
-    bg = (fromSpectrum(v, '400') ?? [0, 0, 0]).join(' ') + '/.1',
-    fg = (fromSpectrum(v, '500') ?? [0, 0, 0]).join(' ') + '/.5'
+    bg = (v === 'accent' ? 'var(--ui-accent-400)' : (fromSpectrum(v, '400') ?? [0, 0, 0]).join(' ')) + '/.1',
+    fg = (v === 'accent' ? 'var(--ui-accent-500)' : (fromSpectrum(v, '500') ?? [0, 0, 0]).join(' ')) + '/.5'
   return `background-color:rgb(${bg});background-image:linear-gradient(135deg,rgb(${fg}) 10%,transparent 0,transparent 50%,rgb(${fg}) 0,rgb(${fg}) 60%,transparent 0,transparent);background-size:7.07px 7.07px`
 }])
 

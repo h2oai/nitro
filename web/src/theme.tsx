@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { BaseSlots, createTheme, getColorFromString, IColor, isDark, loadTheme, Theme, ThemeGenerator, themeRulesStandardCreator } from '@fluentui/react';
-import { fromSpectrum, grays, isColor, rgbToHex } from './color';
+import { BaseSlots, createTheme, getColorFromString, IColor, isDark, loadTheme, ThemeGenerator, themeRulesStandardCreator } from '@fluentui/react';
+import { fromSpectrum, grays, isColor, rgbToHex, shades, spectrum } from './color';
 import { B, Dict, S, words } from './core';
-import { Theme as ProtocolTheme } from './protocol'
+import { Theme as ProtocolTheme } from './protocol';
 
 export type Scheme = {
   sansFont: S
@@ -24,33 +24,6 @@ export type Scheme = {
   backgroundColor: S
   accentColor: S
 }
-
-export const themeColorNames = [
-  'foreground',
-  'background',
-  'accent',
-  'accent-darker',
-  'accent-dark',
-  'accent-dark-alt',
-  'accent-primary',
-  'accent-secondary',
-  'accent-tertiary',
-  'accent-light',
-  'accent-lighter',
-  'accent-lighter-alt',
-  'neutral-dark',
-  'neutral-primary',
-  'neutral-primary-alt',
-  'neutral-secondary',
-  'neutral-secondary-alt',
-  'neutral-tertiary',
-  'neutral-tertiary-alt',
-  'neutral-quaternary',
-  'neutral-quaternary-alt',
-  'neutral-light',
-  'neutral-lighter',
-  'neutral-lighter-alt',
-]
 
 const
   generateTheme = (scheme: Scheme) => {
@@ -85,84 +58,17 @@ const
       })
     return theme
   },
-  exportSwatches = (swatches: [S, S][]) => {
+  exportAccentShades = (accent: S) => {
     const
       root = document.querySelector(':root') as HTMLElement,
-      s = root.style
-    for (const [name, color] of swatches) {
-      s.setProperty(`--ui-${name}`, `${color}`)
+      style = root.style,
+      colors = spectrum[accent]
+    for (let i = 0; i < shades.length; i++) {
+      const
+        s = shades[i],
+        c = colors[i]
+      style.setProperty(`--ui-accent-${s}`, c.join(' '))
     }
-  },
-  hyphenCase = (s: S) => s.replace(/[A-Z]/g, x => '-' + x.toLowerCase()),
-  dict2Swatches = (colors: Dict<S>, prefix: S) => {
-    const swatches: [S, S][] = []
-    for (const k in colors) {
-      swatches.push([prefix + hyphenCase(k), colors[k]])
-    }
-    return swatches
-  },
-  extractSwatches = (theme: Theme) => {
-    const
-      {
-        black,
-        white,
-        accent,
-
-        themeDarker,
-        themeDark,
-        themeDarkAlt,
-        themePrimary,
-        themeSecondary,
-        themeTertiary,
-        themeLight,
-        themeLighter,
-        themeLighterAlt,
-
-        neutralDark,
-        neutralPrimary,
-        neutralPrimaryAlt,
-        neutralSecondary,
-        neutralSecondaryAlt,
-        neutralTertiary,
-        neutralTertiaryAlt,
-        neutralQuaternary,
-        neutralQuaternaryAlt,
-        neutralLight,
-        neutralLighter,
-        neutralLighterAlt,
-
-      } = theme.palette,
-
-      colors: Dict<S> = {
-        'foreground': black,
-        'background': white,
-        accent,
-
-        'accentDarker': themeDarker,
-        'accentDark': themeDark,
-        'accentDarkAlt': themeDarkAlt,
-        'accentPrimary': themePrimary,
-        'accentSecondary': themeSecondary,
-        'accentTertiary': themeTertiary,
-        'accentLight': themeLight,
-        'accentLighter': themeLighter,
-        'accentLighterAlt': themeLighterAlt,
-
-        neutralDark,
-        neutralPrimary,
-        neutralPrimaryAlt,
-        neutralSecondary,
-        neutralSecondaryAlt,
-        neutralTertiary,
-        neutralTertiaryAlt,
-        neutralQuaternary,
-        neutralQuaternaryAlt,
-        neutralLight,
-        neutralLighter,
-        neutralLighterAlt,
-      }
-
-    return dict2Swatches(colors, '')
   },
   exportTheme = (prose: S, dark: B) => {
     const root = document.querySelector('html') as HTMLElement
@@ -182,6 +88,7 @@ export const applyTheme = ({ mode, accent }: ProtocolTheme) => {
   let prose = 'gray'
 
   if (!mode) mode = 'light'
+  if (!accent || !isColor(accent)) accent = 'indigo'
 
   const
     modes = new Set(words(mode)),
@@ -192,7 +99,7 @@ export const applyTheme = ({ mode, accent }: ProtocolTheme) => {
   const
     foregroundColor = rgbToHex(fromSpectrum(prose, isDarkMode ? '300' : '700') ?? [0, 0, 0]), // Mimic Tailwind prose.
     backgroundColor = rgbToHex(isDarkMode ? fromSpectrum(prose, '900') ?? [255, 255, 255] : [255, 255, 255]),
-    accentColor = rgbToHex(fromSpectrum(accent && isColor(accent) ? accent : 'indigo', isDarkMode ? '400' : '600') ?? [99, 102, 241]),
+    accentColor = rgbToHex(fromSpectrum(accent, isDarkMode ? '400' : '600') ?? [99, 102, 241]),
     scheme: Scheme = {
       sansFont: 'inherit',
       monospaceFont: 'inherit',
@@ -202,7 +109,7 @@ export const applyTheme = ({ mode, accent }: ProtocolTheme) => {
     }
 
   const theme = generateTheme(scheme)
-  exportSwatches(extractSwatches(theme))
+  exportAccentShades(accent)
   exportTheme(prose, theme.isInverted)
   loadTheme(theme)
 }
