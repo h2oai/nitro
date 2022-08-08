@@ -103,15 +103,13 @@ def layout_col(view: View):  # height 3
     )
 
 
-# `col(x, y, z)` is shorthand for `box(mode='col', items=[x, y, z], style='flex flex-col gap-2')`.
+# `col(x, y, z)` is shorthand for `box(x, y, z, mode='col', style='flex flex-col gap-2')`.
 def layout_col_alt2(view: View):
     box(
+        box(value='North'),
+        box(value='Center'),
+        box(value='South'),
         mode='col',
-        items=[
-            box(value='North'),
-            box(value='Center'),
-            box(value='South'),
-        ],
         style='flex flex-col gap-2',
     )
 
@@ -169,28 +167,22 @@ def layout_tabs(view: View):  # height 4
     view(
         box(
             box(
-                'Profile',
-                items=[
-                    box('First name', value='Boaty'),
-                    box('Last name', value='McBoatface'),
-                    box('Age', value=42)
-                ],
+                box('First name', value='Boaty'),
+                box('Last name', value='McBoatface'),
+                box('Age', value=42),
+                title='Profile',
             ),
             box(
-                'Billing Address',
-                items=[
-                    box('Billing address line 1', value=''),
-                    box('Billing address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
+                box('Billing address line 1', value=''),
+                box('Billing address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                title='Billing Address',
             ),
             box(
-                'Shipping Address',
-                items=[
-                    box('Shipping address line 1', value=''),
-                    box('Shipping address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
+                box('Shipping address line 1', value=''),
+                box('Shipping address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                title='Shipping Address',
             ),
             mode='tab',
         )
@@ -203,31 +195,25 @@ def layout_tabs_vertical(view: View):  # height 3
     view(
         box(
             box(
-                'Profile',
+                box('First name', value='Boaty'),
+                box('Last name', value='McBoatface'),
+                box('Age', value=42),
+                title='Profile',
                 icon='Contact',
-                items=[
-                    box('First name', value='Boaty'),
-                    box('Last name', value='McBoatface'),
-                    box('Age', value=42)
-                ],
             ),
             box(
-                'Billing Address',
+                box('Billing address line 1', value=''),
+                box('Billing address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                title='Billing Address',
                 icon='PaymentCard',
-                items=[
-                    box('Billing address line 1', value=''),
-                    box('Billing address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
             ),
             box(
-                'Shipping Address',
+                box('Shipping address line 1', value=''),
+                box('Shipping address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                title='Shipping Address',
                 icon='DeliveryTruck',
-                items=[
-                    box('Shipping address line 1', value=''),
-                    box('Shipping address line 2', value=''),
-                    row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                ],
             ),
             mode='vertical tab',
         )
@@ -239,35 +225,27 @@ def layout_tabs_vertical(view: View):  # height 3
 def layout_tabs_icons(view: View):  # height 4
     view(
         box(
+            box(
+                box('First name', value='Boaty'),
+                box('Last name', value='McBoatface'),
+                box('Age', value=42),
+                title='Profile',
+                icon='Contact',
+            ),
+            box(
+                box('Billing address line 1', value=''),
+                box('Billing address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                title='Billing Address',
+                icon='PaymentCard',
+            ),
+            box(
+                box('Shipping address line 1', value=''),
+                box('Shipping address line 2', value=''),
+                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+                title='Shipping Address',
+                icon='DeliveryTruck',
+            ),
             mode='tab',
-            items=[
-                box(
-                    'Profile',
-                    icon='Contact',
-                    items=[
-                        box('First name', value='Boaty'),
-                        box('Last name', value='McBoatface'),
-                        box('Age', value=42)
-                    ],
-                ),
-                box(
-                    'Billing Address',
-                    icon='PaymentCard',
-                    items=[
-                        box('Billing address line 1', value=''),
-                        box('Billing address line 2', value=''),
-                        row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                    ],
-                ),
-                box(
-                    'Shipping Address',
-                    icon='DeliveryTruck',
-                    items=[
-                        box('Shipping address line 1', value=''),
-                        box('Shipping address line 2', value=''),
-                        row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                    ],
-                ),
-            ]
         )
     )

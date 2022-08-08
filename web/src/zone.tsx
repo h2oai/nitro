@@ -41,14 +41,14 @@ export const Zone = ({ context, box, inRow }: { context: ClientContext, box: Box
     if (modes.has('tab')) {
       if (modes.has('vertical')) {
         const tabs = items.map((box, i) => (
-          <Expander key={box.xid} headerText={box.text ?? `Tab ${i + 1}`}>
+          <Expander key={box.xid} headerText={box.title ?? `Tab ${i + 1}`}>
             <Zone key={box.xid} context={context} box={box} inRow={isRow} />
           </Expander>
         ))
         return <div className={className} data-name={box.name ?? undefined}>{tabs}</div>
       } else {
         const tabs = items.map((box, i) => (
-          <PivotItem key={box.xid} headerText={box.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
+          <PivotItem key={box.xid} headerText={box.title ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined}>
             <Zone key={box.xid} context={context} box={box} inRow={isRow} />
           </PivotItem>
         ))
