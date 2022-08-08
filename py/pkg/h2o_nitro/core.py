@@ -125,27 +125,21 @@ class Header:
     def __init__(
             self,
             text: str,
-            icon: Optional[str] = None,
             mode: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            resizable: Optional[bool] = None,
-            multiline: Optional[bool] = None,
+            style: Optional[str] = None,
+            icon: Optional[str] = None,
     ):
         self.text = text
-        self.icon = icon
         self.mode = mode
-        self.width = width
-        self.resizable = resizable
-        self.multiline = multiline
+        self.style = style
+        self.icon = icon
 
     def dump(self) -> dict:
         return _clean(dict(
             text=self.text,
-            icon=self.icon,
             mode=self.mode,
-            width=self.width,
-            resizable=self.resizable,
-            multiline=self.multiline,
+            style=self.style,
+            icon=self.icon,
         ))
 
 
@@ -231,22 +225,16 @@ Value = Union[
 class Theme:
     def __init__(
             self,
-            background_color: str,
-            foreground_color: str,
-            accent_color: str,
-            accent_color_name: str,
+            mode: Optional[str] = None,
+            accent: Optional[str] = None,
     ):
-        self.background_color = background_color
-        self.foreground_color = foreground_color
-        self.accent_color = accent_color
-        self.accent_color_name = accent_color_name
+        self.mode = mode
+        self.accent = accent
 
     def dump(self) -> dict:
         return dict(
-            background_color=self.background_color,
-            foreground_color=self.foreground_color,
-            accent_color=self.accent_color,
-            accent_color_name=self.accent_color_name,
+            mode=self.mode,
+            accent=self.accent,
         )
 
 
@@ -311,25 +299,8 @@ class Box:
             hint: Optional[str] = None,
             help: Optional[str] = None,
             popup: Optional[bool] = None,
-            layout: Optional[str] = None,
             style: Optional[str] = None,
-            tile: Optional[str] = None,
-            cross_tile: Optional[str] = None,
-            wrap: Optional[str] = None,
-            gap: Optional[Length] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
-            align: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            height: Optional[Sizing] = None,
-            margin: Optional[Sizing] = None,
-            padding: Optional[Sizing] = None,
-            color: Optional[str] = None,
-            background: Optional[str] = None,
-            border: Optional[str] = None,
             image: Optional[str] = None,
-            fit: Optional[str] = None,
             icon: Optional[str] = None,
             min: Optional[V] = None,
             max: Optional[V] = None,
@@ -343,11 +314,6 @@ class Box:
             path: Optional[str] = None,
             error: Optional[str] = None,
             lines: Optional[int] = None,
-            multiple: Optional[bool] = None,
-            required: Optional[bool] = None,
-            password: Optional[bool] = None,
-            editable: Optional[bool] = None,
-            live: Optional[bool] = None,
             ignore: Optional[bool] = None,
     ):
         self.xid = _xid()
@@ -369,12 +335,9 @@ class Box:
 
         if row is not None:
             warnings.warn(
-                "The 'row' argument will be removed in a future version."
-                " Use layout='row' or layout='col' instead of row=True or row=False.",
+                "The 'row' argument will be removed in a future version.",
                 DeprecationWarning,
             )
-            if layout is None:
-                layout = 'row' if row else 'col'
 
         self.text = text
         self.name = name
@@ -390,25 +353,8 @@ class Box:
         self.hint = hint
         self.help = help
         self.popup = popup
-        self.layout = layout
         self.style = style
-        self.tile = tile
-        self.cross_tile = cross_tile
-        self.wrap = wrap
-        self.gap = gap
-        self.grow = grow
-        self.shrink = shrink
-        self.basis = basis
-        self.align = align
-        self.width = width
-        self.height = height
-        self.margin = margin
-        self.padding = padding
-        self.color = color
-        self.background = background
-        self.border = border
         self.image = image
-        self.fit = fit
         self.icon = icon
         self.min = min
         self.max = max
@@ -422,11 +368,6 @@ class Box:
         self.path = path
         self.error = error
         self.lines = lines
-        self.multiple = multiple
-        self.required = required
-        self.password = password
-        self.editable = editable
-        self.live = live
         self.ignore = ignore
 
     def dump(self) -> dict:
@@ -446,25 +387,8 @@ class Box:
             hint=self.hint,
             help=self.help,
             popup=self.popup,
-            layout=self.layout,
             style=self.style,
-            tile=self.tile,
-            cross_tile=self.cross_tile,
-            wrap=self.wrap,
-            gap=self.gap,
-            grow=self.grow,
-            shrink=self.shrink,
-            basis=self.basis,
-            align=self.align,
-            width=self.width,
-            height=self.height,
-            margin=self.margin,
-            padding=self.padding,
-            color=self.color,
-            background=self.background,
-            border=self.border,
             image=self.image,
-            fit=self.fit,
             icon=self.icon,
             min=self.min,
             max=self.max,
@@ -478,11 +402,6 @@ class Box:
             path=self.path,
             error=self.error,
             lines=self.lines,
-            multiple=self.multiple,
-            required=self.required,
-            password=self.password,
-            editable=self.editable,
-            live=self.live,
             ignore=self.ignore,
         ))
 
@@ -490,73 +409,18 @@ class Box:
 box = Box
 
 
-class BoxLayout(Enum):
-    Row = 'row'
-    Column = 'col'
-
-
-class BoxArrange(Enum):
-    Normal = 'normal'
-    Stretch = 'stretch'
-    Center = 'center'
-    Start = 'start'
-    End = 'end'
-    Between = 'between'
-    Around = 'around'
-    Evenly = 'evenly'
-
-
-class BoxAlign(Enum):
-    Left = 'left'
-    Right = 'right'
-    Center = 'center'
-    Justify = 'justify'
-
-
 def row(
         *items: Item,
         name: Optional[str] = None,
         style: Optional[str] = None,
-        tile: Optional[str] = None,
-        cross_tile: Optional[str] = None,
-        wrap: Optional[str] = None,
-        gap: Optional[Length] = None,
-        grow: Optional[int] = None,
-        shrink: Optional[int] = None,
-        basis: Optional[Length] = None,
-        align: Optional[str] = None,
-        width: Optional[Sizing] = None,
-        height: Optional[Sizing] = None,
-        margin: Optional[Sizing] = None,
-        padding: Optional[Sizing] = None,
-        color: Optional[str] = None,
-        background: Optional[str] = None,
-        border: Optional[str] = None,
         image: Optional[str] = None,
-        fit: Optional[str] = None,
 ) -> Box:
     return Box(
         items=items,
         mode='row',
         name=name,
         style=style,
-        tile=tile,
-        cross_tile=cross_tile,
-        wrap=wrap,
-        gap=gap,
-        grow=grow,
-        shrink=shrink,
-        basis=basis,
-        align=align,
-        width=width,
-        height=height,
-        margin=margin,
-        padding=padding,
-        color=color,
-        background=background,
-        border=border,
         image=image,
-        fit=fit,
     )
 
 
@@ -564,46 +428,14 @@ def col(
         *items: Item,
         name: Optional[str] = None,
         style: Optional[str] = None,
-        tile: Optional[str] = None,
-        cross_tile: Optional[str] = None,
-        wrap: Optional[str] = None,
-        gap: Optional[Length] = None,
-        grow: Optional[int] = None,
-        shrink: Optional[int] = None,
-        basis: Optional[Length] = None,
-        align: Optional[str] = None,
-        width: Optional[Sizing] = None,
-        height: Optional[Sizing] = None,
-        margin: Optional[Sizing] = None,
-        padding: Optional[Sizing] = None,
-        color: Optional[str] = None,
-        background: Optional[str] = None,
-        border: Optional[str] = None,
         image: Optional[str] = None,
-        fit: Optional[str] = None,
 ) -> Box:
     return Box(
         items=items,
         mode='col',
         name=name,
         style=style,
-        tile=tile,
-        cross_tile=cross_tile,
-        wrap=wrap,
-        gap=gap,
-        grow=grow,
-        shrink=shrink,
-        basis=basis,
-        align=align,
-        width=width,
-        height=height,
-        margin=margin,
-        padding=padding,
-        color=color,
-        background=background,
-        border=border,
         image=image,
-        fit=fit,
     )
 
 
@@ -877,62 +709,18 @@ class View(_View):
             at: Optional[str] = None,
             after: Optional[str] = None,
             before: Optional[str] = None,
-            mode: Optional[str] = None,
-            row: Optional[bool] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
-            tile: Optional[str] = None,
-            cross_tile: Optional[str] = None,
-            wrap: Optional[str] = None,
-            gap: Optional[Length] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
-            align: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            height: Optional[Sizing] = None,
-            margin: Optional[Sizing] = None,
-            padding: Optional[Sizing] = None,
-            color: Optional[str] = None,
-            background: Optional[str] = None,
-            border: Optional[str] = None,
-            image: Optional[str] = None,
-            fit: Optional[str] = None,
     ):
-        if row is not None:
-            warnings.warn(
-                "The 'row' argument will be removed in a future version. Use mode='row' instead of row=True.",
-                DeprecationWarning,
-            )
-            if row and mode is not None:
-                mode = 'row'
-
         b = Box(
             items=items,
-            mode=mode or 'col',
+            mode='col',
             halt=halt,
             title=title,
             popup=popup,
             style=style,
-            tile=tile,
-            cross_tile=cross_tile,
-            wrap=wrap,
-            gap=gap,
-            grow=grow,
-            shrink=shrink,
-            basis=basis,
-            align=align,
-            width=width,
-            height=height,
-            margin=margin,
-            padding=padding,
-            color=color,
-            background=background,
-            border=border,
-            image=image,
-            fit=fit,
         )
 
         edit_type = EditType.Insert if insert else EditType.Remove if remove else EditType.Update
@@ -1050,62 +838,18 @@ class AsyncView(_View):
             at: Optional[str] = None,
             after: Optional[str] = None,
             before: Optional[str] = None,
-            mode: Optional[str] = None,
-            row: Optional[bool] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
-            tile: Optional[str] = None,
-            cross_tile: Optional[str] = None,
-            wrap: Optional[str] = None,
-            gap: Optional[Length] = None,
-            grow: Optional[int] = None,
-            shrink: Optional[int] = None,
-            basis: Optional[Length] = None,
-            align: Optional[str] = None,
-            width: Optional[Sizing] = None,
-            height: Optional[Sizing] = None,
-            margin: Optional[Sizing] = None,
-            padding: Optional[Sizing] = None,
-            color: Optional[str] = None,
-            background: Optional[str] = None,
-            border: Optional[str] = None,
-            image: Optional[str] = None,
-            fit: Optional[str] = None,
     ):
-        if row is not None:
-            warnings.warn(
-                "The 'row' argument will be removed in a future version. Use mode='row' instead of row=True.",
-                DeprecationWarning,
-            )
-            if row and mode is not None:
-                mode = 'row'
-
         b = Box(
             items=items,
-            mode=mode,
+            mode='col',
             halt=halt,
             title=title,
             popup=popup,
             style=style,
-            tile=tile,
-            cross_tile=cross_tile,
-            wrap=wrap,
-            gap=gap,
-            grow=grow,
-            shrink=shrink,
-            basis=basis,
-            align=align,
-            width=width,
-            height=height,
-            margin=margin,
-            padding=padding,
-            color=color,
-            background=background,
-            border=border,
-            image=image,
-            fit=fit,
         )
 
         edit_type = EditType.Insert if insert else EditType.Remove if remove else EditType.Update
