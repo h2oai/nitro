@@ -45,11 +45,11 @@ def separator_align(view: View):  # height 4
 def separator_vertical(view: View):  # height 4
     view(
         row(
-            box('Left-aligned', mode='vertical separator text-start'),
+            box('Top-aligned', mode='vertical separator text-start'),
             box(lorem(3)),
             box('Center-aligned', mode='vertical separator'),
             box(lorem(3)),
-            box('Right-aligned', mode='vertical separator text-end'),
+            box('Bottom-aligned', mode='vertical separator text-end'),
             box(lorem(3)),
         )
     )

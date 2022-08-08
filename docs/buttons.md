@@ -60,7 +60,7 @@ choice = view(box([
 ]))
 
 # Shortest
-choice = view(box(dict(
+choice = view(box(options=dict(
     auto='Automatic',
     yellow='Yellow',
     orange='Orange',
@@ -81,7 +81,7 @@ To select a different button as primary, set `selected=True`.
 
 ```py
 choice = view(
-    'Updates are available!',
+    '## Updates are available!',
     box([
         option('now', 'Update now'),
         option('tomorrow', 'Remind me tomorrow', selected=True),
@@ -102,8 +102,8 @@ Alternatively, Set `value=` to mark a button as *primary*.
 
 ```py
 choice = view(
-    'Updates are available!',
-    box(dict(
+    '## Updates are available!',
+    box(options=dict(
         now='Update now',
         tomorrow='Remind me tomorrow',
         never='Never update',
@@ -123,8 +123,8 @@ If `value=` is set to a sequence, all buttons with those values are marked as *p
 
 ```py
 choice = view(
-    'Sign me up!',
-    box(dict(
+    '## Sign me up!',
+    box(options=dict(
         basic='Basic Plan ($9.99/month)',
         pro='Pro Plan ($14.99/month)',
         none='Not interested',
@@ -144,14 +144,14 @@ Sub-options inside options are shown as split buttons.
 
 ```py
 choice = view(
-    'Send fresh donuts every day?',
+    '### Send fresh donuts every day?',
     box([
         option('yes', 'Yes!'),
         option('no', 'No', options=[
             option('later', 'Remind me later', icon='ChatBot'),
             option('never', "Don't ask me again", icon='MuteChat'),
         ]),
-    ])
+    ], mode='button')
 )
 view(f'You chose {choice}.')
 ```
@@ -167,14 +167,14 @@ Sub-options work for primary buttons, too.
 
 ```py
 choice = view(
-    'Send fresh donuts every day?',
+    '### Send fresh donuts every day?',
     box([
         option('yes', 'Yes!', options=[
             option('later', 'Remind me later', icon='ChatBot'),
             option('never', "Don't ask me again", icon='MuteChat'),
         ]),
         option('no', 'No'),
-    ])
+    ], mode='button')
 )
 view(f'You chose {choice}.')
 ```

@@ -63,7 +63,7 @@ def buttons_shorthand_alt(view: View):  # height 2
     ]))
 
     # Shortest
-    choice = view(box(dict(
+    choice = view(box(options=dict(
         auto='Automatic',
         yellow='Yellow',
         orange='Orange',
@@ -77,7 +77,7 @@ def buttons_shorthand_alt(view: View):  # height 2
 # To select a different button as primary, set `selected=True`.
 def buttons_selected(view: View):  # height 2
     choice = view(
-        'Updates are available!',
+        '## Updates are available!',
         box([
             option('now', 'Update now'),
             option('tomorrow', 'Remind me tomorrow', selected=True),
@@ -91,8 +91,8 @@ def buttons_selected(view: View):  # height 2
 # Alternatively, Set `value=` to mark a button as *primary*.
 def buttons_value(view: View):  # height 2
     choice = view(
-        'Updates are available!',
-        box(dict(
+        '## Updates are available!',
+        box(options=dict(
             now='Update now',
             tomorrow='Remind me tomorrow',
             never='Never update',
@@ -105,8 +105,8 @@ def buttons_value(view: View):  # height 2
 # If `value=` is set to a sequence, all buttons with those values are marked as *primary*.
 def buttons_values(view: View):  # height 2
     choice = view(
-        'Sign me up!',
-        box(dict(
+        '## Sign me up!',
+        box(options=dict(
             basic='Basic Plan ($9.99/month)',
             pro='Pro Plan ($14.99/month)',
             none='Not interested',
@@ -119,14 +119,14 @@ def buttons_values(view: View):  # height 2
 # Sub-options inside options are shown as split buttons.
 def buttons_split(view: View):  # height 2
     choice = view(
-        'Send fresh donuts every day?',
+        '### Send fresh donuts every day?',
         box([
             option('yes', 'Yes!'),
             option('no', 'No', options=[
                 option('later', 'Remind me later', icon='ChatBot'),
                 option('never', "Don't ask me again", icon='MuteChat'),
             ]),
-        ])
+        ], mode='button')
     )
     view(f'You chose {choice}.')
 
@@ -135,14 +135,14 @@ def buttons_split(view: View):  # height 2
 # Sub-options work for primary buttons, too.
 def buttons_selected_split(view: View):  # height 2
     choice = view(
-        'Send fresh donuts every day?',
+        '### Send fresh donuts every day?',
         box([
             option('yes', 'Yes!', options=[
                 option('later', 'Remind me later', icon='ChatBot'),
                 option('never', "Don't ask me again", icon='MuteChat'),
             ]),
             option('no', 'No'),
-        ])
+        ], mode='button')
     )
     view(f'You chose {choice}.')
 
