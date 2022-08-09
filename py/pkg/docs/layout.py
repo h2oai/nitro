@@ -73,20 +73,6 @@ def layout_grow(view: View):  # height 2
     )
 
 
-# ## Adjust spacing
-# Set a `gap` style to change the gap between items. The default gap is `gap-2`.
-def layout_gap(view: View):  # height 2
-    style = 'p-2 rounded bg-accent-500 text-white grow'
-    view(
-        row(
-            box('Left', style=style),
-            box('Center', style=style),
-            box('Right', style=style),
-            style='gap-8 bg-stripes-accent',
-        )
-    )
-
-
 # ## Vertical layout
 # Use `col()` to lay out multiple items vertically, top to bottom.
 #

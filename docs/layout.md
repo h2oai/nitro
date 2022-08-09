@@ -81,27 +81,6 @@ view(
 ![Screenshot](assets/screenshots/layout_grow.png)
 
 
-## Adjust spacing
-
-Set a `gap` style to change the gap between items. The default gap is `gap-2`.
-
-
-```py
-style = 'p-2 rounded bg-accent-500 text-white grow'
-view(
-    row(
-        box('Left', style=style),
-        box('Center', style=style),
-        box('Right', style=style),
-        style='gap-8 bg-stripes-accent',
-    )
-)
-```
-
-
-![Screenshot](assets/screenshots/layout_gap.png)
-
-
 ## Vertical layout
 
 Use `col()` to lay out multiple items vertically, top to bottom.
