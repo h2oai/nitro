@@ -44,7 +44,7 @@ export const Expander = make(({ headerText, children }: { headerText: S, childre
               styles={buttonStyles}
             >{headerText}</ActionButton>
           </div>
-          <div className={css('pb-3 pl-8')} style={expanded ? open : close}>{children}</div>
+          <div className={css('ml-3 pb-3 pl-4 border-l')} style={expanded ? open : close}>{children}</div>
         </div>
       )
     }
