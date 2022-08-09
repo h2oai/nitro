@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { IRGB, Pivot, PivotItem } from '@fluentui/react';
+import { Pivot, PivotItem } from '@fluentui/react';
 import { XBox } from './box';
 import { ClientContext } from './client';
-import { B, isS, S } from './core';
+import { B } from './core';
 import { Expander } from './expander';
 import { Help } from './help';
 import { Box } from './protocol';
-
-// http://www.w3.org/TR/AERT#color-contrast
-const isBright = ({ r, g, b }: IRGB) => (r * 299 + g * 587 + b * 114) / 1000 > 125
-
-const translate = (s: S): S => isS(s) ? s.replace(/\$([\w-]+)/gi, 'var(--$1)') : s
 
 const labeledBoxes = ['text', 'number', 'menu', 'date', 'button', 'tag', 'rating']
 const hasLabel = (box: Box): B => {

@@ -291,9 +291,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
       k = items.length
     switch (k) {
       case 0: // box()
-        {
-          box.items = undefined
-        }
+        box.items = undefined
         break
       case 1:
         {

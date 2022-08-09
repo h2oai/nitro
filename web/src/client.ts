@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { Dict, isS, isURL, newIncr, on, S, Signal, signal, U, V } from './core';
-import { css } from './css';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditPosition, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';

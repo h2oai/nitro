@@ -44,3 +44,7 @@ export const spectrumHues = Object.keys(spectrum)
 export const grays = new Set(['slate', 'gray', 'zinc', 'neutral', 'stone'])
 export const isColor = (name: S) => spectrum[name] ? true : false
 
+// http://www.w3.org/TR/AERT#color-contrast
+export const isBright = (r: U, g: U, b: U) => (r * 299 + g * 587 + b * 114) / 1000 > 125
+
+

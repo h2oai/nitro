@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, Dict, I, N, Pair, S, Triple, U, V } from "./core"
+import { B, Dict, I, N, Pair, S, U, V } from "./core"
 
 export type Server = {
   connect(handler: ServerEventHandler): void

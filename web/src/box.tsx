@@ -22,7 +22,7 @@ import { ChoiceGroup } from './choice_group';
 import { ColorPalette } from './color_palette';
 import { ColorPicker } from './color_picker';
 import { ComboBox } from './combobox';
-import { isS, isURL, S } from './core';
+import { isURL, S } from './core';
 import { css } from './css';
 import { DatePicker } from './date_picker';
 import { Dropdown } from './dropdown';
