@@ -138,20 +138,6 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/picker_shorthand.png)
 
 
-## Shorthand with text
-
-`box('label', [a, b, c])` is shorthand for `box('label', options=[a, b, c])`.
-
-
-```py
-choice = view(box('Pick a color', ['green', 'yellow', 'orange', 'red']))
-view(f'You chose {choice}.')
-```
-
-
-![Screenshot](assets/screenshots/picker_shorthand_label.png)
-
-
 ## Mark as required
 
 Add `required` to `mode` to indicate that input is required.

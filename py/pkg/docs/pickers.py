@@ -105,13 +105,6 @@ def picker_shorthand(view: View):  # height 3
     view(f'You chose {choice}.')
 
 
-# ## Shorthand with text
-# `box('label', [a, b, c])` is shorthand for `box('label', options=[a, b, c])`.
-def picker_shorthand_label(view: View):  # height 3
-    choice = view(box('Pick a color', ['green', 'yellow', 'orange', 'red']))
-    view(f'You chose {choice}.')
-
-
 # ## Mark as required
 # Add `required` to `mode` to indicate that input is required.
 def picker_dropdown_required(view: View):  # height 2
