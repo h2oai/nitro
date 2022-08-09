@@ -270,6 +270,8 @@ const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
 export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   if (isS(box)) {
     box = { xid: xid(), index: 0, modes: new Set(['md']), text: box, options: [] }
+  } else if (Array.isArray(box)) {
+    box = { xid: xid(), index: 0, modes: new Set(), options: box }
   } else {
     const mode: any = (box as any).mode
     box.modes = isS(mode) ? new Set(words(mode)) : new Set()
@@ -290,25 +292,13 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
         box.items = undefined
         break
       case 1:
-        {
-          const [x] = items
-          if (isS(x)) { // box('foo')
-            box.text = x
-            box.items = undefined
-          } else if (Array.isArray(x)) { // box([a, b, c])
-            box.options = x
-            box.items = undefined
-          }
-        }
-        break
-      case 2:
-        {
-          const [x, y] = items
-          if (isS(x) && Array.isArray(y)) { // box('foo', [a, b, c])
-            box.text = x
-            box.options = y
-            box.items = undefined
-          }
+        const [x] = items
+        if (isS(x)) { // box('foo')
+          box.text = x
+          box.items = undefined
+        } else if (Array.isArray(x)) { // box([a, b, c])
+          box.options = x
+          box.items = undefined
         }
         break
     }

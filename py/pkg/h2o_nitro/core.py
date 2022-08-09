@@ -204,7 +204,7 @@ Options = Union[
     Set[OptionPair],
 ]
 
-Item = Union[str, 'Box']
+Item = Union[str, 'Box', Options]
 Items = Union[List[Item], Tuple[Item, ...]]
 Range = Union[
     Tuple[V, V],
