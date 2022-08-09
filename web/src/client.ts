@@ -164,6 +164,18 @@ const getLocale = () => {
   return ''
 }
 
+export const clicker = (path: S) => {
+  const isExternal = isURL(path)
+  return (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isExternal) {
+      window.open(path, '_blank')
+    } else {
+      window.location.hash = '!' + path
+    }
+    e.preventDefault()
+  }
+}
+
 export const newClient = (server: Server) => {
   const
     body: Box[] = [],

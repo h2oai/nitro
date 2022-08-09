@@ -19,6 +19,7 @@ import { Calendar } from './calendar';
 import { Checkbox } from './checkbox';
 import { Checklist } from './checklist';
 import { ChoiceGroup } from './choice_group';
+import { clicker } from './client';
 import { ColorPalette } from './color_palette';
 import { ColorPicker } from './color_picker';
 import { ComboBox } from './combobox';
@@ -30,7 +31,6 @@ import { Droplist } from './droplist';
 import { FileUpload } from './file_upload';
 import { PluginBox } from './plugin';
 import { ProgressBar } from './progress';
-import { Box } from './protocol';
 import { Rating } from './rating';
 import { Separator } from './separator';
 import { Slider } from './slider';
@@ -43,7 +43,7 @@ import { Textbox } from './textbox';
 import { TextBlock } from './text_block';
 import { TimePicker } from './time_picker';
 import { Toggle } from './toggle';
-import { BoxProps, make } from './ui';
+import { BoxProps } from './ui';
 import { WebView } from './webview';
 
 export const XBox = ({ context, box }: BoxProps) => { // recursive
@@ -115,27 +115,7 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     }
   }
 
-  return box.path
-    ? <Link box={box} path={box.path} />
-    : box.text
-      ? <div className={css(box.style)}>{box.text}</div>
-      : <div className={css(box.style)} />
+  const onClick = box.path ? clicker(box.path) : undefined
+  const className = box.path ? css('cursor-pointer', box.style) : css(box.style)
+  return <div className={className} onClick={onClick}>{box.text ?? ''}</div>
 }
-
-const Link = make(({ box, path }: { box: Box, path: S }) => {
-  const
-    { text, style } = box,
-    isExternal = isURL(path),
-    onClick: React.MouseEventHandler<HTMLDivElement> = e => {
-      if (isExternal) {
-        window.open(path, '_blank')
-      } else {
-        window.location.hash = '!' + path
-      }
-      e.preventDefault()
-    },
-    render = () => (
-      <div className={style ? css('cursor-pointer', style) : undefined} onClick={onClick}>{text ?? ''}</div>
-    )
-  return { render }
-})

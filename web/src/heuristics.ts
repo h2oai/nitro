@@ -259,10 +259,6 @@ const localizeHeader = (locale: Dict<S>, header: Header) => {
   if (text) header.text = translate(locale, text) ?? ''
 }
 
-const prefixStyle = (box: Box, prefix: S | undefined) => {
-  if (prefix) box.style = box.style ? prefix + ' ' + box.style : prefix
-}
-
 const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
   if (modes.size === 0) return true
   for (const m of knownModes) if (modes.has(m)) return false
@@ -319,15 +315,6 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   }
 
   if (box.items) {
-    if (modes.has('tab')) {
-      box.items.forEach(box => prefixStyle(box, 'flex flex-col gap-2 my-2'))
-    }
-    const prefix = modes.has('col')
-      ? 'flex flex-col gap-2'
-      : modes.has('row')
-        ? 'flex flex-row gap-2'
-        : undefined
-    prefixStyle(box, prefix)
     box.items = box.items.map(b => sanitizeBox(locale, b))
   } else {
     const { value, options } = box
