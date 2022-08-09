@@ -220,9 +220,9 @@ def build_funcs(groups: List[Group]) -> str:
 
             p(f"    row(")
             if e.prev:
-                p(f"        box('🡠 {e.prev.qualified_title}', path='docs.{doc_of(e.prev.name)}', style='grow'),")
+                p(f"        row(box(prev_arrow, mode='svg', style='w-8 h-8'), box(box('Previous', style='text-xs font-bold'), box('{e.prev.qualified_title}', style='text-sm font-medium')), path='docs.{doc_of(e.prev.name)}', style='grow'),")
             if e.next:
-                p(f"        box('{e.next.qualified_title} 🡢', path='docs.{doc_of(e.next.name)}', style='grow text-right'),")
+                p(f"        row(box(box('Next', style='text-xs font-bold'), box('{e.next.qualified_title}', style='text-sm font-medium'), style='text-right'), box(next_arrow, mode='svg', style='w-8 h-8'), path='docs.{doc_of(e.next.name)}', style='grow justify-end'),")
             p(f"        style='my-4 py-2',")
             p(f"    ),")
 

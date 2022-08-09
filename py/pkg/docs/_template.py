@@ -38,6 +38,17 @@ import simple_websocket
 from flask import Flask, request, send_from_directory
 from werkzeug.utils import secure_filename
 
+next_arrow = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
+  <path d="m24 40-2.1-2.15L34.25 25.5H8v-3h26.25L21.9 10.15 24 8l16 16Z"/>
+</svg>
+'''
+prev_arrow = '''
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
+  <path d="M24 40 8 24 24 8l2.1 2.1-12.4 12.4H40v3H13.7l12.4 12.4Z"/>
+</svg>
+'''
+
 # EXAMPLES
 
 topics = dict(
