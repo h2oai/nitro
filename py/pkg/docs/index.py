@@ -21,7 +21,6 @@ from h2o_nitro import View, box, row, col, option, lorem
 # #include layout.py
 # #include forms.py
 # #include edit.py
-# #include help.py
 # #include popup.py
 # #include textbox.py
 # #include spinbox.py
@@ -50,7 +49,9 @@ from h2o_nitro import View, box, row, col, option, lorem
 # #include banner.py
 # #include progress_bar.py
 # #include spinner.py
+# #include help.py
 # #include separator.py
+# #include components.py
 # #include cards.py
 # #include theming.py
 # #include advanced_layout.py
