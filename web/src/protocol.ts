@@ -135,6 +135,7 @@ export type BoxMode = 'box'
   | 'day'
   | 'error'
   | 'file'
+  | 'group'
   | 'image'
   | 'info'
   | 'md'
@@ -151,7 +152,6 @@ export type BoxMode = 'box'
   | 'spinner'
   | 'success'
   | 'svg'
-  | 'tab'
   | 'table'
   | 'tag'
   | 'text'
@@ -161,13 +161,17 @@ export type BoxMode = 'box'
   | 'web'
   | 'week'
 
+export type BoxModifier = 'editable' | 'multi' | 'required' | 'live' | 'selectable' | 'vertical' | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
+
+export type BoxT = BoxMode | BoxModifier
+
 export type Box = {
   xid: S
   index: I // (front-end only) don't record if -1
   ignore?: B // don't record if true
   text?: S
   name?: S
-  modes: Set<S>
+  modes: Set<BoxT>
   value?: V | Pair<V>
   options: Option[]
   headers?: Header[]
