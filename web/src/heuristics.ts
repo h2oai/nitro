@@ -15,14 +15,11 @@
 import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, S, words, xid } from './core';
 import { css } from './css';
 import { markdown } from './markdown';
-import { Box, BoxMode, Header, Option } from './protocol';
+import { Box, BoxMode, BoxT, Header, Option } from './protocol';
 
 const knownModes: BoxMode[] = [
-  'box',
-  'info',
-  'rating',
-  'text',
   'blocked',
+  'box',
   'button',
   'check',
   'col',
@@ -32,7 +29,9 @@ const knownModes: BoxMode[] = [
   'day',
   'error',
   'file',
+  'group',
   'image',
+  'info',
   'md',
   'menu',
   'month',
@@ -41,14 +40,15 @@ const knownModes: BoxMode[] = [
   'progress',
   'radio',
   'range',
+  'rating',
   'row',
   'separator',
   'spinner',
   'success',
   'svg',
-  'tab',
   'table',
   'tag',
+  'text',
   'time',
   'toggle',
   'warning',
@@ -59,24 +59,34 @@ const knownModes: BoxMode[] = [
 const interactiveModes: BoxMode[] = [
   'button',
   'check',
+  'color',
   'date',
+  'day',
+  'file',
   'md', // conditional: only if it has hyperlinks
   'menu',
+  'month',
   'number',
   'password',
   'radio',
   'range',
-  'text',
-  'time',
-  'toggle',
-  'color',
-  'day',
-  'file',
-  'month',
   'rating',
   'table',
   'tag',
+  'text',
+  'time',
+  'toggle',
   'week',
+]
+
+export const labeledModes: BoxMode[] = [
+  'button',
+  'date',
+  'menu',
+  'number',
+  'rating',
+  'tag',
+  'text',
 ]
 
 const invert = <T>(xs: T[], ys: T[]) => {
@@ -266,7 +276,6 @@ const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
   return true
 }
 
-
 export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   if (isS(box)) {
     box = { xid: xid(), index: 0, modes: new Set(['md']), text: box, options: [] }
@@ -274,12 +283,12 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     box = { xid: xid(), index: 0, modes: new Set(), options: box }
   } else {
     const mode: any = (box as any).mode
-    box.modes = isS(mode) ? new Set(words(mode)) : new Set()
+    box.modes = isS(mode) ? new Set(words(mode) as BoxT[]) : new Set()
   }
 
   const { modes } = box
 
-  if (modes.has('column')) modes.add('col') // QOL
+  if (modes.has('column' as BoxMode)) modes.add('col') // QOL
 
   const isContainer = modes.has('row') || modes.has('col') || modes.has('tab')
 
