@@ -30,7 +30,7 @@ def layout_basic(view: View):  # height 3
     )
 
 
-# ## Horizontal layout
+# ## Rows
 # Use `row()` to lay out multiple items horizontally, left to right.
 def layout_row(view: View):  # height 2
     style = 'p-2 rounded bg-accent-500 text-white'
@@ -59,7 +59,7 @@ def layout_row_alt(view: View):
     )
 
 
-# ## Adjust items to fit
+# ## Fit
 # Set the `grow` style to expand items to fit.
 def layout_grow(view: View):  # height 2
     style = 'p-2 rounded bg-accent-500 text-white grow'
@@ -73,7 +73,7 @@ def layout_grow(view: View):  # height 2
     )
 
 
-# ## Vertical layout
+# ## Columns
 # Use `col()` to lay out multiple items vertically, top to bottom.
 #
 # The example shows one row split into three columns containing three rows each.
@@ -100,7 +100,7 @@ def layout_col_alt2(view: View):
     )
 
 
-# ## Combine horizontal and vertical layouts
+# ## Combine rows and columns
 # Combine `row()` and `col()` to create simple grid-like layouts
 #
 # The example shows one row split into three columns containing three rows each.
@@ -131,7 +131,7 @@ def layout_row_col(view: View):  # height 3
     )
 
 
-# ## Grid layout
+# ## Grids
 # A simple way to lay out items in a grid is use the `grid` style.
 #
 # The example below lays out 12 boxes in a 4-column grid.
@@ -145,32 +145,14 @@ def layout_grid(view: View):  # height 3
     view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-accent'))
 
 
-# ## Tabbed layout
-# Set `mode='tab'` on a box to lay out its items in tabs.
-#
-# The `text` of each child item is used as the tab's label.
+# ## Tabs
+# Put groups in a row to display a tabbed layout.
 def layout_tabs(view: View):  # height 4
     view(
-        box(
-            box(
-                box('First name', value='Boaty'),
-                box('Last name', value='McBoatface'),
-                box('Age', value=42),
-                title='Profile',
-            ),
-            box(
-                box('Billing address line 1', value=''),
-                box('Billing address line 2', value=''),
-                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                title='Billing Address',
-            ),
-            box(
-                box('Shipping address line 1', value=''),
-                box('Shipping address line 2', value=''),
-                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                title='Shipping Address',
-            ),
-            mode='tab',
+        row(
+            box(lorem(3), title='Donuts'),
+            box(lorem(3), title='Coffee'),
+            box(lorem(3), title='Ice Cream'),
         )
     )
 
