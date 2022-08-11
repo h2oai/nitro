@@ -179,5 +179,15 @@ def layout_tabs_icons(view: View):  # height 4
             box(lorem(3), title='Shipping Address', icon='DeliveryTruck'),
         ),
     )
+
+
+# ## Vertical Tabs with icons
+# Set `icon=` on each group to show an icon on its tab.
+def layout_tabs_vertical_icons(view: View):  # height 4
+    view(
+        col(
+            box(lorem(3), title='Profile', icon='Contact'),
+            box(lorem(3), title='Billing Address', icon='PaymentCard'),
+            box(lorem(3), title='Shipping Address', icon='DeliveryTruck'),
         )
     )
