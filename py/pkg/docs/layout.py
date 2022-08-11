@@ -157,33 +157,14 @@ def layout_tabs(view: View):  # height 4
     )
 
 
-# ## Accordion layout
-# Set `mode='vertical tab'` to lay out tabs one below the other, commonly known as an accordion.
+# ## Vertical Tabs
+# Put groups in a column to display a vertical tabbed layout.
 def layout_tabs_vertical(view: View):  # height 3
     view(
-        box(
-            box(
-                box('First name', value='Boaty'),
-                box('Last name', value='McBoatface'),
-                box('Age', value=42),
-                title='Profile',
-                icon='Contact',
-            ),
-            box(
-                box('Billing address line 1', value=''),
-                box('Billing address line 2', value=''),
-                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                title='Billing Address',
-                icon='PaymentCard',
-            ),
-            box(
-                box('Shipping address line 1', value=''),
-                box('Shipping address line 2', value=''),
-                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                title='Shipping Address',
-                icon='DeliveryTruck',
-            ),
-            mode='vertical tab',
+        col(
+            box(lorem(3), title='Donuts'),
+            box(lorem(3), title='Coffee'),
+            box(lorem(3), title='Ice Cream'),
         )
     )
 
