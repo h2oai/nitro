@@ -169,32 +169,15 @@ def layout_tabs_vertical(view: View):  # height 3
     )
 
 
-# ## Show icons on tabs
-# Set `icon=` on each tab to show an icon on the tab.
+# ## Tabs with icons
+# Set `icon=` on each group to show an icon on its tab.
 def layout_tabs_icons(view: View):  # height 4
     view(
-        box(
-            box(
-                box('First name', value='Boaty'),
-                box('Last name', value='McBoatface'),
-                box('Age', value=42),
-                title='Profile',
-                icon='Contact',
-            ),
-            box(
-                box('Billing address line 1', value=''),
-                box('Billing address line 2', value=''),
-                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                title='Billing Address',
-                icon='PaymentCard',
-            ),
-            box(
-                box('Shipping address line 1', value=''),
-                box('Shipping address line 2', value=''),
-                row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-                title='Shipping Address',
-                icon='DeliveryTruck',
-            ),
-            mode='tab',
+        row(
+            box(lorem(3), title='Profile', icon='Contact'),
+            box(lorem(3), title='Billing Address', icon='PaymentCard'),
+            box(lorem(3), title='Shipping Address', icon='DeliveryTruck'),
+        ),
+    )
         )
     )
