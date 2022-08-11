@@ -31,7 +31,7 @@
 import json
 import os
 from pathlib import Path
-from h2o_nitro import View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \
+from h2o_nitro import View, box, option, header, row, col, ContextSwitchError, lorem, Theme, part, \
     __version__ as version
 from h2o_nitro_web import web_directory
 import simple_websocket

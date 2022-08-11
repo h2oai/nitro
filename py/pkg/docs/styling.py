@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from h2o_nitro import View, box, row, col, option, lorem
+from h2o_nitro import View, box, row, col, option, lorem, part
 
 
 # # Styling
@@ -20,7 +20,37 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 # ## Basic
 # Set `style=` to control how a box looks. Nitro supports [Tailwind](https://tailwindcss.com/) styles.
+# ## Parts
+# A part is a custom box with a preset style. Use `part()` to define a part.
 #
+# Parts can be used wherever `box(text, style='...')` feels repetitive.
+def styling_part(view: View):  # height 3
+    alert = part('p-4 border-l-4 text-sm font-medium text-sky-700 bg-sky-50 border-sky-700')
+
+    view(
+        alert('Begin at the beginning.'),
+        alert('And go on till you come to the end.'),
+        alert('Then stop.'),
+    )
+
+
+# ## Derived parts
+# `part()` can extend existing parts.
+#
+# The example below creates different kinds of alerts from a base alert.
+def styling_derived(view: View):  # height 3
+    alert = part('p-4 border-l-4 text-sm font-medium')
+    info_alert = part(alert, 'text-sky-700 bg-sky-50 border-sky-700')
+    warning_alert = part(alert, 'text-amber-700 bg-amber-50 border-amber-700')
+    critical_alert = part(alert, 'text-red-700 bg-red-50 border-red-700')
+
+    view(
+        info_alert('Begin at the beginning.'),
+        warning_alert('And go on till you come to the end.'),
+        critical_alert('Then stop.'),
+    )
+
+
 # The following example starts with a plain box and incrementally applies styles to create an alert box.
 def styling_alert(view: View):  # height 2
     text = "I'm sorry, Dave. I can't do that."
