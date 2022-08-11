@@ -20,13 +20,15 @@ import { BoxProps } from './ui';
 export const Spinner = ({ box }: BoxProps) => {
   const
     { text, modes, style } = box,
-    labelPosition = modes.has('text-top')
-      ? 'top'
-      : modes.has('text-right')
-        ? 'right'
-        : modes.has('text-left')
-          ? 'left'
-          : undefined
+    labelPosition = modes.has('top')
+      ? 'bottom'
+      : modes.has('right')
+        ? 'left'
+        : modes.has('left')
+          ? 'right'
+          : modes.has('bottom')
+            ? 'top'
+            : undefined
 
   return (
     <div className={css(style)}>
