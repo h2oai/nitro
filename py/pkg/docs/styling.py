@@ -20,6 +20,22 @@ from h2o_nitro import View, box, row, col, option, lorem, part
 
 # ## Basic
 # Set `style=` to control how a box looks. Nitro supports [Tailwind](https://tailwindcss.com/) styles.
+def styling_basic(view: View):  # height 2
+    view(
+        box(
+            'Hello world!',
+            # p-4: Padding, 4 units wide.
+            # border-l-4: Border on the left, 4 pixels thick.
+            # text-sm: Small text
+            # font-medium: Medium font
+            # text-sky-700: Dark blue text
+            # bg-sky-50: Light blue background
+            # border-sky-700: Dark blue border
+            style='p-4 border-l-4 text-sm font-medium text-sky-700 bg-sky-50 border-sky-700',
+        ),
+    )
+
+
 # ## Parts
 # A part is a custom box with a preset style. Use `part()` to define a part.
 #
@@ -51,6 +67,7 @@ def styling_derived(view: View):  # height 3
     )
 
 
+# ## Alert example
 # The following example starts with a plain box and incrementally applies styles to create an alert box.
 def styling_alert(view: View):  # height 2
     text = "I'm sorry, Dave. I can't do that."
