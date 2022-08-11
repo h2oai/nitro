@@ -45,7 +45,8 @@ const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children
 const NavSet = make(({ context, box, items }: Container & { items: Box[] }) => {
   const
     { style, options } = box,
-    selectedIndexB = signal(0),
+    selectedIndex = items.findIndex(box => box.modes.has('open')),
+    selectedIndexB = signal(selectedIndex < 0 ? 0 : selectedIndex),
     selectedKeyB = by(selectedIndexB, i => String(options[i].value)),
     visibleBs = options.map((_, i) => signal(i === selectedIndexB() ? true : false)),
     tabs = zip(items, visibleBs, (box, visibleB) => (
@@ -103,7 +104,7 @@ export const Zone = ({ context, box }: Container) => {
     const children = items.map(box => <Zone key={box.xid} context={context} box={box} />)
 
     if (modes.has('group')) return (
-      <Expander headerText={box.title ?? 'Group'}>{children}</Expander>
+      <Expander box={box}>{children}</Expander>
     )
 
     const
