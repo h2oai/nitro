@@ -32,16 +32,6 @@ const hasLabel = (box: Box): B => {
 
 type Container = { context: ClientContext, box: Box }
 
-const Accordion = ({ context, box, items }: Container & { items: Box[] }) => {
-  const { style } = box
-  const tabs = items.map((box, i) => (
-    <Expander key={box.xid} headerText={box.title ?? `Tab ${i + 1}`}>
-      <Zone context={context} box={box} />
-    </Expander>
-  ))
-  return <div className={css(style)} data-name={box.name ?? undefined}>{tabs}</div>
-}
-
 const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children: React.ReactNode }) => {
   const
     render = () => {
