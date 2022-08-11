@@ -80,14 +80,15 @@ const TabSet = ({ context, box, items }: Container & { items: Box[] }) => {
   const
     { style, options } = box,
     tabs = zip(options, items, (opt, box, i) => (
-      <PivotItem key={box.xid} headerText={opt.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined} style={{ padding: '8px 0' }}>
+      <PivotItem key={box.xid} headerText={opt.text ?? `Tab ${i + 1}`} itemKey={box.xid} itemIcon={box.icon ?? undefined} style={{ padding: '8px 0' }}>
         <Zone context={context} box={box} />
       </PivotItem>
-    ))
+    )),
+    selectedKey = (items.find(box => box.modes.has('open')) ?? items[0]).xid
 
   return (
     <div className={css(style)} data-name={box.name ?? undefined} >
-      <Pivot>{tabs}</Pivot>
+      <Pivot defaultSelectedKey={selectedKey}>{tabs}</Pivot>
     </div>
   )
 }
