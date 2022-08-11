@@ -105,3 +105,74 @@ Sign up: {action}
 
 
 ![Screenshot](assets/screenshots/form_improved.png)
+
+
+## Tabs
+
+Groups together related boxes inside `row()` to display a tabbed layout.
+
+
+```py
+view(
+    row(
+        box(
+            box('First name', value='Boaty'),
+            box('Last name', value='McBoatface'),
+            box('Age', value=42),
+            title='Profile',
+        ),
+        box(
+            box('Billing address line 1', value=''),
+            box('Billing address line 2', value=''),
+            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+            title='Billing Address',
+        ),
+        box(
+            box('Shipping address line 1', value=''),
+            box('Shipping address line 2', value=''),
+            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+            title='Shipping Address',
+        ),
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/form_tabs.png)
+
+
+## Vertical tabs
+
+Groups together related boxes inside `col()` to display a vertical tabbed layout.
+
+
+```py
+view(
+    col(
+        box(
+            box('First name', value='Boaty'),
+            box('Last name', value='McBoatface'),
+            box('Age', value=42),
+            title='Profile',
+            icon='Contact',
+        ),
+        box(
+            box('Billing address line 1', value=''),
+            box('Billing address line 2', value=''),
+            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+            title='Billing Address',
+            icon='PaymentCard',
+        ),
+        box(
+            box('Shipping address line 1', value=''),
+            box('Shipping address line 2', value=''),
+            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
+            title='Shipping Address',
+            icon='DeliveryTruck',
+        ),
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/form_tabs_vertical.png)

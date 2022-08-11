@@ -21,7 +21,7 @@ view(
 ![Screenshot](assets/screenshots/layout_basic.png)
 
 
-## Horizontal layout
+## Rows
 
 Use `row()` to lay out multiple items horizontally, left to right.
 
@@ -60,7 +60,7 @@ view(
 ![Screenshot](assets/screenshots/layout_row.png)
 
 
-## Adjust items to fit
+## Fit
 
 Set the `grow` style to expand items to fit.
 
@@ -81,7 +81,7 @@ view(
 ![Screenshot](assets/screenshots/layout_grow.png)
 
 
-## Vertical layout
+## Columns
 
 Use `col()` to lay out multiple items vertically, top to bottom.
 
@@ -118,7 +118,7 @@ box(
 ![Screenshot](assets/screenshots/layout_col.png)
 
 
-## Combine horizontal and vertical layouts
+## Combine rows and columns
 
 Combine `row()` and `col()` to create simple grid-like layouts
 
@@ -156,7 +156,7 @@ view(
 ![Screenshot](assets/screenshots/layout_row_col.png)
 
 
-## Grid layout
+## Grids
 
 A simple way to lay out items in a grid is use the `grid` style.
 
@@ -177,35 +177,35 @@ view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-accent'))
 ![Screenshot](assets/screenshots/layout_grid.png)
 
 
-## Tabbed layout
+## Groups
 
-Set `mode='tab'` on a box to lay out its items in tabs.
-
-The `text` of each child item is used as the tab's label.
+Set `mode='group'` or set `title=` to create an expandable group.
 
 
 ```py
 view(
-    box(
-        box(
-            box('First name', value='Boaty'),
-            box('Last name', value='McBoatface'),
-            box('Age', value=42),
-            title='Profile',
-        ),
-        box(
-            box('Billing address line 1', value=''),
-            box('Billing address line 2', value=''),
-            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-            title='Billing Address',
-        ),
-        box(
-            box('Shipping address line 1', value=''),
-            box('Shipping address line 2', value=''),
-            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-            title='Shipping Address',
-        ),
-        mode='tab',
+    '## Menu',
+    box(lorem(3), title='Donuts'),
+    box(lorem(3), title='Coffee'),
+    box(lorem(3), title='Ice Cream'),
+)
+```
+
+
+![Screenshot](assets/screenshots/layout_group.png)
+
+
+## Tabs
+
+Put groups in a row to display a tabbed layout.
+
+
+```py
+view(
+    row(
+        box(lorem(3), title='Donuts'),
+        box(lorem(3), title='Coffee'),
+        box(lorem(3), title='Ice Cream'),
     )
 )
 ```
@@ -214,36 +214,17 @@ view(
 ![Screenshot](assets/screenshots/layout_tabs.png)
 
 
-## Accordion layout
+## Vertical Tabs
 
-Set `mode='vertical tab'` to lay out tabs one below the other, commonly known as an accordion.
+Put groups in a column to display a vertical tabbed layout.
 
 
 ```py
 view(
-    box(
-        box(
-            box('First name', value='Boaty'),
-            box('Last name', value='McBoatface'),
-            box('Age', value=42),
-            title='Profile',
-            icon='Contact',
-        ),
-        box(
-            box('Billing address line 1', value=''),
-            box('Billing address line 2', value=''),
-            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-            title='Billing Address',
-            icon='PaymentCard',
-        ),
-        box(
-            box('Shipping address line 1', value=''),
-            box('Shipping address line 2', value=''),
-            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-            title='Shipping Address',
-            icon='DeliveryTruck',
-        ),
-        mode='vertical tab',
+    col(
+        box(lorem(3), title='Donuts'),
+        box(lorem(3), title='Coffee'),
+        box(lorem(3), title='Ice Cream'),
     )
 )
 ```
@@ -252,39 +233,39 @@ view(
 ![Screenshot](assets/screenshots/layout_tabs_vertical.png)
 
 
-## Show icons on tabs
+## Tabs with icons
 
-Set `icon=` on each tab to show an icon on the tab.
+Set `icon=` on each group to show an icon on its tab.
 
 
 ```py
 view(
-    box(
-        box(
-            box('First name', value='Boaty'),
-            box('Last name', value='McBoatface'),
-            box('Age', value=42),
-            title='Profile',
-            icon='Contact',
-        ),
-        box(
-            box('Billing address line 1', value=''),
-            box('Billing address line 2', value=''),
-            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-            title='Billing Address',
-            icon='PaymentCard',
-        ),
-        box(
-            box('Shipping address line 1', value=''),
-            box('Shipping address line 2', value=''),
-            row(box('City', value=''), box('State', value=''), box('Zip', value='')),
-            title='Shipping Address',
-            icon='DeliveryTruck',
-        ),
-        mode='tab',
-    )
+    row(
+        box(lorem(3), title='Profile', icon='Contact'),
+        box(lorem(3), title='Billing Address', icon='PaymentCard'),
+        box(lorem(3), title='Shipping Address', icon='DeliveryTruck'),
+    ),
 )
 ```
 
 
 ![Screenshot](assets/screenshots/layout_tabs_icons.png)
+
+
+## Vertical Tabs with icons
+
+Set `icon=` on each group to show an icon on its tab.
+
+
+```py
+view(
+    col(
+        box(lorem(3), title='Profile', icon='Contact'),
+        box(lorem(3), title='Billing Address', icon='PaymentCard'),
+        box(lorem(3), title='Shipping Address', icon='DeliveryTruck'),
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/layout_tabs_vertical_icons.png)

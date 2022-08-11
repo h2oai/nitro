@@ -17,44 +17,41 @@ view(box('Donuts', mode='separator'))
 
 ## Set text alignment
 
-A separator's text is centered by default.
-
-- Set `text-start` to show text at the start of the separator.
-- Set `text-end` to show text at the end of the separator.
+A separator's text is centered by default. Add `left`, `right`, `top`, `middle`, or `bottom` to `mode` to change the
+orientation and text alignment.
 
 
 ```py
+content = box(lorem(1), style='p-2 bg-stripes-accent')
 view(
-    box('Left-aligned', mode='separator text-start'),
-    box(lorem(3)),
-    box('Center-aligned', mode='separator'),
-    box(lorem(3)),
-    box('Right-aligned', mode='separator text-end'),
-    box(lorem(3)),
+    row(
+        col(
+            content,
+            box('Left', mode='left separator'),
+            content,
+        ),
+        col(
+            content,
+            box('Center', mode='separator'),
+            content,
+        ),
+        col(
+            content,
+            box('Right', mode='right separator'),
+            content,
+        ),
+    ),
+    row(
+        content,
+        box('Top', mode='top separator'),
+        content,
+        box('Middle', mode='middle separator'),
+        content,
+        box('Bottom', mode='bottom separator'),
+        content,
+    ),
 )
 ```
 
 
 ![Screenshot](assets/screenshots/separator_align.png)
-
-
-## Vertical
-
-Set `vertical` to show a vertical separator
-
-
-```py
-view(
-    row(
-        box('Top-aligned', mode='vertical separator text-start'),
-        box(lorem(3)),
-        box('Center-aligned', mode='vertical separator'),
-        box(lorem(3)),
-        box('Bottom-aligned', mode='vertical separator text-end'),
-        box(lorem(3)),
-    )
-)
-```
-
-
-![Screenshot](assets/screenshots/separator_vertical.png)

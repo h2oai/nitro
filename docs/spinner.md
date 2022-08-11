@@ -18,8 +18,8 @@ view(box('Reticulating splines...', mode='spinner'))
 
 ## Set alignment
 
-Add `text-left`, `text-right`, `text-top` or `text-bottom` to the `mode` to align the text
-to the `left`, `right`, `top`, or `bottom` of the spinner.
+Add `left`, `right`, `top` or `bottom` to the `mode` to set spinner position relative to the label.
+The default is `top`.
 
 
 ```py
@@ -28,13 +28,13 @@ view(
         'Default:',
         box('Reticulating splines...', mode='spinner'),
         'Left:',
-        box('Reticulating splines...', mode='spinner text-left'),
+        box('Reticulating splines...', mode='left spinner'),
         'Top:',
-        box('Reticulating splines...', mode='spinner text-top'),
+        box('Reticulating splines...', mode='top spinner'),
         'Right:',
-        box('Reticulating splines...', mode='spinner text-right'),
+        box('Reticulating splines...', mode='right spinner'),
         'Bottom:',
-        box('Reticulating splines...', mode='spinner text-bottom'),
+        box('Reticulating splines...', mode='bottom spinner'),
     )
 )
 ```
