@@ -19,10 +19,10 @@ import { BoxProps } from './ui';
 export const Separator = ({ box }: BoxProps) => {
   const
     { text, modes, style } = box,
-    vertical = modes.has('vertical'),
-    align = modes.has('text-start')
+    vertical = modes.has('top') || modes.has('middle') || modes.has('bottom'),
+    align = (modes.has('left') || modes.has('top'))
       ? 'start'
-      : modes.has('text-end')
+      : (modes.has('right') || modes.has('bottom'))
         ? 'end'
         : undefined
 
