@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from h2o_nitro import View, box, row, col, option, lorem
+from h2o_nitro import View, box, row, col, part, option, lorem
 
 
 # # Layout
@@ -21,11 +21,11 @@ from h2o_nitro import View, box, row, col, option, lorem
 # ## Basic
 # By default, items passed to `view()` are laid out one below the other.
 def layout_basic(view: View):  # height 3
-    style = 'p-2 rounded bg-accent-500 text-white'
+    block = part('p-2 rounded bg-accent-500 text-white')
     view(
-        box('Top', style=style),
-        box('Middle', style=style),
-        box('Bottom', style=style),
+        block('Top'),
+        block('Middle'),
+        block('Bottom'),
         style='bg-stripes-accent',
     )
 
@@ -33,12 +33,12 @@ def layout_basic(view: View):  # height 3
 # ## Rows
 # Use `row()` to lay out multiple items horizontally, left to right.
 def layout_row(view: View):  # height 2
-    style = 'p-2 rounded bg-accent-500 text-white'
+    block = part('p-2 rounded bg-accent-500 text-white')
     view(
         row(
-            box('Left', style=style),
-            box('Center', style=style),
-            box('Right', style=style),
+            block('Left'),
+            block('Center'),
+            block('Right'),
             style='bg-stripes-accent',
         )
     )
@@ -47,12 +47,12 @@ def layout_row(view: View):  # height 2
 # `row(x, y, z)` is in fact shorthand for `box(x, y, z, mode='row', style='flex flex-row gap-2')`.
 # The following code produces the same results.
 def layout_row_alt(view: View):
-    style = 'p-2 rounded bg-accent-500 text-white'
+    block = part('p-2 rounded bg-accent-500 text-white')
     view(
         box(
-            box('Left', style=style),
-            box('Center', style=style),
-            box('Right', style=style),
+            block('Left'),
+            block('Center'),
+            block('Right'),
             mode='row',
             style='flex flex-row gap-2 bg-stripes-accent',
         ),
@@ -62,12 +62,12 @@ def layout_row_alt(view: View):
 # ## Fit
 # Set the `grow` style to expand items to fit.
 def layout_grow(view: View):  # height 2
-    style = 'p-2 rounded bg-accent-500 text-white grow'
+    block = part('p-2 rounded bg-accent-500 text-white grow')
     view(
         row(
-            box('Left', style=style),
-            box('Center', style=style),
-            box('Right', style=style),
+            block('Left'),
+            block('Center'),
+            block('Right'),
             style='bg-stripes-accent',
         )
     )
@@ -78,12 +78,12 @@ def layout_grow(view: View):  # height 2
 #
 # The example shows one row split into three columns containing three rows each.
 def layout_col(view: View):  # height 3
-    style = 'p-2 rounded bg-accent-500 text-white'
+    block = part('p-2 rounded bg-accent-500 text-white')
     view(
         col(
-            box('North', style=style),
-            box('Center', style=style),
-            box('South', style=style),
+            block('North'),
+            block('Center'),
+            block('South'),
             style='bg-stripes-accent',
         ),
     )
@@ -92,9 +92,9 @@ def layout_col(view: View):  # height 3
 # `col(x, y, z)` is shorthand for `box(x, y, z, mode='col', style='flex flex-col gap-2')`.
 def layout_col_alt2(view: View):
     box(
-        box(value='North'),
-        box(value='Center'),
-        box(value='South'),
+        box('North'),
+        box('Center'),
+        box('South'),
         mode='col',
         style='flex flex-col gap-2',
     )
@@ -105,25 +105,19 @@ def layout_col_alt2(view: View):
 #
 # The example shows one row split into three columns containing three rows each.
 def layout_row_col(view: View):  # height 3
-    style = 'p-2 rounded bg-accent-500 text-white'
+    block = part('p-2 rounded bg-accent-500 text-white')
     view(
         row(
             col(
-                box('North-west', style=style),
-                box('West', style=style),
-                box('South-west', style=style),
+                block('North-west'), block('West'), block('South-west'),
                 style='grow'
             ),
             col(
-                box('North', style=style),
-                box('Center', style=style),
-                box('South', style=style),
+                block('North'), block('Center'), block('South'),
                 style='grow'
             ),
             col(
-                box('North-east', style=style),
-                box('East', style=style),
-                box('South-east', style=style),
+                block('North-east'), block('East'), block('South-east'),
                 style='grow'
             ),
             style='bg-stripes-accent'

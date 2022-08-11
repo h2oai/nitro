@@ -8,11 +8,11 @@ By default, items passed to `view()` are laid out one below the other.
 
 
 ```py
-style = 'p-2 rounded bg-accent-500 text-white'
+block = part('p-2 rounded bg-accent-500 text-white')
 view(
-    box('Top', style=style),
-    box('Middle', style=style),
-    box('Bottom', style=style),
+    block('Top'),
+    block('Middle'),
+    block('Bottom'),
     style='bg-stripes-accent',
 )
 ```
@@ -27,12 +27,12 @@ Use `row()` to lay out multiple items horizontally, left to right.
 
 
 ```py
-style = 'p-2 rounded bg-accent-500 text-white'
+block = part('p-2 rounded bg-accent-500 text-white')
 view(
     row(
-        box('Left', style=style),
-        box('Center', style=style),
-        box('Right', style=style),
+        block('Left'),
+        block('Center'),
+        block('Right'),
         style='bg-stripes-accent',
     )
 )
@@ -44,12 +44,12 @@ The following code produces the same results.
 
 
 ```py
-style = 'p-2 rounded bg-accent-500 text-white'
+block = part('p-2 rounded bg-accent-500 text-white')
 view(
     box(
-        box('Left', style=style),
-        box('Center', style=style),
-        box('Right', style=style),
+        block('Left'),
+        block('Center'),
+        block('Right'),
         mode='row',
         style='flex flex-row gap-2 bg-stripes-accent',
     ),
@@ -66,12 +66,12 @@ Set the `grow` style to expand items to fit.
 
 
 ```py
-style = 'p-2 rounded bg-accent-500 text-white grow'
+block = part('p-2 rounded bg-accent-500 text-white grow')
 view(
     row(
-        box('Left', style=style),
-        box('Center', style=style),
-        box('Right', style=style),
+        block('Left'),
+        block('Center'),
+        block('Right'),
         style='bg-stripes-accent',
     )
 )
@@ -89,12 +89,12 @@ The example shows one row split into three columns containing three rows each.
 
 
 ```py
-style = 'p-2 rounded bg-accent-500 text-white'
+block = part('p-2 rounded bg-accent-500 text-white')
 view(
     col(
-        box('North', style=style),
-        box('Center', style=style),
-        box('South', style=style),
+        block('North'),
+        block('Center'),
+        block('South'),
         style='bg-stripes-accent',
     ),
 )
@@ -106,9 +106,9 @@ view(
 
 ```py
 box(
-    box(value='North'),
-    box(value='Center'),
-    box(value='South'),
+    box('North'),
+    box('Center'),
+    box('South'),
     mode='col',
     style='flex flex-col gap-2',
 )
@@ -126,25 +126,19 @@ The example shows one row split into three columns containing three rows each.
 
 
 ```py
-style = 'p-2 rounded bg-accent-500 text-white'
+block = part('p-2 rounded bg-accent-500 text-white')
 view(
     row(
         col(
-            box('North-west', style=style),
-            box('West', style=style),
-            box('South-west', style=style),
+            block('North-west'), block('West'), block('South-west'),
             style='grow'
         ),
         col(
-            box('North', style=style),
-            box('Center', style=style),
-            box('South', style=style),
+            block('North'), block('Center'), block('South'),
             style='grow'
         ),
         col(
-            box('North-east', style=style),
-            box('East', style=style),
-            box('South-east', style=style),
+            block('North-east'), block('East'), block('South-east'),
             style='grow'
         ),
         style='bg-stripes-accent'
