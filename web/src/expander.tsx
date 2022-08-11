@@ -29,7 +29,7 @@ const
   }
 
 // TODO  mode=`expander`, mode=`open expander`
-export const Expander = make(({ headerText, children }: { headerText: S, children: JSX.Element }) => {
+export const Expander = make(({ headerText, children }: { headerText: S, children: React.ReactNode }) => {
   const
     expandedB = signal(false),
     toggle = () => expandedB(!expandedB()),

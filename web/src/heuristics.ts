@@ -350,6 +350,12 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     box.index = ignore || box.ignore ? -1 : 0
   }
 
+  // make tabs if all items of a row or col are children
+  if (isRowOrCol && box.items && !box.options && box.items.every(b => b.modes.has('group'))) {
+    box.items.forEach(b => b.modes.delete('group'))
+    box.options = box.items.map(b => ({ value: b.xid, text: b.title }))
+  }
+
   if (box.style) box.style = css(box.style)
 
   return box

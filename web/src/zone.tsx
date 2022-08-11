@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Pivot, PivotItem } from '@fluentui/react';
+import { INavLink, INavLinkGroup, Nav, Pivot, PivotItem } from '@fluentui/react';
+import React from 'react';
 import { XBox } from './box';
-import { ClientContext, clicker } from './client';
-import { B } from './core';
+import { clicker, ClientContext } from './client';
+import { B, by, on, signal, Signal, zip } from './core';
 import { css } from './css';
 import { Expander } from './expander';
 import { Help } from './help';
+import { labeledModes } from './heuristics';
 import { Box } from './protocol';
+import { make } from './ui';
 
-const labeledBoxes = ['text', 'number', 'menu', 'date', 'button', 'tag', 'rating']
 const hasLabel = (box: Box): B => {
   const { modes } = box
-  for (const t of labeledBoxes) if (modes.has(t) && box.text) return true
+  for (const t of labeledModes) if (modes.has(t) && box.text) return true
   return false
 }
 
@@ -34,19 +36,64 @@ const Accordion = ({ context, box, items }: Container & { items: Box[] }) => {
   const { style } = box
   const tabs = items.map((box, i) => (
     <Expander key={box.xid} headerText={box.title ?? `Tab ${i + 1}`}>
-      <Zone key={box.xid} context={context} box={box} />
+      <Zone context={context} box={box} />
     </Expander>
   ))
   return <div className={css(style)} data-name={box.name ?? undefined}>{tabs}</div>
 }
 
-const Tabset = ({ context, box, items }: Container & { items: Box[] }) => {
-  const { style } = box
-  const tabs = items.map((box, i) => (
-    <PivotItem key={box.xid} headerText={box.title ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined} style={{ padding: '8px 0' }}>
-      <Zone key={box.xid} context={context} box={box} />
-    </PivotItem>
-  ))
+const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children: React.ReactNode }) => {
+  const
+    render = () => {
+      const style: React.CSSProperties = { display: visibleB() ? 'block' : 'none' }
+      return <div style={style}>{children}</div>
+    }
+  return { render, visibleB }
+})
+
+
+const NavSet = make(({ context, box, items }: Container & { items: Box[] }) => {
+  const
+    { style, options } = box,
+    selectedIndexB = signal(0),
+    selectedKeyB = by(selectedIndexB, i => String(options[i].value)),
+    visibleBs = options.map((_, i) => signal(i === selectedIndexB() ? true : false)),
+    tabs = zip(items, visibleBs, (box, visibleB) => (
+      <NavSetItem key={box.xid} visibleB={visibleB}><Zone key={box.xid} context={context} box={box} /></NavSetItem>
+    )),
+    links: INavLink[] = zip(items, options, (box, o) => ({
+      key: String(o.value),
+      name: o.text ?? '',
+      url: '',
+      icon: box.icon,
+    })),
+    groups: INavLinkGroup[] = [{ links }],
+    onLinkClick = (ev?: React.MouseEvent<HTMLElement>, item?: INavLink) => {
+      if (item) selectedIndexB(links.indexOf(item))
+    },
+    render = () => (
+      <div className={css('flex gap-4', style)}>
+        <div className={css('border-r')}>
+          <Nav groups={groups} onLinkClick={onLinkClick} selectedKey={selectedKeyB()} />
+        </div>
+        <div className={css('grow')}>{tabs}</div>
+      </div>
+    )
+
+  on(selectedIndexB, k => visibleBs.forEach((v, i) => v(i === k ? true : false)))
+
+  return { render, selectedKeyB }
+})
+
+const TabSet = ({ context, box, items }: Container & { items: Box[] }) => {
+  const
+    { style, options } = box,
+    tabs = zip(options, items, (opt, box, i) => (
+      <PivotItem key={box.xid} headerText={opt.text ?? `Tab ${i + 1}`} itemIcon={box.icon ?? undefined} style={{ padding: '8px 0' }}>
+        <Zone context={context} box={box} />
+      </PivotItem>
+    ))
+
   return (
     <div className={css(style)} data-name={box.name ?? undefined} >
       <Pivot>{tabs}</Pivot>
@@ -55,19 +102,23 @@ const Tabset = ({ context, box, items }: Container & { items: Box[] }) => {
 }
 
 export const Zone = ({ context, box }: Container) => {
-  const { modes, items, image, path, style } = box
+  const { modes, items, options, image, path, style } = box
   if (items) {
-    if (modes.has('tab')) {
-      return modes.has('vertical')
-        ? <Accordion context={context} box={box} items={items} />
-        : <Tabset context={context} box={box} items={items} />
+    if (options?.length) {
+      return modes.has('col')
+        ? <NavSet context={context} box={box} items={items} />
+        : <TabSet context={context} box={box} items={items} />
     }
+
+    const children = items.map(box => <Zone key={box.xid} context={context} box={box} />)
+
+    if (modes.has('group')) return (
+      <Expander headerText={box.title ?? 'Group'}>{children}</Expander>
+    )
+
     const
-      children = items.map(box => (
-        <Zone key={box.xid} context={context} box={box} />
-      )),
       background = image ? { backgroundImage: `url(${image})` } : undefined,
-      flex = modes.has('col') ? 'flex flex-col gap-2' : modes.has('row') ? 'flex flex-row gap-2' : undefined,
+      flex = modes.has('col') ? 'flex flex-col gap-2' : modes.has('row') ? 'flex gap-2' : undefined,
       onClick = path ? clicker(path) : undefined,
       pointer = path ? 'cursor-pointer' : undefined
     return (
@@ -89,6 +140,7 @@ export const Zone = ({ context, box }: Container) => {
         src={box.image} />
     )
   }
+
 
   const
     component = <XBox context={context.scoped(box.index, box.xid)} box={box} />

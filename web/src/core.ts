@@ -239,3 +239,10 @@ export function mapd<T, V>(xs: T[], f: (x: T) => [S, V]): Dict<V> {
   }
   return d
 }
+export function zip<X, Y, Z>(xs: X[], ys: Y[], f: (x: X, y: Y, i: U) => Z): Z[] {
+  const
+    n = Math.min(xs.length, ys.length),
+    zs = new Array<Z>(n)
+  for (let i = 0; i < n; i++) zs[i] = f(xs[i], ys[i], i)
+  return zs
+}
