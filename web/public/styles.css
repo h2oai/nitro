@@ -9,7 +9,7 @@
   /* gray-700 - prose default */
   --ui-foreground: #374151;
   /* indigo-500 */
-  --ui-accent: #6366f1;
+  --ui-accent-500: 99 102 241;
 }
 
 /*
@@ -58,8 +58,8 @@ html {
   /* 3 */
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
-  background-color: var(--ui-background);
-  color: var(--ui-foreground);
+  background-color: rgb(var(--ui-background));
+  color: rgb(var(--ui-foreground));
 }
 
 /*
@@ -2212,7 +2212,7 @@ video {
 
 .stripe {
   height: 1rem;
-  background-color: var(--ui-accent);
+  background-color: rgb(var(--ui-accent-500));
   background-size: 5px 5px;
-  background-image: radial-gradient(var(--ui-background) 1px, transparent 1px);
+  background-image: radial-gradient(rgb(var(--ui-background)) 1px, transparent 1px);
 }

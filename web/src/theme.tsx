@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { BaseSlots, createTheme, getColorFromString, IColor, isDark, loadTheme, ThemeGenerator, themeRulesStandardCreator } from '@fluentui/react';
-import { fromSpectrum, grays, isColor, rgbToHex, shades, spectrum } from './color';
-import { B, Dict, S, words } from './core';
+import { fromSpectrum, grays, isColor, rgbToHex, RGBTriplet, shades, spectrum } from './color';
+import { B, Dict, S, words, zip } from './core';
 import { Theme as ProtocolTheme } from './protocol';
 
 export type Scheme = {
@@ -58,17 +58,11 @@ const
       })
     return theme
   },
-  exportAccentShades = (accent: S) => {
+  exportVars = (vars: [S, S][]) => {
     const
       root = document.querySelector(':root') as HTMLElement,
-      style = root.style,
-      colors = spectrum[accent]
-    for (let i = 0; i < shades.length; i++) {
-      const
-        s = shades[i],
-        c = colors[i]
-      style.setProperty(`--ui-accent-${s}`, c.join(' '))
-    }
+      style = root.style
+    for (const [k, v] of vars) style.setProperty(k, v)
   },
   exportTheme = (prose: S, dark: B) => {
     const root = document.querySelector('html') as HTMLElement
@@ -97,8 +91,10 @@ export const applyTheme = ({ mode, accent }: ProtocolTheme) => {
   for (const shade of grays) if (modes.has(shade)) prose = shade
 
   const
-    foregroundColor = rgbToHex(fromSpectrum(prose, isDarkMode ? '300' : '700') ?? [0, 0, 0]), // Mimic Tailwind prose.
-    backgroundColor = rgbToHex(isDarkMode ? fromSpectrum(prose, '900') ?? [255, 255, 255] : [255, 255, 255]),
+    foreground = fromSpectrum(prose, isDarkMode ? '300' : '700') ?? [0, 0, 0],// Mimic Tailwind prose.
+    background: RGBTriplet = isDarkMode ? (fromSpectrum(prose, '900') ?? [0, 0, 0]) : [255, 255, 255],
+    foregroundColor = rgbToHex(foreground),
+    backgroundColor = rgbToHex(background),
     accentColor = rgbToHex(fromSpectrum(accent, isDarkMode ? '400' : '600') ?? [99, 102, 241]),
     scheme: Scheme = {
       sansFont: 'inherit',
@@ -106,10 +102,14 @@ export const applyTheme = ({ mode, accent }: ProtocolTheme) => {
       backgroundColor,
       foregroundColor,
       accentColor,
-    }
+    },
+    theme = generateTheme(scheme),
+    vars: [S, S][] = zip(spectrum[accent], shades, (c, s) => ([`--ui-accent-${s}`, c.join(' ')]))
 
-  const theme = generateTheme(scheme)
-  exportAccentShades(accent)
+  vars.push(['--ui-foreground', foreground.join(' ')])
+  vars.push(['--ui-background', background.join(' ')])
+
+  exportVars(vars)
   exportTheme(prose, theme.isInverted)
   loadTheme(theme)
 }
