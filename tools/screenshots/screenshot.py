@@ -1,7 +1,9 @@
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-url = 'http://localhost:5000'
+delay_between_screenshots = 1000
+
+url = 'http://localhost:5000/'
 output_dir = Path('docs') / 'assets' / 'screenshots'
 
 output_dir.mkdir(exist_ok=True)
@@ -25,9 +27,9 @@ with sync_playwright() as p:
         if name.endswith('_noop'):
             continue
         print(f'Capturing {name}...')
-        page.locator(f'[href="{href}"]').click()
-        page.wait_for_timeout(1000)
-        page.locator('[data-name=output]').screenshot(path=str(output_dir / f'{name}.png'))
-        page.locator('[data-name=contents]').click()
+        chromeless_url = url + href.replace('docs.help_', 'docs.') + '?mode=chromeless'
+        page.goto(chromeless_url)
+        page.wait_for_timeout(delay_between_screenshots)
+        page.locator('.main>.flex>.flex:first-child').screenshot(path=str(output_dir / f'{name}.png'))
     browser.close()
     print('Done!')
