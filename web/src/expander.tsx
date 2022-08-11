@@ -14,8 +14,9 @@
 
 import { ActionButton, IButtonStyles, IIconProps } from '@fluentui/react';
 import React from 'react';
-import { S, signal } from './core';
+import { signal } from './core';
 import { css } from './css';
+import { Box } from './protocol';
 import { make } from './ui';
 
 const
@@ -28,10 +29,10 @@ const
     label: { fontWeight: 600 },
   }
 
-// TODO  mode=`expander`, mode=`open expander`
-export const Expander = make(({ headerText, children }: { headerText: S, children: React.ReactNode }) => {
+export const Expander = make(({ box, children }: { box: Box, children: React.ReactNode }) => {
   const
-    expandedB = signal(false),
+    { title, modes } = box,
+    expandedB = signal(modes.has('open')),
     toggle = () => expandedB(!expandedB()),
     render = () => {
       const expanded = expandedB()
@@ -42,7 +43,7 @@ export const Expander = make(({ headerText, children }: { headerText: S, childre
               iconProps={expanded ? down : right}
               onClick={toggle}
               styles={buttonStyles}
-            >{headerText}</ActionButton>
+            >{title ?? 'Group'}</ActionButton>
           </div>
           <div className={css('ml-3 pb-3 pl-4 border-l')} style={expanded ? open : close}>{children}</div>
         </div>

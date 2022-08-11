@@ -161,7 +161,11 @@ export type BoxMode = 'box'
   | 'web'
   | 'week'
 
-export type BoxModifier = 'editable' | 'multi' | 'required' | 'live' | 'selectable' | 'vertical' | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
+export type BoxModifier = 'live'
+  | 'editable' | 'multi' | 'required' | 'selectable'
+  | 'vertical'
+  | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
+  | 'open' | 'closed'
 
 export type BoxT = BoxMode | BoxModifier
 
