@@ -289,8 +289,10 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   const { modes } = box
 
   if (modes.has('column' as BoxMode)) modes.add('col') // QOL
+  if (box.title) modes.add('group')
 
-  const isContainer = modes.has('row') || modes.has('col') || modes.has('tab')
+  const isRowOrCol = modes.has('row') || modes.has('col')
+  const isContainer = isRowOrCol || modes.has('group')
 
   if (box.items && !isContainer) {
     const
