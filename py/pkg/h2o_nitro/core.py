@@ -381,6 +381,82 @@ class Box:
 box = Box
 
 
+class _Part:
+    def __init__(self, style: str):
+        self.style = style
+
+    def __call__(
+            self,
+            *items,
+            name: Optional[str] = None,
+            mode: Optional[str] = None,
+            value: Optional[Value] = None,
+            options: Optional[Options] = None,
+            headers: Optional[Headers] = None,
+            data: Optional[dict] = None,
+            halt: Optional[bool] = None,
+            title: Optional[str] = None,
+            caption: Optional[str] = None,
+            hint: Optional[str] = None,
+            help: Optional[str] = None,
+            popup: Optional[bool] = None,
+            style: Optional[str] = None,
+            image: Optional[str] = None,
+            icon: Optional[str] = None,
+            min: Optional[V] = None,
+            max: Optional[V] = None,
+            step: Optional[N] = None,
+            precision: Optional[int] = None,
+            range: Optional[Range] = None,
+            mask: Optional[str] = None,
+            prefix: Optional[str] = None,
+            suffix: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            path: Optional[str] = None,
+            error: Optional[str] = None,
+            lines: Optional[int] = None,
+            ignore: Optional[bool] = None,
+    ):
+        return box(
+            *items,
+            name=name,
+            mode=mode,
+            value=value,
+            options=options,
+            headers=headers,
+            data=data,
+            halt=halt,
+            title=title,
+            caption=caption,
+            hint=hint,
+            help=help,
+            popup=popup,
+            style=self.style if style is None else f'{self.style} {style}',
+            image=image,
+            icon=icon,
+            min=min,
+            max=max,
+            step=step,
+            precision=precision,
+            range=range,
+            mask=mask,
+            prefix=prefix,
+            suffix=suffix,
+            placeholder=placeholder,
+            path=path,
+            error=error,
+            lines=lines,
+            ignore=ignore,
+        )
+
+
+Prototype = Union[str, _Part]
+
+
+def part(*styles: Prototype):
+    return _Part(' '.join([s.style if isinstance(s, _Part) else s for s in styles]))
+
+
 def row(
         *items: Item,
         name: Optional[str] = None,
