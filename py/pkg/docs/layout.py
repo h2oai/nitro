@@ -146,11 +146,13 @@ def layout_grid(view: View):  # height 3
 
 
 # ## Groups
-# Set `mode='group'` or set `title=` to create an expandable group.
-def layout_group(view: View):  # height 3
+# Add `mode='group'` or set `title=` to create a group. A group can be expanded or collapsed by the user.
+#
+# A group is collapsed by default. Add `open` to `mode` to expand it.
+def layout_group(view: View):  # height 4
     view(
         '## Menu',
-        box(lorem(3), title='Donuts'),
+        box(lorem(3), title='Donuts', mode='open'),
         box(lorem(3), title='Coffee'),
         box(lorem(3), title='Ice Cream'),
     )
@@ -158,7 +160,7 @@ def layout_group(view: View):  # height 3
 
 # ## Tabs
 # Put groups in a row to display a tabbed layout.
-def layout_tabs(view: View):  # height 4
+def layout_tabs(view: View):  # height 3
     view(
         row(
             box(lorem(3), title='Donuts'),
@@ -200,5 +202,29 @@ def layout_tabs_vertical_icons(view: View):  # height 4
             box(lorem(3), title='Profile', icon='Contact'),
             box(lorem(3), title='Billing Address', icon='PaymentCard'),
             box(lorem(3), title='Shipping Address', icon='DeliveryTruck'),
+        )
+    )
+
+
+# ## Select tab
+# Add `open` to `mode` to open that tab.
+def layout_tab_select(view: View):  # height 4
+    view(
+        row(
+            box(lorem(3), title='Donuts'),
+            box(lorem(3), title='Coffee', mode='open'),
+            box(lorem(3), title='Ice Cream'),
+        )
+    )
+
+
+# ## Select vertical tab
+# Add `open` to `mode` to open that tab.
+def layout_tab_vertical_select(view: View):  # height 4
+    view(
+        col(
+            box(lorem(3), title='Donuts'),
+            box(lorem(3), title='Coffee', mode='open'),
+            box(lorem(3), title='Ice Cream'),
         )
     )

@@ -179,13 +179,15 @@ view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-accent'))
 
 ## Groups
 
-Set `mode='group'` or set `title=` to create an expandable group.
+Add `mode='group'` or set `title=` to create a group. A group can be expanded or collapsed by the user.
+
+A group is collapsed by default. Add `open` to `mode` to expand it.
 
 
 ```py
 view(
     '## Menu',
-    box(lorem(3), title='Donuts'),
+    box(lorem(3), title='Donuts', mode='open'),
     box(lorem(3), title='Coffee'),
     box(lorem(3), title='Ice Cream'),
 )
@@ -269,3 +271,41 @@ view(
 
 
 ![Screenshot](assets/screenshots/layout_tabs_vertical_icons.png)
+
+
+## Select tab
+
+Add `open` to `mode` to open that tab.
+
+
+```py
+view(
+    row(
+        box(lorem(3), title='Donuts'),
+        box(lorem(3), title='Coffee', mode='open'),
+        box(lorem(3), title='Ice Cream'),
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/layout_tab_select.png)
+
+
+## Select vertical tab
+
+Add `open` to `mode` to open that tab.
+
+
+```py
+view(
+    col(
+        box(lorem(3), title='Donuts'),
+        box(lorem(3), title='Coffee', mode='open'),
+        box(lorem(3), title='Ice Cream'),
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/layout_tab_vertical_select.png)
