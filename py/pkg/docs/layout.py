@@ -145,6 +145,17 @@ def layout_grid(view: View):  # height 3
     view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-accent'))
 
 
+# ## Groups
+# Set `mode='group'` or set `title=` to create an expandable group.
+def layout_group(view: View):  # height 3
+    view(
+        '## Menu',
+        box(lorem(3), title='Donuts'),
+        box(lorem(3), title='Coffee'),
+        box(lorem(3), title='Ice Cream'),
+    )
+
+
 # ## Tabs
 # Put groups in a row to display a tabbed layout.
 def layout_tabs(view: View):  # height 4
