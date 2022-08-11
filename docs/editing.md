@@ -12,29 +12,29 @@ to edit the view.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 
 # Show some boxes:
 view(
-    box('Blue 1', style=blue),
-    box('Amber', style=amber, name='amber'),
-    box('Blue 2', style=blue),
+    blue('Blue 1'),
+    amber('Amber', name='amber'),
+    blue('Blue 2'),
 )
 
 # Append a box:
-view(box('Appended', style=red), insert=True)
+view(red('Appended'), insert=True)
 
 # Insert a box before `amber`:
-view(box('Inserted', style=green), insert=True, before='amber')
+view(green('Inserted'), insert=True, before='amber')
 
 # Overwrite two boxes with three boxes after `amber`:
 view(
-    box('Overwritten 1', style=green),
-    box('Overwritten 2', style=green),
-    box('Overwritten 3', style=green),
+    green('Overwritten 1'),
+    green('Overwritten 2'),
+    green('Overwritten 3'),
     after='amber',
 )
 
@@ -52,18 +52,18 @@ Set `at=` to overwrite boxes starting at an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue', style=blue),
-    box('Red 1', style=red, name='red1'),
-    box('Red 2', style=red),
+    blue('Blue'),
+    red('Red 1', name='red1'),
+    red('Red 2'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
-    box('Green 3', style=green),
+    green('Green 1'),
+    green('Green 2'),
+    green('Green 3'),
     at='red1',
 )
 ```
@@ -78,19 +78,19 @@ Set `before=` to overwrite boxes before an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Red', style=red),
-    box('Amber', style=amber, name='amber'),
-    box('Blue', style=blue),
+    red('Red'),
+    amber('Amber', name='amber'),
+    blue('Blue'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
-    box('Green 3', style=green),
+    green('Green 1'),
+    green('Green 2'),
+    green('Green 3'),
     before='amber',
 )
 ```
@@ -105,19 +105,19 @@ Set `after=` to overwrite boxes after an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue', style=blue),
-    box('Amber', style=amber, name='amber'),
-    box('Red', style=red),
+    blue('Blue'),
+    amber('Amber', name='amber'),
+    red('Red'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
-    box('Green 3', style=green),
+    green('Green 1'),
+    green('Green 2'),
+    green('Green 3'),
     after='amber',
 )
 ```
@@ -132,25 +132,25 @@ Set `inside=` to overwrite boxes inside an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue 1', style=blue),
+    blue('Blue 1'),
     col(
-        box('Red 1', style=red),
-        box('Red 2', style=red),
-        box('Red 3', style=red),
-        style=amber,
+        red('Red 1'),
+        red('Red 2'),
+        red('Red 3'),
+        style='p-2 bg-stripes-amber',
         name='amber'
     ),
-    box('Blue 2', style=blue),
+    blue('Blue 2'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
-    box('Green 3', style=green),
+    green('Green 1'),
+    green('Green 2'),
+    green('Green 3'),
     inside='amber',
 )
 ```
@@ -167,17 +167,17 @@ By default, new boxes are appended to the bottom of the view.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue 1', style=blue),
-    box('Blue 2', style=blue),
-    box('Blue 3', style=blue),
+    blue('Blue 1'),
+    blue('Blue 2'),
+    blue('Blue 3'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
-    box('Green 3', style=green),
+    green('Green 1'),
+    green('Green 2'),
+    green('Green 3'),
     insert=True,
 )
 ```
@@ -192,18 +192,18 @@ Set `insert=True` with `before=` to insert boxes before an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue 1', style=blue),
-    box('Amber', style=amber, name='amber'),
-    box('Blue 2', style=blue),
+    blue('Blue 1'),
+    amber('Amber', name='amber'),
+    blue('Blue 2'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
-    box('Green 3', style=green),
+    green('Green 1'),
+    green('Green 2'),
+    green('Green 3'),
     insert=True, before='amber',
 )
 ```
@@ -218,18 +218,18 @@ Setting `at=` has the same effect as `before=` when `Insert=True`.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue 1', style=blue),
-    box('Amber', style=amber, name='amber'),
-    box('Blue 2', style=blue),
+    blue('Blue 1'),
+    amber('Amber', name='amber'),
+    blue('Blue 2'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
-    box('Green 3', style=green),
+    green('Green 1'),
+    green('Green 2'),
+    green('Green 3'),
     insert=True, at='amber',
 )
 ```
@@ -244,18 +244,18 @@ Set `insert=True` with `after=` to insert boxes after an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue 1', style=blue),
-    box('Amber', style=amber, name='amber'),
-    box('Blue 2', style=blue),
+    blue('Blue 1'),
+    amber('Amber', name='amber'),
+    blue('Blue 2'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
-    box('Green 3', style=green),
+    green('Green 1'),
+    green('Green 2'),
+    green('Green 3'),
     insert=True, after='amber',
 )
 ```
@@ -270,22 +270,22 @@ Set `insert=True` with `inside=` to insert boxes inside an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue 1', style=blue),
+    blue('Blue 1'),
     col(
-        box('Blue 2', style=blue),
-        box('Blue 3', style=blue),
-        style=amber,
+        blue('Blue 2'),
+        blue('Blue 3'),
+        style='p-2 bg-stripes-amber',
         name='amber',
     ),
-    box('Blue 4', style=blue),
+    blue('Blue 4'),
 )
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
+    green('Green 1'),
+    green('Green 2'),
     insert=True, inside='amber',
 )
 ```
@@ -300,14 +300,14 @@ Set `remove=True` with `at=` to remove an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
 view(
-    box('Blue 1', style=blue),
-    box('Blue 2', style=blue),
-    box('Red', style=red, name='red'),
-    box('Blue 3', style=blue),
-    box('Blue 4', style=blue),
+    blue('Blue 1'),
+    blue('Blue 2'),
+    red('Red', name='red'),
+    blue('Blue 3'),
+    blue('Blue 4'),
 )
 view(remove=True, at='red')
 ```
@@ -322,15 +322,15 @@ Set `remove=True` with `before=` to remove boxes before an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
 view(
-    box('Red 1', style=red),
-    box('Red 2', style=red),
-    box('Amber', style=amber, name='amber'),
-    box('Blue 1', style=blue),
-    box('Blue 2', style=blue),
+    red('Red 1'),
+    red('Red 2'),
+    amber('Amber', name='amber'),
+    blue('Blue 1'),
+    blue('Blue 2'),
 )
 view(remove=True, before='amber')
 ```
@@ -345,15 +345,15 @@ Set `remove=True` with `after=` to remove boxes after an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
 view(
-    box('Blue 1', style=blue),
-    box('Blue 2', style=blue),
-    box('Amber', style=amber, name='amber'),
-    box('Red 1', style=red),
-    box('Red 2', style=red),
+    blue('Blue 1'),
+    blue('Blue 2'),
+    amber('Amber', name='amber'),
+    red('Red 1'),
+    red('Red 2'),
 )
 view(remove=True, after='amber')
 ```
@@ -368,21 +368,21 @@ Set `remove=True` with `inside=` to remove boxes inside an existing box.
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 view(
-    box('Blue 1', style=blue),
-    box('Blue 2', style=blue),
+    blue('Blue 1'),
+    blue('Blue 2'),
     col(
-        box('Red 1', style=red),
-        box('Red 2', style=red),
-        box('Red 3', style=red),
-        style=amber,
+        red('Red 1'),
+        red('Red 2'),
+        red('Red 3'),
+        style='p-2 bg-stripes-amber',
         name='amber'
     ),
-    box('Blue 2', style=blue),
+    blue('Blue 2'),
 )
 view(remove=True, inside='amber')
 ```
@@ -402,31 +402,31 @@ Set `at=`, `before=`, or `after=` to space-separated names to select nested item
 
 
 ```py
-blue = 'p-2 rounded border text-sky-500 border-sky-500 bg-sky-100'
-amber = 'p-2 rounded border text-amber-500 border-amber-500 bg-amber-100'
-red = 'p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100'
-green = 'p-2 rounded border text-green-500 border-green-500 bg-green-100'
+blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
+amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
+red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
 # Show a 3x3 grid
 view(
     box(
         col(
-            box('Blue 1', style=blue),
-            box('Blue 2', style=blue),
-            box('Blue 3', style=blue),
-            style=blue,
+            blue('Blue 1'),
+            blue('Blue 2'),
+            blue('Blue 3'),
+            style='p-2 bg-stripes-blue',
         ),
         col(
-            box('Blue 4', style=blue),
-            box('Amber', style=amber, name='amber'),
-            box('Red', style=red),
-            style=amber,
+            blue('Blue 4'),
+            amber('Amber', name='amber'),
+            red('Red'),
+            style='p-2 bg-stripes-amber',
             name='col2',
         ),
         col(
-            box('Blue 5', style=blue),
-            box('Blue 6', style=blue),
-            box('Blue 7', style=blue),
-            style=blue,
+            blue('Blue 5'),
+            blue('Blue 6'),
+            blue('Blue 7'),
+            style='p-2 bg-stripes-blue',
         ),
         style='grid grid-cols-3 gap-2'
     ),
@@ -434,15 +434,15 @@ view(
 
 # Insert 2 boxes before `amber` inside `col2`.
 view(
-    box('Green 1', style=green),
-    box('Green 2', style=green),
+    green('Green 1'),
+    green('Green 2'),
     insert=True, before='col2 amber',
 )
 
 # Overwrite everything after `indigo` inside `col2`.
 view(
-    box('Green 3', style=green),
-    box('Green 4', style=green),
+    green('Green 3'),
+    green('Green 4'),
     after='col2 amber',
 )
 
