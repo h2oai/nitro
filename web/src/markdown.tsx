@@ -70,19 +70,21 @@ export const
       const src = hljs.highlight(revertMicromarkEncodings(code), { language }).value
       return `<code>${src}</code>`
     }),
-  isFootnoteLink = (s: S) => s.startsWith('user-content'), // gfm-footnote default
   markdown = (text: S): [S, B] => {
+    const tmp = document.createElement('div')
+
+    tmp.innerHTML = highlight(micromark(dedent(text), opts))
+
     let hasLinks = false
-    const md = micromark(dedent(text), opts)
-    const hl = highlight(md)
-      // Change <a href="#foo"> to <a data-jump="foo" href>
-      // Exclude hashbangs #!, which act as context switches.
-      // Exclude footnote references.
-      // We need the links to be rendered as such, but not affect the address bar.
-      .replace(/href="#([^!].+?)"/g, (all, ref) => {
-        if (isFootnoteLink(ref)) return all
+    for (const link of tmp.querySelectorAll('a')) {
+      const href = link.getAttribute('href')
+      if (href && href.indexOf('#') === 0) {
+        if (href.indexOf('#user-content') === 0) continue // gfm-footnote default; ignore
         hasLinks = true
-        return `data-jump="${ref}" href`
-      })
-    return [hl, hasLinks]
+        if (href.indexOf('#!') === 0) continue  // ignore hashbangs
+        link.setAttribute('href', '') // don't affect address bar when clicked
+        link.setAttribute('data-jump', href.substring(1)) // marker attribute; will be hijacked later
+      }
+    }
+    return [tmp.innerHTML, hasLinks]
   }
