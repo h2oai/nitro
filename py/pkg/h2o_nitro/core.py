@@ -278,78 +278,6 @@ class Plugin:
         )
 
 
-class _Part:
-    def __init__(self, style: str):
-        self.style = style
-
-    def __call__(
-            self,
-            *items,
-            name: Optional[str] = None,
-            mode: Optional[str] = None,
-            value: Optional[Value] = None,
-            options: Optional[Options] = None,
-            headers: Optional[Headers] = None,
-            data: Optional[dict] = None,
-            halt: Optional[bool] = None,
-            title: Optional[str] = None,
-            caption: Optional[str] = None,
-            hint: Optional[str] = None,
-            help: Optional[str] = None,
-            popup: Optional[bool] = None,
-            style: Optional[str] = None,
-            image: Optional[str] = None,
-            icon: Optional[str] = None,
-            min: Optional[V] = None,
-            max: Optional[V] = None,
-            step: Optional[N] = None,
-            precision: Optional[int] = None,
-            range: Optional[Range] = None,
-            mask: Optional[str] = None,
-            prefix: Optional[str] = None,
-            suffix: Optional[str] = None,
-            placeholder: Optional[str] = None,
-            path: Optional[str] = None,
-            error: Optional[str] = None,
-            lines: Optional[int] = None,
-            ignore: Optional[bool] = None,
-    ):
-        return box(
-            *items,
-            name=name,
-            mode=mode,
-            value=value,
-            options=options,
-            headers=headers,
-            data=data,
-            halt=halt,
-            title=title,
-            caption=caption,
-            hint=hint,
-            help=help,
-            popup=popup,
-            style=self.style if style is None else f'{self.style} {style}',
-            image=image,
-            icon=icon,
-            min=min,
-            max=max,
-            step=step,
-            precision=precision,
-            range=range,
-            mask=mask,
-            prefix=prefix,
-            suffix=suffix,
-            placeholder=placeholder,
-            path=path,
-            error=error,
-            lines=lines,
-            ignore=ignore,
-        )
-
-
-Prototype = Union[str, _Part]
-
-
 class Box:
     # noinspection PyShadowingBuiltins
     def __init__(
@@ -415,9 +343,107 @@ class Box:
         self.lines = lines
         self.ignore = ignore
 
-    @classmethod
-    def part(cls, *styles: Prototype):
-        return _Part(' '.join([s.style if isinstance(s, _Part) else s for s in styles]))
+    def __call__(
+            self,
+            *items,
+            name: Optional[str] = None,
+            mode: Optional[str] = None,
+            value: Optional[Value] = None,
+            options: Optional[Options] = None,
+            headers: Optional[Headers] = None,
+            data: Optional[dict] = None,
+            halt: Optional[bool] = None,
+            title: Optional[str] = None,
+            caption: Optional[str] = None,
+            hint: Optional[str] = None,
+            help: Optional[str] = None,
+            popup: Optional[bool] = None,
+            style: Optional[str] = None,
+            image: Optional[str] = None,
+            icon: Optional[str] = None,
+            min: Optional[V] = None,
+            max: Optional[V] = None,
+            step: Optional[N] = None,
+            precision: Optional[int] = None,
+            range: Optional[Range] = None,
+            mask: Optional[str] = None,
+            prefix: Optional[str] = None,
+            suffix: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            path: Optional[str] = None,
+            error: Optional[str] = None,
+            lines: Optional[int] = None,
+            ignore: Optional[bool] = None,
+    ):
+        return box(
+            *items,
+            name=self.name if name is None else name,
+            mode=self.mode if mode is None else mode,
+            value=self.value if value is None else value,
+            options=self.options if options is None else options,
+            headers=self.headers if headers is None else headers,
+            data=self.data if data is None else data,
+            halt=self.halt if halt is None else halt,
+            title=self.title if title is None else title,
+            caption=self.caption if caption is None else caption,
+            hint=self.hint if hint is None else hint,
+            help=self.help if help is None else help,
+            popup=self.popup if popup is None else popup,
+            style=self.style if style is None else f'{self.style} {style}',  # Additive!
+            image=self.image if image is None else image,
+            icon=self.icon if icon is None else icon,
+            min=self.min if min is None else min,
+            max=self.max if max is None else max,
+            step=self.step if step is None else step,
+            precision=self.precision if precision is None else precision,
+            range=self.range if range is None else range,
+            mask=self.mask if mask is None else mask,
+            prefix=self.prefix if prefix is None else prefix,
+            suffix=self.suffix if suffix is None else suffix,
+            placeholder=self.placeholder if placeholder is None else placeholder,
+            path=self.path if path is None else path,
+            error=self.error if error is None else error,
+            lines=self.lines if lines is None else lines,
+            ignore=self.ignore if ignore is None else ignore,
+        )
+
+    def clone(self):
+        return Box(
+            *self.items,
+            name=self.name,
+            mode=self.mode,
+            value=self.value,
+            options=self.options,
+            headers=self.headers,
+            data=self.data,
+            halt=self.halt,
+            title=self.title,
+            caption=self.caption,
+            hint=self.hint,
+            help=self.help,
+            popup=self.popup,
+            style=self.style,
+            image=self.image,
+            icon=self.icon,
+            min=self.min,
+            max=self.max,
+            step=self.step,
+            precision=self.precision,
+            range=self.range,
+            mask=self.mask,
+            prefix=self.prefix,
+            suffix=self.suffix,
+            placeholder=self.placeholder,
+            path=self.path,
+            error=self.error,
+            lines=self.lines,
+            ignore=self.ignore,
+        )
+
+    def __truediv__(self, style: str):
+        b = self.clone()
+        b.style = style if b.style is None else f'{b.style} {style}'
+        return b
 
     def dump(self) -> dict:
         return _clean(dict(

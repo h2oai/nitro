@@ -36,34 +36,31 @@ def styling_basic(view: View):  # height 2
     )
 
 
-# ## Parts
-# A part is a custom box with a preset style. Use `box.part()` to define a part.
-#
-# Parts can be used wherever `box(text, style='...')` feels repetitive.
-def styling_part(view: View):  # height 3
-    alert = box.part('p-4 border-l-4 text-sm font-medium text-sky-700 bg-sky-50 border-sky-700')
-
+# ## Shorthand
+# `box(...) / style` is shorthand for `box(..., style='...')`.
+def styling_shorthand(view: View):  # height 2
     view(
-        alert('Begin at the beginning.'),
-        alert('And go on till you come to the end.'),
-        alert('Then stop.'),
+        box('Hello world!', style='p-2 bg-stripes-amber'),  # Longer
+        box('Hello world!') / 'p-2 bg-stripes-amber',  # Shorter
     )
 
 
-# ## Derived parts
-# `box.part()` can extend existing parts.
+# ## Derived boxes
+# New boxes can be created from existing boxes. In many circumstances, using derived boxes simplifies your code and
+# makes it more readable.
 #
 # The example below creates different kinds of alerts from a base alert.
 def styling_derived(view: View):  # height 3
-    alert = box.part('p-4 border-l-4 text-sm font-medium')
-    info_alert = box.part(alert, 'text-sky-700 bg-sky-50 border-sky-700')
-    warning_alert = box.part(alert, 'text-amber-700 bg-amber-50 border-amber-700')
-    critical_alert = box.part(alert, 'text-red-700 bg-red-50 border-red-700')
+    alert = box() / 'p-4 border-l-4 text-sm font-medium'
+    info = alert / 'text-sky-700 bg-sky-50 border-sky-700'
+    warning = alert / 'text-amber-700 bg-amber-50 border-amber-700'
+    failure = alert / 'text-red-700 bg-red-50 border-red-700'
 
     view(
-        info_alert('Begin at the beginning.'),
-        warning_alert('And go on till you come to the end.'),
-        critical_alert('Then stop.'),
+        alert('The King said, very gravely,'),
+        info('Begin at the beginning.'),
+        warning('And go on till you come to the end.'),
+        failure('Then stop.'),
     )
 
 
@@ -92,7 +89,11 @@ def styling_card(view: View):  # height 7
     view(box(image, col(title, text), style='w-72 rounded-xl'), ['Crop contents'])
     view(box(image, col(title, text), style='w-72 rounded-xl overflow-hidden'), ['Add shadow'])
     view(box(image, col(title, text), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Add padding'])
-    view(box(image, col(title, text, style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make title bold'])
-    view(box(image, col(box(title, style='font-bold'), text, style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make title larger'])
-    view(box(image, col(box(title, style='font-bold text-xl'), text, style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make text smaller'])
-    view(box(image, col(box(title, style='font-bold text-xl'), box(text, style='text-sm'), style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Restart'])
+    view(box(image, col(title, text, style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'),
+         ['Make title bold'])
+    view(box(image, col(box(title, style='font-bold'), text, style='p-4'),
+             style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make title larger'])
+    view(box(image, col(box(title, style='font-bold text-xl'), text, style='p-4'),
+             style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make text smaller'])
+    view(box(image, col(box(title, style='font-bold text-xl'), box(text, style='text-sm'), style='p-4'),
+             style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Restart'])
