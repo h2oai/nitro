@@ -55,32 +55,32 @@
 
 ## Views
 
-| Operation                                     | Code                                       |
-|-----------------------------------------------|--------------------------------------------|
-| Overwrite current view                        | `view(...)`                                |
-| Overwrite boxes inside box `'foo'`.           | `view(..., inside='foo')`                  |
-| Overwrite boxes starting at box `'foo'`.      | `view(..., at='foo')`                      |
-| Overwrite boxes before box `'foo'`.           | `view(..., before='foo')`                  |
-| Overwrite boxes after box `'foo'`.            | `view(..., after='foo')`                   |
-| Append boxes to current view.                 | `view(..., insert=True)`                   |
-| Append boxes inside box `'foo'`.              | `view(..., insert=True, inside='foo')`     |
-| Insert boxes before box `'foo'`.              | `view(..., insert=True, before='foo')`     |
-| Insert boxes after box `'foo'`.               | `view(..., insert=True, after='foo')`      |
-| Clear current view.                           | `view(remove=True)`                        |
-| Remove boxes inside box `'foo'`.              | `view(remove=True, inside='foo')`          |
-| Remove boxes starting at box `'foo'`.         | `view(remove=True, at='foo')`              |
-| Remove boxes before box `'foo'`.              | `view(remove=True, before='foo')`          |
-| Remove boxes after box `'foo'`.               | `view(remove=True, after='foo')`           |
-| Show view, but without the "Continue" button. | `view(..., halt=True)`                     |
-| Show view, but don't wait for inputs.         | `view(..., read=False)`                    |
-| Show view, but in a popup.                    | `view(..., popup=True, title='...')`       |
-| Set view title.                               | `view.set(title='...')`                    |
-| Set view caption.                             | `view.set(caption='...')`                  |
-| Set view menu.                                | `view.set(menu='...')`                     |
-| Set view nav.                                 | `view.set(nav='...')`                      |
-| Set view theme.                               | `view.set(theme='...')`                    |
-| Jump to another view function.                | `view.jump(func)`                          |
-| Jump to another URL.                          | `view.jump(url)`                           |
-| Jump to another URL in a new window.          | `view.jump(url, target='_blank')`          |
-| Jump to another URL in a new popup window.    | `view.jump(url, target='_blank', popup=1)` |
+| Operation                                     | Code                                 |
+|-----------------------------------------------|--------------------------------------|
+| Overwrite current view                        | `view(...)`                          |
+| Overwrite boxes inside box `'foo'`.           | `view(..., at='foo *')`              |
+| Overwrite boxes starting at box `'foo'`.      | `view(..., at='foo')`                |
+| Overwrite boxes before box `'foo'`.           | `view(..., at=':foo')`               |
+| Overwrite boxes after box `'foo'`.            | `view(..., at='foo:')`               |
+| Add boxes to current view.                    | `view.add(...)`                      |
+| Add boxes inside box `'foo'`.                 | `view.add(..., at='foo *')`          |
+| Add boxes before box `'foo'`.                 | `view.add(..., at=':foo')`           |
+| Add boxes after box `'foo'`.                  | `view.add(..., at='foo:')`           |
+| Clear current view.                           | `view.clear()`                       |
+| Clear boxes inside box `'foo'`.               | `view.clear(at='foo *')`             |
+| Clear boxes starting at box `'foo'`.          | `view.clear(at='foo')`               |
+| Clear boxes before box `'foo'`.               | `view.clear(at=':foo')`              |
+| Clear boxes after box `'foo'`.                | `view.clear(at='foo:')`              |
+| Show view, but without the "Continue" button. | `view(..., halt=True)`               |
+| Show view, but don't wait for inputs.         | `view(..., read=False)`              |
+| Show view, but in a popup.                    | `view(..., popup=True, title='...')` |
+| Set view title.                               | `view.set(title='...')`              |
+| Set view caption.                             | `view.set(caption='...')`            |
+| Set view menu.                                | `view.set(menu='...')`               |
+| Set view nav.                                 | `view.set(nav='...')`                |
+| Set view theme.                               | `view.set(theme='...')`              |
+| Jump to another view function.                | `view.jump(func)`                    |
+| Launch external URL.                          | `view.jump(url)`                     |
+| Launch external URL in a popup.               | `view.jump(url, popup=1)`            |
+| Navigate to another URL.                      | `view.jump(url, target='_self')`     |
 
