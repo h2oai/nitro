@@ -15,7 +15,7 @@
 import { Dict, isS, isURL, newIncr, on, S, Signal, signal, U, V } from './core';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
-import { Box, DisplayMode, Edit, EditPosition, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
+import { Box, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
 import { applyTheme } from './theme';
 
 export enum ClientStateT { Connecting, Disconnected, Invalid, Connected }
@@ -32,6 +32,8 @@ export type ClientState = {
   t: ClientStateT.Connected
   client: Client
 }
+
+enum EditPosition { Inside, Before, At, After }
 
 type SanitizedEdit = {
   t: EditType
@@ -148,12 +150,23 @@ const getHashRPC = (): HashRPC | null => {
 
 const sanitizeEdit = (e?: Edit): SanitizedEdit => {
   if (!e) return defaultEdit
-  const { s } = e
-  const selector = isS(s) ? s.trim().split(/\s+/) : []
+  const
+    { s } = e,
+    xs = (s ? s : '*')
+      .split(/\s*\b\s*/)
+      .filter(x => x.length ? true : false),
+    n = xs.length,
+    p = xs[n - 1] === '*'
+      ? EditPosition.Inside
+      : xs[n - 1] === ':'
+        ? EditPosition.After
+        : xs[n - 2] === ':'
+          ? EditPosition.Before
+          : EditPosition.At
   return {
     t: e.t,
-    p: e.p,
-    s: selector,
+    p,
+    s: xs.filter(x => x !== '*' && x !== ':'),
   }
 }
 

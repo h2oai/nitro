@@ -78,12 +78,9 @@ export type Message = {
 
 export enum EditType { Insert = 1, Update, Remove }
 
-export enum EditPosition { Inside = 1, At, Before, After }
-
 export type Edit = {
   t: EditType
-  p: EditPosition
-  s?: S | S[] // selector
+  s?: S // selector
 }
 
 export type Client = {
