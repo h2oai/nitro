@@ -752,20 +752,20 @@ class View(_View):
             self,
             *items: Item,
             read=True,
-            location: Optional[str] = None,
+            at: Optional[str] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
     ):
         b = Box(*items, mode='col', halt=halt, title=title, popup=popup, style=style)
-        return self._write(read, b, Edit(EditType.Update, location) if location else None)
+        return self._write(read, b, Edit(EditType.Update, at) if at else None)
 
-    def add(self, *items: Item, read=True, location: Optional[str] = None):
-        return self._write(read, Box(*items, mode='col'), Edit(EditType.Insert, location))
+    def add(self, *items: Item, read=True, at: Optional[str] = None):
+        return self._write(read, Box(*items, mode='col'), Edit(EditType.Insert, at))
 
-    def clear(self, read=True, location: Optional[str] = None):
-        return self._write(read, Box(mode='col'), Edit(EditType.Remove, location))
+    def clear(self, read=True, at: Optional[str] = None):
+        return self._write(read, Box(mode='col'), Edit(EditType.Remove, at))
 
 
 class AsyncView(_View):
@@ -856,20 +856,20 @@ class AsyncView(_View):
             self,
             *items: Item,
             read=True,
-            location: Optional[str] = None,
+            at: Optional[str] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
     ):
         b = Box(*items, mode='col', halt=halt, title=title, popup=popup, style=style)
-        return await self._write(read, b, Edit(EditType.Update, location) if location else None)
+        return await self._write(read, b, Edit(EditType.Update, at) if at else None)
 
-    async def add(self, *items: Item, read=True, location: Optional[str] = None):
-        return await self._write(read, Box(*items, mode='col'), Edit(EditType.Insert, location))
+    async def add(self, *items: Item, read=True, at: Optional[str] = None):
+        return await self._write(read, Box(*items, mode='col'), Edit(EditType.Insert, at))
 
-    async def clear(self, read=True, location: Optional[str] = None):
-        return await self._write(read, Box(mode='col'), Edit(EditType.Remove, location))
+    async def clear(self, read=True, at: Optional[str] = None):
+        return await self._write(read, Box(mode='col'), Edit(EditType.Remove, at))
 
 
 class Duplex:

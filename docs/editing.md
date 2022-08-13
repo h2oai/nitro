@@ -9,7 +9,7 @@ It's also possible to selectively modify the previous view instead of overwritin
 
 The following example uses `view()`, `view.add()` and `view.clear()` to modify the current view.
 
-The `location` argument indicates where to add, overwrite or clear boxes.
+The `at` argument indicates where to add, overwrite or clear boxes.
 
 - `foo`: from box `foo` (or at box `foo`).
 - `:foo`: before box `foo`.
@@ -38,18 +38,18 @@ view(
 view.add(red('Appended'))
 
 # Add a box before `amber`:
-view.add(green('Added'), location=':amber')
+view.add(green('Added'), at=':amber')
 
 # Overwrite two boxes with three other boxes after `amber`:
 view(
     green('Overwritten 1'),
     green('Overwritten 2'),
     green('Overwritten 3'),
-    location='amber:',
+    at='amber:',
 )
 
 # Clear everything before `amber`:
-view.clear(location=':amber')
+view.clear(at=':amber')
 ```
 
 
@@ -58,7 +58,7 @@ view.clear(location=':amber')
 
 ## Overwrite
 
-Set `location='name'` to overwrite boxes starting at an existing box.
+Set `at='name'` to overwrite boxes starting at an existing box.
 
 
 ```py
@@ -74,7 +74,7 @@ view(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    location='red1',
+    at='red1',
 )
 ```
 
@@ -84,7 +84,7 @@ view(
 
 ## Overwrite before
 
-Set `location=':name'` to overwrite boxes before an existing box.
+Set `at=':name'` to overwrite boxes before an existing box.
 
 
 ```py
@@ -101,7 +101,7 @@ view(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    location=':amber',
+    at=':amber',
 )
 ```
 
@@ -111,7 +111,7 @@ view(
 
 ## Overwrite after
 
-Set `location='name:'` to overwrite boxes after an existing box.
+Set `at='name:'` to overwrite boxes after an existing box.
 
 
 ```py
@@ -128,7 +128,7 @@ view(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    location='amber:',
+    at='amber:',
 )
 ```
 
@@ -138,7 +138,7 @@ view(
 
 ## Overwrite inside
 
-Set `location='name *'` to overwrite boxes inside an existing box.
+Set `at='name *'` to overwrite boxes inside an existing box.
 
 
 ```py
@@ -161,7 +161,7 @@ view(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    location='amber *',
+    at='amber *',
 )
 ```
 
@@ -197,7 +197,7 @@ view.add(
 
 ## Add before
 
-Set `location=':name'` to add boxes before an existing box.
+Set `at=':name'` to add boxes before an existing box.
 
 
 ```py
@@ -213,7 +213,7 @@ view.add(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    location=':amber',
+    at=':amber',
 )
 ```
 
@@ -223,7 +223,7 @@ view.add(
 
 ## Add at
 
-Setting `location='name'` has the same effect as `location=':name'` when calling `view.add()`,
+Setting `at='name'` has the same effect as `at=':name'` when calling `view.add()`,
 i.e. "add at" is the same as "add before".
 
 
@@ -240,7 +240,7 @@ view.add(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    location='amber',
+    at='amber',
 )
 ```
 
@@ -250,7 +250,7 @@ view.add(
 
 ## Add after
 
-Set `location='name:'` to add boxes after an existing box.
+Set `at='name:'` to add boxes after an existing box.
 
 
 ```py
@@ -266,7 +266,7 @@ view.add(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    location='amber:',
+    at='amber:',
 )
 ```
 
@@ -276,7 +276,7 @@ view.add(
 
 ## Add inside
 
-Set `location='name *'` to add boxes inside an existing box.
+Set `at='name *'` to add boxes inside an existing box.
 
 
 ```py
@@ -296,7 +296,7 @@ view(
 view.add(
     green('Green 1'),
     green('Green 2'),
-    location='amber *',
+    at='amber *',
 )
 ```
 
@@ -319,7 +319,7 @@ view(
     blue('Blue 3'),
     blue('Blue 4'),
 )
-view.clear(location='red')
+view.clear(at='red')
 ```
 
 
@@ -328,7 +328,7 @@ view.clear(location='red')
 
 ## Clear before
 
-Set `location=`:name'` to clear everything before a box.
+Set `at=`:name'` to clear everything before a box.
 
 
 ```py
@@ -342,7 +342,7 @@ view(
     blue('Blue 1'),
     blue('Blue 2'),
 )
-view.clear(location=':amber')
+view.clear(at=':amber')
 ```
 
 
@@ -351,7 +351,7 @@ view.clear(location=':amber')
 
 ## Clear after
 
-Set `location=`name:'` to clear everything after a box.
+Set `at=`name:'` to clear everything after a box.
 
 
 ```py
@@ -365,7 +365,7 @@ view(
     red('Red 1'),
     red('Red 2'),
 )
-view.clear(location='amber:')
+view.clear(at='amber:')
 ```
 
 
@@ -374,7 +374,7 @@ view.clear(location='amber:')
 
 ## Clear inside
 
-Set `location=`name *'` to clear everything inside a box.
+Set `at=`name *'` to clear everything inside a box.
 
 
 ```py
@@ -394,7 +394,7 @@ view(
     ),
     blue('Blue 2'),
 )
-view.clear(location='amber *')
+view.clear(at='amber *')
 ```
 
 
@@ -403,7 +403,7 @@ view.clear(location='amber *')
 
 ## Selecting nested boxes
 
-Set `location=` to space-separated names to select nested items.
+Set `at=` to space-separated names to select nested items.
 
 - `foo` refers to the box named `foo`.
 - `foo bar` refers to the box named `bar` inside the box named `foo`.
@@ -446,18 +446,18 @@ view(
 view.add(
     green('Green 1'),
     green('Green 2'),
-    location='lime :amber',
+    at='lime :amber',
 )
 
 # Overwrite everything after `amber` inside `lime`.
 view(
     green('Green 3'),
     green('Green 4'),
-    location='lime amber:',
+    at='lime amber:',
 )
 
 # Clear 'amber'.
-view.clear(location='lime amber')
+view.clear(at='lime amber')
 ```
 
 
