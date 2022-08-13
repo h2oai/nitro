@@ -278,109 +278,6 @@ class Plugin:
         )
 
 
-class Box:
-    # noinspection PyShadowingBuiltins
-    def __init__(
-            self,
-            *items,
-            name: Optional[str] = None,
-            mode: Optional[str] = None,
-            value: Optional[Value] = None,
-            options: Optional[Options] = None,
-            headers: Optional[Headers] = None,
-            data: Optional[dict] = None,
-            halt: Optional[bool] = None,
-            title: Optional[str] = None,
-            caption: Optional[str] = None,
-            hint: Optional[str] = None,
-            help: Optional[str] = None,
-            popup: Optional[bool] = None,
-            style: Optional[str] = None,
-            image: Optional[str] = None,
-            icon: Optional[str] = None,
-            min: Optional[V] = None,
-            max: Optional[V] = None,
-            step: Optional[N] = None,
-            precision: Optional[int] = None,
-            range: Optional[Range] = None,
-            mask: Optional[str] = None,
-            prefix: Optional[str] = None,
-            suffix: Optional[str] = None,
-            placeholder: Optional[str] = None,
-            path: Optional[str] = None,
-            error: Optional[str] = None,
-            lines: Optional[int] = None,
-            ignore: Optional[bool] = None,
-    ):
-        self.xid = _xid()
-        self.name = name
-        self.mode = mode
-        self.value = value
-        self.options = options
-        self.headers = headers
-        self.items = items
-        self.data = data
-        self.halt = halt
-        self.title = title
-        self.caption = caption
-        self.hint = hint
-        self.help = help
-        self.popup = popup
-        self.style = style
-        self.image = image
-        self.icon = icon
-        self.min = min
-        self.max = max
-        self.step = step
-        self.precision = precision
-        self.range = range
-        self.mask = mask
-        self.prefix = prefix
-        self.suffix = suffix
-        self.placeholder = placeholder
-        self.path = path
-        self.error = error
-        self.lines = lines
-        self.ignore = ignore
-
-    def dump(self) -> dict:
-        return _clean(dict(
-            xid=self.xid,
-            name=self.name,
-            mode=self.mode,
-            value=self.value,
-            options=_dump(self.options),
-            headers=_dump(self.headers),
-            items=_dump(self.items),
-            data=_dump(self.data),
-            halt=self.halt,
-            title=self.title,
-            caption=self.caption,
-            hint=self.hint,
-            help=self.help,
-            popup=self.popup,
-            style=self.style,
-            image=self.image,
-            icon=self.icon,
-            min=self.min,
-            max=self.max,
-            step=self.step,
-            precision=self.precision,
-            range=self.range,
-            mask=self.mask,
-            prefix=self.prefix,
-            suffix=self.suffix,
-            placeholder=self.placeholder,
-            path=self.path,
-            error=self.error,
-            lines=self.lines,
-            ignore=self.ignore,
-        ))
-
-
-box = Box
-
-
 class _Part:
     def __init__(self, style: str):
         self.style = style
@@ -453,8 +350,111 @@ class _Part:
 Prototype = Union[str, _Part]
 
 
-def part(*styles: Prototype):
-    return _Part(' '.join([s.style if isinstance(s, _Part) else s for s in styles]))
+class Box:
+    # noinspection PyShadowingBuiltins
+    def __init__(
+            self,
+            *items,
+            name: Optional[str] = None,
+            mode: Optional[str] = None,
+            value: Optional[Value] = None,
+            options: Optional[Options] = None,
+            headers: Optional[Headers] = None,
+            data: Optional[dict] = None,
+            halt: Optional[bool] = None,
+            title: Optional[str] = None,
+            caption: Optional[str] = None,
+            hint: Optional[str] = None,
+            help: Optional[str] = None,
+            popup: Optional[bool] = None,
+            style: Optional[str] = None,
+            image: Optional[str] = None,
+            icon: Optional[str] = None,
+            min: Optional[V] = None,
+            max: Optional[V] = None,
+            step: Optional[N] = None,
+            precision: Optional[int] = None,
+            range: Optional[Range] = None,
+            mask: Optional[str] = None,
+            prefix: Optional[str] = None,
+            suffix: Optional[str] = None,
+            placeholder: Optional[str] = None,
+            path: Optional[str] = None,
+            error: Optional[str] = None,
+            lines: Optional[int] = None,
+            ignore: Optional[bool] = None,
+    ):
+        self.xid = _xid()
+        self.name = name
+        self.mode = mode
+        self.value = value
+        self.options = options
+        self.headers = headers
+        self.items = items
+        self.data = data
+        self.halt = halt
+        self.title = title
+        self.caption = caption
+        self.hint = hint
+        self.help = help
+        self.popup = popup
+        self.style = style
+        self.image = image
+        self.icon = icon
+        self.min = min
+        self.max = max
+        self.step = step
+        self.precision = precision
+        self.range = range
+        self.mask = mask
+        self.prefix = prefix
+        self.suffix = suffix
+        self.placeholder = placeholder
+        self.path = path
+        self.error = error
+        self.lines = lines
+        self.ignore = ignore
+
+    @classmethod
+    def part(cls, *styles: Prototype):
+        return _Part(' '.join([s.style if isinstance(s, _Part) else s for s in styles]))
+
+    def dump(self) -> dict:
+        return _clean(dict(
+            xid=self.xid,
+            name=self.name,
+            mode=self.mode,
+            value=self.value,
+            options=_dump(self.options),
+            headers=_dump(self.headers),
+            items=_dump(self.items),
+            data=_dump(self.data),
+            halt=self.halt,
+            title=self.title,
+            caption=self.caption,
+            hint=self.hint,
+            help=self.help,
+            popup=self.popup,
+            style=self.style,
+            image=self.image,
+            icon=self.icon,
+            min=self.min,
+            max=self.max,
+            step=self.step,
+            precision=self.precision,
+            range=self.range,
+            mask=self.mask,
+            prefix=self.prefix,
+            suffix=self.suffix,
+            placeholder=self.placeholder,
+            path=self.path,
+            error=self.error,
+            lines=self.lines,
+            ignore=self.ignore,
+        ))
+
+
+box = Box
 
 
 def row(

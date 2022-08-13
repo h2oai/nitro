@@ -29,13 +29,13 @@ view(
 
 ## Parts
 
-A part is a custom box with a preset style. Use `part()` to define a part.
+A part is a custom box with a preset style. Use `box.part()` to define a part.
 
 Parts can be used wherever `box(text, style='...')` feels repetitive.
 
 
 ```py
-alert = part('p-4 border-l-4 text-sm font-medium text-sky-700 bg-sky-50 border-sky-700')
+alert = box.part('p-4 border-l-4 text-sm font-medium text-sky-700 bg-sky-50 border-sky-700')
 
 view(
     alert('Begin at the beginning.'),
@@ -50,16 +50,16 @@ view(
 
 ## Derived parts
 
-`part()` can extend existing parts.
+`box.part()` can extend existing parts.
 
 The example below creates different kinds of alerts from a base alert.
 
 
 ```py
-alert = part('p-4 border-l-4 text-sm font-medium')
-info_alert = part(alert, 'text-sky-700 bg-sky-50 border-sky-700')
-warning_alert = part(alert, 'text-amber-700 bg-amber-50 border-amber-700')
-critical_alert = part(alert, 'text-red-700 bg-red-50 border-red-700')
+alert = box.part('p-4 border-l-4 text-sm font-medium')
+info_alert = box.part(alert, 'text-sky-700 bg-sky-50 border-sky-700')
+warning_alert = box.part(alert, 'text-amber-700 bg-amber-50 border-amber-700')
+critical_alert = box.part(alert, 'text-red-700 bg-red-50 border-red-700')
 
 view(
     info_alert('Begin at the beginning.'),
