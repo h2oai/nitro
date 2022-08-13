@@ -654,22 +654,14 @@ class EditType(IntEnum):
     Remove = 3
 
 
-class EditPositionType(IntEnum):
-    Inside = 1
-    At = 2
-    Before = 3
-    After = 4
-
-
 class Edit:
     # noinspection PyShadowingBuiltins
-    def __init__(self, type: EditType, position: EditPositionType, selector: Optional[str] = None):
+    def __init__(self, type: EditType, selector: Optional[str] = None):
         self.t = type
-        self.p = position
         self.s = selector
 
     def dump(self) -> dict:
-        return _clean(dict(t=self.t, p=self.p, s=self.s))
+        return _clean(dict(t=self.t, s=self.s))
 
 
 class View(_View):
@@ -725,6 +717,11 @@ class View(_View):
             except InterruptError:
                 return
 
+    def _write(self, read: bool, b: Box, edit: Edit):
+        self._send(_marshal(_clean(dict(t=_MsgType.Output, box=b.dump(), edit=edit.dump() if edit else None))))
+        if read:
+            return self._read(_MsgType.Input)
+
     def _read(self, expected: int):
         m = self._recv()
         if m:
@@ -755,50 +752,20 @@ class View(_View):
             self,
             *items: Item,
             read=True,
-            insert=False,
-            remove=False,
-            inside: Optional[str] = None,
-            at: Optional[str] = None,
-            after: Optional[str] = None,
-            before: Optional[str] = None,
+            location: Optional[str] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
     ):
-        b = Box(
-            *items,
-            mode='col',
-            halt=halt,
-            title=title,
-            popup=popup,
-            style=style,
-        )
+        b = Box(*items, mode='col', halt=halt, title=title, popup=popup, style=style)
+        return self._write(read, b, Edit(EditType.Update, location) if location else None)
 
-        edit_type = EditType.Insert if insert else EditType.Remove if remove else EditType.Update
+    def add(self, *items: Item, read=True, location: Optional[str] = None):
+        return self._write(read, Box(*items, mode='col'), Edit(EditType.Insert, location))
 
-        if inside:
-            edit = Edit(edit_type, EditPositionType.Inside, inside)
-        elif at:
-            edit = Edit(edit_type, EditPositionType.At, at)
-        elif before:
-            edit = Edit(edit_type, EditPositionType.Before, before)
-        elif after:
-            edit = Edit(edit_type, EditPositionType.After, after)
-        elif edit_type != EditType.Update:
-            edit = Edit(edit_type, EditPositionType.Inside)
-        else:
-            edit = None
-
-        self._send(_marshal(_clean(dict(
-            t=_MsgType.Output,
-            box=b.dump(),
-            edit=edit.dump() if edit else None,
-        ))))
-
-        if read:
-            res = self._read(_MsgType.Input)
-            return res
+    def clear(self, read=True, location: Optional[str] = None):
+        return self._write(read, Box(mode='col'), Edit(EditType.Remove, location))
 
 
 class AsyncView(_View):
@@ -860,6 +827,11 @@ class AsyncView(_View):
             return _interpret(_unmarshal(m), expected)
         raise InterruptError()
 
+    async def _write(self, read: bool, b: Box, edit: Edit):
+        await self._send(_marshal(_clean(dict(t=_MsgType.Output, box=b.dump(), edit=edit.dump() if edit else None))))
+        if read:
+            return await self._read(_MsgType.Input)
+
     async def set(
             self,
             title: str = None,
@@ -884,50 +856,20 @@ class AsyncView(_View):
             self,
             *items: Item,
             read=True,
-            insert=False,
-            remove=False,
-            inside: Optional[str] = None,
-            at: Optional[str] = None,
-            after: Optional[str] = None,
-            before: Optional[str] = None,
+            location: Optional[str] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
     ):
-        b = Box(
-            *items,
-            mode='col',
-            halt=halt,
-            title=title,
-            popup=popup,
-            style=style,
-        )
+        b = Box(*items, mode='col', halt=halt, title=title, popup=popup, style=style)
+        return await self._write(read, b, Edit(EditType.Update, location) if location else None)
 
-        edit_type = EditType.Insert if insert else EditType.Remove if remove else EditType.Update
+    async def add(self, *items: Item, read=True, location: Optional[str] = None):
+        return await self._write(read, Box(*items, mode='col'), Edit(EditType.Insert, location))
 
-        if inside:
-            edit = Edit(edit_type, EditPositionType.Inside, inside)
-        elif at:
-            edit = Edit(edit_type, EditPositionType.At, at)
-        elif before:
-            edit = Edit(edit_type, EditPositionType.Before, before)
-        elif after:
-            edit = Edit(edit_type, EditPositionType.After, after)
-        elif edit_type != EditType.Update:
-            edit = Edit(edit_type, EditPositionType.Inside)
-        else:
-            edit = None
-
-        await self._send(_marshal(_clean(dict(
-            t=_MsgType.Output,
-            box=b.dump(),
-            edit=edit.dump() if edit else None,
-        ))))
-
-        if read:
-            res = await self._read(_MsgType.Input)
-            return res
+    async def clear(self, read=True, location: Optional[str] = None):
+        return await self._write(read, Box(mode='col'), Edit(EditType.Remove, location))
 
 
 class Duplex:
