@@ -2,13 +2,23 @@
 
 Make changes to content already displayed on a page.
 
-## Overview
+## Basics
 
 By default, `view()` overwrites all boxes displayed by the previous `view()`.
-However, you can also make `view()` selectively  append, update, insert or remove boxes.
+It's also possible to selectively modify the previous view instead of overwriting it entirely.
 
-The following example uses `insert=` or `remove=` with `before=`, `at=` or `after=`
-to edit the view.
+The following example uses `view()`, `view.add()` and `view.clear()` to modify the current view.
+
+The `location` argument indicates where to add, overwrite or clear boxes.
+
+- `foo`: from box `foo` (or at box `foo`).
+- `:foo`: before box `foo`.
+- `foo:`: after box `foo`.
+- `foo *`: inside box `foo`.
+- `foo bar`: from box `foo`'s child box `bar` (or at box `foo`'s child box `bar`).
+- `foo :bar`: before box `foo`'s child box `bar`.
+- `foo bar:`: after box `foo`'s child box `bar`.
+- `foo bar *`: inside box `foo`'s child box `bar`.
 
 
 ```py
@@ -24,31 +34,31 @@ view(
     blue('Blue 2'),
 )
 
-# Append a box:
-view(red('Appended'), insert=True)
+# Add a box:
+view.add(red('Appended'))
 
-# Insert a box before `amber`:
-view(green('Inserted'), insert=True, before='amber')
+# Add a box before `amber`:
+view.add(green('Added'), location=':amber')
 
-# Overwrite two boxes with three boxes after `amber`:
+# Overwrite two boxes with three other boxes after `amber`:
 view(
     green('Overwritten 1'),
     green('Overwritten 2'),
     green('Overwritten 3'),
-    after='amber',
+    location='amber:',
 )
 
-# Remove everything before `amber`:
-view(remove=True, before='amber')
+# Clear everything before `amber`:
+view.clear(location=':amber')
 ```
 
 
-![Screenshot](assets/screenshots/edit_update.png)
+![Screenshot](assets/screenshots/edit_overwrite.png)
 
 
-## Update at
+## Overwrite
 
-Set `at=` to overwrite boxes starting at an existing box.
+Set `location='name'` to overwrite boxes starting at an existing box.
 
 
 ```py
@@ -64,17 +74,17 @@ view(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    at='red1',
+    location='red1',
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_update_at.png)
+![Screenshot](assets/screenshots/edit_overwrite_at.png)
 
 
-## Update before
+## Overwrite before
 
-Set `before=` to overwrite boxes before an existing box.
+Set `location=':name'` to overwrite boxes before an existing box.
 
 
 ```py
@@ -91,17 +101,17 @@ view(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    before='amber',
+    location=':amber',
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_update_before.png)
+![Screenshot](assets/screenshots/edit_overwrite_before.png)
 
 
-## Update after
+## Overwrite after
 
-Set `after=` to overwrite boxes after an existing box.
+Set `location='name:'` to overwrite boxes after an existing box.
 
 
 ```py
@@ -118,17 +128,17 @@ view(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    after='amber',
+    location='amber:',
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_update_after.png)
+![Screenshot](assets/screenshots/edit_overwrite_after.png)
 
 
-## Update inside
+## Overwrite inside
 
-Set `inside=` to overwrite boxes inside an existing box.
+Set `location='name *'` to overwrite boxes inside an existing box.
 
 
 ```py
@@ -151,17 +161,17 @@ view(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    inside='amber',
+    location='amber *',
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_update_inside.png)
+![Screenshot](assets/screenshots/edit_overwrite_inside.png)
 
 
-## Insert
+## Add
 
-Set `insert=True` to insert boxes into an existing view.
+Call `view.add()` to add boxes to the existing view.
 
 By default, new boxes are appended to the bottom of the view.
 
@@ -174,21 +184,20 @@ view(
     blue('Blue 2'),
     blue('Blue 3'),
 )
-view(
+view.add(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    insert=True,
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_insert.png)
+![Screenshot](assets/screenshots/edit_add.png)
 
 
-## Insert before
+## Add before
 
-Set `insert=True` with `before=` to insert boxes before an existing box.
+Set `location=':name'` to add boxes before an existing box.
 
 
 ```py
@@ -200,21 +209,22 @@ view(
     amber('Amber', name='amber'),
     blue('Blue 2'),
 )
-view(
+view.add(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    insert=True, before='amber',
+    location=':amber',
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_insert_before.png)
+![Screenshot](assets/screenshots/edit_add_before.png)
 
 
-## Insert at
+## Add at
 
-Setting `at=` has the same effect as `before=` when `Insert=True`.
+Setting `location='name'` has the same effect as `location=':name'` when calling `view.add()`,
+i.e. "add at" is the same as "add before".
 
 
 ```py
@@ -226,21 +236,21 @@ view(
     amber('Amber', name='amber'),
     blue('Blue 2'),
 )
-view(
+view.add(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    insert=True, at='amber',
+    location='amber',
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_insert_at.png)
+![Screenshot](assets/screenshots/edit_add_at.png)
 
 
-## Insert after
+## Add after
 
-Set `insert=True` with `after=` to insert boxes after an existing box.
+Set `location='name:'` to add boxes after an existing box.
 
 
 ```py
@@ -252,21 +262,21 @@ view(
     amber('Amber', name='amber'),
     blue('Blue 2'),
 )
-view(
+view.add(
     green('Green 1'),
     green('Green 2'),
     green('Green 3'),
-    insert=True, after='amber',
+    location='amber:',
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_insert_after.png)
+![Screenshot](assets/screenshots/edit_add_after.png)
 
 
-## Insert inside
+## Add inside
 
-Set `insert=True` with `inside=` to insert boxes inside an existing box.
+Set `location='name *'` to add boxes inside an existing box.
 
 
 ```py
@@ -283,20 +293,20 @@ view(
     ),
     blue('Blue 4'),
 )
-view(
+view.add(
     green('Green 1'),
     green('Green 2'),
-    insert=True, inside='amber',
+    location='amber *',
 )
 ```
 
 
-![Screenshot](assets/screenshots/edit_insert_inside.png)
+![Screenshot](assets/screenshots/edit_add_inside.png)
 
 
-## Remove at
+## Clear
 
-Set `remove=True` with `at=` to remove an existing box.
+Call `view.clear() to remove a box.
 
 
 ```py
@@ -309,16 +319,16 @@ view(
     blue('Blue 3'),
     blue('Blue 4'),
 )
-view(remove=True, at='red')
+view.clear(location='red')
 ```
 
 
-![Screenshot](assets/screenshots/edit_remove_at.png)
+![Screenshot](assets/screenshots/edit_clear_at.png)
 
 
-## Remove before
+## Clear before
 
-Set `remove=True` with `before=` to remove boxes before an existing box.
+Set `location=`:name'` to clear everything before a box.
 
 
 ```py
@@ -332,16 +342,16 @@ view(
     blue('Blue 1'),
     blue('Blue 2'),
 )
-view(remove=True, before='amber')
+view.clear(location=':amber')
 ```
 
 
-![Screenshot](assets/screenshots/edit_remove_before.png)
+![Screenshot](assets/screenshots/edit_clear_before.png)
 
 
-## Remove after
+## Clear after
 
-Set `remove=True` with `after=` to remove boxes after an existing box.
+Set `location=`name:'` to clear everything after a box.
 
 
 ```py
@@ -355,16 +365,16 @@ view(
     red('Red 1'),
     red('Red 2'),
 )
-view(remove=True, after='amber')
+view.clear(location='amber:')
 ```
 
 
-![Screenshot](assets/screenshots/edit_remove_after.png)
+![Screenshot](assets/screenshots/edit_clear_after.png)
 
 
-## Remove inside
+## Clear inside
 
-Set `remove=True` with `inside=` to remove boxes inside an existing box.
+Set `location=`name *'` to clear everything inside a box.
 
 
 ```py
@@ -384,20 +394,20 @@ view(
     ),
     blue('Blue 2'),
 )
-view(remove=True, inside='amber')
+view.clear(location='amber *')
 ```
 
 
-![Screenshot](assets/screenshots/edit_remove_inside.png)
+![Screenshot](assets/screenshots/edit_clear_inside.png)
 
 
 ## Selecting nested boxes
 
-Set `at=`, `before=`, or `after=` to space-separated names to select nested items.
+Set `location=` to space-separated names to select nested items.
 
-- `before='foo'` means *before the box named `foo`*.
-- `before='foo bar'` means *before the box named `bar` inside the box named `foo`*.
-- `before='foo bar baz'` means *before the box named `baz` inside the box named `bar`, inside the box named `foo`*.
+- `foo` refers to the box named `foo`.
+- `foo bar` refers to the box named `bar` inside the box named `foo`.
+- `foo bar baz` refers to the box named `baz` inside the box named `bar` inside the box named `foo`.
 - ...and so on.
 
 
@@ -419,8 +429,8 @@ view(
             blue('Blue 4'),
             amber('Amber', name='amber'),
             red('Red'),
-            style='p-2 bg-stripes-amber',
-            name='col2',
+            style='p-2 bg-stripes-lime',
+            name='lime',
         ),
         col(
             blue('Blue 5'),
@@ -432,23 +442,23 @@ view(
     ),
 )
 
-# Insert 2 boxes before `amber` inside `col2`.
-view(
+# Add 2 boxes before `amber` inside `lime`.
+view.add(
     green('Green 1'),
     green('Green 2'),
-    insert=True, before='col2 amber',
+    location='lime :amber',
 )
 
-# Overwrite everything after `indigo` inside `col2`.
+# Overwrite everything after `amber` inside `lime`.
 view(
     green('Green 3'),
     green('Green 4'),
-    after='col2 amber',
+    location='lime amber:',
 )
 
-# Remove 'indigo'.
-view(remove=True, at='lime indigo')
+# Clear 'amber'.
+view.clear(location='lime amber')
 ```
 
 
-![Screenshot](assets/screenshots/edit_insert_before_nested.png)
+![Screenshot](assets/screenshots/edit_add_before_nested.png)

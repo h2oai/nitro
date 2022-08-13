@@ -19,13 +19,23 @@ from h2o_nitro import View, box, row, col, part, option, lorem, Theme
 # # Editing
 # Make changes to content already displayed on a page.
 
-# ## Overview
+# ## Basics
 # By default, `view()` overwrites all boxes displayed by the previous `view()`.
-# However, you can also make `view()` selectively  append, update, insert or remove boxes.
+# It's also possible to selectively modify the previous view instead of overwriting it entirely.
 #
-# The following example uses `insert=` or `remove=` with `before=`, `at=` or `after=`
-# to edit the view.
-def edit_update(view: View):  # height 5
+# The following example uses `view()`, `view.add()` and `view.clear()` to modify the current view.
+#
+# The `location` argument indicates where to add, overwrite or clear boxes.
+#
+# - `foo`: from box `foo` (or at box `foo`).
+# - `:foo`: before box `foo`.
+# - `foo:`: after box `foo`.
+# - `foo *`: inside box `foo`.
+# - `foo bar`: from box `foo`'s child box `bar` (or at box `foo`'s child box `bar`).
+# - `foo :bar`: before box `foo`'s child box `bar`.
+# - `foo bar:`: after box `foo`'s child box `bar`.
+# - `foo bar *`: inside box `foo`'s child box `bar`.
+def edit_overwrite(view: View):  # height 5
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
@@ -38,27 +48,27 @@ def edit_update(view: View):  # height 5
         blue('Blue 2'),
     )
 
-    # Append a box:
-    view(red('Appended'), insert=True)
+    # Add a box:
+    view.add(red('Appended'))
 
-    # Insert a box before `amber`:
-    view(green('Inserted'), insert=True, before='amber')
+    # Add a box before `amber`:
+    view.add(green('Added'), location=':amber')
 
-    # Overwrite two boxes with three boxes after `amber`:
+    # Overwrite two boxes with three other boxes after `amber`:
     view(
         green('Overwritten 1'),
         green('Overwritten 2'),
         green('Overwritten 3'),
-        after='amber',
+        location='amber:',
     )
 
-    # Remove everything before `amber`:
-    view(remove=True, before='amber')
+    # Clear everything before `amber`:
+    view.clear(location=':amber')
 
 
-# ## Update at
-# Set `at=` to overwrite boxes starting at an existing box.
-def edit_update_at(view: View):  # height 3
+# ## Overwrite
+# Set `location='name'` to overwrite boxes starting at an existing box.
+def edit_overwrite_at(view: View):  # height 3
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
     green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
@@ -71,13 +81,13 @@ def edit_update_at(view: View):  # height 3
         green('Green 1'),
         green('Green 2'),
         green('Green 3'),
-        at='red1',
+        location='red1',
     )
 
 
-# ## Update before
-# Set `before=` to overwrite boxes before an existing box.
-def edit_update_before(view: View):  # height 4
+# ## Overwrite before
+# Set `location=':name'` to overwrite boxes before an existing box.
+def edit_overwrite_before(view: View):  # height 4
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
@@ -91,13 +101,13 @@ def edit_update_before(view: View):  # height 4
         green('Green 1'),
         green('Green 2'),
         green('Green 3'),
-        before='amber',
+        location=':amber',
     )
 
 
-# ## Update after
-# Set `after=` to overwrite boxes after an existing box.
-def edit_update_after(view: View):  # height 4
+# ## Overwrite after
+# Set `location='name:'` to overwrite boxes after an existing box.
+def edit_overwrite_after(view: View):  # height 4
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
@@ -111,13 +121,13 @@ def edit_update_after(view: View):  # height 4
         green('Green 1'),
         green('Green 2'),
         green('Green 3'),
-        after='amber',
+        location='amber:',
     )
 
 
-# ## Update inside
-# Set `inside=` to overwrite boxes inside an existing box.
-def edit_update_inside(view: View):  # height 4
+# ## Overwrite inside
+# Set `location='name *'` to overwrite boxes inside an existing box.
+def edit_overwrite_inside(view: View):  # height 4
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
@@ -137,15 +147,15 @@ def edit_update_inside(view: View):  # height 4
         green('Green 1'),
         green('Green 2'),
         green('Green 3'),
-        inside='amber',
+        location='amber *',
     )
 
 
-# ## Insert
-# Set `insert=True` to insert boxes into an existing view.
+# ## Add
+# Call `view.add()` to add boxes to the existing view.
 #
 # By default, new boxes are appended to the bottom of the view.
-def edit_insert(view: View):  # height 5
+def edit_add(view: View):  # height 5
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
     view(
@@ -153,17 +163,16 @@ def edit_insert(view: View):  # height 5
         blue('Blue 2'),
         blue('Blue 3'),
     )
-    view(
+    view.add(
         green('Green 1'),
         green('Green 2'),
         green('Green 3'),
-        insert=True,
     )
 
 
-# ## Insert before
-# Set `insert=True` with `before=` to insert boxes before an existing box.
-def edit_insert_before(view: View):  # height 5
+# ## Add before
+# Set `location=':name'` to add boxes before an existing box.
+def edit_add_before(view: View):  # height 5
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
@@ -172,17 +181,18 @@ def edit_insert_before(view: View):  # height 5
         amber('Amber', name='amber'),
         blue('Blue 2'),
     )
-    view(
+    view.add(
         green('Green 1'),
         green('Green 2'),
         green('Green 3'),
-        insert=True, before='amber',
+        location=':amber',
     )
 
 
-# ## Insert at
-# Setting `at=` has the same effect as `before=` when `Insert=True`.
-def edit_insert_at(view: View):  # height 5
+# ## Add at
+# Setting `location='name'` has the same effect as `location=':name'` when calling `view.add()`,
+# i.e. "add at" is the same as "add before".
+def edit_add_at(view: View):  # height 5
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
@@ -191,17 +201,17 @@ def edit_insert_at(view: View):  # height 5
         amber('Amber', name='amber'),
         blue('Blue 2'),
     )
-    view(
+    view.add(
         green('Green 1'),
         green('Green 2'),
         green('Green 3'),
-        insert=True, at='amber',
+        location='amber',
     )
 
 
-# ## Insert after
-# Set `insert=True` with `after=` to insert boxes after an existing box.
-def edit_insert_after(view: View):  # height 4
+# ## Add after
+# Set `location='name:'` to add boxes after an existing box.
+def edit_add_after(view: View):  # height 4
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
@@ -210,17 +220,17 @@ def edit_insert_after(view: View):  # height 4
         amber('Amber', name='amber'),
         blue('Blue 2'),
     )
-    view(
+    view.add(
         green('Green 1'),
         green('Green 2'),
         green('Green 3'),
-        insert=True, after='amber',
+        location='amber:',
     )
 
 
-# ## Insert inside
-# Set `insert=True` with `inside=` to insert boxes inside an existing box.
-def edit_insert_inside(view: View):  # height 5
+# ## Add inside
+# Set `location='name *'` to add boxes inside an existing box.
+def edit_add_inside(view: View):  # height 5
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
@@ -234,16 +244,16 @@ def edit_insert_inside(view: View):  # height 5
         ),
         blue('Blue 4'),
     )
-    view(
+    view.add(
         green('Green 1'),
         green('Green 2'),
-        insert=True, inside='amber',
+        location='amber *',
     )
 
 
-# ## Remove at
-# Set `remove=True` with `at=` to remove an existing box.
-def edit_remove_at(view: View):  # height 4
+# ## Clear
+# Call `view.clear() to remove a box.
+def edit_clear_at(view: View):  # height 4
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
     view(
@@ -253,12 +263,12 @@ def edit_remove_at(view: View):  # height 4
         blue('Blue 3'),
         blue('Blue 4'),
     )
-    view(remove=True, at='red')
+    view.clear(location='red')
 
 
-# ## Remove before
-# Set `remove=True` with `before=` to remove boxes before an existing box.
-def edit_remove_before(view: View):  # height 4
+# ## Clear before
+# Set `location=`:name'` to clear everything before a box.
+def edit_clear_before(view: View):  # height 4
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
@@ -269,12 +279,12 @@ def edit_remove_before(view: View):  # height 4
         blue('Blue 1'),
         blue('Blue 2'),
     )
-    view(remove=True, before='amber')
+    view.clear(location=':amber')
 
 
-# ## Remove after
-# Set `remove=True` with `after=` to remove boxes after an existing box.
-def edit_remove_after(view: View):  # height 4
+# ## Clear after
+# Set `location=`name:'` to clear everything after a box.
+def edit_clear_after(view: View):  # height 4
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
@@ -285,12 +295,12 @@ def edit_remove_after(view: View):  # height 4
         red('Red 1'),
         red('Red 2'),
     )
-    view(remove=True, after='amber')
+    view.clear(location='amber:')
 
 
-# ## Remove inside
-# Set `remove=True` with `inside=` to remove boxes inside an existing box.
-def edit_remove_inside(view: View):  # height 5
+# ## Clear inside
+# Set `location=`name *'` to clear everything inside a box.
+def edit_clear_inside(view: View):  # height 5
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
@@ -307,17 +317,17 @@ def edit_remove_inside(view: View):  # height 5
         ),
         blue('Blue 2'),
     )
-    view(remove=True, inside='amber')
+    view.clear(location='amber *')
 
 
 # ## Selecting nested boxes
-# Set `at=`, `before=`, or `after=` to space-separated names to select nested items.
+# Set `location=` to space-separated names to select nested items.
 #
-# - `before='foo'` means *before the box named `foo`*.
-# - `before='foo bar'` means *before the box named `bar` inside the box named `foo`*.
-# - `before='foo bar baz'` means *before the box named `baz` inside the box named `bar`, inside the box named `foo`*.
+# - `foo` refers to the box named `foo`.
+# - `foo bar` refers to the box named `bar` inside the box named `foo`.
+# - `foo bar baz` refers to the box named `baz` inside the box named `bar` inside the box named `foo`.
 # - ...and so on.
-def edit_insert_before_nested(view: View):  # height 5
+def edit_add_before_nested(view: View):  # height 5
     blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
     amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
     red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
@@ -335,8 +345,8 @@ def edit_insert_before_nested(view: View):  # height 5
                 blue('Blue 4'),
                 amber('Amber', name='amber'),
                 red('Red'),
-                style='p-2 bg-stripes-amber',
-                name='col2',
+                style='p-2 bg-stripes-lime',
+                name='lime',
             ),
             col(
                 blue('Blue 5'),
@@ -348,19 +358,19 @@ def edit_insert_before_nested(view: View):  # height 5
         ),
     )
 
-    # Insert 2 boxes before `amber` inside `col2`.
-    view(
+    # Add 2 boxes before `amber` inside `lime`.
+    view.add(
         green('Green 1'),
         green('Green 2'),
-        insert=True, before='col2 amber',
+        location='lime :amber',
     )
 
-    # Overwrite everything after `indigo` inside `col2`.
+    # Overwrite everything after `amber` inside `lime`.
     view(
         green('Green 3'),
         green('Green 4'),
-        after='col2 amber',
+        location='lime amber:',
     )
 
-    # Remove 'indigo'.
-    view(remove=True, at='lime indigo')
+    # Clear 'amber'.
+    view.clear(location='lime amber')
