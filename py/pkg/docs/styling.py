@@ -50,7 +50,7 @@ def styling_shorthand(view: View):  # height 2
 # makes it more readable.
 #
 # The example below creates different kinds of alerts from a base alert.
-def styling_derived(view: View):  # height 3
+def styling_derived(view: View):  # height 4
     alert = box() / 'p-4 border-l-4 text-sm font-medium'
     info = alert / 'text-sky-700 bg-sky-50 border-sky-700'
     warning = alert / 'text-amber-700 bg-amber-50 border-amber-700'
