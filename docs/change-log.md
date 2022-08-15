@@ -17,6 +17,86 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.14.0
+
+Aug 15, 2022
+
+**Warning: This release has several breaking changes.**
+
+The major focus for this release was to support arbitrary styles for boxes, and reducing the code clutter typically
+associated with mixing presentation and behavioral logic.
+
+- Added
+    - Support for applying arbitrary styles using [Tailwind](https://tailwindcss.com/) notation. Note that Nitro does
+      not use the official Tailwind library, but includes an entirely custom imcremental compiler that expands and
+      applies styles on the fly.
+    - Concise styling notation: `box(...) / style` is equivalent to `box(..., style='')`
+    - Extensible styles: `box(...) / a / b` is shorthand for `box(..., style=f'{a} {b}')`
+    - Extensible boxes: `box(x, y)(p, q)` clones a box and puts `p` and `q` in it.
+    - Support for rendering SVG graphics.
+    - Dozens of examples for custom components like cards, stats, pagination, etc. built using pure Python.
+- Changed
+    - Typography and color handling have been completely overhauled.
+    - Markdown styling has been completely overhauled. Now uses Tailwind's `prose` styles.
+    - `box(style=)` now controls how a box looks, and replaces individual settings like `tile`, `width`, `color`, and so
+      on.
+      A box can have several styles, e.g. `box(style='p-4 grow text-blue-500'`).
+    - `box(mode=)` controls how a box behaves, and replaces individual flags like `multiple`, `required`, and so on. A
+      box
+      can have several modes, e.g. `box(mode='required multi menu')`.
+    - `view(insert=, remove=, inside=, before=, at=, after=)` replaced with `view.add(at=)`, `view.clear(at=)`.
+    - `box([options...])` now can be used to create any picker that accepts options, not just buttons.
+    - Themes have been simplified. Instead of specifying background, foreground and accent colors, you only need to
+      specify
+      light/dark modes and an accent color.
+    - `view.jump()` opens URLs in a new window (instead of the current window).
+    - `view.jump(target='_self')` opens URLs in the current window.
+    - `box(title=)` is now interpreted as a collapsible group.
+    - `row(box(title=), ...)` is now interpreted as a tabbed view.
+    - `col(box(title=), ...)` is now interpreted as a vertical tabbed view (not as an accordion view).
+- Removed
+    - `box(items=[a, b, c])` removed. Use `box(a, b, c)` instead, i.e. `box()` is now variadic.
+    - `box(row=)` removed. Use `row()` or `col()` instead.
+    - `box(layout='column')` removed. Use `mode='vertical'` instead.
+    - `box(tile=)` removed. Use `style='justify-*'` instead.
+    - `box(cross_tile=)` removed. Use `style='items-*'` instead.
+    - `box(wrap=)` removed. Use `style='flex-wrap'` instead.
+    - `box(gap=)` removed. Use `style='gap-*'` instead.
+    - `box(grow=)` removed. Use `style='grow'` instead.
+    - `box(shrink=)` removed. Use `style='shrink'` instead.
+    - `box(basis=)` removed. Use `style='basis-*'` instead.
+    - `box(align=)` removed. Use `style='text-*'` instead.
+    - `box(width=)` removed. Use `style='w-*'` instead.
+    - `box(height=)` removed. Use `style='h-*'` instead.
+    - `box(margin=)` removed. Use `style='m-*'` instead.
+    - `box(padding=)` removed. Use `style='p-*'` instead.
+    - `box(color=)` removed. Use `style='text-*'` instead.
+    - `box(background=)` removed. Use `style='bg-*'` instead.
+    - `box(border=)` removed. Use `style='border-*'` instead.
+    - `box(fit=)` removed. Use `style='object-*'` instead.
+    - `box(multiple=)` removed. Use `mode='multi'` instead.
+    - `box(required=)` removed. Use `mode='required'` instead.
+    - `box(password=)` removed. Use `mode=''password` instead.
+    - `box(editable=)` removed. Use `mode=''editable` instead.
+    - `box(live=)` removed. Use `mode='live'` instead.
+    - `header(width=)` removed. Use `style='min-w-* max-w-*'` instead.
+    - `header(resizable=)` removed. Use `mode='fixed'` instead.
+    - `header(multiline=)` removed. Use `mode='multiline'` instead.
+    - `view(before='foo')` removed. Use `view(at=':foo')` instead.
+    - `view(after='foo')` removed. Use `view(at='foo:')` instead.
+    - `view(inside='foo')` removed. Use `view(at='foo *')` instead.
+    - `view(insert=True)` removed. Use `view.add()` instead.
+    - `view(insert=True, at='foo')` removed. Use `view.add(at='foo')` instead.
+    - `view(insert=True, before='foo')` removed. Use `view.add(at=':foo')` instead.
+    - `view(insert=True, after='foo')` removed. Use `view.add(at='foo:')` instead.
+    - `view(insert=True, inside='foo')` removed. Use `view.add(at='foo *')` instead.
+    - `view(remove=True)` removed. Use `view.clear()` instead.
+    - `view(remove=True, at='foo')` removed. Use `view.clear(at='foo')` instead.
+    - `view(remove=True, before='foo')` removed. Use `view.clear(at=':foo')` instead.
+    - `view(remove=True, after='foo')` removed. Use `view.clear(at='foo:')` instead.
+    - `view(remove=True, inside='foo')` removed. Use `view.clear(at='foo *')` instead.
+    - `box(mode='tabs')` removed. Use `row(box(title=), ...)` instead.
+
 ## v0.13.2
 
 Jul 22, 2022
@@ -29,7 +109,7 @@ Jul 22, 2022
 Jul 21, 2022
 
 - Changed
-    - `view.jump()` now performs an implicit socket read, which can help prevent infinite loops in 
+    - `view.jump()` now performs an implicit socket read, which can help prevent infinite loops in
       situations where application code does not peform an explicit read after a jump.
 
 ## v0.13.0
@@ -63,8 +143,8 @@ Jul 05, 2022
     - Spinner component (infinite) with customizable label alignment.
 - Fixed
     - Client might return stale values if later sync does not overwrite previous values.
-    - Selected date is not reflected in calendar. 
-    - Respect scalar initial value if table is in single-select mode. 
+    - Selected date is not reflected in calendar.
+    - Respect scalar initial value if table is in single-select mode.
     - Remove (harmless) xid mismatch errors when re-entering workflows.
 
 ## v0.11.0
