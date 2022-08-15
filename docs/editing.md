@@ -22,10 +22,8 @@ The `at` argument indicates where to add, overwrite or clear boxes.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                           ['sky', 'amber', 'red', 'green']]
 
 # Show some boxes:
 view(
@@ -62,9 +60,8 @@ Set `at='name'` to overwrite boxes starting at an existing box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                    ['sky', 'red', 'green']]
 view(
     blue('Blue'),
     red('Red 1', name='red1'),
@@ -88,10 +85,8 @@ Set `at=':name'` to overwrite boxes before an existing box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                           ['sky', 'amber', 'red', 'green']]
 view(
     red('Red'),
     amber('Amber', name='amber'),
@@ -115,10 +110,8 @@ Set `at='name:'` to overwrite boxes after an existing box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                           ['sky', 'amber', 'red', 'green']]
 view(
     blue('Blue'),
     amber('Amber', name='amber'),
@@ -142,10 +135,8 @@ Set `at='name *'` to overwrite boxes inside an existing box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                    ['sky', 'red', 'green']]
 view(
     blue('Blue 1'),
     col(
@@ -177,8 +168,8 @@ By default, new boxes are appended to the bottom of the view.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+               ['sky', 'green']]
 view(
     blue('Blue 1'),
     blue('Blue 2'),
@@ -201,9 +192,8 @@ Set `at=':name'` to add boxes before an existing box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, amber, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                      ['sky', 'amber', 'green']]
 view(
     blue('Blue 1'),
     amber('Amber', name='amber'),
@@ -228,9 +218,8 @@ i.e. "add at" is the same as "add before".
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, amber, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                      ['sky', 'amber', 'green']]
 view(
     blue('Blue 1'),
     amber('Amber', name='amber'),
@@ -254,9 +243,8 @@ Set `at='name:'` to add boxes after an existing box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, amber, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                      ['sky', 'amber', 'green']]
 view(
     blue('Blue 1'),
     amber('Amber', name='amber'),
@@ -280,9 +268,8 @@ Set `at='name *'` to add boxes inside an existing box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+               ['sky', 'green']]
 view(
     blue('Blue 1'),
     col(
@@ -310,8 +297,8 @@ Call `view.clear() to remove a box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+blue, red = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+             ['sky', 'red']]
 view(
     blue('Blue 1'),
     blue('Blue 2'),
@@ -328,13 +315,12 @@ view.clear(at='red')
 
 ## Clear before
 
-Set `at=`:name'` to clear everything before a box.
+Set `at=':name'` to clear everything before a box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+blue, amber, red = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                    ['sky', 'amber', 'red']]
 view(
     red('Red 1'),
     red('Red 2'),
@@ -351,13 +337,12 @@ view.clear(at=':amber')
 
 ## Clear after
 
-Set `at=`name:'` to clear everything after a box.
+Set `at='name:'` to clear everything after a box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+blue, amber, red = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                    ['sky', 'amber', 'red']]
 view(
     blue('Blue 1'),
     blue('Blue 2'),
@@ -374,14 +359,12 @@ view.clear(at='amber:')
 
 ## Clear inside
 
-Set `at=`name *'` to clear everything inside a box.
+Set `at='name *'` to clear everything inside a box.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                           ['sky', 'amber', 'red', 'green']]
 view(
     blue('Blue 1'),
     blue('Blue 2'),
@@ -412,10 +395,8 @@ Set `at=` to space-separated names to select nested items.
 
 
 ```py
-blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                           ['sky', 'amber', 'red', 'green']]
 # Show a 3x3 grid
 view(
     box(

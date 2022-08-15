@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from h2o_nitro import View, box, row, col, part, option, lorem, Theme
+from h2o_nitro import View, box, row, col, option, lorem, Theme
 
 
 # # Editing
@@ -36,10 +36,8 @@ from h2o_nitro import View, box, row, col, part, option, lorem, Theme
 # - `foo bar:`: after box `foo`'s child box `bar`.
 # - `foo bar *`: inside box `foo`'s child box `bar`.
 def edit_overwrite(view: View):  # height 5
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                               ['sky', 'amber', 'red', 'green']]
 
     # Show some boxes:
     view(
@@ -69,9 +67,8 @@ def edit_overwrite(view: View):  # height 5
 # ## Overwrite
 # Set `at='name'` to overwrite boxes starting at an existing box.
 def edit_overwrite_at(view: View):  # height 3
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                        ['sky', 'red', 'green']]
     view(
         blue('Blue'),
         red('Red 1', name='red1'),
@@ -88,10 +85,8 @@ def edit_overwrite_at(view: View):  # height 3
 # ## Overwrite before
 # Set `at=':name'` to overwrite boxes before an existing box.
 def edit_overwrite_before(view: View):  # height 4
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                               ['sky', 'amber', 'red', 'green']]
     view(
         red('Red'),
         amber('Amber', name='amber'),
@@ -108,10 +103,8 @@ def edit_overwrite_before(view: View):  # height 4
 # ## Overwrite after
 # Set `at='name:'` to overwrite boxes after an existing box.
 def edit_overwrite_after(view: View):  # height 4
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                               ['sky', 'amber', 'red', 'green']]
     view(
         blue('Blue'),
         amber('Amber', name='amber'),
@@ -128,10 +121,8 @@ def edit_overwrite_after(view: View):  # height 4
 # ## Overwrite inside
 # Set `at='name *'` to overwrite boxes inside an existing box.
 def edit_overwrite_inside(view: View):  # height 4
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                        ['sky', 'red', 'green']]
     view(
         blue('Blue 1'),
         col(
@@ -156,8 +147,8 @@ def edit_overwrite_inside(view: View):  # height 4
 #
 # By default, new boxes are appended to the bottom of the view.
 def edit_add(view: View):  # height 5
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                   ['sky', 'green']]
     view(
         blue('Blue 1'),
         blue('Blue 2'),
@@ -173,9 +164,8 @@ def edit_add(view: View):  # height 5
 # ## Add before
 # Set `at=':name'` to add boxes before an existing box.
 def edit_add_before(view: View):  # height 5
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, amber, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                          ['sky', 'amber', 'green']]
     view(
         blue('Blue 1'),
         amber('Amber', name='amber'),
@@ -193,9 +183,8 @@ def edit_add_before(view: View):  # height 5
 # Setting `at='name'` has the same effect as `at=':name'` when calling `view.add()`,
 # i.e. "add at" is the same as "add before".
 def edit_add_at(view: View):  # height 5
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, amber, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                          ['sky', 'amber', 'green']]
     view(
         blue('Blue 1'),
         amber('Amber', name='amber'),
@@ -212,9 +201,8 @@ def edit_add_at(view: View):  # height 5
 # ## Add after
 # Set `at='name:'` to add boxes after an existing box.
 def edit_add_after(view: View):  # height 4
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, amber, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                          ['sky', 'amber', 'green']]
     view(
         blue('Blue 1'),
         amber('Amber', name='amber'),
@@ -231,9 +219,8 @@ def edit_add_after(view: View):  # height 4
 # ## Add inside
 # Set `at='name *'` to add boxes inside an existing box.
 def edit_add_inside(view: View):  # height 5
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                   ['sky', 'green']]
     view(
         blue('Blue 1'),
         col(
@@ -254,8 +241,8 @@ def edit_add_inside(view: View):  # height 5
 # ## Clear
 # Call `view.clear() to remove a box.
 def edit_clear_at(view: View):  # height 4
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+    blue, red = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                 ['sky', 'red']]
     view(
         blue('Blue 1'),
         blue('Blue 2'),
@@ -267,11 +254,10 @@ def edit_clear_at(view: View):  # height 4
 
 
 # ## Clear before
-# Set `at=`:name'` to clear everything before a box.
+# Set `at=':name'` to clear everything before a box.
 def edit_clear_before(view: View):  # height 4
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+    blue, amber, red = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                        ['sky', 'amber', 'red']]
     view(
         red('Red 1'),
         red('Red 2'),
@@ -283,11 +269,10 @@ def edit_clear_before(view: View):  # height 4
 
 
 # ## Clear after
-# Set `at=`name:'` to clear everything after a box.
+# Set `at='name:'` to clear everything after a box.
 def edit_clear_after(view: View):  # height 4
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
+    blue, amber, red = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                        ['sky', 'amber', 'red']]
     view(
         blue('Blue 1'),
         blue('Blue 2'),
@@ -299,12 +284,10 @@ def edit_clear_after(view: View):  # height 4
 
 
 # ## Clear inside
-# Set `at=`name *'` to clear everything inside a box.
+# Set `at='name *'` to clear everything inside a box.
 def edit_clear_inside(view: View):  # height 5
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                               ['sky', 'amber', 'red', 'green']]
     view(
         blue('Blue 1'),
         blue('Blue 2'),
@@ -328,10 +311,8 @@ def edit_clear_inside(view: View):  # height 5
 # - `foo bar baz` refers to the box named `baz` inside the box named `bar` inside the box named `foo`.
 # - ...and so on.
 def edit_add_before_nested(view: View):  # height 5
-    blue = part('p-2 rounded border text-sky-500 border-sky-500 bg-sky-100')
-    amber = part('p-2 rounded border text-amber-500 border-amber-500 bg-amber-100')
-    red = part('p-2 rounded border border-dashed text-red-500 border-red-500 bg-red-100')
-    green = part('p-2 rounded border text-green-500 border-green-500 bg-green-100')
+    blue, amber, red, green = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
+                               ['sky', 'amber', 'red', 'green']]
     # Show a 3x3 grid
     view(
         box(
