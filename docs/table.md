@@ -8,6 +8,8 @@ They are a good replacement for dropdowns and dropdown lists when each option ha
 
 Call `box()` with `mode='table'` to show a table.
 
+`mode` can be elided if a box has both `headers` and nested `options`.
+
 
 ```py
 view(box(
@@ -40,7 +42,6 @@ If set, `view()` returns the `value` of the clicked row.
 
 ```py
 choice = view(box(
-    mode='table',
     headers=[
         header('Flavor', mode='link'),
         header('Super cheap!'),
@@ -68,7 +69,6 @@ By default, cells are interpreted as plain text. To interpret them as markdown, 
 
 ```py
 choice = view(box(
-    mode='table',
     headers=[
         header('Flavor'),
         header('Super cheap!'),
@@ -219,7 +219,6 @@ To group rows, use nested options.
 
 ```py
 choice = view(box(
-    mode='table',
     headers=[
         header('Flavor'),
         header('Super cheap!'),
@@ -253,7 +252,6 @@ Rows can be nested at multiple levels.
 
 ```py
 choice = view(box(
-    mode='table',
     headers=[
         header('Flavor'),
         header('Super cheap!'),
@@ -291,7 +289,6 @@ Set `min-w-*` and `max-w-*` styles to control the minimum and maximum widths of 
 
 ```py
 view(box(
-    mode='table',
     headers=[
         header('Flavor'),
         header('Super cheap!', style='min-w-24'),  # 96px wide
@@ -318,7 +315,6 @@ Set `icon=` to display an icon in the header instead of text.
 
 ```py
 view(box(
-    mode='table',
     headers=[
         header('Flavor'),
         header('Super cheap!', icon='Money'),
@@ -345,7 +341,6 @@ Add `fixed` to `mode` to prevent a column from being resized.
 
 ```py
 view(box(
-    mode='table',
     headers=[
         header('Flavor'),
         header('Super cheap!', mode='fixed'),
@@ -372,7 +367,6 @@ Add `multiline` to `mode` to allow multiline text in a column's cells
 
 ```py
 view(box(
-    mode='table',
     headers=[
         header('Flavor'),
         header('Super cheap!'),

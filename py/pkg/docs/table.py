@@ -22,6 +22,8 @@ from h2o_nitro import View, box, row, col, option, header, lorem
 
 # ## Basic
 # Call `box()` with `mode='table'` to show a table.
+#
+# `mode` can be elided if a box has both `headers` and nested `options`.
 def table_basic(view: View):  # height 4
     view(box(
         mode='table',
@@ -46,7 +48,6 @@ def table_basic(view: View):  # height 4
 # If set, `view()` returns the `value` of the clicked row.
 def table_clickable(view: View):  # height 4
     choice = view(box(
-        mode='table',
         headers=[
             header('Flavor', mode='link'),
             header('Super cheap!'),
@@ -67,7 +68,6 @@ def table_clickable(view: View):  # height 4
 # By default, cells are interpreted as plain text. To interpret them as markdown, set `mode='md'` on the header.
 def table_markdown(view: View):  # height 4
     choice = view(box(
-        mode='table',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -183,7 +183,6 @@ def table_selected(view: View):  # height 4
 # To group rows, use nested options.
 def table_grouped(view: View):  # height 7
     choice = view(box(
-        mode='table',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -210,7 +209,6 @@ def table_grouped(view: View):  # height 7
 # Rows can be nested at multiple levels.
 def table_multilevel(view: View):  # height 8
     choice = view(box(
-        mode='table',
         headers=[
             header('Flavor'),
             header('Super cheap!'),
@@ -241,7 +239,6 @@ def table_multilevel(view: View):  # height 8
 # Set `min-w-*` and `max-w-*` styles to control the minimum and maximum widths of each column.
 def table_column_width(view: View):  # height 4
     view(box(
-        mode='table',
         headers=[
             header('Flavor'),
             header('Super cheap!', style='min-w-24'),  # 96px wide
@@ -261,7 +258,6 @@ def table_column_width(view: View):  # height 4
 # Set `icon=` to display an icon in the header instead of text.
 def table_header_icon(view: View):  # height 4
     view(box(
-        mode='table',
         headers=[
             header('Flavor'),
             header('Super cheap!', icon='Money'),
@@ -281,7 +277,6 @@ def table_header_icon(view: View):  # height 4
 # Add `fixed` to `mode` to prevent a column from being resized.
 def table_header_resizable(view: View):  # height 4
     view(box(
-        mode='table',
         headers=[
             header('Flavor'),
             header('Super cheap!', mode='fixed'),
@@ -301,7 +296,6 @@ def table_header_resizable(view: View):  # height 4
 # Add `multiline` to `mode` to allow multiline text in a column's cells
 def table_column_multiline(view: View):  # height 4
     view(box(
-        mode='table',
         headers=[
             header('Flavor'),
             header('Super cheap!'),

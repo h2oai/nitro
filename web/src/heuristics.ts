@@ -102,6 +102,9 @@ const determineMode = (box: Box): BoxMode => {
   const { modes, options } = box
 
   if (options.length) {
+    if (box.headers?.length && options.every(o => o.options?.length ? true : false)) {
+      return 'table'
+    }
     if (modes.has('editable')) {
       return 'menu'
     }
