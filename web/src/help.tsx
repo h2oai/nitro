@@ -107,7 +107,7 @@ const Doc = make(({ html, helpE }: { html: S, helpE: Signal<S> }) => {
       })
     },
     render = () => {
-      return <div className='md' ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
+      return <div className='prose' ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
     }
   return { init: update, update, render }
 })
