@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from h2o_nitro import View, box, row, col, part, option, lorem
+from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Layout
@@ -21,7 +21,7 @@ from h2o_nitro import View, box, row, col, part, option, lorem
 # ## Basic
 # By default, items passed to `view()` are laid out one below the other.
 def layout_basic(view: View):  # height 3
-    block = part('p-2 rounded bg-accent-500 text-white')
+    block = box() / 'p-2 rounded bg-accent-500 text-white'
     view(
         block('Top'),
         block('Middle'),
@@ -33,7 +33,7 @@ def layout_basic(view: View):  # height 3
 # ## Rows
 # Use `row()` to lay out multiple items horizontally, left to right.
 def layout_row(view: View):  # height 2
-    block = part('p-2 rounded bg-accent-500 text-white')
+    block = box() / 'p-2 rounded bg-accent-500 text-white'
     view(
         row(
             block('Left'),
@@ -47,7 +47,7 @@ def layout_row(view: View):  # height 2
 # `row(x, y, z)` is in fact shorthand for `box(x, y, z, mode='row', style='flex flex-row gap-2')`.
 # The following code produces the same results.
 def layout_row_alt(view: View):
-    block = part('p-2 rounded bg-accent-500 text-white')
+    block = box() / 'p-2 rounded bg-accent-500 text-white'
     view(
         box(
             block('Left'),
@@ -62,7 +62,7 @@ def layout_row_alt(view: View):
 # ## Fit
 # Set the `grow` style to expand items to fit.
 def layout_grow(view: View):  # height 2
-    block = part('p-2 rounded bg-accent-500 text-white grow')
+    block = box() / 'p-2 rounded bg-accent-500 text-white grow'
     view(
         row(
             block('Left'),
@@ -78,7 +78,7 @@ def layout_grow(view: View):  # height 2
 #
 # The example shows one row split into three columns containing three rows each.
 def layout_col(view: View):  # height 3
-    block = part('p-2 rounded bg-accent-500 text-white')
+    block = box() / 'p-2 rounded bg-accent-500 text-white'
     view(
         col(
             block('North'),
@@ -105,7 +105,7 @@ def layout_col_alt2(view: View):
 #
 # The example shows one row split into three columns containing three rows each.
 def layout_row_col(view: View):  # height 3
-    block = part('p-2 rounded bg-accent-500 text-white')
+    block = box() / 'p-2 rounded bg-accent-500 text-white'
     view(
         row(
             col(
@@ -201,7 +201,7 @@ def layout_tabs_vertical_icons(view: View):  # height 4
 
 
 # ## Select tab
-# Add `open` to `mode` to open that tab.
+# Set a tab's `mode` to `open` to open that tab instead of the first tab in the set.
 def layout_tab_select(view: View):  # height 4
     view(
         row(
@@ -213,7 +213,7 @@ def layout_tab_select(view: View):  # height 4
 
 
 # ## Select vertical tab
-# Add `open` to `mode` to open that tab.
+# Set a tab's `mode` to `open` to open that tab instead of the first tab in the set.
 def layout_tab_vertical_select(view: View):  # height 4
     view(
         col(

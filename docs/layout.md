@@ -8,7 +8,7 @@ By default, items passed to `view()` are laid out one below the other.
 
 
 ```py
-block = part('p-2 rounded bg-accent-500 text-white')
+block = box() / 'p-2 rounded bg-accent-500 text-white'
 view(
     block('Top'),
     block('Middle'),
@@ -27,7 +27,7 @@ Use `row()` to lay out multiple items horizontally, left to right.
 
 
 ```py
-block = part('p-2 rounded bg-accent-500 text-white')
+block = box() / 'p-2 rounded bg-accent-500 text-white'
 view(
     row(
         block('Left'),
@@ -44,7 +44,7 @@ The following code produces the same results.
 
 
 ```py
-block = part('p-2 rounded bg-accent-500 text-white')
+block = box() / 'p-2 rounded bg-accent-500 text-white'
 view(
     box(
         block('Left'),
@@ -66,7 +66,7 @@ Set the `grow` style to expand items to fit.
 
 
 ```py
-block = part('p-2 rounded bg-accent-500 text-white grow')
+block = box() / 'p-2 rounded bg-accent-500 text-white grow'
 view(
     row(
         block('Left'),
@@ -89,7 +89,7 @@ The example shows one row split into three columns containing three rows each.
 
 
 ```py
-block = part('p-2 rounded bg-accent-500 text-white')
+block = box() / 'p-2 rounded bg-accent-500 text-white'
 view(
     col(
         block('North'),
@@ -126,7 +126,7 @@ The example shows one row split into three columns containing three rows each.
 
 
 ```py
-block = part('p-2 rounded bg-accent-500 text-white')
+block = box() / 'p-2 rounded bg-accent-500 text-white'
 view(
     row(
         col(
@@ -269,7 +269,7 @@ view(
 
 ## Select tab
 
-Add `open` to `mode` to open that tab.
+Set a tab's `mode` to `open` to open that tab instead of the first tab in the set.
 
 
 ```py
@@ -288,7 +288,7 @@ view(
 
 ## Select vertical tab
 
-Add `open` to `mode` to open that tab.
+Set a tab's `mode` to `open` to open that tab instead of the first tab in the set.
 
 
 ```py
