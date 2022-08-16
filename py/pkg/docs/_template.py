@@ -25,7 +25,10 @@
 # h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
-# START python docs.py
+# ENV FLASK_APP docs.py
+# ENV FLASK_ENV development
+# ENV FLASK_RUN_PORT 4999
+# START python -m flask run
 # ===
 
 import json
@@ -135,6 +138,3 @@ def socket():
         pass
     return ''
 
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=4999)
