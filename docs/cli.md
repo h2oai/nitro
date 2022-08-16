@@ -20,7 +20,7 @@ The `nitro` CLI (command line interface) makes it really easy to play with any N
 
 1. Go to [https://github.com/h2oai/nitro/releases](https://github.com/h2oai/nitro/releases).
 2. Download the appropriate archive for your platform.
-3. Extract the archive and move `nitro` or `nitro.exe` to a location that's in your `PATH`. [Learn how to.](help.md#add-cli-to-path)
+3. Extract the archive and move `nitro` or `nitro.exe` to a location that's in your `PATH`. [Learn how.](help.md#add-cli-to-path)
 
 !!! success "Test your installation"
     To verify if `nitro` is accessible, open a new terminal window and run `nitro version`.
@@ -42,10 +42,10 @@ nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.p
 
 The `nitro run` command does several things for you:
 
-- First, it creates a new virtual environment.
-- Then, it ensures that a current version of `pip` is available.
-- Next, it installs all the libraries that `hello.py` needs.
-- Finally, it launches the app.
+- Creates a new virtual environment.
+- Ensures that a current version of `pip` is available.
+- Installs all the libraries that `hello.py` needs.
+- Launches the app.
 
 ```txt
 Downloading https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py

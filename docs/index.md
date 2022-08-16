@@ -70,7 +70,6 @@ Nitro is for you if:
 - You know Python.
 - You want to ship a browser-based application, but don't know or care about Javascript.
 - You want it to look beautiful, with a simple and friendly user experience.
-- You don't care about customizing the visual design too much.
 - **You want to write the least amount of code necessary, and ship fast!**
 
 ## Status
