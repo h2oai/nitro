@@ -39,8 +39,7 @@ def layout_row(view: View):  # height 2
             block('Left'),
             block('Center'),
             block('Right'),
-            style='bg-stripes-accent',
-        )
+        ) / 'bg-stripes-accent'
     )
 
 
@@ -54,8 +53,7 @@ def layout_row_alt(view: View):
             block('Center'),
             block('Right'),
             mode='row',
-            style='flex flex-row gap-2 bg-stripes-accent',
-        ),
+        ) / 'flex flex-row gap-2 bg-stripes-accent',
     )
 
 
@@ -68,8 +66,7 @@ def layout_grow(view: View):  # height 2
             block('Left'),
             block('Center'),
             block('Right'),
-            style='bg-stripes-accent',
-        )
+        ) / 'bg-stripes-accent'
     )
 
 
@@ -84,8 +81,7 @@ def layout_col(view: View):  # height 3
             block('North'),
             block('Center'),
             block('South'),
-            style='bg-stripes-accent',
-        ),
+        ) / 'bg-stripes-accent',
     )
 
 
@@ -96,8 +92,7 @@ def layout_col_alt2(view: View):
         box('Center'),
         box('South'),
         mode='col',
-        style='flex flex-col gap-2',
-    )
+    ) / 'flex flex-col gap-2'
 
 
 # ## Combine rows and columns
@@ -106,22 +101,13 @@ def layout_col_alt2(view: View):
 # The example shows one row split into three columns containing three rows each.
 def layout_row_col(view: View):  # height 3
     block = box() / 'p-2 rounded bg-accent-500 text-white'
+    grow = col() / 'grow'  # a column stretched horizontally
     view(
         row(
-            col(
-                block('North-west'), block('West'), block('South-west'),
-                style='grow'
-            ),
-            col(
-                block('North'), block('Center'), block('South'),
-                style='grow'
-            ),
-            col(
-                block('North-east'), block('East'), block('South-east'),
-                style='grow'
-            ),
-            style='bg-stripes-accent'
-        ),
+            grow(block('North-west'), block('West'), block('South-west')),
+            grow(block('North'), block('Center'), block('South')),
+            grow(block('North-east'), block('East'), block('South-east')),
+        ) / 'bg-stripes-accent',
     )
 
 
@@ -133,10 +119,10 @@ def layout_grid(view: View):  # height 3
     style = 'p-2 rounded bg-accent-500 text-white'
 
     # Create some boxes.
-    boxes = [box(f'Box {i}', style=style) for i in range(1, 13)]
+    boxes = [box(f'Box {i}') / style for i in range(1, 13)]
 
     # Place the boxes in a 4-column grid.
-    view(box(*boxes, style='grid grid-cols-4 gap-2 bg-stripes-accent'))
+    view(box(*boxes) / 'grid grid-cols-4 gap-2 bg-stripes-accent')
 
 
 # ## Groups
