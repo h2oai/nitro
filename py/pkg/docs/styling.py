@@ -79,7 +79,7 @@ def styling_alert(view: View):  # height 2
 
 
 # ## Card example
-# The following example starts with some nested and incrementally applies styles to create a card.
+# The following example starts with some nested boxes and incrementally applies styles to create a card.
 def styling_card(view: View):  # height 7
     title = 'Space Travel'
     text = lorem(2)
@@ -89,11 +89,7 @@ def styling_card(view: View):  # height 7
     view(box(image, col(title, text), style='w-72 rounded-xl'), ['Crop contents'])
     view(box(image, col(title, text), style='w-72 rounded-xl overflow-hidden'), ['Add shadow'])
     view(box(image, col(title, text), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Add padding'])
-    view(box(image, col(title, text, style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'),
-         ['Make title bold'])
-    view(box(image, col(box(title, style='font-bold'), text, style='p-4'),
-             style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make title larger'])
-    view(box(image, col(box(title, style='font-bold text-xl'), text, style='p-4'),
-             style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make text smaller'])
-    view(box(image, col(box(title, style='font-bold text-xl'), box(text, style='text-sm'), style='p-4'),
-             style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Restart'])
+    view(box(image, col(title, text, style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make title bold'])
+    view(box(image, col(box(title, style='font-bold'), text, style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make title larger'])
+    view(box(image, col(box(title, style='font-bold text-xl'), text, style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Make text smaller'])
+    view(box(image, col(box(title, style='font-bold text-xl'), box(text, style='text-sm'), style='p-4'), style='w-72 rounded-xl overflow-hidden shadow-xl'), ['Restart'])
