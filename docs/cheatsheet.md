@@ -10,8 +10,9 @@
 | Stack boxes vertically.                                     | `box(box(...), box(...), ...)`                                                                              |
 | Stack boxes horizontally (with gaps).                       | `row(box(...), box(...), ...)` <br> `box(..., mode='row')`                                                  |
 | Stack boxes vertically (with gaps).                         | `col(box(...), box(...), ...)` <br> `box(..., mode='col')`                                                  |
-| Show boxes in tabs.                                         | `row(box(..., title='Label1'), box(..., title='Label2'), ...)`                                              |
-| Show boxes in vertical tabs.                                | `col(box(..., title='Label1'), box(..., title='Label2'), ...)`                                              |
+| Show boxes in a group (collapsible).                        | `box(..., title='Group1')`                                                                                  |
+| Show tabs.                                                  | `row(group1, group1, ...)` <br> `row(box(..., title='Group1'), box(..., title='Group2'), ...)`              |
+| Show vertical tabs.                                         | `col(group1, group2, ...)` <br> `col(box(..., title='Group1'), box(..., title='Group2'), ...)`              |
 | Show a textbox.                                             | `box('Label', value='Alice')` <br> `box('Label', mode='text')`                                              |
 | Show a spinbox.                                             | `box('Label', value=42)` <br> `box('Label', mode='number')`                                                 |
 | Show a checkbox.                                            | `box('Label', value=False)` <br> `box('Label', value=True)` <br> `box('Label', mode='check')`               |
@@ -52,6 +53,12 @@
 | Show a table with grouped rows.                             | `box(mode='table', headers=[...], options=[option(..., options=[option(..., options=[...]), ...]), ...])`   |
 | Make a column's cells clickable.                            | `header(..., mode='link'`                                                                                   |
 | Render markdown in a column's cells.                        | `header(..., mode='md')`                                                                                    |
+| Pass options                                                | `box(..., options=[option('red', 'Red'), ...])` <br> `box([option('red', 'Red'), ...], ...)`                |
+| Pass options using pairs                                    | `box(..., options=[('red', 'Red'), ('blue', 'Blue')])` <br> `box([('red', 'Red'), ('blue', 'Blue')], ...)`  |
+| Pass options using tuple                                    | `box(..., options=('red', 'blue'))`                                                                         |
+| Pass options using list                                     | `box(..., options=['red', 'blue'])` <br> `box(['red', 'blue'], ...)`                                        |
+| Pass options using dict                                     | `box(..., options=dict(red='Red', blue='Blue'))`                                                            |
+| Pass options using string                                   | `box(..., options='red blue')`                                                                              |
 
 ## Views
 
