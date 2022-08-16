@@ -30,13 +30,14 @@ Set the `object-` style to control how the image should be resized to fit its bo
 
 
 ```py
+image = box(image='sample.jpg') / 'w-32 h-32 border bg-stripes-sky'
 view(
     row(
-        box(image='sample.jpg', style='w-32 h-32 border object-cover'),
-        box(image='sample.jpg', style='w-32 h-32 border object-fill'),
-        box(image='sample.jpg', style='w-32 h-32 border object-contain'),
-        box(image='sample.jpg', style='w-32 h-32 border object-none'),
-        box(image='sample.jpg', style='w-32 h-32 border object-scale-down'),
+        image / 'object-cover',
+        image / 'object-fill',
+        image / 'object-contain',
+        image / 'object-none',
+        image / 'object-scale-down',
     )
 )
 ```
@@ -56,13 +57,9 @@ If a box contains child items, `image=` is used as a background.
 ```py
 view(
     col(
-        box(
-            'To the galaxy and beyond',
-            style='font-bold text-3xl text-center text-white',
-        ),
+        box('To the galaxy and beyond') / 'font-bold text-3xl text-center text-white',
         image='sample.jpg',
-        style='h-64 justify-center bg-cover bg-center'
-    )
+    ) / 'h-64 justify-center bg-cover bg-center'
 )
 ```
 
@@ -84,13 +81,9 @@ The example below uses the image as a background pattern.
 ```py
 view(
     col(
-        box(
-            'To the galaxy and beyond',
-            style='font-bold text-3xl text-center text-white',
-        ),
+        box('To the galaxy and beyond') / 'font-bold text-3xl text-center text-white',
         image='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEUlEQVQIHWNggIBiEGUFxJUABisBJ85jLc8AAAAASUVORK5CYII=',
-        style='h-64 justify-center'
-    )
+    ) / 'h-64 justify-center'
 )
 ```
 
