@@ -71,15 +71,15 @@ def form_improved(view: View):  # height 5
     first, middle, last, addr1, addr2, city, state, zip, action = view(
         row(
             box('First name', value=''),
-            box('M.I.', value='', style='w-1/10'),  # shrink
+            box('M.I.', value='') / 'w-1/10',  # shrink
             box('Last name', value=''),
         ),
         box('Address line 1', value=''),
         box('Address line 2', value=''),
         row(
-            box('City', value='', style='grow'),  # grow
-            box('State', value='', style='w-1/5'),  # shrink
-            box('Zip', value='', style='grow'),  # grow
+            box('City', value='') / 'grow',  # grow
+            box('State', value='') / 'w-1/5',  # shrink
+            box('Zip', value='') / 'grow',  # grow
         ),
         box([
             option('yes', 'Sign me up!', caption='Terms and conditions apply'),
