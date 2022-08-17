@@ -174,7 +174,7 @@ export type Box = {
   name?: S
   modes: Set<BoxT>
   value?: V | Pair<V>
-  options: Option[]
+  options?: Option[]
   headers?: Header[]
   items?: Box[]
   data?: any

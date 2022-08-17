@@ -57,10 +57,13 @@ export const
     }
     return items
   },
-  selectedOf = ({ value, options }: Box): Option | undefined => value
-    ? options.find(c => c.value === value)
-    : options.find(c => c.selected),
-
-  selectedsOf = ({ value, options }: Box): Option[] => Array.isArray(value)
-    ? options.filter(c => value.includes(c.value))
-    : options.filter(c => c.selected)
+  selectedOf = ({ value, options }: Box): Option | undefined => options
+    ? value
+      ? options.find(c => c.value === value)
+      : options.find(c => c.selected)
+    : undefined,
+  selectedsOf = ({ value, options }: Box): Option[] => options
+    ? Array.isArray(value)
+      ? options.filter(c => value.includes(c.value))
+      : options.filter(c => c.selected)
+    : []

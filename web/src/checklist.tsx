@@ -20,7 +20,8 @@ import { BoxProps, make } from './ui';
 
 export const Checklist = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, options, style } = box,
+    { modes, text, options: rawOptions, style } = box,
+    options = rawOptions ?? [],
     live = modes.has('live'),
     selecteds = selectedsOf(box),
     selection = new Set<S>(selecteds.map(s => String(s.value))),

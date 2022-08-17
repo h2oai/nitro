@@ -101,7 +101,7 @@ const readonlyModes = invert(knownModes, interactiveModes)
 const determineMode = (box: Box): BoxMode => {
   const { modes, options } = box
 
-  if (options.length) {
+  if (options) {
     if (box.headers?.length && options.every(o => o.options?.length ? true : false)) {
       return 'table'
     }
@@ -202,7 +202,6 @@ const sanitizeRange = (box: Box) => {
 }
 
 export const sanitizeOptions = (x: any): Option[] => { // recursive
-  if (!x) return []
   if (Array.isArray(x)) {
     const c: Option[] = []
     for (const v of x) {
@@ -323,7 +322,8 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   } else {
     const { value, options } = box
 
-    box.options = sanitizeOptions(options)
+    if (options) box.options = sanitizeOptions(options)
+
     let ignore = false
 
     sanitizeRange(box)
@@ -386,7 +386,7 @@ export const hasActions = (boxes: Box[]): B => { // recursive
       if (hasActions(box.items)) return true
     } else {
       if (modes.has('button')) {
-        if (box.options.length) return true
+        if (box.options) return true
       } else if (modes.has('md')) {
         if (box.index >= 0) return true
       } else if (modes.has('toggle') || modes.has('progress') || modes.has('spinner')) {

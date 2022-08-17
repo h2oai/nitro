@@ -44,7 +44,8 @@ const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children
 
 const NavSet = make(({ context, box, items }: Container & { items: Box[] }) => {
   const
-    { style, options } = box,
+    { style, options: rawOptions } = box,
+    options = rawOptions ?? [],
     selectedIndex = items.findIndex(box => box.modes.has('open')),
     selectedIndexB = signal(selectedIndex < 0 ? 0 : selectedIndex),
     selectedKeyB = by(selectedIndexB, i => String(options[i].value)),
@@ -78,7 +79,8 @@ const NavSet = make(({ context, box, items }: Container & { items: Box[] }) => {
 
 const TabSet = ({ context, box, items }: Container & { items: Box[] }) => {
   const
-    { style, options } = box,
+    { style, options: rawOptions } = box,
+    options = rawOptions ?? [],
     tabs = zip(options, items, (opt, box, i) => (
       <PivotItem key={box.xid} headerText={opt.text ?? `Tab ${i + 1}`} itemKey={box.xid} itemIcon={box.icon ?? undefined} style={{ padding: '8px 0' }}>
         <Zone context={context} box={box} />

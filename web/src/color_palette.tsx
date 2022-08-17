@@ -22,7 +22,8 @@ import { BoxProps, make } from './ui';
 const swatchCellSize = 25
 export const ColorPalette = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, options, style } = box,
+    { modes, text, options: rawOptions, style } = box,
+    options = rawOptions ?? [],
     live = modes.has('live'),
     selected = selectedOf(box),
     cells: IColorCellProps[] = options.map(c => ({

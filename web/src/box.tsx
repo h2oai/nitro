@@ -54,13 +54,13 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
   } else if (modes.has('button')) {
     return <Buttons context={context} box={box} />
   } else if (modes.has('check')) {
-    return options.length
+    return options
       ? <Checklist context={context} box={box} />
       : <Checkbox context={context} box={box} />
   } else if (modes.has('toggle')) {
     return <Toggle context={context} box={box} />
   } else if (modes.has('color')) {
-    return options.length
+    return options
       ? <ColorPalette context={context} box={box} />
       : <ColorPicker context={context} box={box} />
   } else if (modes.has('date')) {

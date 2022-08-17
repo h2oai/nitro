@@ -24,7 +24,8 @@ export const Buttons = make(({ context, box }: BoxProps) => {
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
-        { text, options, style, modes } = box,
+        { text, options: rawOptions, style, modes } = box,
+        options = rawOptions ?? [],
         horizontal = !modes.has('vertical'),
         styles: IButtonStyles = horizontal ? {} : { root: { width: '100%' } },
         compoundStyles: IButtonStyles = horizontal ? {} : { root: { width: '100%', maxWidth: 'auto' } },
