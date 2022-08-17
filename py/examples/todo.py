@@ -45,23 +45,22 @@ def task_to_option(task: Task):
 
 
 def main(view: View):
-    while True:
-        text, add, not_done, done = view(
-            row(box('Add a task', value='', lines=4) / 'grow', ['Add']),
-            box('To do', mode='live check', options=[
-                task_to_option(task) for task in tasks.values() if not task.done
-            ]),
-            box('Done', mode='live check', options=[
-                task_to_option(task) for task in tasks.values() if task.done
-            ]),
-        )
-        if add:
-            task = Task(text)
-            tasks[task.key] = task
-        else:
-            checked = set(not_done + done)
-            for task in tasks.values():
-                task.done = task.key in checked
+    text, add, not_done, done = view(
+        row(box('Add a task', value='', lines=4) / 'grow', ['Add']),
+        box('To do', mode='live check', options=[
+            task_to_option(task) for task in tasks.values() if not task.done
+        ]),
+        box('Done', mode='live check', options=[
+            task_to_option(task) for task in tasks.values() if task.done
+        ]),
+    )
+    if add:
+        task = Task(text)
+        tasks[task.key] = task
+    else:
+        checked = set(not_done + done)
+        for task in tasks.values():
+            task.done = task.key in checked
 
 
 nitro = View(main, title='To Do List', caption='Made with Nitro')
