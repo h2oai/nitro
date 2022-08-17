@@ -44,12 +44,15 @@ export const Checklist = make(({ context, box }: BoxProps) => {
               onChange={(_, checked) => onChecked(c.value, checked)}
             />
           </div>
-        ))
+        )),
+        contents = checkboxes.length
+          ? <div className={css('flex flex-col gap-2', style)}>{checkboxes}</div>
+          : <div>&mdash;</div>
 
       return (
         <div className={css('flex flex-col gap-2')}>
           {text && <Label>{text}</Label>}
-          <div className={css('flex flex-col gap-2', style)}>{checkboxes}</div>
+          {contents}
         </div>
       )
     }
