@@ -239,7 +239,7 @@ def edit_add_inside(view: View):  # height 5
 
 
 # ## Clear
-# Call `view.clear() to remove a box.
+# Call `view.clear()` to remove a box.
 def edit_clear_at(view: View):  # height 4
     blue, red = [box() / f'p-2 rounded border text-{c}-500 border-{c}-500 bg-{c}-100' for c in
                  ['sky', 'red']]
