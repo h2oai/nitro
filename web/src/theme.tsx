@@ -40,11 +40,11 @@ const
         [BaseSlots.backgroundColor, backgroundColor]
       ],
       rules = themeRulesStandardCreator(),
-      currentIsDark = isDark(rules[BaseSlots[BaseSlots.backgroundColor]].color!)
+      isInverted = isDark(backgroundColor)
 
-    ThemeGenerator.insureSlots(rules, currentIsDark)
+    ThemeGenerator.insureSlots(rules, isInverted)
     for (const [slot, color] of slots) {
-      ThemeGenerator.setSlot(rules[BaseSlots[slot]], color, currentIsDark, true, true)
+      ThemeGenerator.setSlot(rules[BaseSlots[slot]], color, isInverted, true, true)
     }
 
     const
@@ -54,7 +54,7 @@ const
           fontFamily: 'inherit',
         },
         palette,
-        isInverted: isDark(rules[BaseSlots[BaseSlots.backgroundColor]].color!),
+        isInverted,
       })
     return theme
   },
