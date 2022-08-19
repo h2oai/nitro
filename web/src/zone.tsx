@@ -15,7 +15,7 @@
 import { INavLink, INavLinkGroup, Nav, Pivot, PivotItem } from '@fluentui/react';
 import React from 'react';
 import { XBox } from './box';
-import { clicker, ClientContext } from './client';
+import { ClientContext, jump } from './client';
 import { B, by, on, signal, Signal, zip } from './core';
 import { css } from './css';
 import { Expander } from './expander';
@@ -113,7 +113,10 @@ export const Zone = ({ context, box }: Container) => {
     const
       background = image ? { backgroundImage: `url(${image})` } : undefined,
       flex = modes.has('col') ? 'flex flex-col gap-2' : modes.has('row') ? 'flex gap-2' : undefined,
-      onClick = path ? clicker(path) : undefined,
+      onClick = path ? (e: React.MouseEvent<HTMLDivElement>) => {
+        jump(path ?? '')
+        e.preventDefault()
+      } : undefined,
       pointer = path ? 'cursor-pointer' : undefined
     return (
       <div

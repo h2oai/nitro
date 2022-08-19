@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import React from 'react';
 import { Banner } from './banner';
 import { Buttons } from './buttons';
 import { Calendar } from './calendar';
 import { Checkbox } from './checkbox';
 import { Checklist } from './checklist';
 import { ChoiceGroup } from './choice_group';
-import { clicker } from './client';
+import { jump } from './client';
 import { ColorPalette } from './color_palette';
 import { ColorPicker } from './color_picker';
 import { ComboBox } from './combobox';
@@ -113,7 +114,10 @@ export const XBox = ({ context, box }: BoxProps) => { // recursive
     }
   }
 
-  const onClick = box.path ? clicker(box.path) : undefined
+  const onClick = box.path ? (e: React.MouseEvent<HTMLDivElement>) => {
+    jump(box.path ?? '')
+    e.preventDefault()
+  } : undefined
   const className = box.path ? css('cursor-pointer', box.style) : css(box.style)
   return <div className={className} onClick={onClick}>{box.text ?? ''}</div>
 }

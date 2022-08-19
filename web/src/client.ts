@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, isS, isURL, newIncr, on, S, Signal, signal, U, V } from './core';
+import { Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
@@ -177,16 +177,26 @@ const getLocale = () => {
   return ''
 }
 
-export const clicker = (path: S) => {
-  const isExternal = isURL(path)
-  return (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isExternal) {
-      window.open(path, '_blank')
-    } else {
-      window.location.hash = '!' + path
-    }
-    e.preventDefault()
+export const jump = (v: V, params?: Dict<S>) => {
+  if (!isS(v)) v = String(v)
+
+  const
+    p = params ?? {},
+    target = p['target']
+  if (target) delete p['target']
+
+
+  // hash without target
+  if (!target && v.indexOf('#') === 0) {
+    window.location.hash = v.substring(1)
+    return
   }
+
+  // not hash, or hash with target
+  const features: S[] = []
+  for (const k in p) features.push(`${k}=${p[k]}`)
+
+  window.open(v, target ?? '_blank', features.length ? features.join(',') : undefined)
 }
 
 export const newClient = (server: Server) => {
@@ -208,22 +218,6 @@ export const newClient = (server: Server) => {
     stateB = signal<ClientState>({ t: ClientStateT.Connecting }),
     connect = () => {
       server.connect(handleEvent)
-    },
-    jump = (v: V, params?: Dict<S>) => {
-      if (isS(v) && isURL(v)) {
-        const
-          p = params ?? {},
-          target = p['target'] ?? '_blank',
-          features: S[] = []
-        for (const k in p) if (k !== 'target') features.push(`${k}=${p[k]}`)
-        if (features.length) {
-          window.open(v, target, features.join(','))
-        } else {
-          window.open(v, target)
-        }
-        return
-      }
-      window.location.hash = '!' + v
     },
     bounce = () => {
       const hashbang = getHashRPC()

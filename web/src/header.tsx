@@ -16,7 +16,7 @@ import { CommandBar, ContextualMenu } from '@fluentui/react';
 import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import { Client } from './client';
-import { signal } from './core';
+import { signal, V } from './core';
 import { css } from './css';
 import { toContextualMenuItem } from './options';
 import { Option } from './protocol';
@@ -24,8 +24,10 @@ import { make } from './ui';
 
 const Menu = make(({ client, options }: { client: Client, options: Option[] }) => {
   const
-    hasMenu = options.length > 0,
-    items = options.map(o => toContextualMenuItem(o, client.jump)),
+    // TODO jump to URL if option has path
+    jump = (v: V) => client.jump('#!' + v),
+    items = options.map(o => toContextualMenuItem(o, jump)),
+    hasMenu = items.length > 0,
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = signal(false),
     showMenu = () => showMenuB(true),
@@ -56,7 +58,9 @@ const Menu = make(({ client, options }: { client: Client, options: Option[] }) =
 
 const NavBar = make(({ client, options }: { client: Client, options: Option[] }) => {
   const
-    items = options.map(o => toContextualMenuItem(o, client.jump)),
+    // TODO jump to URL if option has path
+    jump = (v: V) => client.jump('#!' + v),
+    items = options.map(o => toContextualMenuItem(o, jump)),
     render = () => (
       <div className={css('flex grow justify-end')}>
         <CommandBar items={items} />
