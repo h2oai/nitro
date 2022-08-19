@@ -293,7 +293,7 @@ view.add(
 
 ## Clear
 
-Call `view.clear() to remove a box.
+Call `view.clear()` to remove a box.
 
 
 ```py

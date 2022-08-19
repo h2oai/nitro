@@ -17,6 +17,19 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.14.1
+
+Aug 18, 2022
+
+- Changed
+    - Show empty indicator in checklists when empty.
+    - `box(..., path='...')` now behaves the same as `view.jump()`.
+    - `path=` links requires `#!` prefixes to jump to other functions.
+    - `view.jump()` allows jumping to relative paths.
+- Fixed
+    - `check` mode shows checkbox instead of checklist when options are empty.
+    - `menu` and `date` modes active/hover mode color contrasts are too low.
+
 ## v0.14.0
 
 Aug 15, 2022
@@ -28,10 +41,10 @@ associated with mixing presentation and behavioral logic.
 
 - Added
     - Support for applying arbitrary styles using [Tailwind](https://tailwindcss.com/) notation. Note that Nitro does
-      not use the official Tailwind library, but includes an entirely custom imcremental compiler that expands and
+      not use the official Tailwind library, but includes an entirely custom incremental compiler that expands and
       applies styles on the fly.
-    - Concise styling notation: `box(...) / style` is equivalent to `box(..., style='')`
-    - Extensible styles: `box(...) / a / b` is shorthand for `box(..., style=f'{a} {b}')`
+    - Concise styling notation: `box(...) / style` is equivalent to `box(..., style='')`.
+    - Extensible styles: `box(...) / a / b` is shorthand for `box(..., style=f'{a} {b}')`.
     - Extensible boxes: `box(x, y)(p, q)` clones a box and puts `p` and `q` in it.
     - Support for rendering SVG graphics.
     - Dozens of examples for custom components like cards, stats, pagination, etc. built using pure Python.
