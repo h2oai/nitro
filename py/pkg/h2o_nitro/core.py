@@ -770,8 +770,24 @@ class View(_View):
             theme=theme,
         ))
 
-    def jump(self, method: Union[V, Callable], **params):
-        self._send(_marshal_switch(method, params))
+    def jump(
+            self,
+            method: Union[V, Callable],
+            target: Optional[str] = None,
+            popup: Optional[bool] = None,
+            width: Optional[int] = None,
+            height: Optional[int] = None,
+            left: Optional[int] = None,
+            top: Optional[int] = None,
+    ):
+        self._send(_marshal_switch(method, dict(
+            target=target,
+            popup=popup,
+            width=width,
+            height=height,
+            left=left,
+            top=top,
+        )))
         self._read(_MsgType.Switch)
 
     def __call__(
@@ -874,8 +890,24 @@ class AsyncView(_View):
             theme=theme,
         ))
 
-    async def jump(self, method: Union[V, Callable], **params):
-        await self._send(_marshal_switch(method, params))
+    async def jump(
+            self,
+            method: Union[V, Callable],
+            target: Optional[str] = None,
+            popup: Optional[bool] = None,
+            width: Optional[int] = None,
+            height: Optional[int] = None,
+            left: Optional[int] = None,
+            top: Optional[int] = None,
+    ):
+        await self._send(_marshal_switch(method, dict(
+            target=target,
+            popup=popup,
+            width=width,
+            height=height,
+            left=left,
+            top=top,
+        )))
         await self._read(_MsgType.Switch)
 
     async def __call__(

@@ -88,6 +88,6 @@
 | Set view theme.                               | `view.set(theme='...')`              |
 | Jump to another view function.                | `view.jump(func)`                    |
 | Launch external URL.                          | `view.jump(url)`                     |
-| Launch external URL in a popup.               | `view.jump(url, popup=1)`            |
+| Launch external URL in a popup.               | `view.jump(url, popup=True)`         |
 | Navigate to another URL.                      | `view.jump(url, target='_self')`     |
 
