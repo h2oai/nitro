@@ -353,6 +353,7 @@ export const newClient = (server: Server) => {
                 {
                   const { method, params } = msg
                   jump(method, params)
+                  invalidate()
                 }
                 break
               case MessageType.Set:
