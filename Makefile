@@ -70,9 +70,11 @@ clean-screenshots: # Clean screenshot automation tooling
 serve-docs: # Launch docs in development mode
 	./tools/docs/venv/bin/mkdocs serve
 
-release: # Tag and release on Github
+publish: publish-cli publish-py # Publish everything
 	git tag v$(VERSION)
 	git push origin && git push origin --tags
+
+publish-cli: # Publish CLI
 	cd cli && goreleaser release --rm-dist
 
 publish-py: ## Publish wheel to PyPI
