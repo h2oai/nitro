@@ -70,7 +70,9 @@ clean-screenshots: # Clean screenshot automation tooling
 serve-docs: # Launch docs in development mode
 	./tools/docs/venv/bin/mkdocs serve
 
-publish: publish-cli publish-py # Publish everything
+publish: publish-tag publish-cli publish-py # Publish everything
+
+publish-tag: # Push tags to origin
 	git tag v$(VERSION)
 	git push origin && git push origin --tags
 
