@@ -929,15 +929,18 @@ excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserun
 
 # noinspection SpellCheckingInspection
 _lorems = set([w.strip() for w in _lorem.split(' ')])
+_long_lorems = set([w for w in _lorems if len(w) > 4])
 
 
 # noinspection PyShadowingBuiltins
 def _sentence(min: int, max: int):
-    return ' '.join(random.sample(_lorems, random.randint(min, max))).capitalize()
+    return ' '.join(random.sample(_lorems, random.randint(min, max))).capitalize() + '.'
 
 
-def lorem(sentences: int = 0):
-    if sentences == 0:
+def lorem(sentences: Optional[int] = None, words: Optional[int] = None):
+    if words is not None:
+        return ' '.join(random.sample(_long_lorems, words)).title()
+    if sentences is None:
         return _sentence(4, 5)
     lines = [_sentence(5, 9) for _ in range(sentences)]
-    return '. '.join(lines) + '.'
+    return ' '.join(lines)
