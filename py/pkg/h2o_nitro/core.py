@@ -599,12 +599,12 @@ def _marshal_set(
         ))))
 
 
-def _marshal_switch(method: Union[V, Callable], params: Optional[dict] = None):
-    return _marshal(dict(
+def _marshal_switch(method: Union[V, Callable], params: Optional[dict]):
+    return _marshal(_clean(dict(
         t=_MsgType.Switch,
-        method=_qual_name_of(method) if isinstance(method, FunctionType) else str(method),
-        params=params,
-    ))
+        method='#!' + _qual_name_of(method) if isinstance(method, FunctionType) else str(method),
+        params=_clean(params),
+    )))
 
 
 def _get_locale(locales: Optional[Locales], locale: Optional[str], fallback: str) -> Optional[Locale]:
