@@ -16,7 +16,7 @@ The `nitro` CLI (command line interface) makes it really easy to play with any N
     Do not use `nitro run` to execute someone else's code without reading it first!
     **Make sure you trust the authors.** 
 
-## Installation
+## Install
 
 1. Go to [https://github.com/h2oai/nitro/releases](https://github.com/h2oai/nitro/releases).
 2. Download the appropriate archive for your platform.
@@ -27,18 +27,27 @@ The `nitro` CLI (command line interface) makes it really easy to play with any N
 
 ## Run an app
 
-From your terminal, create and switch to a new directory:
+=== "Linux / macOS"
 
-```bash
-mkdir my_app
-cd my_app
-```
+    ```sh
+    # Create and switch to a new directory
+    mkdir my_app
+    cd my_app
 
-Run a "Hello World" app:
+    # Run the "Hello World" app
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
+    ```
 
-```bash
-nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
-```
+=== "Windows"
+
+    ```bat
+    :: Create and switch to a new directory
+    mkdir my_app
+    cd my_app
+
+    :: Run the "Hello World" app
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
+    ```
 
 The `nitro run` command does several things for you:
 
