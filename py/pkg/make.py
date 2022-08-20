@@ -24,6 +24,8 @@ from shlex import shlex
 from pathlib import Path
 
 git_root = Path('..') / '..'
+docs_dir = git_root / 'help' / 'docs'
+guide_dir = docs_dir / 'guide'
 
 
 class Printer:
@@ -311,9 +313,6 @@ def write_example(p: Printer, e: Example):
             p()
 
 
-docs_dir = git_root / 'docs'
-
-
 def write_docs(groups: List[Group]):
     for g in groups:
         p = Printer()
@@ -328,7 +327,7 @@ def write_docs(groups: List[Group]):
             if not e.name.endswith('_noop'):
                 p(f'![Screenshot](assets/screenshots/{e.name}.png)')
                 p()
-        (docs_dir / f'{g.name}.md').write_text(str(p))
+        (guide_dir / f'{g.name}.md').write_text(str(p))
 
 
 yaml_separator_begin = '# Begin generated'
@@ -350,17 +349,13 @@ def write_docs_yaml(groups: List[Group]):
     p('- Guide:')
     p.indent()
     for g in groups:
-        p(f"- '{g.name}.md'")
+        p(f"- 'guide/{g.name}.md'")
 
     p(yaml_separator_end)
     p.dedent()
     p(yaml_end)
 
     yaml_path.write_text(str(p))
-
-
-def write_readme():
-    (git_root / 'README.md').write_text((docs_dir / 'index.md').read_text().replace('assets/', 'docs/assets/'))
 
 
 def count_examples(groups: List[Group]):
@@ -399,9 +394,6 @@ def main():
 
     print('Generating tour...')
     write_tour(groups)
-
-    print('Generating README.md...')
-    write_readme()
 
     print('Generating examples for docs...')
     write_docs(groups)
