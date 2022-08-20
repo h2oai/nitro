@@ -17,6 +17,7 @@ with sync_playwright() as p:
     page.goto(url)
 
     link_prefix = '#!docs.help_'
+    page.wait_for_timeout(delay_between_screenshots)
     all_links = page.locator('a[href]').element_handles()
     all_hrefs = [link.get_attribute('href') for link in all_links]
     example_hrefs = [href for href in all_hrefs if href.startswith(link_prefix)]
