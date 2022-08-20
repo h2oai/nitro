@@ -1,0 +1,215 @@
+# Copyright (c) 2016-2022 Martin Donath <martin.donath@squidfunk.com>
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to
+# deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+# sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+
+# Project information
+site_name: H2O Nitro
+site_url: https://nitro.h2o.ai/
+site_author: Prithvi Prabhu
+site_description: Create apps 10x quicker, without Javascript, HTML, or CSS.
+
+# Repository
+repo_name: h2oai/nitro
+repo_url: https://github.com/h2oai/nitro
+
+# Copyright
+copyright: "Copyright &copy; 2022 <a href='https://h2o.ai'>H2O.ai, Inc</a>. Licensed under <a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a>."
+
+# Configuration
+theme:
+  name: material
+  custom_dir: material
+
+  # Static files
+  static_templates:
+    - 404.html
+
+  # Don't include MkDocs' JavaScript
+  include_search_page: false
+  search_index_only: true
+
+  # Default values, taken from mkdocs_theme.yml
+  language: en
+  features:
+    # - announce.dismiss
+    - content.code.annotate
+    # - content.tabs.link
+    - content.tooltips
+    # - header.autohide
+    # - navigation.expand
+    - navigation.indexes
+    # - navigation.instant
+    # - navigation.prune
+    - navigation.sections
+    - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    # - toc.integrate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/favicon.png
+  logo: assets/nitro.svg
+
+# Plugins
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+# Customization
+extra:
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/h2oai/nitro
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/6RUdk2CPgw
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/h2o-nitro/
+    - icon: fontawesome/solid/building
+      link: https://h2o.ai
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/CrunchingData
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:materialx.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: h2oai
+      repo: nitro
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Page tree
+nav:
+  - Home: index.md
+  - Getting started:
+    - 'intro.md'
+    - 'install.md'
+    - 'cli.md'
+    - 'live-docs.md'
+    - 'cheatsheet.md'
+    - 'change-log.md'
+  # Begin generated
+  - Guide:
+    - 'guide/basics.md'
+    - 'guide/markdown.md'
+    - 'guide/styling.md'
+    - 'guide/images.md'
+    - 'guide/layout.md'
+    - 'guide/forms.md'
+    - 'guide/editing.md'
+    - 'guide/popups.md'
+    - 'guide/textbox.md'
+    - 'guide/spinbox.md'
+    - 'guide/checkbox.md'
+    - 'guide/toggle.md'
+    - 'guide/pickers.md'
+    - 'guide/options.md'
+    - 'guide/buttons.md'
+    - 'guide/radio-buttons.md'
+    - 'guide/dropdown.md'
+    - 'guide/dropdown-list.md'
+    - 'guide/checklist.md'
+    - 'guide/table.md'
+    - 'guide/slider.md'
+    - 'guide/range-slider.md'
+    - 'guide/time-picker.md'
+    - 'guide/date-picker.md'
+    - 'guide/calendar.md'
+    - 'guide/week-picker.md'
+    - 'guide/month-picker.md'
+    - 'guide/tag-picker.md'
+    - 'guide/color-picker.md'
+    - 'guide/color-palette.md'
+    - 'guide/rating.md'
+    - 'guide/file-upload.md'
+    - 'guide/banner.md'
+    - 'guide/progress-bar.md'
+    - 'guide/spinner.md'
+    - 'guide/help.md'
+    - 'guide/separator.md'
+    - 'guide/components.md'
+    - 'guide/cards.md'
+    - 'guide/theming.md'
+    - 'guide/advanced.md'
+    # End generated
+  - Examples:
+    - 'examples/index.md'
+  - Plugins:
+    - 'plugins/index.md'
+    - 'plugins/writing.md'
+  - Reference:
+    - 'reference/index.md'
+    - 'reference/wasm.md'
+    - 'reference/nitrogen.md'
+    - 'reference/protocol.md'
+    - 'reference/appendix.md'
