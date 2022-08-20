@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Rating
 
 Use a rating component to capture a star-rating.

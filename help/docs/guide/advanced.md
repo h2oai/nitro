@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Advanced
 
 Learn some advanced tips and tricks to level up your Nitro skills.

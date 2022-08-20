@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Editing
 
 Make changes to content already displayed on a page.

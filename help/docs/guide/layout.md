@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Layout
 
 Compose and arrange boxes to lay out content and control flow.

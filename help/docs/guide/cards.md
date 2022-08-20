@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Cards
 
 Create content cards by stacking boxes together.

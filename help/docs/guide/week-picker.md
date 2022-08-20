@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Week Picker
 
 Use a week picker to pick a week in a given range.

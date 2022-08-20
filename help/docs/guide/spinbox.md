@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Spinbox
 
 Use spinboxes to capture numeric inputs.

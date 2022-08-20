@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Buttons
 
 Use buttons to allow users to trigger actions.

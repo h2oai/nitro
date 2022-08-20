@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Banner
 
 Use banners to show errors, warnings, or important information related to an operation.

@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Basics
 
 Take your first steps with Nitro.

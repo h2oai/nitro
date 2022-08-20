@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Images
 
 Display images, or use them as backgrounds or in patterns.

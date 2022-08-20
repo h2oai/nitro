@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Textbox
 
 Use textboxes to capture text inputs and passwords.

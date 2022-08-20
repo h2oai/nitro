@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Help
 
 Show context-sensitive hints and help.

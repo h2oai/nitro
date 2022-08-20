@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Forms
 
 Learn the basics of collecting inputs from the user.

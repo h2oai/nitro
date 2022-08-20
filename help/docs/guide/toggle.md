@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Toggle
 
 Use a toggle to choose between two mutually exclusive options, with an immediate result.

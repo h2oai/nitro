@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Progress Bar
 
 Use progress bars to show the completion status of long-running operations.

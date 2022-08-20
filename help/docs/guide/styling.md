@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Styling
 
 Change how boxes look: colors, borders, sizing, margins, and padding.

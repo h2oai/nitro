@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # File Upload
 
 Use a file upload component to get one or more files from the user.

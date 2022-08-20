@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Markdown
 
 Use Markdown to display rich text, tables, and code.

@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Date Picker
 
 Use a date picker to pick a date within a range. A date picker is a compact form of the calendar.

@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Theming
 
 Learn how to customize your app's color scheme.

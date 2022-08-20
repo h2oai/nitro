@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Radio Buttons
 
 Use radio buttons to pick one option from a small number of options.

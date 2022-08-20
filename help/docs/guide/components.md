@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Components
 
 A selection of useful components that you can copy and adapt.

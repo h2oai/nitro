@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Checklist
 
 Use checkboxes to pick one or more options from a small number of options.

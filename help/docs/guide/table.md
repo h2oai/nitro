@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Table
 
 Use tables to display detailed information in the form of a grid.

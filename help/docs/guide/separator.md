@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Separator
 
 Use a separator to visually separate form inputs into sections.

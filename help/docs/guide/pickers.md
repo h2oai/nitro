@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Pickers
 
 Use pickers to pick one or more options from several options.

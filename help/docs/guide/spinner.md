@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Spinner
 
 Use a spinner to indicate that a long-running operation is in progress,
