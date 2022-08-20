@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 delay_between_screenshots = 1000
 
 url = 'http://localhost:5000/'
-output_dir = Path('docs') / 'assets' / 'screenshots'
+output_dir = Path('help') / 'docs' / 'guide' / 'assets' / 'screenshots'
 
 output_dir.mkdir(exist_ok=True)
 
