@@ -3,4 +3,5 @@
 /venv
 /site
 /docs/docs.py
+/docs/__pycache__
 /docs/guide/assets/screenshots

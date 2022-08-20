@@ -24,7 +24,8 @@ from shlex import shlex
 from pathlib import Path
 
 git_root = Path('..') / '..'
-docs_dir = git_root / 'help' / 'docs'
+help_dir = git_root / 'help'
+docs_dir = help_dir / 'docs'
 guide_dir = docs_dir / 'guide'
 
 
@@ -340,7 +341,7 @@ yaml_separator_end = '# End generated'
 def write_docs_yaml(groups: List[Group]):
     p = Printer('  ')
 
-    yaml_path = git_root / 'mkdocs.yml'
+    yaml_path = help_dir / 'mkdocs.yml'
     yaml = yaml_path.read_text()
     yaml_begin = yaml.split(yaml_separator_begin)[0].strip()
     yaml_end = yaml.split(yaml_separator_end)[1].strip() + "\n"
