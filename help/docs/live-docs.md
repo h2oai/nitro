@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Live Docs
 
 Nitro has beautiful interactive documentation with live examples.

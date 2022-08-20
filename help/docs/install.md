@@ -1,4 +1,7 @@
-# Getting Started
+---
+template: overrides/main.html
+---
+# Install
 
 H2O Nitro can be installed from [PyPI](https://pypi.org/project/h2o-nitro/):
 
@@ -135,6 +138,6 @@ There's no need to start a brand new project either, you can easily use it in yo
 
 - [Install the CLI](cli.md): The Nitro CLI makes it easy to set up and play around with apps.
 - [Get the live docs](live-docs.md): Play around with an interactive version of these docs.
-- [Read the guide](basics.md): Deep-dive into what Nitro can do for you.
-- [Try more examples](examples.md): Learn, modify and share your creations with the community.
+- [Read the guide](guide/basics.md): Deep-dive into what Nitro can do for you.
+- [Try more examples](examples/index.md): Learn, modify and share your creations with the community.
 

@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Nitro CLI
 
 The best way to get better at programming is to clone other apps and tinker with them.
@@ -20,7 +23,7 @@ The `nitro` CLI (command line interface) makes it really easy to play with any N
 
 1. Go to [https://github.com/h2oai/nitro/releases](https://github.com/h2oai/nitro/releases).
 2. Download the appropriate archive for your platform.
-3. Extract the archive and move `nitro` or `nitro.exe` to a location that's in your `PATH`. [Learn how.](help.md#add-cli-to-path)
+3. Extract the archive and move `nitro` or `nitro.exe` to a location that's in your `PATH`. [Learn how.](reference/appendix.md#add-cli-to-path)
 
 !!! success "Test your installation"
     To verify if `nitro` is accessible, open a new terminal window and run `nitro version`.
@@ -98,7 +101,7 @@ your browser reload and display your changes automatically!
 ## It's just Python!
 
 If you inspect `hello.py`, you'll see that it's a plain Python file containing a
-simple [Flask](https://flask.palletsprojects.com/) app and a [Nitrogen](nitrogen.md) header:
+simple [Flask](https://flask.palletsprojects.com/) app and a [Nitrogen](reference/nitrogen.md) header:
 
 ```py
 # Flask imports go here.
@@ -144,12 +147,12 @@ There's no magic here. Nitro apps are just plain Python programs.
 
 ## How does it work?
 
-The `nitro run` command looks for and executes [Nitrogen](nitrogen.md) instructions in the source file's comments.
+The `nitro run` command looks for and executes [Nitrogen](reference/nitrogen.md) instructions in the source file's comments.
 
 Nitrogen is a mini-language that describes libraries to install, files to fetch, and commands to run in order to 
 set up and launch the app.
 
-[Read the Nitrogen specifications](nitrogen.md) to learn more.
+[Read the Nitrogen specifications](reference/nitrogen.md) to learn more.
 
 ## Upgrading
 

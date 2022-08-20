@@ -1,24 +1,19 @@
-# Nitro
+---
+template: overrides/main.html
+---
+# Introduction
 
-Create apps 10x quicker, without Javascript, HTML, or CSS.
+Nitro aims to be the quickest way to author multi-platform apps.
 
-![Nitro](assets/banner.png)
 
-**[Get Started](https://nitro.h2o.ai/install/)**
-/ [Cheatsheet](https://nitro.h2o.ai/cheatsheet/)
-/ [Guide](https://nitro.h2o.ai/basics/)
-/ [Examples](https://nitro.h2o.ai/examples/)
-/ [Plugins](https://nitro.h2o.ai/plugins/)
-/ [Change Log](https://nitro.h2o.ai/change-log/)
-/ [Roadmap](https://github.com/h2oai/nitro/issues/4)
-/ [Milestones](https://github.com/h2oai/nitro/milestones)
-/ [Backlog](https://github.com/h2oai/nitro/issues/15)
-
-**Currently a Work in Progress.**
-Follow [the development blog](https://wrong.technology/tags/nitro/) or
-[@CrunchingData](https://twitter.com/CrunchingData) for updates, or use
-[Discord](https://discord.gg/6RUdk2CPgw) or
-[Discussions](https://github.com/h2oai/nitro/discussions) for help / ideas / suggestions.
+!!! warning "Currently a work in progress"
+    See [Roadmap](https://github.com/h2oai/nitro/issues/4),
+    [Milestones](https://github.com/h2oai/nitro/milestones), and
+    [Backlog](https://github.com/h2oai/nitro/issues/15).
+    Follow [the development blog](https://wrong.technology/tags/nitro/) or
+    [@CrunchingData](https://twitter.com/CrunchingData) for updates, or use
+    [Discord](https://discord.gg/6RUdk2CPgw) or
+    [Discussions](https://github.com/h2oai/nitro/discussions) for help, ideas, or suggestions.
 
 ## Philosophy
 
@@ -81,6 +76,15 @@ Critical missing features include data visualization, back-button (history) supp
 The API is mostly stable, but expect minor changes while we ship support for at least one other 
 language (R, Julia, Go  planned), and compile apps to mobile or desktop.
 
+See [Roadmap](https://github.com/h2oai/nitro/issues/4),
+[Milestones](https://github.com/h2oai/nitro/milestones), and
+[Backlog](https://github.com/h2oai/nitro/issues/15).
+
+Follow [the development blog](https://wrong.technology/tags/nitro/) or
+[@CrunchingData](https://twitter.com/CrunchingData) for updates, or use
+[Discord](https://discord.gg/6RUdk2CPgw) or
+[Discussions](https://github.com/h2oai/nitro/discussions) for help, ideas, or suggestions.
+
 ## Features
 
 - **No HTML/Javascript.** Build sophisticated multi-page wizard-like workflows and walkthroughs using pure Python.
@@ -89,7 +93,7 @@ language (R, Julia, Go  planned), and compile apps to mobile or desktop.
       [Starlette](https://www.starlette.io/) , [Tornado](https://www.tornadoweb.org/), [Uvicorn](https://www.uvicorn.org/) 
       and other popular frameworks.
     - Can be integrated into your existing or legacy applications.
-    - [Works entirely in-browser via WebAssembly, too](wasm.md)!
+    - [Works entirely in-browser via WebAssembly, too](reference/wasm.md)!
 - **Less Code.** Laser-focused on keeping application code simple, concise, and clear.
     - **Simplicity.** Page flow follows code flow.
     - **Brevity.** Lowest number of lines of code for expressing solutions to a given problem.

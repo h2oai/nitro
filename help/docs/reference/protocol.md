@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Protocol
 
 This page describes the protocol used by the Nitro client to communicate with servers.

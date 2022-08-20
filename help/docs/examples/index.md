@@ -1,8 +1,11 @@
+---
+template: overrides/main.html
+---
 # Examples
 
 It's easy to run these examples on your computer.
 
-1. [Install the `nitro` CLI](cli.md#install).
+1. [Install the `nitro` CLI](../cli.md#install).
 2. Create and switch to a new directory, say, `nitro_examples`.
 3. Execute `nitro run http://path/to/example.py`.
 

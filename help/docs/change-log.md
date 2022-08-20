@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Change Log
 
 ## Background

@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Nitrogen
 
 *Nitrogen* is a simple mini-language used by `nitro run` to set up and launch apps.

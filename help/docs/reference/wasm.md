@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Web Assembly
 
 Nitro apps can be run entirely in-browser using *Nitride*, an application runtime for web browsers built

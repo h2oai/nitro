@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Appendix
 
 This section contains topics that don't fit anywhere else in the documentation.

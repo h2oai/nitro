@@ -1,3 +1,6 @@
+---
+template: overrides/main.html
+---
 # Writing plugins
 
 Plugins can load third-party or custom Javascript into Nitro's user interface, and provide new variations of
