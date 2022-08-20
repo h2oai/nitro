@@ -316,6 +316,9 @@ def write_example(p: Printer, e: Example):
 def write_docs(groups: List[Group]):
     for g in groups:
         p = Printer()
+        p('---')
+        p('template: overrides/main.html')
+        p('---')
         p(f'# {g.title}')
         p()
         p(g.description)
