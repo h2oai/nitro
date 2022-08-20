@@ -1,4 +1,6 @@
 /__pycache__
 /.idea
+/venv
+/site
 /docs/docs.py
 /docs/guide/assets/screenshots

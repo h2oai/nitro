@@ -31,7 +31,7 @@ The `docs.py` file is generated from `py/examples/*.py`, which is what you'll be
 
 1. Open `web/` in Visual Studio Code.
 2. Open `py/` in PyCharm. If you're prompted to select an interpreter, use the one in `py/venv`.
-3. Auto-rebuild `docs.py` whenever `examples.py` is changed: `make dev-docs`.
+3. Auto-rebuild `docs.py` whenever `examples.py` is changed: `make dev-guide`.
 4. Run `docs.py` with auto-reload enabled: run `make dev-py`.
 5. Run the front-end with auto-reload enabled: `make dev-web`. This will automatically launch the front-end at https://localhost:3000.
 
