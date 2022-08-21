@@ -192,6 +192,7 @@ var (
 	setupRegex              = regexp.MustCompile(`(?i)^\s*SETUP\s*:\s*$`)
 	pythonCandidates        = []string{"python3", "python"}
 	pythonWindowsCandidates = []string{"py", "python3", "python"}
+	rCandidates             = []string{"R", "Rscript"}
 	errNoHeaderFound        = errors.New("no header found")
 	errUnexpectedEOF        = errors.New("unexpected end of file reading header")
 	nl                      = []byte{'\n'}
@@ -335,6 +336,16 @@ func parseCommands(lines []Line) ([]Command, error) {
 	}
 	return commands, nil
 }
+func findRExecutable() (string, error) {
+	candidates := rCandidates
+	for _, name := range candidates {
+		r, err := exec.LookPath(name)
+		if err == nil {
+			return r, nil
+		}
+	}
+	return "", fmt.Errorf("R executable not found (tried %v)", rCandidates)
+}
 
 func findPythonExecutable() (string, error) {
 	candidates := pythonCandidates
@@ -350,21 +361,53 @@ func findPythonExecutable() (string, error) {
 	return "", fmt.Errorf("python executable not found (tried %v)", candidates)
 }
 
+func newREnv(conf *Conf, vars []string) (*Env, error) {
+	if conf.executable == "" {
+		exe, err := findRExecutable()
+		if err != nil {
+			return nil, err
+		}
+		conf.executable = exe
+	}
+
+	checkFiles := []string{"renv.lock", "renv", ",Rprofile"}
+	checkCounter := 0
+	for _, fName := range checkFiles {
+		if _, err := os.Stat(fName); err == nil {
+			checkCounter += 1
+		}
+	}
+	if checkCounter == 3 {
+		fmt.Println("Virtual environment already available")
+	} else {
+		fmt.Printf("Creating virtual environment using %q...\n", conf.executable)
+		if err := execCommand(conf.executable, []string{"-e", "install.packages('renv',repos = 'http://cran.us.r-project.org')"}, nil, conf.verbose); err != nil {
+			return nil, fmt.Errorf("error creating virtual environment: %v", err)
+		}
+	}
+
+	return &Env{
+		vars: vars,
+		translate: func(name string) string {
+			return name
+		}}, nil
+}
+
 func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
-	if conf.python == "" {
+	if conf.executable == "" {
 		python, err := findPythonExecutable()
 		if err != nil {
 			return nil, err
 		}
-		conf.python = python
+		conf.executable = python
 	}
 
 	if _, err := os.Stat("venv"); err == nil {
 		fmt.Println("Virtual environment already available.")
 	} else {
-		fmt.Printf("Creating virtual environment using %q ...\n", conf.python)
+		fmt.Printf("Creating virtual environment using %q ...\n", conf.executable)
 		// Run python -m venv venv
-		if err := execCommand(conf.python, []string{"-m", "venv", "venv"}, nil, conf.verbose); err != nil {
+		if err := execCommand(conf.executable, []string{"-m", "venv", "venv"}, nil, conf.verbose); err != nil {
 			return nil, fmt.Errorf("error initializing virtual environment: %v", err)
 		}
 	}
@@ -412,6 +455,8 @@ func newEnv(conf *Conf, file string) (*Env, error) {
 	switch lang {
 	case ".py":
 		return newPythonEnv(conf, vars)
+	case ".R":
+		return newREnv(conf, vars)
 	}
 	return nil, fmt.Errorf("unsupported file type %q", lang)
 }
@@ -640,9 +685,9 @@ func run(conf *Conf, urlPath string) error {
 }
 
 type Conf struct {
-	verbose bool
-	start   bool
-	python  string
+	verbose    bool
+	start      bool
+	executable string
 }
 
 func main() {
@@ -650,7 +695,7 @@ func main() {
 
 	rootFlagSet := flag.NewFlagSet("nitro", flag.ExitOnError)
 	rootFlagSet.BoolVar(&conf.verbose, "verbose", false, "print verbose output")
-	rootFlagSet.StringVar(&conf.python, "python", "", "path to the Python executable")
+	rootFlagSet.StringVar(&conf.executable, "python/R", "", "path to the Python/R executable")
 	runFlagSet := flag.NewFlagSet("nitro run", flag.ExitOnError)
 	cloneFlagSet := flag.NewFlagSet("nitro clone", flag.ExitOnError)
 
