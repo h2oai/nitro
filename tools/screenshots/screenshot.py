@@ -6,7 +6,7 @@ delay_between_screenshots = 1000
 url = 'http://localhost:5000/'
 output_dir = Path('help') / 'docs' / 'guide' / 'assets' / 'screenshots'
 
-output_dir.mkdir(exist_ok=True)
+output_dir.mkdir(parents=True, exist_ok=True)
 
 with sync_playwright() as p:
     print('Launching browser...')
