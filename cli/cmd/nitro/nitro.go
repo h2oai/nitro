@@ -351,7 +351,7 @@ func findPythonExecutable() (string, error) {
 	return "", fmt.Errorf("python executable not found (tried %v)", candidates)
 }
 
-func newPythonEnv(file string, conf *Conf, vars []string) (*Env, error) {
+func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
 	if conf.python == "" {
 		python, err := findPythonExecutable()
 		if err != nil {
@@ -392,7 +392,6 @@ func newPythonEnv(file string, conf *Conf, vars []string) (*Env, error) {
 	}
 
 	return &Env{
-		file: file,
 		vars: vars,
 		translateCommand: func(name string) string {
 			if name == "python" {
@@ -437,12 +436,11 @@ func (e *Env) translateVars(xs []string) []string {
 	return ys
 }
 
-func newEnv(conf *Conf, file string) (*Env, error) {
+func newEnv(conf *Conf, lang string) (*Env, error) {
 	vars := os.Environ()
-	lang := filepath.Ext(file)
 	switch lang {
 	case ".py":
-		return newPythonEnv(file, conf, vars)
+		return newPythonEnv(conf, vars)
 	}
 	return nil, fmt.Errorf("unsupported file type %q", lang)
 }
@@ -563,15 +561,7 @@ func isURL(urlPath string) bool {
 	return true
 }
 
-func getOrLocateMainFile(urlPath string) (string, error) {
-	if isURL(urlPath) {
-		relPath, err := downloadFile(urlPath, "")
-		if err != nil {
-			return "", fmt.Errorf("error downloading main file: %v", err)
-		}
-		return relPath, nil
-	}
-
+func copyMainFile(urlPath string) (string, error) {
 	absSrcPath, err := filepath.Abs(urlPath)
 	if err != nil {
 		return "", fmt.Errorf("error finding absolute path to main file: %v", err)
@@ -638,8 +628,19 @@ func copyFile(srcPath, dstPath string) error {
 	return err
 }
 
+func downloadOrCopyMainFile(urlPath string) (string, error) {
+	if isURL(urlPath) {
+		relPath, err := downloadFile(urlPath, "")
+		if err != nil {
+			return "", fmt.Errorf("error downloading main file: %v", err)
+		}
+		return relPath, nil
+	}
+	return copyMainFile(urlPath)
+}
+
 func run(conf *Conf, urlPath string) error {
-	mainFilePath, err := getOrLocateMainFile(urlPath)
+	mainFilePath, err := downloadOrCopyMainFile(urlPath)
 	if err != nil {
 		return err
 	}
@@ -658,10 +659,12 @@ func run(conf *Conf, urlPath string) error {
 		return errNoHeaderFound
 	}
 
-	env, err := newEnv(conf, mainFilePath)
+	env, err := newEnv(conf, filepath.Ext(mainFilePath))
 	if err != nil {
 		return fmt.Errorf("error initializing environment: %v", err)
 	}
+
+	env.file = mainFilePath
 
 	if err := interpret(conf, env, header.commands); err != nil {
 		return err
