@@ -92,7 +92,7 @@ dev-web: # Launch front-end in development mode
 	cd web && npm start
 
 dev-py: # Launch backend in development mode
-	cd py/pkg && FLASK_APP=../../help/docs/docs.py FLASK_ENV=development ./venv/bin/flask run
+	cd py/pkg && FLASK_APP=../../help/docs/docs.py ./venv/bin/flask --debug run
 
 dev-guide: # Rebuild guide pages when pkg/docs is changed
 	cd py/pkg && find docs | entr $(MAKE) docs

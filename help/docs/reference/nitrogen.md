@@ -65,8 +65,7 @@ Here's a more complete example, with metadata:
 # EOF
 # RUN python -m pip install -r requirements.txt
 # ENV FLASK_APP hello.py
-# ENV FLASK_ENV development
-# START python -m flask run
+# START python -m flask --debug run
 # ===
 ```
 
@@ -186,7 +185,7 @@ If `file-path` is a directory (ends with a `/`), the filename is deduced from th
 
 !!!example
 
-    Fetches a file and save it to `license.txt`:
+    Fetch a file and save it to `license.txt`:
 
     ```
     GET https://raw.githubusercontent.com/path/to/license.txt
@@ -262,11 +261,11 @@ ENV name value
 
 !!!example
 
-    Set `FLASK_APP=hello.py` and `FLASK_ENV=development`:
+    Set `FLASK_APP=hello.py` and `FLASK_SESSION_COOKIE_NAME=crumbles`:
 
     ```
     ENV FLASK_APP hello.py
-    ENV FLASK_ENV development
+    ENV FLASK_SESSION_COOKIE_NAME crumbles
     ```
 
 ### RUN

@@ -26,9 +26,8 @@
 # EOF
 # RUN python -m pip install -r requirements.txt
 # ENV FLASK_APP docs.py
-# ENV FLASK_ENV development
 # ENV FLASK_RUN_PORT 4999
-# START python -m flask run
+# START python -m flask --debug run
 # ===
 
 import json
