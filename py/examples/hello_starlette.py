@@ -13,18 +13,10 @@
 # h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
-# START python -m uvicorn hello_starlette:app --reload --port 5000
+# START python -m uvicorn __name__:app --reload --port 5000
 # ===
-import uvicorn
-from starlette.applications import Starlette
-from starlette.routing import Mount, Route, WebSocketRoute
-from starlette.staticfiles import StaticFiles
-from starlette.responses import FileResponse
-
-# ┌───────────────  Nitro app starts here ───────────────┐
 
 from h2o_nitro import AsyncView as View, box
-from h2o_nitro_web import web_directory
 
 
 async def main(view: View):
@@ -35,8 +27,15 @@ async def main(view: View):
 
 nitro = View(main, title='Hello Nitro!', caption='v1.0')
 
+# ┌─────────────── Uvicorn Boilerplate ───────────────┐
 
-# └─────────────── Nitro app ends here ───────────────┘
+import uvicorn
+from starlette.applications import Starlette
+from starlette.routing import Mount, Route, WebSocketRoute
+from starlette.staticfiles import StaticFiles
+from starlette.responses import FileResponse
+from h2o_nitro_web import web_directory
+
 
 async def home_page(request):
     return FileResponse(f'{web_directory}/index.html')

@@ -12,17 +12,10 @@
 # EOF
 # RUN python -m pip install -r requirements.txt
 # ECHO Access your app at http://localhost:5000
-# START python hello_tornado.py
+# START python __base__
 # ===
-import tornado.ioloop
-import tornado.web
-import tornado.websocket
-import tornado.queues
-
-# ┌───────────────  Nitro app starts here ───────────────┐
 
 from h2o_nitro import AsyncView as View, box
-from h2o_nitro_web import web_directory
 
 
 async def main(view: View):
@@ -33,8 +26,14 @@ async def main(view: View):
 
 nitro = View(main, title='Hello Nitro!', caption='v1.0')
 
+# ┌─────────────── Tornado Boilerplate ───────────────┐
 
-# └─────────────── Nitro app ends here ───────────────┘
+import tornado.ioloop
+import tornado.web
+import tornado.websocket
+import tornado.queues
+from h2o_nitro_web import web_directory
+
 
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
