@@ -12,7 +12,7 @@
 # h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
-# ENV FLASK_APP __base__
+# ENV FLASK_APP __file__
 # START python -m flask --debug run
 # ===
 

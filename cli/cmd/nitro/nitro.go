@@ -411,12 +411,13 @@ type Env struct {
 
 func (e *Env) translateVar(x string) string {
 	return dunderRegex.ReplaceAllStringFunc(x, func(m string) string {
-		switch m { // Source: /path/to/foo.bar
-		case "__file__": // /path/to/foo.bar
+		// Local path: /path/to/foo.bar
+		switch m {
+		case "__path__": // /path/to/foo.bar
 			return e.file
 		case "__dir__": // /path/to
 			return filepath.Dir(e.file)
-		case "__base__": // foo.bar
+		case "__file__": // foo.bar
 			return filepath.Base(e.file)
 		case "__name__": // foo
 			return strings.TrimSuffix(filepath.Base(e.file), filepath.Ext(e.file))

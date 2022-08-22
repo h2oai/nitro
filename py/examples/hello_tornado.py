@@ -12,7 +12,7 @@
 # EOF
 # RUN python -m pip install -r requirements.txt
 # ECHO Access your app at http://localhost:5000
-# START python __base__
+# START python __file__
 # ===
 
 from h2o_nitro import AsyncView as View, box

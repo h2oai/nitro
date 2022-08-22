@@ -313,9 +313,9 @@ Given a file `/path/to/foo.py`:
 
 | Variable | Translates to | Example |
 |---|---|---|
-| `__file__` | File path | `/path/to/foo.py` |
+| `__path__` | File path | `/path/to/foo.py` |
 | `__dir__` | File's parent directory | `/path/to` |
-| `__base__` | File name with extension | `foo.py` |
+| `__file__` | File name with extension | `foo.py` |
 | `__name__` | File name without extension | `foo` |
 | `__ext__` | File extension | `.py` |
 
@@ -328,7 +328,7 @@ Special variables are useful when you want to avoid hard-coding the current file
 ENV FLASK_ENV foo.py
 
 # After
-ENV FLASK_ENV __base__
+ENV FLASK_ENV __file__
 ```
 
 **Example 2.** Launching an app using Uvicorn:
