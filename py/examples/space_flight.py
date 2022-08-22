@@ -12,18 +12,12 @@
 # h2o-nitro[web]
 # EOF
 # RUN python -m pip install -r requirements.txt
-# ENV FLASK_APP space_flight.py
+# ENV FLASK_APP __file__
 # START python -m flask --debug run
 # ===
 
-import simple_websocket
-from flask import Flask, request, send_from_directory
-from datetime import datetime, timedelta
-
-# ┌───────────────  Nitro app starts here ───────────────┐
-
 from h2o_nitro import View, box, option, row, col
-from h2o_nitro_web import web_directory
+from datetime import datetime, timedelta
 
 
 # The job application workflow. Spans seven pages.
@@ -236,7 +230,11 @@ nitro = View(
         option(about, 'About'),
     ])
 
-# └─────────────── Nitro app ends here ───────────────┘
+# ┌─────────────── Flask Boilerplate ───────────────┐
+
+import simple_websocket
+from flask import Flask, request, send_from_directory
+from h2o_nitro_web import web_directory
 
 app = Flask(__name__, static_folder=web_directory, static_url_path='')
 

@@ -12,19 +12,14 @@
 # h2o-nitro[web] >= 0.13
 # EOF
 # RUN python -m pip install -r requirements.txt
-# ENV FLASK_APP back_button.py
+# ENV FLASK_APP __file__
 # START python -m flask --debug run
 # ===
 
-import simple_websocket
-from flask import Flask, request, send_from_directory
-
-# ┌───────────────  Nitro app starts here ───────────────┐
 from h2o_nitro import View, box, option
-from h2o_nitro_web import web_directory
 
 
-# For back-button support, the app's code needs to be structured a bit different:
+# For back-button support, the app's code needs to be structured a bit differently:
 # 1. Place each `view()` in a separate function.
 # 2. To show the next view, call `view.jump(do_something)` instead of `do_something(view)`.
 # 3. Pass these functions as routes when creating the root `View()`.
@@ -132,7 +127,11 @@ nitro = View(
     ],
 )
 
-# └─────────────── Nitro app ends here ───────────────┘
+# ┌─────────────── Flask Boilerplate ───────────────┐
+
+import simple_websocket
+from flask import Flask, request, send_from_directory
+from h2o_nitro_web import web_directory
 
 app = Flask(__name__, static_folder=web_directory, static_url_path='')
 

@@ -12,18 +12,13 @@
 # EOF
 # RUN python -m pip install -r requirements.txt
 # ECHO Access your app at http://localhost:5000
-# START python back_button_async.py
+# START python __file__
 # ===
-import tornado.ioloop
-import tornado.web
-import tornado.websocket
-import tornado.queues
-# ┌───────────────  Nitro app starts here ───────────────┐
+
 from h2o_nitro import AsyncView as View, box, option
-from h2o_nitro_web import web_directory
 
 
-# For back-button support, the app's code needs to be structured a bit different:
+# For back-button support, the app's code needs to be structured a bit differently:
 # 1. Place each `view()` in a separate function.
 # 2. To show the next view, call `view.jump(do_something)` instead of `do_something(view)`.
 # 3. Pass these functions as routes when creating the root `View()`.
@@ -131,8 +126,13 @@ nitro = View(
     ],
 )
 
+# ┌─────────────── Tornado Boilerplate ───────────────┐
 
-# └─────────────── Nitro app ends here ───────────────┘
+import tornado.ioloop
+import tornado.web
+import tornado.websocket
+import tornado.queues
+from h2o_nitro_web import web_directory
 
 
 class RootHandler(tornado.web.RequestHandler):
