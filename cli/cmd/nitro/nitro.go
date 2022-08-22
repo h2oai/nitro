@@ -190,6 +190,7 @@ var (
 	breakRegex              = regexp.MustCompile(`\\\s*$`)
 	headerRegex             = regexp.MustCompile(`^\s*#\s*={3,}\s*$`)
 	setupRegex              = regexp.MustCompile(`(?i)^\s*SETUP\s*:\s*$`)
+	dunderRegex             = regexp.MustCompile(`__[a-zA-Z]+__`)
 	pythonCandidates        = []string{"python3", "python"}
 	pythonWindowsCandidates = []string{"py", "python3", "python"}
 	errNoHeaderFound        = errors.New("no header found")
@@ -350,7 +351,7 @@ func findPythonExecutable() (string, error) {
 	return "", fmt.Errorf("python executable not found (tried %v)", candidates)
 }
 
-func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
+func newPythonEnv(file string, conf *Conf, vars []string) (*Env, error) {
 	if conf.python == "" {
 		python, err := findPythonExecutable()
 		if err != nil {
@@ -391,8 +392,9 @@ func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
 	}
 
 	return &Env{
+		file: file,
 		vars: vars,
-		translate: func(name string) string {
+		translateCommand: func(name string) string {
 			if name == "python" {
 				return vexe
 			}
@@ -401,9 +403,37 @@ func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
 }
 
 type Env struct {
-	baseURL   *url.URL
-	vars      []string
-	translate func(string) string
+	file             string
+	baseURL          *url.URL
+	vars             []string
+	translateCommand func(string) string
+}
+
+func (e *Env) translateVar(x string) string {
+	return dunderRegex.ReplaceAllStringFunc(x, func(m string) string {
+		switch m { // Source: /path/to/foo.bar
+		case "__file__": // /path/to/foo.bar
+			return e.file
+		case "__dir__": // /path/to
+			return filepath.Dir(e.file)
+		case "__base__": // foo.bar
+			return filepath.Base(e.file)
+		case "__name__": // foo
+			return strings.TrimSuffix(filepath.Base(e.file), filepath.Ext(e.file))
+		case "__ext__": // .bar
+			return filepath.Ext(e.file)
+		default:
+			return m
+		}
+	})
+}
+
+func (e *Env) translateVars(xs []string) []string {
+	ys := make([]string, len(xs))
+	for i, x := range xs {
+		ys[i] = e.translateVar(x)
+	}
+	return ys
 }
 
 func newEnv(conf *Conf, file string) (*Env, error) {
@@ -411,7 +441,7 @@ func newEnv(conf *Conf, file string) (*Env, error) {
 	lang := filepath.Ext(file)
 	switch lang {
 	case ".py":
-		return newPythonEnv(conf, vars)
+		return newPythonEnv(file, conf, vars)
 	}
 	return nil, fmt.Errorf("unsupported file type %q", lang)
 }
@@ -455,15 +485,15 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 			if len(args) != 2 {
 				return fmt.Errorf("ENV: want %q, got %#v", "ENV name value", args)
 			}
-			name, value := args[0], args[1]
+			name, value := args[0], env.translateVar(args[1])
 			env.vars = append(env.vars, name+"="+value)
 		case "ECHO":
-			fmt.Println(strings.Join(args, " "))
+			fmt.Println(strings.Join(env.translateVars(args), " "))
 		case "SHOW":
 			if len(args) != 1 {
 				return fmt.Errorf("SHOW: want %q, got %#v", "SHOW file-path", args)
 			}
-			localPath := args[0]
+			localPath := env.translateVar(args[0])
 			if err := showFile(localPath); err != nil {
 				return fmt.Errorf("SHOW: %v", err)
 			}
@@ -493,17 +523,17 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 				abs := env.baseURL.ResolveReference(rel)
 				urlPath = abs.String()
 			}
-			if _, err := downloadFile(urlPath, localPath); err != nil {
+			if _, err := downloadFile(urlPath, env.translateVar(localPath)); err != nil {
 				return fmt.Errorf("GET: %v", err)
 			}
 		case "FILE":
 			localPath, contents := args[0], args[1]
-			if err := writeFile(localPath, contents); err != nil {
+			if err := writeFile(env.translateVar(localPath), contents); err != nil {
 				return fmt.Errorf("FILE: %v", err)
 			}
 		case "RUN":
 			name, args := args[0], args[1:]
-			if err := execCommand(env.translate(name), args, env.vars, conf.verbose); err != nil {
+			if err := execCommand(env.translateCommand(name), env.translateVars(args), env.vars, conf.verbose); err != nil {
 				return fmt.Errorf("RUN: %v", err)
 			}
 		case "START":
@@ -511,7 +541,7 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 				continue
 			}
 			name, args := args[0], args[1:]
-			if err := startCommand(env.translate(name), args, env.vars); err != nil {
+			if err := startCommand(env.translateCommand(name), env.translateVars(args), env.vars); err != nil {
 				return fmt.Errorf("START: %v", err)
 			}
 		default:
