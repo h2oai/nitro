@@ -21,7 +21,7 @@ to host [WebSocket](https://en.wikipedia.org/wiki/WebSocket) connections.
 
 ### Using Flask
 
-Get the "Hello World" example [hello.py](https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py), then:
+Get the "Hello World" example [hello_flask.py](https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello_flask.py), then:
 
 === "Linux / macOS"
 
@@ -34,7 +34,7 @@ Get the "Hello World" example [hello.py](https://raw.githubusercontent.com/h2oai
     pip install "h2o-nitro[web]" flask simple-websocket
 
     # Run the app:
-    python hello.py
+    python hello_flask.py
     ```
     
 
@@ -49,7 +49,7 @@ Get the "Hello World" example [hello.py](https://raw.githubusercontent.com/h2oai
     pip install "h2o-nitro[web]" flask simple-websocket
 
     :: Run the app:
-    python hello.py
+    python hello_flask.py
     ```
 
 !!! success "Play with the app"
