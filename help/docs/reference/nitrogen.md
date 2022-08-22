@@ -303,3 +303,40 @@ like Flask, Tornado, Starlette, etc. where it's useful to inspect the command's 
     ```
     START python -m flask run
     ```
+
+
+## Special Variables
+
+Use special variables to refer to the file containing Nitrogen instructions.
+
+Given a file `/path/to/foo.py`:
+
+| Variable | Translates to | Example |
+|---|---|---|
+| `__file__` | File path | `/path/to/foo.py` |
+| `__dir__` | File's parent directory | `/path/to` |
+| `__base__` | File name with extension | `foo.py` |
+| `__name__` | File name without extension | `foo` |
+| `__ext__` | File extension | `.py` |
+
+Special variables are useful when you want to avoid hard-coding the current file name in instructions.
+
+**Example 1.** Setting an environment variable for Flask:
+
+```
+# Before
+ENV FLASK_ENV foo.py
+
+# After
+ENV FLASK_ENV __base__
+```
+
+**Example 2.** Launching an app using Uvicorn:
+
+```
+# Before
+START python -m uvicorn foo:app
+
+# After
+START python -m uvicorn __name__:app
+```
