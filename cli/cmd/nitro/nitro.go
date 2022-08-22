@@ -501,7 +501,7 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 			if len(args) != 1 {
 				return fmt.Errorf("FROM: want %q, got %#v", "FROM base-url", args)
 			}
-			u, err := url.Parse(args[0])
+			u, err := url.Parse(env.translateVar(args[0]))
 			if err != nil {
 				return fmt.Errorf("FROM: failed parsing URL: %v", err)
 			}
@@ -509,9 +509,9 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 		case "GET":
 			var urlPath, localPath string
 			if len(args) == 1 {
-				urlPath = args[0]
+				urlPath = env.translateVar(args[0])
 			} else if len(args) == 2 {
-				urlPath, localPath = args[0], args[1]
+				urlPath, localPath = env.translateVar(args[0]), env.translateVar(args[1])
 			} else {
 				return fmt.Errorf("GET: want %q, got %#v", "GET remote-url [local-path]", args)
 			}
@@ -523,25 +523,25 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 				abs := env.baseURL.ResolveReference(rel)
 				urlPath = abs.String()
 			}
-			if _, err := downloadFile(urlPath, env.translateVar(localPath)); err != nil {
+			if _, err := downloadFile(urlPath, localPath); err != nil {
 				return fmt.Errorf("GET: %v", err)
 			}
 		case "FILE":
-			localPath, contents := args[0], args[1]
-			if err := writeFile(env.translateVar(localPath), contents); err != nil {
+			localPath, contents := env.translateVar(args[0]), args[1]
+			if err := writeFile(localPath, contents); err != nil {
 				return fmt.Errorf("FILE: %v", err)
 			}
 		case "RUN":
-			name, args := args[0], args[1:]
-			if err := execCommand(env.translateCommand(name), env.translateVars(args), env.vars, conf.verbose); err != nil {
+			name, args := args[0], env.translateVars(args[1:])
+			if err := execCommand(env.translateCommand(name), args, env.vars, conf.verbose); err != nil {
 				return fmt.Errorf("RUN: %v", err)
 			}
 		case "START":
 			if !conf.start {
 				continue
 			}
-			name, args := args[0], args[1:]
-			if err := startCommand(env.translateCommand(name), env.translateVars(args), env.vars); err != nil {
+			name, args := args[0], env.translateVars(args[1:])
+			if err := startCommand(env.translateCommand(name), args, env.vars); err != nil {
 				return fmt.Errorf("START: %v", err)
 			}
 		default:
