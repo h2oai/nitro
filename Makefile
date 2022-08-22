@@ -7,13 +7,16 @@ version:
 	echo "__version__ = \"${VERSION}\"" > py/pkg/h2o_nitro/version.py
 	echo "__version__ = \"${VERSION}\"" > py/web/h2o_nitro_web/version.py
 
-setup: clean version setup-web setup-py setup-screenshots setup-docs ## Install dependencies
+setup: clean version setup-web setup-py setup-screenshots setup-docs setup-cli ## Install dependencies
 
 build: version web py docs ## Build everything
 
 clean: clean-docs clean-screenshots clean-py clean-web ## Clean everything
 	rm -f py/pkg/h2o_nitro/version.py
 	rm -f py/web/h2o_nitro_web/version.py
+
+setup-cli:
+	cd cli && go install cmd/nitro/nitro.go
 
 setup-web: ## Install dependencies for web
 	cd web && npm ci
