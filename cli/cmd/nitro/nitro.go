@@ -123,12 +123,12 @@ func showFile(slashPath string) error {
 	return nil
 }
 
-func downloadFile(urlPath, slashPath string) (string, error) {
+func downloadFile(urlPath, slashPath string) (*url.URL, string, error) {
 	fmt.Printf("Downloading %s\n", urlPath)
 
 	req, err := http.NewRequest("GET", urlPath, nil)
 	if err != nil {
-		return "", fmt.Errorf("error creating HTTP request: %v", err)
+		return nil, "", fmt.Errorf("error creating HTTP request: %v", err)
 	}
 
 	baseName := path.Base(req.URL.Path)
@@ -140,49 +140,49 @@ func downloadFile(urlPath, slashPath string) (string, error) {
 
 	relPath, err := resolvePathSafe(slashPath)
 	if err != nil {
-		return "", fmt.Errorf("error resolving file path %q: %v", slashPath, err)
+		return nil, "", fmt.Errorf("error resolving file path %q: %v", slashPath, err)
 	}
 
 	if destIsDir {
 		if baseName == "" {
 			// TODO inspect Content-Disposition instead of bailing out?
-			return "", fmt.Errorf("could not determine file name from url %q", urlPath)
+			return nil, "", fmt.Errorf("could not determine file name from url %q", urlPath)
 		}
 		relPath = filepath.Join(relPath, baseName)
 	}
 
 	if _, err := os.Stat(relPath); err == nil {
 		fmt.Printf("Download skipped: %q already exists.\n", relPath)
-		return relPath, nil
+		return req.URL, relPath, nil
 	}
 
 	relPathDir := filepath.Dir(relPath)
 	if relPathDir != "." && relPathDir != "/" {
 		if err := os.MkdirAll(relPathDir, 0750); err != nil {
-			return "", fmt.Errorf("error creating destination directory %q: %v", relPathDir, err)
+			return nil, "", fmt.Errorf("error creating destination directory %q: %v", relPathDir, err)
 		}
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("error making HTTP request: %v", err)
+		return nil, "", fmt.Errorf("error making HTTP request: %v", err)
 	}
 	defer res.Body.Close()
 
 	out, err := os.Create(relPath)
 	if err != nil {
-		return "", fmt.Errorf("error creating file %q: %v", relPath, err)
+		return nil, "", fmt.Errorf("error creating file %q: %v", relPath, err)
 	}
 	defer out.Close()
 
 	n, err := io.Copy(out, res.Body)
 	if err != nil {
-		return "", fmt.Errorf("error writing file %q: %v", relPath, err)
+		return nil, "", fmt.Errorf("error writing file %q: %v", relPath, err)
 	}
 
 	fmt.Printf("Downloaded %s: %s\n", relPath, humanize.Bytes(uint64(n)))
 
-	return relPath, nil
+	return req.URL, relPath, nil
 }
 
 var (
@@ -402,9 +402,9 @@ func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
 }
 
 type Env struct {
-	src              string
 	file             string
-	fromURL          *url.URL
+	src              *url.URL
+	from             *url.URL
 	vars             []string
 	translateCommand func(string) string
 }
@@ -424,8 +424,6 @@ func (e *Env) translateVar(x string) string {
 			return strings.TrimSuffix(filepath.Base(e.file), filepath.Ext(e.file))
 		case "__ext__": // .bar
 			return filepath.Ext(e.file)
-		case "__src__": // https://example.com
-			return e.src
 		default:
 			return m
 		}
@@ -504,29 +502,34 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 			if len(args) != 1 {
 				return fmt.Errorf("FROM: want %q, got %#v", "FROM base-url", args)
 			}
-			u, err := url.Parse(env.translateVar(args[0]))
+			u, err := url.Parse(args[0])
 			if err != nil {
 				return fmt.Errorf("FROM: failed parsing URL: %v", err)
 			}
-			env.fromURL = u
+			env.from = u
 		case "GET":
 			var urlPath, localPath string
 			if len(args) == 1 {
-				urlPath = env.translateVar(args[0])
+				urlPath = args[0]
 			} else if len(args) == 2 {
-				urlPath, localPath = env.translateVar(args[0]), env.translateVar(args[1])
+				urlPath, localPath = args[0], env.translateVar(args[1])
 			} else {
 				return fmt.Errorf("GET: want %q, got %#v", "GET remote-url [local-path]", args)
 			}
-			if env.fromURL != nil && !isURL(urlPath) {
+			if !isURL(urlPath) {
 				rel, err := url.Parse(urlPath)
 				if err != nil {
 					return fmt.Errorf("GET: failed parsing URL: %v", err)
 				}
-				abs := env.fromURL.ResolveReference(rel)
-				urlPath = abs.String()
+				// Use FROM if available, else default to source.
+				if env.from != nil {
+					urlPath = env.from.ResolveReference(rel).String()
+				} else {
+					rel.Path = path.Join("..", rel.Path)
+					urlPath = env.src.ResolveReference(rel).String()
+				}
 			}
-			if _, err := downloadFile(urlPath, localPath); err != nil {
+			if _, _, err := downloadFile(urlPath, localPath); err != nil {
 				return fmt.Errorf("GET: %v", err)
 			}
 		case "FILE":
@@ -565,48 +568,6 @@ func isURL(urlPath string) bool {
 	return true
 }
 
-func copyMainFile(urlPath string) (string, error) {
-	absSrcPath, err := filepath.Abs(urlPath)
-	if err != nil {
-		return "", fmt.Errorf("error finding absolute path to main file: %v", err)
-	}
-
-	srcPathStat, err := os.Stat(absSrcPath)
-	if err != nil {
-		return "", fmt.Errorf("error locating main file: %v", err)
-	}
-
-	if !srcPathStat.Mode().IsRegular() {
-		return "", fmt.Errorf("error: not a regular file: %q", absSrcPath)
-	}
-
-	absSrcDir := filepath.Dir(absSrcPath)
-
-	cwd, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("could not determine current working directory: %v", err)
-	}
-
-	if absSrcDir == cwd {
-		return absSrcPath, nil
-	}
-
-	dstPath := filepath.Base(absSrcPath)
-
-	if _, err := os.Stat(dstPath); err == nil {
-		fmt.Printf("Copy skipped: %q already exists.\n", dstPath)
-		return dstPath, nil
-	}
-
-	fmt.Printf("Copying %q to %q\n", absSrcPath, dstPath)
-
-	if err := copyFile(absSrcPath, dstPath); err != nil {
-		return "", fmt.Errorf("error copying main file: %v", err)
-	}
-
-	return dstPath, nil
-}
-
 func copyFile(srcPath, dstPath string) error {
 	src, err := os.Open(srcPath)
 	if err != nil {
@@ -632,31 +593,33 @@ func copyFile(srcPath, dstPath string) error {
 	return err
 }
 
-func downloadOrCopyMainFile(urlPath string) (string, error) {
-	if isURL(urlPath) {
-		relPath, err := downloadFile(urlPath, "")
-		if err != nil {
-			return "", fmt.Errorf("error downloading main file: %v", err)
-		}
-		return relPath, nil
-	}
-	return copyMainFile(urlPath)
-}
+var (
+	testPort = ":12345"
+)
 
-func getBaseURL(urlPath string) string {
-	if isURL(urlPath) {
-		u, _ := url.Parse(urlPath)
-		up, _ := url.Parse("..")
-		base := u.ResolveReference(up)
-		return base.String()
-	}
-	return path.Dir(urlPath)
+func isDir(p string) bool {
+	stat, err := os.Stat(p)
+	return err == nil && stat.IsDir()
 }
 
 func run(conf *Conf, urlPath string) error {
-	mainFilePath, err := downloadOrCopyMainFile(urlPath)
+	if conf.source != "" {
+		if !isDir(conf.source) {
+			return fmt.Errorf("source directory not found: %s", conf.source)
+		}
+		fmt.Printf("Hosting file server at %s\n", testPort)
+		urlPath = "http://localhost" + testPort + "/" + urlPath
+		go func() {
+			err := http.ListenAndServe(testPort, http.FileServer(http.Dir(conf.source)))
+			if err != nil {
+				panic(err)
+			}
+		}()
+	}
+
+	src, mainFilePath, err := downloadFile(urlPath, "")
 	if err != nil {
-		return err
+		return fmt.Errorf("error downloading main file: %v", err)
 	}
 
 	code, err := readFile(mainFilePath)
@@ -678,7 +641,7 @@ func run(conf *Conf, urlPath string) error {
 		return fmt.Errorf("error initializing environment: %v", err)
 	}
 
-	env.src = getBaseURL(urlPath)
+	env.src = src
 	env.file = mainFilePath
 
 	if err := interpret(conf, env, header.commands); err != nil {
@@ -692,6 +655,7 @@ type Conf struct {
 	verbose bool
 	start   bool
 	python  string
+	source  string
 }
 
 func main() {
@@ -700,6 +664,7 @@ func main() {
 	rootFlagSet := flag.NewFlagSet("nitro", flag.ExitOnError)
 	rootFlagSet.BoolVar(&conf.verbose, "verbose", false, "print verbose output")
 	rootFlagSet.StringVar(&conf.python, "python", "", "path to the Python executable")
+	rootFlagSet.StringVar(&conf.source, "source", "", "path to the directory to use as a source (simulates downloads)")
 	runFlagSet := flag.NewFlagSet("nitro run", flag.ExitOnError)
 	cloneFlagSet := flag.NewFlagSet("nitro clone", flag.ExitOnError)
 
