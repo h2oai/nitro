@@ -402,14 +402,16 @@ func newPythonEnv(conf *Conf, vars []string) (*Env, error) {
 }
 
 type Env struct {
+	src              string
 	file             string
-	baseURL          *url.URL
+	fromURL          *url.URL
 	vars             []string
 	translateCommand func(string) string
 }
 
 func (e *Env) translateVar(x string) string {
 	return dunderRegex.ReplaceAllStringFunc(x, func(m string) string {
+		// Remote path: https://example.com
 		// Local path: /path/to/foo.bar
 		switch m {
 		case "__path__": // /path/to/foo.bar
@@ -422,6 +424,8 @@ func (e *Env) translateVar(x string) string {
 			return strings.TrimSuffix(filepath.Base(e.file), filepath.Ext(e.file))
 		case "__ext__": // .bar
 			return filepath.Ext(e.file)
+		case "__src__": // https://example.com
+			return e.src
 		default:
 			return m
 		}
@@ -504,7 +508,7 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 			if err != nil {
 				return fmt.Errorf("FROM: failed parsing URL: %v", err)
 			}
-			env.baseURL = u
+			env.fromURL = u
 		case "GET":
 			var urlPath, localPath string
 			if len(args) == 1 {
@@ -514,12 +518,12 @@ func interpret(conf *Conf, env *Env, commands []Command) error {
 			} else {
 				return fmt.Errorf("GET: want %q, got %#v", "GET remote-url [local-path]", args)
 			}
-			if env.baseURL != nil && !isURL(urlPath) {
+			if env.fromURL != nil && !isURL(urlPath) {
 				rel, err := url.Parse(urlPath)
 				if err != nil {
 					return fmt.Errorf("GET: failed parsing URL: %v", err)
 				}
-				abs := env.baseURL.ResolveReference(rel)
+				abs := env.fromURL.ResolveReference(rel)
 				urlPath = abs.String()
 			}
 			if _, err := downloadFile(urlPath, localPath); err != nil {
@@ -639,6 +643,16 @@ func downloadOrCopyMainFile(urlPath string) (string, error) {
 	return copyMainFile(urlPath)
 }
 
+func getBaseURL(urlPath string) string {
+	if isURL(urlPath) {
+		u, _ := url.Parse(urlPath)
+		up, _ := url.Parse("..")
+		base := u.ResolveReference(up)
+		return base.String()
+	}
+	return path.Dir(urlPath)
+}
+
 func run(conf *Conf, urlPath string) error {
 	mainFilePath, err := downloadOrCopyMainFile(urlPath)
 	if err != nil {
@@ -664,6 +678,7 @@ func run(conf *Conf, urlPath string) error {
 		return fmt.Errorf("error initializing environment: %v", err)
 	}
 
+	env.src = getBaseURL(urlPath)
 	env.file = mainFilePath
 
 	if err := interpret(conf, env, header.commands); err != nil {
