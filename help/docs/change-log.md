@@ -20,6 +20,16 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.15.0
+
+Aug 23, 2022
+
+- Added
+    - Support for special variables in Nitrogen headers that refer to current file, dir, etc.
+    - Simulation mode (`-source`) to test `nitro run` locally.
+- Changed
+    - Remove deprecated `FLASK_ENV` from all Flask examples; use `--debug` instead.
+
 ## v0.14.2
 
 Aug 19, 2022
