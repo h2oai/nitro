@@ -120,10 +120,10 @@ nitro = View(main, title='Hello Nitro!', caption='v1.0')
 # Flask initialization goes here.
 ```
 
-You can run `hello.py` using `nitro run` (`nitro run` accepts local files in addition to URLs):
+You can run `hello.py` using `nitro run` like this:
 
 ```
-nitro run hello.py
+nitro -source . run hello.py
 ```
 
 Or, if you prefer to use Python directly:

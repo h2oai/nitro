@@ -340,3 +340,13 @@ START python -m uvicorn foo:app
 # After
 START python -m uvicorn __name__:app
 ```
+
+## Testing
+
+To test if the Nitrogen instructions in your app are working as expected, you can pass `-source` (the source directory), like this:
+
+```sh
+nitro -source path/to/app/sources run app.py
+```
+
+Assuming `app.py` is located in the directory `path/to/app/sources`, the `nitro` command will start a temporary local file server hosting the files in `path/to/app/sources` at http://localhost:12345/ and execute `app.py` from http://localhost:12345/app.py.
