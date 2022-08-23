@@ -309,10 +309,11 @@ like Flask, Tornado, Starlette, etc. where it's useful to inspect the command's 
 
 Use special variables to refer to the file containing Nitrogen instructions.
 
-Given a file `/path/to/foo.py`:
+Given a file `/path/to/foo.py` downloaded from `https://example.com/path/to/foo.py`:
 
 | Variable | Translates to | Example |
 |---|---|---|
+| `__src__` | File source | `https://example.com/path/to` |
 | `__path__` | File path | `/path/to/foo.py` |
 | `__dir__` | File's parent directory | `/path/to` |
 | `__file__` | File name with extension | `foo.py` |
