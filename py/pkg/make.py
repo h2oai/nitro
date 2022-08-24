@@ -267,6 +267,29 @@ def build_toc(groups: List[Group]) -> str:
     return str(p)
 
 
+def title_to_link(title: str) -> str:
+    title = re.sub(r'\s+', '-', title.lower())
+    return re.sub(r'[^a-zA-Z\d-]', '', title)
+
+
+def write_toc(groups: List[Group]):
+    p = Printer()
+    p('---')
+    p('template: overrides/main.html')
+    p('---')
+    p('# Guide')
+    for g in groups:
+        p()
+        p(f'## {g.title}')
+        p()
+        p(g.description)
+        p()
+        for e in g.examples:
+            p(f'- [{e.title}]({g.name}.md#{title_to_link(e.title)})')
+
+    (guide_dir / 'index.md').write_text(str(p))
+
+
 def build_menu(groups: List[Group]) -> str:
     p = Printer().indent().indent()
     for g in groups:
@@ -352,6 +375,7 @@ def write_docs_yaml(groups: List[Group]):
 
     p('- Guide:')
     p.indent()
+    p("- 'guide/index.md'")
     for g in groups:
         p(f"- 'guide/{g.name}.md'")
 
@@ -400,6 +424,7 @@ def main():
     write_tour(groups)
 
     print('Generating examples for docs...')
+    write_toc(groups)
     write_docs(groups)
 
     print('Updating mkdocs.yml...')

@@ -160,6 +160,7 @@ nav:
     - 'change-log.md'
   # Begin generated
   - Guide:
+    - 'guide/index.md'
     - 'guide/basics.md'
     - 'guide/markdown.md'
     - 'guide/styling.md'
