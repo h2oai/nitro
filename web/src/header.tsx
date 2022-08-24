@@ -25,8 +25,7 @@ import { make } from './ui';
 const Menu = make(({ client, options }: { client: Client, options: Option[] }) => {
   const
     // TODO jump to URL if option has path
-    jump = (v: V) => client.jump('#!' + v),
-    items = options.map(o => toContextualMenuItem(o, jump)),
+    items = options.map(o => toContextualMenuItem(o, client.jump)),
     hasMenu = items.length > 0,
     containerRef = React.createRef<HTMLDivElement>(),
     showMenuB = signal(false),
@@ -59,8 +58,7 @@ const Menu = make(({ client, options }: { client: Client, options: Option[] }) =
 const NavBar = make(({ client, options }: { client: Client, options: Option[] }) => {
   const
     // TODO jump to URL if option has path
-    jump = (v: V) => client.jump('#!' + v),
-    items = options.map(o => toContextualMenuItem(o, jump)),
+    items = options.map(o => toContextualMenuItem(o, client.jump)),
     render = () => (
       <div className={css('flex grow justify-end')}>
         <CommandBar items={items} />

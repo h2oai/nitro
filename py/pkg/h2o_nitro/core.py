@@ -152,11 +152,17 @@ Headers = Union[
     Set[Header],
 ]
 
+Delegate = Union[V, Callable]
+
+
+def _address_of(delegate: Delegate) -> str:
+    return '#!' + _qual_name_of(delegate) if isinstance(delegate, FunctionType) else str(delegate)
+
 
 class Option:
     def __init__(
             self,
-            value: Union[V, Callable],
+            value: Delegate,
             text: Optional[str] = None,
             name: Optional[str] = None,
             icon: Optional[str] = None,
@@ -164,12 +170,9 @@ class Option:
             selected: Optional[bool] = None,
             options: Optional['Options'] = None,
     ):
-        # If value is a function, use it as the delegate.
+        # If value is a function, use it as the delegate, and use function address as the value.
         self.delegate = value if isinstance(value, FunctionType) else None
-        # If value was a function, use one of these as the value:
-        # - option's name, if available.
-        # - function's name ("module_name.function_name")
-        self.value = value if self.delegate is None else name if name is not None else _qual_name_of(self.delegate)
+        self.value = _address_of(self.delegate) if self.delegate else value
         self.text = text
         self.name = name
         self.icon = icon
@@ -309,7 +312,7 @@ class Box:
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
             placeholder: Optional[str] = None,
-            path: Optional[str] = None,
+            path: Optional[Delegate] = None,
             error: Optional[str] = None,
             lines: Optional[int] = None,
             ignore: Optional[bool] = None,
@@ -340,7 +343,7 @@ class Box:
         self.prefix = prefix
         self.suffix = suffix
         self.placeholder = placeholder
-        self.path = path
+        self.path = _address_of(path) if path else path
         self.error = error
         self.lines = lines
         self.ignore = ignore
@@ -524,7 +527,8 @@ def _collect_delegates(d: Dict[str, FunctionType], options: Optional[Sequence[Op
         return
     for opt in options:
         if opt.delegate:
-            d[opt.value] = opt.delegate
+            # Lop off leading '#!' if delegate address
+            d[opt.value[2:]] = opt.delegate
         if opt.options:
             _collect_delegates(d, opt.options)
 
@@ -605,10 +609,10 @@ def _marshal_set(
         ))))
 
 
-def _marshal_switch(method: Union[V, Callable], params: Optional[dict]):
+def _marshal_switch(method: Delegate, params: Optional[dict]):
     return _marshal(_clean(dict(
         t=_MsgType.Switch,
-        method='#!' + _qual_name_of(method) if isinstance(method, FunctionType) else str(method),
+        method=_address_of(method),
         params=_clean(params),
     )))
 
@@ -786,7 +790,7 @@ class View(_View):
 
     def jump(
             self,
-            method: Union[V, Callable],
+            method: Delegate,
             target: Optional[str] = None,
             popup: Optional[bool] = None,
             width: Optional[int] = None,
@@ -910,7 +914,7 @@ class AsyncView(_View):
 
     async def jump(
             self,
-            method: Union[V, Callable],
+            method: Delegate,
             target: Optional[str] = None,
             popup: Optional[bool] = None,
             width: Optional[int] = None,

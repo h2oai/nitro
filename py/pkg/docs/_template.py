@@ -85,9 +85,10 @@ nitro = View(
     menu=[
         option(main, 'Contents', icon='Documentation'),
         # MENU
+        option('https://nitro.h2o.ai', 'nitro.h2o.ai', icon='Globe')
     ],
     nav=[
-        option(main, 'Contents', name='contents'),
+        option(main, 'Contents'),
     ],
     routes=[
         # ROUTES
