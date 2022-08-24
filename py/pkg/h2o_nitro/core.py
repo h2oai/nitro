@@ -794,6 +794,9 @@ class View(_View):
             hotkeys: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
     ):
+        for options in [menu, nav, hotkeys]:
+            self._delegator.scan_opts(options)
+
         self._send(_marshal_set(
             title=title,
             caption=caption,
@@ -920,6 +923,9 @@ class AsyncView(_View):
             hotkeys: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
     ):
+        for options in [menu, nav, hotkeys]:
+            self._delegator.scan_opts(options)
+
         await self._send(_marshal_set(
             title=title,
             caption=caption,
