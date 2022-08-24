@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import hotkeys from "hotkeys-js";
 import { Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
@@ -230,6 +231,19 @@ export const newClient = (server: Server) => {
       client.busy = false
       stateB({ t: ClientStateT.Connected, client })
     },
+    registerHotkeys = (options: Option[]) => {
+      hotkeys.unbind() // clear existing
+
+      options.forEach(o => {
+        if (o.text) {
+          hotkeys(o.text, e => {
+            e.preventDefault()
+            jump('#!' + o.value)
+            return false
+          })
+        }
+      })
+    },
     handleEvent = (e: ServerEvent) => {
       switch (e.t) {
         case ServerEventT.Connect:
@@ -360,12 +374,13 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { settings } = msg,
-                    { title, caption, menu, nav, theme, plugins, mode, locale } = settings
+                    { title, caption, menu, nav, hotkeys, theme, plugins, mode, locale } = settings
 
                   if (title) titleB(title)
                   if (caption) captionB(caption)
                   if (menu) menuB(sanitizeOptions(menu))
                   if (nav) navB(sanitizeOptions(nav))
+                  if (hotkeys) registerHotkeys(hotkeys)
                   if (theme) themeB(theme)
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)

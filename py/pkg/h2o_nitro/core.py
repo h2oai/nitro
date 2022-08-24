@@ -11,13 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Callable, Optional, Sequence, Set, Tuple, List, Dict, Union, Iterable
-from types import FunctionType
-import random
 import asyncio
 import collections
+import random
+import urllib.parse
 from collections import OrderedDict
 from enum import IntEnum
+from types import FunctionType
+from typing import Callable, Optional, Sequence, Set, Tuple, List, Dict, Union, Iterable
+
 from .version import __version__
 
 # noinspection PyBroadException
@@ -537,7 +539,9 @@ def _interpret(msg, expected_type: int):
             raise RemoteError(f'{text} (code {code})')
 
         if t == _MsgType.Switch:
-            method = msg.get('method')
+            # Decode nested function names:
+            # module.func.%3Clocals%3E.nested_func -> module.func.<locals>.nested_func
+            method = urllib.parse.unquote(msg.get('method'))
             raise ContextSwitchError(method)
 
         if (expected_type > -1) and t != expected_type:
@@ -580,6 +584,7 @@ def _marshal_set(
         caption: str = None,
         menu: Optional[Sequence[Option]] = None,
         nav: Optional[Sequence[Option]] = None,
+        hotkeys: Optional[Sequence[Option]] = None,
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
         locale: Optional[Locale] = None,
@@ -592,6 +597,7 @@ def _marshal_set(
             caption=caption,
             menu=_dump(menu),
             nav=_dump(nav),
+            hotkeys=_dump(hotkeys),
             theme=_dump(theme),
             plugins=_dump(plugins),
             locale=locale,
@@ -624,6 +630,7 @@ class _View:
             caption: str = f'v{__version__}',
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            hotkeys: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
@@ -638,6 +645,7 @@ class _View:
         self._caption = caption
         self._menu = menu
         self._nav = nav
+        self._hotkeys = hotkeys
         self._routes = routes
         self._theme = theme
         self._plugins = plugins
@@ -647,6 +655,7 @@ class _View:
         self._delegates: Dict[str, FunctionType] = dict()
         _collect_delegates(self._delegates, self._menu)
         _collect_delegates(self._delegates, self._nav)
+        _collect_delegates(self._delegates, self._hotkeys)
         _collect_delegates(self._delegates, self._routes)
 
     def _ack(self, mode: Optional[str] = None, locale: Optional[str] = None):
@@ -655,6 +664,7 @@ class _View:
             caption=self._caption,
             menu=self._menu,
             nav=self._nav,
+            hotkeys=self._hotkeys,
             theme=self._theme,
             plugins=self._plugins,
             locale=_get_locale(self._locales, locale, self._default_locale),
@@ -701,14 +711,15 @@ class View(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            hotkeys: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
             locales: Optional[Locales] = None,
             default_locale: Optional[str] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales,
-                         default_locale)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, hotkeys, routes, theme, plugins,
+                         locales, default_locale)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
@@ -720,6 +731,7 @@ class View(_View):
             caption=self._caption,
             menu=self._menu,
             nav=self._nav,
+            hotkeys=self._hotkeys,
             routes=self._routes,
             theme=self._theme,
             plugins=self._plugins,
@@ -760,6 +772,7 @@ class View(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            hotkeys: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
     ):
         self._send(_marshal_set(
@@ -767,6 +780,7 @@ class View(_View):
             caption=caption,
             menu=menu,
             nav=nav,
+            hotkeys=hotkeys,
             theme=theme,
         ))
 
@@ -821,14 +835,15 @@ class AsyncView(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            hotkeys: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
             locales: Optional[Locales] = None,
             default_locale: Optional[str] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins, locales,
-                         default_locale)
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, hotkeys, routes, theme, plugins,
+                         locales, default_locale)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
@@ -840,6 +855,7 @@ class AsyncView(_View):
             caption=self._caption,
             menu=self._menu,
             nav=self._nav,
+            hotkeys=self._hotkeys,
             routes=self._routes,
             theme=self._theme,
             plugins=self._plugins,
@@ -880,6 +896,7 @@ class AsyncView(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
+            hotkeys: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
     ):
         await self._send(_marshal_set(
@@ -887,6 +904,7 @@ class AsyncView(_View):
             caption=caption,
             menu=menu,
             nav=nav,
+            hotkeys=hotkeys,
             theme=theme,
         ))
 

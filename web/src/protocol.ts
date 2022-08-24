@@ -113,6 +113,7 @@ export type Settings = {
   caption?: S,
   menu?: Option[]
   nav?: Option[]
+  hotkeys?: Option[]
   theme?: Theme
   plugins?: Plugin[]
   mode?: DisplayMode

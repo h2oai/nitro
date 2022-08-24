@@ -18,6 +18,7 @@
     "@types/react-dom": "^17.0.17",
     "@ygoe/msgpack": "^1.0.3",
     "highlight.js": "^11.6.0",
+    "hotkeys-js": "^3.9.5",
     "js-yaml": "^4.1.0",
     "micromark": "^3.0.10",
     "micromark-extension-gfm": "^2.0.1",
