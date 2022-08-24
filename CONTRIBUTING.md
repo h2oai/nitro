@@ -27,17 +27,16 @@ make
 **Long version:**
 
 Most of the time, you'll be editing the front-end sources in `web/` while running a Nitro app in parallel, like the Nitro interactive docs (`docs/docs.py`).
-The `docs.py` file is generated from `py/examples/*.py`, which is what you'll be editing.
+The `docs.py` file is generated from `py/pkg/docs/*.py`, which is what you'll be editing.
 
 1. Open `web/` in Visual Studio Code.
-2. Open `py/` in PyCharm. If you're prompted to select an interpreter, use the one in `py/venv`.
-3. Auto-rebuild `docs.py` whenever `examples.py` is changed: `make dev-guide`.
-4. Run `docs.py` with auto-reload enabled: run `make dev-py`.
-5. Run the front-end with auto-reload enabled: `make dev-web`. This will automatically launch the front-end at https://localhost:3000.
+2. Open `py/pkg` in PyCharm. If you're prompted to select an interpreter, use the one in `py/pkg/venv`.
+3. Run `make dev-guide` in a new terminal window. This will rebuild `docs.py` whenever `py/pkg/docs/*.py` is changed.
+4. Run `make dev-py` in a new terminal window. This will `docs.py` with auto-reload enabled.
+5. Run `make dev-web` in a new terminal window. This will automatically launch the front-end at http://localhost:3000 with auto-reload enabled.
 
-The project's `README.md` and the guide pages under `docs/` are also generated from `examples.py`, so the above process
-will also update the docs simultaneously.
-
+In general, as long as the backend is running at http://localhost:5000, the development version of the front-end can interact with it. 
+This way, you can always interact with apps at http://localhost:3000, and switch backends at http://localhost:5000.
 
 **Tip.** To preview the project website during development, also run `make serve-docs`, which will run `mkdocs` live.
 
