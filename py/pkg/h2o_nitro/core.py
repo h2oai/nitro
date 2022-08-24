@@ -170,9 +170,7 @@ class Option:
             selected: Optional[bool] = None,
             options: Optional['Options'] = None,
     ):
-        # If value is a function, use it as the delegate, and use function address as the value.
-        self.delegate = value if isinstance(value, FunctionType) else None
-        self.value = _address_of(self.delegate) if self.delegate else value
+        self.value = value
         self.text = text
         self.name = name
         self.icon = icon
@@ -343,7 +341,7 @@ class Box:
         self.prefix = prefix
         self.suffix = suffix
         self.placeholder = placeholder
-        self.path = _address_of(path) if path else path
+        self.path = path
         self.error = error
         self.lines = lines
         self.ignore = ignore
@@ -522,17 +520,6 @@ def col(
     )
 
 
-def _collect_delegates(d: Dict[str, FunctionType], options: Optional[Sequence[Option]] = None):
-    if options is None:
-        return
-    for opt in options:
-        if opt.delegate:
-            # Lop off leading '#!' if delegate address
-            d[opt.value[2:]] = opt.delegate
-        if opt.options:
-            _collect_delegates(d, opt.options)
-
-
 def _interpret(msg, expected_type: int):
     if isinstance(msg, dict):
         t = msg.get('t')
@@ -623,6 +610,39 @@ def _get_locale(locales: Optional[Locales], locale: Optional[str], fallback: str
     return locales.get(locale) or locales.get(fallback)
 
 
+class Delegator:
+    def __init__(self):
+        self._delegates: Dict[str, FunctionType] = dict()
+
+    def _add(self, f: FunctionType) -> str:
+        a = _address_of(f)
+        self._delegates[a[2:]] = f
+        return a
+
+    def scan(self, b: Box):
+        if isinstance(b, Box):
+            if isinstance(b.path, FunctionType):
+                b.path = self._add(b.path)
+            if b.items:
+                for c in b.items:
+                    self.scan(c)
+            self.scan_opts(b.options)
+
+    def scan_opts(self, options: Optional[Sequence[Option]] = None):
+        if options:
+            for o in options:
+                if isinstance(o, Option):
+                    if isinstance(o.value, FunctionType):
+                        o.value = self._add(o.value)
+                    self.scan_opts(o.options)
+
+    def lookup(self, key: str):
+        d = self._delegates.get(key)
+        if d is None:
+            raise ProtocolError(404, f'Delegate not found: "{key}"')
+        return d
+
+
 class _View:
     def __init__(
             self,
@@ -640,6 +660,7 @@ class _View:
             plugins: Optional[Iterable[Plugin]] = None,
             locales: Optional[Locales] = None,
             default_locale: Optional[str] = None,
+            delegator: Optional[Delegator] = None,
     ):
         self._delegate = delegate
         self.context = context or {}
@@ -655,12 +676,10 @@ class _View:
         self._plugins = plugins
         self._locales = locales
         self._default_locale = default_locale or 'en-US'
+        self._delegator = delegator or Delegator()
 
-        self._delegates: Dict[str, FunctionType] = dict()
-        _collect_delegates(self._delegates, self._menu)
-        _collect_delegates(self._delegates, self._nav)
-        _collect_delegates(self._delegates, self._hotkeys)
-        _collect_delegates(self._delegates, self._routes)
+        for options in [self._menu, self._nav, self._hotkeys, self._routes]:
+            self._delegator.scan_opts(options)
 
     def _ack(self, mode: Optional[str] = None, locale: Optional[str] = None):
         return _marshal_set(
@@ -680,12 +699,6 @@ class _View:
 
     def __setitem__(self, key, value):
         self.context[key] = value
-
-    def _delegate_for(self, key: str):
-        d = self._delegates.get(key)
-        if d is None:
-            raise ProtocolError(404, f'Delegate not found: "{key}"')
-        return d
 
 
 class EditType(IntEnum):
@@ -721,9 +734,10 @@ class View(_View):
             plugins: Optional[Iterable[Plugin]] = None,
             locales: Optional[Locales] = None,
             default_locale: Optional[str] = None,
+            delegator: Optional[Delegator] = None,
     ):
         super().__init__(delegate, context, send, recv, title, caption, menu, nav, hotkeys, routes, theme, plugins,
-                         locales, default_locale)
+                         locales, default_locale, delegator)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
@@ -740,7 +754,8 @@ class View(_View):
             theme=self._theme,
             plugins=self._plugins,
             locales=self._locales,
-            default_locale=self._default_locale
+            default_locale=self._default_locale,
+            delegator=self._delegator,
         )._run()
 
     def _run(self):
@@ -751,7 +766,7 @@ class View(_View):
         # Event loop
         while True:
             try:
-                (self._delegate_for(method) if method else self._delegate)(self)
+                (self._delegator.lookup(method) if method else self._delegate)(self)
             except ContextSwitchError as cse:
                 method = cse.method
             except ProtocolError as pe:
@@ -845,9 +860,10 @@ class AsyncView(_View):
             plugins: Optional[Iterable[Plugin]] = None,
             locales: Optional[Locales] = None,
             default_locale: Optional[str] = None,
+            delegator: Optional[Delegator] = None,
     ):
         super().__init__(delegate, context, send, recv, title, caption, menu, nav, hotkeys, routes, theme, plugins,
-                         locales, default_locale)
+                         locales, default_locale, delegator)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
@@ -865,6 +881,7 @@ class AsyncView(_View):
             plugins=self._plugins,
             locales=self._locales,
             default_locale=self._default_locale,
+            delegator=self._delegator,
         )._run()
 
     async def _run(self):
@@ -875,7 +892,7 @@ class AsyncView(_View):
         # Event loop
         while True:
             try:
-                await (self._delegate_for(method) if method else self._delegate)(self)
+                await (self._delegator.lookup(method) if method else self._delegate)(self)
             except ContextSwitchError as cse:
                 method = cse.method
             except ProtocolError as pe:
