@@ -38,7 +38,7 @@ The `nitro` CLI (command line interface) makes it really easy to play with any N
     cd my_app
 
     # Run the "Hello World" app
-    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello.py
     ```
 
 === "Windows"
@@ -49,7 +49,7 @@ The `nitro` CLI (command line interface) makes it really easy to play with any N
     cd my_app
 
     :: Run the "Hello World" app
-    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello.py
     ```
 
 The `nitro run` command does several things for you:
@@ -60,7 +60,7 @@ The `nitro run` command does several things for you:
 - Launches the app.
 
 ```txt
-Downloading https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
+Downloading https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello.py
 Downloaded hello.py: 1.5 kB
 Creating virtual environment using "/usr/bin/python3" ...
 Running /usr/bin/python3 [-m venv venv] ...
@@ -88,7 +88,7 @@ To see what `nitro run` just did, let's inspect the directory's contents. You sh
 - `venv`: A [virtual environment](https://docs.python.org/3/library/venv.html) for the libraries used by the app.
 - `requirements.txt`: A [requirements file](https://pip.pypa.io/en/stable/user_guide/#requirements-files) containing a
   list of installed libraries.
-- `hello.py`: The [app's source code](https://github.com/h2oai/nitro/blob/main/py/examples/hello.py).
+- `hello.py`: The [app's source code](https://github.com/h2oai/nitro/blob/main/py/demo/hello.py).
 
 Open the directory in a Python editor, like [PyCharm](https://www.jetbrains.com/pycharm/)
 or [Visual Studio Code](https://code.visualstudio.com/). Then, make some change to `hello.py` and save. You should see

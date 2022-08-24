@@ -2,7 +2,7 @@
 # About: To Do List
 # Author: Prithvi Prabhu <prithvi.prabhu@gmail.com>
 # License: Apache-2.0
-# Source: https://github.com/h2oai/nitro/py/examples
+# Source: https://github.com/h2oai/nitro/py/demo
 # Keywords: [todo, flask]
 #
 # Setup:

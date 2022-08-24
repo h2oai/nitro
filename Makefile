@@ -32,7 +32,7 @@ setup-py: ## Install dependencies for Python
 	cd py/web && $(MAKE) setup
 	cd py/pkg && $(MAKE) setup
 	cd py/wasm && $(MAKE) setup
-	cd py/examples && $(MAKE) setup
+	cd py/demo && $(MAKE) setup
 
 .PHONY: py
 py: ## Build Python
@@ -44,7 +44,7 @@ clean-py: ## Clean Python dependencies
 	cd py/web && $(MAKE) clean
 	cd py/pkg && $(MAKE) clean
 	cd py/wasm && $(MAKE) clean
-	cd py/examples && $(MAKE) clean
+	cd py/demo && $(MAKE) clean
 
 setup-docs: ## Set up docs for development mode
 	cd help && $(MAKE) setup

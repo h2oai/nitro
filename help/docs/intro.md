@@ -47,7 +47,7 @@ def main(view: View):
 
 ![Hello World app](assets/images/app-basic.gif)
 
-And here's a more elaborate example with seven pages in [seven Python statements](https://github.com/h2oai/nitro/blob/main/py/examples/space_flight.py):
+And here's a more elaborate example with seven pages in [seven Python statements](https://github.com/h2oai/nitro/blob/main/py/demo/space_flight.py):
 
 ![Recruitment app](assets/images/app-recruitment.gif)
 

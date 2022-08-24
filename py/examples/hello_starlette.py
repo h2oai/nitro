@@ -2,7 +2,7 @@
 # About: Basic Hello World app using Starlette
 # Author: Prithvi Prabhu <prithvi.prabhu@gmail.com>
 # License: Apache-2.0
-# Source: https://github.com/h2oai/nitro/py/examples
+# Source: https://github.com/h2oai/nitro/py/demo
 # Keywords: [basic, uvicorn, starlette]
 #
 # Setup:
