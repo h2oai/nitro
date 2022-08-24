@@ -32,7 +32,7 @@ view(
 
 ## Shorthand
 
-`box(...) / style` is shorthand for `box(..., style='...')`.
+`box(...) / X` is shorthand for `box(..., style=X)`.
 
 
 ```py

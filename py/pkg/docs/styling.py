@@ -37,7 +37,7 @@ def styling_basic(view: View):  # height 2
 
 
 # ## Shorthand
-# `box(...) / style` is shorthand for `box(..., style='...')`.
+# `box(...) / X` is shorthand for `box(..., style=X)`.
 def styling_shorthand(view: View):  # height 2
     view(
         box('Hello world!', style='p-2 bg-stripes-amber'),  # Longer
