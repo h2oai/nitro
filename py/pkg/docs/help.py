@@ -44,6 +44,8 @@ def help_markdown(view: View):  # height 3
         ### No health risks!
 
         All our flavors are **100% natural** - no added sugar or colors!
+        
+        [Learn more](https://www.example.com)
         ''',
     ))
     view(f'You chose {choice}.')

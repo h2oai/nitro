@@ -78,12 +78,17 @@ export const
     let hasLinks = false
     for (const link of tmp.querySelectorAll('a')) {
       const href = link.getAttribute('href')
-      if (href && href.indexOf('#') === 0) {
-        if (href.indexOf('#user-content') === 0) continue // gfm-footnote default; ignore
-        hasLinks = true
-        if (href.indexOf('#!') === 0) continue  // ignore hashbangs
-        link.setAttribute('href', '') // don't affect address bar when clicked
-        link.setAttribute('data-jump', href.substring(1)) // marker attribute; will be hijacked later
+      if (href) {
+        if (href.indexOf('#') === 0) {
+          if (href.indexOf('#user-content') === 0) continue // gfm-footnote default; ignore
+          hasLinks = true
+          if (href.indexOf('#!') === 0) continue  // ignore hashbangs
+          link.setAttribute('href', '') // don't affect address bar when clicked
+          link.setAttribute('data-jump', href.substring(1)) // marker attribute; will be hijacked later
+        } else {
+          // Open all non-local links in a new window
+          link.target = '_blank'
+        }
       }
     }
     return [tmp.innerHTML, hasLinks]
