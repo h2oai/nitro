@@ -21,7 +21,7 @@ to host [WebSocket](https://en.wikipedia.org/wiki/WebSocket) connections.
 
 ### Using Flask
 
-Get the "Hello World" example [hello_flask.py](https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_flask.py), then:
+[Download `hello_flask.py`](https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_flask.py), then:
 
 === "Linux / macOS"
 
@@ -57,7 +57,7 @@ Get the "Hello World" example [hello_flask.py](https://raw.githubusercontent.com
 
 ### Using Tornado
 
-Get the "Hello World" example [hello_tornado.py](https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_tornado.py), then:
+[Download `hello_tornado.py`](https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_tornado.py), then:
 
 === "Linux / macOS"
 
@@ -93,7 +93,7 @@ Get the "Hello World" example [hello_tornado.py](https://raw.githubusercontent.c
 
 ### Using Starlette
 
-Get the "Hello World" example [hello_starlette.py](https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_starlette.py), then:
+[Download `hello_starlette.py`](https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_starlette.py), then:
 
 === "Linux / macOS"
 
