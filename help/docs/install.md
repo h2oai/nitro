@@ -138,6 +138,6 @@ There's no need to start a brand new project either, you can easily use it in yo
 
 - [Install the CLI](cli.md): The Nitro CLI makes it easy to set up and play around with apps.
 - [Get the live docs](live-docs.md): Play around with an interactive version of these docs.
-- [Read the guide](guide/basics.md): Deep-dive into what Nitro can do for you.
-- [Try more examples](examples/index.md): Learn, modify and share your creations with the community.
+- [Read the guide](guide/index.md): Deep-dive into what Nitro can do for you.
+- [Try more sample apps](gallery/index.md): Learn, modify and share your creations with the community.
 

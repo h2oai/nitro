@@ -22,55 +22,55 @@ It's easy to run these examples on your computer.
 
 A simple app, using [Flask](https://flask.palletsprojects.com/).
 
-Source: https://github.com/h2oai/nitro/blob/main/py/examples/hello.py
+Source: https://github.com/h2oai/nitro/blob/main/py/demo/hello.py
 
 !!!example "Run"
     ```
-    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello.py
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello.py
     ```
 
 ### Hello World using Tornado
 
 Same example as above, but using [Tornado](https://www.tornadoweb.org/en/stable/index.html).
 
-Source: https://github.com/h2oai/nitro/blob/main/py/examples/hello_tornado.py
+Source: https://github.com/h2oai/nitro/blob/main/py/demo/hello_tornado.py
 
 !!!example "Run"
     ```
-    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello_tornado.py
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_tornado.py
     ```
 
 ### Hello World using Starlette
 
 Same example as above, but using [Starlette](https://www.starlette.io/) and [Uvicorn](https://www.uvicorn.org/).
 
-Source: https://github.com/h2oai/nitro/blob/main/py/examples/hello_starlette.py
+Source: https://github.com/h2oai/nitro/blob/main/py/demo/hello_starlette.py
 
 !!!example "Run"
     ```
-    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/hello_starlette.py
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_starlette.py
     ```
 
 ### Apply for space flight
 
 A job application wizard. Seven pages in seven statements!
 
-Source: https://github.com/h2oai/nitro/blob/main/py/examples/space_flight.py
+Source: https://github.com/h2oai/nitro/blob/main/py/demo/space_flight.py
 
 !!!example "Run"
     ```
-    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/space_flight.py
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/space_flight.py
     ```
 
 ### Back button state handling
 
 How to track state when the user clicks back/forward to navigate between pages.
 
-Source: https://github.com/h2oai/nitro/blob/main/py/examples/back_button.py
+Source: https://github.com/h2oai/nitro/blob/main/py/demo/back_button.py
 
 !!!example "Run"
     ```
-    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/examples/back_button.py
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/back_button.py
     ```
 
 ## Data Visualization

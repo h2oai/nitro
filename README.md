@@ -16,7 +16,7 @@ Follow [the development blog](https://wrong.technology/tags/nitro/) or
 - **Learn**:
   [Introduction](https://nitro.h2o.ai/intro/)
   | [Guide](https://nitro.h2o.ai/guide/basics/)
-  | [Examples](https://nitro.h2o.ai/examples/)
+  | [Gallery](https://nitro.h2o.ai/gallery/)
   | [Plugins](https://nitro.h2o.ai/plugins/)
   | [Cheatsheet](https://nitro.h2o.ai/cheatsheet/)
 - **More**:

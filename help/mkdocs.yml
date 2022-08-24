@@ -204,8 +204,8 @@ nav:
     - 'guide/theming.md'
     - 'guide/advanced.md'
     # End generated
-  - Examples:
-    - 'examples/index.md'
+  - Gallery:
+    - 'gallery/index.md'
   - Plugins:
     - 'plugins/index.md'
     - 'plugins/writing.md'
