@@ -22,11 +22,11 @@ It's easy to run these examples on your computer.
 
 A simple app, using [Flask](https://flask.palletsprojects.com/).
 
-Source: https://github.com/h2oai/nitro/blob/main/py/demo/hello.py
+Source: https://github.com/h2oai/nitro/blob/main/py/demo/hello_flask.py
 
 !!!example "Run"
     ```
-    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello.py
+    nitro run https://raw.githubusercontent.com/h2oai/nitro/main/py/demo/hello_flask.py
     ```
 
 ### Hello World using Tornado
