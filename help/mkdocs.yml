@@ -196,6 +196,7 @@ nav:
     - 'guide/progress-bar.md'
     - 'guide/spinner.md'
     - 'guide/help.md'
+    - 'guide/globals.md'
     - 'guide/separator.md'
     - 'guide/components.md'
     - 'guide/cards.md'
