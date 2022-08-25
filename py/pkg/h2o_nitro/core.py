@@ -676,6 +676,7 @@ class _View:
         self._plugins = plugins
         self._locales = locales
         self._default_locale = default_locale or 'en-US'
+        # TODO clone instead? (to account for view-local closures)
         self._delegator = delegator or Delegator()
 
         for options in [self._menu, self._nav, self._hotkeys, self._routes]:
@@ -775,6 +776,7 @@ class View(_View):
                 return
 
     def _write(self, read: bool, b: Box, edit: Edit):
+        self._delegator.scan(b)
         self._send(_marshal(_clean(dict(t=_MsgType.Output, box=b.dump(), edit=edit.dump() if edit else None))))
         if read:
             return self._read(_MsgType.Input)
@@ -910,6 +912,7 @@ class AsyncView(_View):
         raise InterruptError()
 
     async def _write(self, read: bool, b: Box, edit: Edit):
+        self._delegator.scan(b)
         await self._send(_marshal(_clean(dict(t=_MsgType.Output, box=b.dump(), edit=edit.dump() if edit else None))))
         if read:
             return await self._read(_MsgType.Input)

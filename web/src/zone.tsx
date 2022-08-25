@@ -116,11 +116,10 @@ export const Zone = ({ context, box }: Container) => {
       onClick = path ? (e: React.MouseEvent<HTMLDivElement>) => {
         jump(path ?? '')
         e.preventDefault()
-      } : undefined,
-      pointer = path ? 'cursor-pointer' : undefined
+      } : undefined
     return (
       <div
-        className={css(flex, pointer, style)}
+        className={css(flex, path ? 'cursor-pointer' : undefined, style)}
         data-name={box.name ?? undefined}
         onClick={onClick}
         style={background}
