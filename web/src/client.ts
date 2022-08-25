@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import hotkeys from "hotkeys-js";
-import { Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
+import { B, Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
 import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
@@ -31,7 +31,6 @@ export type ClientState = {
   error: S
 } | {
   t: ClientStateT.Connected
-  client: Client
 }
 
 enum EditPosition { Inside, Before, At, After }
@@ -85,6 +84,7 @@ const queryBox = (boxes: Box[], name: S): [Box[], U] | null => {
 
 export type ClientContext = {
   scoped(index: any, xid: S): Context
+  record(value: InputValue): void
   commit(): void
   switch(method: S, params?: Dict<S>): void
   help(id: S): void
@@ -95,7 +95,7 @@ export type Context = {
   commit(): void
 }
 
-export const newClientContext = (server: Server, helpE: Signal<S>, onBusy: () => void): ClientContext => {
+export const newClientContext = (server: Server, helpE: Signal<S>, busyB: Signal<B>): ClientContext => {
   const
     inputs: Input[] = [],
     popAll = (): Input[] => {
@@ -103,23 +103,26 @@ export const newClientContext = (server: Server, helpE: Signal<S>, onBusy: () =>
       inputs.length = 0
       return a
     },
-    record = (index: any, xid: S, value: InputValue) => {
+    capture = (index: any, xid: S, value: InputValue) => {
       if (index >= 0) inputs[index] = [xid, value]
     },
+    record = (value: InputValue) => {
+      // XXX
+    },
     commit = () => {
-      onBusy()
+      busyB(true)
       server.send({ t: MessageType.Input, inputs: popAll() })
     },
     change = (m: S, p?: Dict<S>) => {
-      onBusy()
+      busyB(true)
       inputs.length = 0 // clear any un-commit()-ed state.
       server.send({ t: MessageType.Switch, method: m, params: p })
     },
     scoped = (index: any, xid: S): Context => ({
-      record: (value: InputValue) => record(index, xid, value),
+      record: (value: InputValue) => capture(index, xid, value),
       commit,
     })
-  return { commit, scoped, switch: change, help: helpE }
+  return { scoped, record, commit, switch: change, help: helpE }
 }
 
 
@@ -212,10 +215,8 @@ export const newClient = (server: Server) => {
     modeB = signal<DisplayMode>('normal'),
     localeB = signal<Dict<S>>({}),
     helpE = signal<S>(),
-    context = newClientContext(server, helpE, () => {
-      client.busy = true
-      stateB({ t: ClientStateT.Connected, client })
-    }),
+    busyB = signal<B>(true),
+    context = newClientContext(server, helpE, busyB),
     stateB = signal<ClientState>({ t: ClientStateT.Connecting }),
     connect = () => {
       server.connect(handleEvent)
@@ -226,10 +227,6 @@ export const newClient = (server: Server) => {
         const { method, params } = hashbang
         context.switch(method, params)
       }
-    },
-    invalidate = () => {
-      client.busy = false
-      stateB({ t: ClientStateT.Connected, client })
     },
     registerHotkeys = (options: Option[]) => {
       hotkeys.unbind() // clear existing
@@ -360,14 +357,14 @@ export const newClient = (server: Server) => {
                     }
                     reIndex(body, newIncr())
                   }
-                  invalidate()
+                  busyB(false)
                 }
                 break
               case MessageType.Switch:
                 {
                   const { method, params } = msg
                   jump(method, params)
-                  invalidate()
+                  busyB(false)
                 }
                 break
               case MessageType.Set:
@@ -387,9 +384,7 @@ export const newClient = (server: Server) => {
                   if (locale) localeB(locale)
 
                   const state = stateB()
-                  if (state.t === ClientStateT.Connected) {
-                    invalidate()
-                  }
+                  if (state.t === ClientStateT.Connected) busyB(false)
                 }
                 break
               default:
@@ -409,6 +404,8 @@ export const newClient = (server: Server) => {
 
   on(titleB, title => document.title = title)
   on(themeB, theme => window.setTimeout(() => applyTheme(theme), 100))
+  on(busyB, () => { stateB({ t: ClientStateT.Connected }) })
+
   window.addEventListener('hashchange', () => { bounce() })
 
   const client = {
@@ -420,13 +417,13 @@ export const newClient = (server: Server) => {
     modeB,
     localeB,
     helpE,
+    busyB,
     body,
     popup,
     context,
     connect,
     jump,
     stateB,
-    busy: true,
   }
 
   return client

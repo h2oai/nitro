@@ -75,12 +75,11 @@ export const App = make(({ client }: { client: Client }) => {
           )
         case ClientStateT.Connected:
           const
-            { popup, busy, modeB } = client,
+            { popup, busyB, modeB } = client,
             isChromeless = modeB() === 'chromeless'
-
           return (
             <>
-              {busy && <Busy timeout={500} />}
+              {busyB() && <Busy timeout={500} />}
               <HelpPanel helpE={client.helpE} />
               <div className='view'>
                 {!isChromeless && <div className='stripe' />}
