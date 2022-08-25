@@ -42,9 +42,10 @@ const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children
 })
 
 
-const NavSet = make(({ context, box, items }: Container & { items: Box[] }) => {
+const NavSet = make(({ context, box }: Container) => {
   const
-    { style, options: rawOptions } = box,
+    { style, items: rawItems, options: rawOptions } = box,
+    items = rawItems ?? [],
     options = rawOptions ?? [],
     selectedIndex = items.findIndex(box => box.modes.has('open')),
     selectedIndexB = signal(selectedIndex < 0 ? 0 : selectedIndex),
@@ -77,9 +78,10 @@ const NavSet = make(({ context, box, items }: Container & { items: Box[] }) => {
   return { render, selectedKeyB }
 })
 
-const TabSet = ({ context, box, items }: Container & { items: Box[] }) => {
+const TabSet = ({ context, box }: Container) => {
   const
-    { style, options: rawOptions } = box,
+    { style, items: rawItems, options: rawOptions } = box,
+    items = rawItems ?? [],
     options = rawOptions ?? [],
     tabs = zip(options, items, (opt, box, i) => (
       <PivotItem key={box.xid} headerText={opt.text ?? `Tab ${i + 1}`} itemKey={box.xid} itemIcon={box.icon ?? undefined} style={{ padding: '8px 0' }}>
@@ -100,8 +102,8 @@ export const Zone = ({ context, box }: Container) => {
   if (items) {
     if (options?.length) {
       return modes.has('col')
-        ? <NavSet context={context} box={box} items={items} />
-        : <TabSet context={context} box={box} items={items} />
+        ? <NavSet context={context} box={box} />
+        : <TabSet context={context} box={box} />
     }
 
     const children = items.map(box => <Zone key={box.xid} context={context} box={box} />)
@@ -125,18 +127,15 @@ export const Zone = ({ context, box }: Container) => {
         style={background}
       >{children}</div>
     )
-  }
+  } // items
 
-  if (modes.has('image')) {
-    return (
-      <img
-        className={css(style)}
-        data-name={box.name ?? undefined}
-        alt={box.text}
-        src={box.image} />
-    )
-  }
-
+  if (modes.has('image')) return (
+    <img
+      className={css(style)}
+      data-name={box.name ?? undefined}
+      alt={box.text}
+      src={box.image} />
+  )
 
   const
     component = <XBox context={context.scoped(box.index, box.xid)} box={box} />
