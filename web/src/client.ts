@@ -215,7 +215,7 @@ export const newClient = (server: Server) => {
     modeB = signal<DisplayMode>('normal'),
     localeB = signal<Dict<S>>({}),
     helpE = signal<S>(),
-    busyB = signal<B>(true),
+    busyB = signal<B>(true, () => false),
     context = newClientContext(server, helpE, busyB),
     stateB = signal<ClientState>({ t: ClientStateT.Connecting }),
     connect = () => {
@@ -408,7 +408,7 @@ export const newClient = (server: Server) => {
 
   window.addEventListener('hashchange', () => { bounce() })
 
-  const client = {
+  return {
     titleB,
     captionB,
     menuB,
@@ -425,8 +425,6 @@ export const newClient = (server: Server) => {
     jump,
     stateB,
   }
-
-  return client
 }
 
 export type Client = ReturnType<typeof newClient>
