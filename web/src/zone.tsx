@@ -15,22 +15,20 @@
 import { INavLink, INavLinkGroup, Nav, Pivot, PivotItem } from '@fluentui/react';
 import React from 'react';
 import { XBox } from './box';
-import { ClientContext, jump } from './client';
+import { jump } from './client';
 import { B, by, on, signal, Signal, zip } from './core';
 import { css } from './css';
 import { Expander } from './expander';
 import { Help } from './help';
 import { labeledModes } from './heuristics';
 import { Box } from './protocol';
-import { make } from './ui';
+import { BoxProps, make } from './ui';
 
 const hasLabel = (box: Box): B => {
   const { modes } = box
   for (const t of labeledModes) if (modes.has(t) && box.text) return true
   return false
 }
-
-type Container = { context: ClientContext, box: Box }
 
 const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children: React.ReactNode }) => {
   const
@@ -42,7 +40,7 @@ const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children
 })
 
 
-const NavSet = make(({ context, box }: Container) => {
+const NavSet = make(({ context, box }: BoxProps) => {
   const
     { style, items: rawItems, options: rawOptions } = box,
     items = rawItems ?? [],
@@ -78,7 +76,7 @@ const NavSet = make(({ context, box }: Container) => {
   return { render, selectedKeyB }
 })
 
-const TabSet = ({ context, box }: Container) => {
+const TabSet = ({ context, box }: BoxProps) => {
   const
     { style, items: rawItems, options: rawOptions } = box,
     items = rawItems ?? [],
@@ -97,7 +95,7 @@ const TabSet = ({ context, box }: Container) => {
   )
 }
 
-export const Zone = ({ context, box }: Container) => {
+export const Zone = ({ context, box }: BoxProps) => {
   const { modes, items, options, image, path, style } = box
   if (items) {
     if (options?.length) {

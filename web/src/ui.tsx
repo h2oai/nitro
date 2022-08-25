@@ -13,11 +13,19 @@
 // limitations under the License.
 
 import React from 'react';
-import { Context } from './client';
 import { B, Dict, Disposable, isSignal, on, S } from './core';
-import { Box } from './protocol';
+import { Box, InputValue } from './protocol';
+
+export type Context = {
+  scoped(index: any, xid: S): Context
+  record(value: InputValue): void
+  commit(): void
+  switch(method: S, params?: Dict<S>): void
+  help(id: S): void
+}
 
 export type BoxProps = { context: Context, box: Box }
+
 
 export type StyledBoxProps = BoxProps & { className?: S }
 interface Renderable {

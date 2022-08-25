@@ -13,10 +13,9 @@
 // limitations under the License.
 
 import React from 'react';
-import { Context } from './client';
 import { B, Dict, gensym, S, U, xid } from "./core";
 import { Plugin, Script } from './protocol';
-import { BoxProps, make } from './ui';
+import { BoxProps, Context, make } from './ui';
 
 type Go = (error: S | null) => void
 

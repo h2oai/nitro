@@ -14,10 +14,9 @@
 
 import { IButtonProps, IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import React from 'react';
-import { ClientContext } from './client';
 import { B, on, S, Signal, signal, splitLines, xid } from './core';
 import { markdown } from './markdown';
-import { make } from './ui';
+import { Context, make } from './ui';
 
 const tokenize = (hint?: S) => {
   if (!hint) return []
@@ -27,7 +26,7 @@ const tokenize = (hint?: S) => {
   return lines.length > 1 ? [lines.slice(1).join('\n'), lines[0]] : lines
 }
 
-const Hint = make(({ context, hint: rawHint, help }: { context: ClientContext, hint?: S, help?: S }) => {
+const Hint = make(({ context, hint: rawHint, help }: { context: Context, hint?: S, help?: S }) => {
   const
     id = xid(),
     visibleB = signal(false),
@@ -70,7 +69,7 @@ const Hint = make(({ context, hint: rawHint, help }: { context: ClientContext, h
   return { render, visibleB }
 })
 
-export const Help = make(({ context, hint, help, offset, children }: { context: ClientContext, hint?: S, help?: S, offset: B, children: JSX.Element }) => {
+export const Help = make(({ context, hint, help, offset, children }: { context: Context, hint?: S, help?: S, offset: B, children: JSX.Element }) => {
   const
     render = () => {
       const

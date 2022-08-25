@@ -18,6 +18,7 @@ import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
 import { applyTheme } from './theme';
+import { Context } from "./ui";
 
 export enum ClientStateT { Connecting, Disconnected, Invalid, Connected }
 
@@ -82,56 +83,39 @@ const queryBox = (boxes: Box[], name: S): [Box[], U] | null => {
   return null
 }
 
-export type ClientContext = {
-  scoped(index: any, xid: S): Context
-  record(value: InputValue): void
-  commit(): void
-  switch(method: S, params?: Dict<S>): void
-  help(id: S): void
-}
-
-export type Context = {
-  record(value: InputValue): void
-  commit(): void
-}
-
-export const newClientContext = (server: Server, helpE: Signal<S>, busyB: Signal<B>): ClientContext => {
-  const
-    inputs: Input[] = [],
-    popAll = (): Input[] => {
-      const a = inputs.slice()
-      inputs.length = 0
-      return a
-    },
-    capture = (index: any, xid: S, value: InputValue) => {
-      if (index >= 0) inputs[index] = [xid, value]
-    },
-    record = (value: InputValue) => {
-      // XXX
-    },
-    commit = () => {
-      busyB(true)
-      server.send({ t: MessageType.Input, inputs: popAll() })
-    },
-    change = (m: S, p?: Dict<S>) => {
-      busyB(true)
-      inputs.length = 0 // clear any un-commit()-ed state.
-      server.send({ t: MessageType.Switch, method: m, params: p })
-    },
-    scoped = (index: any, xid: S): Context => ({
-      record: (value: InputValue) => capture(index, xid, value),
-      commit,
-    })
-  return { scoped, record, commit, switch: change, help: helpE }
-}
-
-
-type HashRPC = {
+type Switch = {
   method: S
   params?: Dict<S>
 }
 
-const getHashRPC = (): HashRPC | null => {
+type ContextState = {
+  inputs: Input[]
+  switchE: Signal<Switch>
+  commitE: Signal<Input[]>
+  helpE: Signal<S>
+}
+
+const newContext = (state: ContextState, index: any, xid: S): Context => {
+  const
+    { inputs, switchE, commitE, helpE } = state,
+    capture = (index: any, xid: S, value: InputValue) => {
+      if (index >= 0) inputs[index] = [xid, value]
+    },
+    record = (value: InputValue) => capture(index, xid, value),
+    commit = () => {
+      const a = inputs.slice()
+      inputs.length = 0
+      commitE(a)
+    },
+    change = (method: S, params?: Dict<S>) => {
+      inputs.length = 0 // clear any un-commit()-ed state.
+      switchE({ method, params })
+    },
+    scoped = (index: any, xid: S): Context => newContext(state, index, xid)
+  return { scoped, record, commit, switch: change, help: helpE }
+}
+
+const parseSwitch = (): Switch | null => {
   const h = window.location.hash
   if (h && h.length > 2 && h.startsWith('#!')) {
     const
@@ -214,17 +198,20 @@ export const newClient = (server: Server) => {
     themeB = signal<Theme>({}),
     modeB = signal<DisplayMode>('normal'),
     localeB = signal<Dict<S>>({}),
-    helpE = signal<S>(),
     busyB = signal<B>(true, () => false),
-    context = newClientContext(server, helpE, busyB),
+    inputs: Input[] = [],
+    switchE = signal<Switch>(),
+    commitE = signal<Input[]>(),
+    helpE = signal<S>(),
+    context = newContext({ inputs, commitE, switchE, helpE }, -1, ''),
     stateB = signal<ClientState>({ t: ClientStateT.Connecting }),
     connect = () => {
       server.connect(handleEvent)
     },
     bounce = () => {
-      const hashbang = getHashRPC()
-      if (hashbang) {
-        const { method, params } = hashbang
+      const rpc = parseSwitch()
+      if (rpc) {
+        const { method, params } = rpc
         context.switch(method, params)
       }
     },
@@ -247,7 +234,7 @@ export const newClient = (server: Server) => {
           if (server) {
             const
               join: Message = { t: MessageType.Join, client: { locale: getLocale() } },
-              rpc = getHashRPC()
+              rpc = parseSwitch()
             if (rpc) {
               const { method, params } = rpc
               if (method) join.method = method
@@ -404,6 +391,14 @@ export const newClient = (server: Server) => {
 
   on(titleB, title => document.title = title)
   on(themeB, theme => window.setTimeout(() => applyTheme(theme), 100))
+  on(switchE, ({ method, params }) => {
+    server.send({ t: MessageType.Switch, method, params })
+    busyB(true)
+  })
+  on(commitE, inputs => {
+    server.send({ t: MessageType.Input, inputs })
+    busyB(true)
+  })
   on(busyB, () => { stateB({ t: ClientStateT.Connected }) })
 
   window.addEventListener('hashchange', () => { bounce() })
