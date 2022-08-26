@@ -15,8 +15,10 @@
 import { IButtonProps, IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import React from 'react';
 import { B, on, S, Signal, signal, splitLines, xid } from './core';
+import { labeledModes } from './heuristics';
 import { markdown } from './markdown';
-import { Context, make } from './ui';
+import { Box } from './protocol';
+import { BoxProps, Context, make } from './ui';
 
 const tokenize = (hint?: S) => {
   if (!hint) return []
@@ -69,29 +71,35 @@ const Hint = make(({ context, hint: rawHint, help }: { context: Context, hint?: 
   return { render, visibleB }
 })
 
-export const Help = make(({ context, hint, help, offset, children }: { context: Context, hint?: S, help?: S, offset: B, children: JSX.Element }) => {
-  const
-    render = () => {
-      const
-        button = <Hint context={context} hint={hint} help={help} />,
-        maybeWithLabel = offset
-          ? (
-            <Stack>
-              <Stack.Item><Label>&nbsp;</Label></Stack.Item>
-              <Stack.Item>{button}</Stack.Item>
-            </Stack>
-          )
-          : button
+const hasLabel = (box: Box): B => {
+  const { modes } = box
+  for (const t of labeledModes) if (modes.has(t) && box.text) return true
+  return false
+}
 
-      return (
-        <Stack horizontal tokens={{ childrenGap: 5 }}>
-          <Stack.Item grow>{children}</Stack.Item>
-          <Stack.Item>{maybeWithLabel}</Stack.Item>
+export const Help = ({ context, box, children }: BoxProps & { children: JSX.Element }) => {
+  const { help, hint } = box
+
+  if (!(hint || help)) return children
+
+  const
+    button = <Hint context={context} hint={hint} help={help} />,
+    maybeWithLabel = hasLabel(box)
+      ? (
+        <Stack>
+          <Stack.Item><Label>&nbsp;</Label></Stack.Item>
+          <Stack.Item>{button}</Stack.Item>
         </Stack>
       )
-    }
-  return { render }
-})
+      : button
+
+  return (
+    <Stack horizontal tokens={{ childrenGap: 5 }}>
+      <Stack.Item grow>{children}</Stack.Item>
+      <Stack.Item>{maybeWithLabel}</Stack.Item>
+    </Stack>
+  )
+}
 
 const Doc = make(({ html, helpE }: { html: S, helpE: Signal<S> }) => {
   const

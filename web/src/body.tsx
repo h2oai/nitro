@@ -18,7 +18,7 @@ import { signal, xid } from './core';
 import { hasActions } from './heuristics';
 import { Box } from './protocol';
 import { make } from './ui';
-import { Zone } from './zone';
+import { XBox } from './box';
 
 const
   continueButton: Box = {
@@ -33,7 +33,7 @@ export const Body = ({ client }: { client: Client }) => {
   const boxes: Box[] = makeContinuable(client.body)
   return (
     <div className='main'>
-      <Zone context={client.context} box={{ xid: 'main', index: -1, modes: new Set(['col']), items: boxes, options: [] }} />
+      <XBox context={client.context} box={{ xid: 'main', index: -1, modes: new Set(['col']), items: boxes, options: [] }} />
     </div>
   )
 }
@@ -67,7 +67,7 @@ export const Popup = make(({ client }: { client: Client }) => {
           modalProps={modalProps}
           hidden={hidden}
         >
-          <Zone context={client.context} box={{ xid: 'popup', index: -1, modes: new Set(['col']), items: boxes, options: [] }} />
+          <XBox context={client.context} box={{ xid: 'popup', index: -1, modes: new Set(['col']), items: boxes, options: [] }} />
         </Dialog >
       )
     }

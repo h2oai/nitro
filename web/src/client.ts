@@ -14,7 +14,7 @@
 
 import hotkeys from "hotkeys-js";
 import { B, Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
-import { reIndex, sanitizeBox, sanitizeOptions } from './heuristics';
+import { freeze, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
 import { applyTheme } from './theme';
@@ -261,7 +261,7 @@ export const newClient = (server: Server) => {
                   if (box.popup) {
                     popup.length = 0
                     popup.push(box)
-                    reIndex(popup, newIncr())
+                    freeze(popup)
                   } else {
                     popup.length = 0 // clear any existing popup
 
@@ -342,7 +342,7 @@ export const newClient = (server: Server) => {
                         }
                       }
                     }
-                    reIndex(body, newIncr())
+                    freeze(body)
                   }
                   busyB(false)
                 }

@@ -165,7 +165,7 @@ view(f'You chose {choice}.')
 
 ## More examples
 
-All boxes support `hint=` and `help=`, except containers like rows, columns, or tabs.
+Almost all boxes in Nitro support `hint=` and `help=`.
 
 
 ```py

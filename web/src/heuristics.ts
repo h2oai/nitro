@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, S, words, xid } from './core';
+import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
 import { css } from './css';
 import { markdown } from './markdown';
 import { Box, BoxMode, BoxT, Header, Option } from './protocol';
@@ -24,13 +24,13 @@ const knownModes: BoxMode[] = [
   'check',
   'col',
   'color',
+  'control',
   'critical',
   'date',
   'day',
   'error',
   'file',
   'group',
-  'image',
   'info',
   'md',
   'menu',
@@ -48,6 +48,7 @@ const knownModes: BoxMode[] = [
   'svg',
   'table',
   'tag',
+  'tap',
   'text',
   'time',
   'toggle',
@@ -60,6 +61,7 @@ const interactiveModes: BoxMode[] = [
   'button',
   'check',
   'color',
+  'control',
   'date',
   'day',
   'file',
@@ -97,6 +99,11 @@ const invert = <T>(xs: T[], ys: T[]) => {
 }
 
 const readonlyModes = invert(knownModes, interactiveModes)
+
+const isReadOnly = (modes: Set<BoxT>) => {
+  for (const m of readonlyModes) if (modes.has(m)) return true
+  return false
+}
 
 const determineMode = (box: Box): BoxMode => {
   const { modes, options } = box
@@ -152,10 +159,6 @@ const determineMode = (box: Box): BoxMode => {
 
   if (box.text && !box.path && !box.style) {
     return 'md'
-  }
-
-  if (box.image) {
-    return 'image'
   }
 
   return 'box'
@@ -317,14 +320,13 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     }
   }
 
+  let mdWithoutLinks = false
   if (box.items) {
     box.items = box.items.map(b => sanitizeBox(locale, b))
   } else {
     const { value, options } = box
 
     if (options) box.options = sanitizeOptions(options)
-
-    let ignore = false
 
     sanitizeRange(box)
 
@@ -337,9 +339,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     if (modes.has('md')) {
       const [md, hasLinks] = markdown(box.text ?? '')
       box.text = md
-      if (!hasLinks) ignore = true  // don't record
-    } else {
-      for (const t of readonlyModes) if (modes.has(t)) ignore = true // don't record
+      if (!hasLinks) mdWithoutLinks = true  // don't record
     }
 
     if (modes.has('table')) {
@@ -350,13 +350,14 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
         }
       }
     }
-
-    // if 0, box.index is set to a 1-up index later during re-indexing.
-    box.index = ignore || box.ignore ? -1 : 0
   }
 
-  // make tabs if all items of a row or col are children
+  // if 0, box.index is set to a 1-up index later during re-indexing.
+  box.index = (mdWithoutLinks || box.ignore || isReadOnly(modes)) ? -1 : 0
+
+  // special-casing for row/col modes:
   if (isRowOrCol && box.items && !box.options && box.items.every(b => b.modes.has('group'))) {
+    // make tabs if all children are groups
     box.items.forEach(b => b.modes.delete('group'))
     box.options = box.items.map(b => ({ value: b.xid, text: b.title }))
   }
@@ -366,14 +367,35 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   return box
 }
 
-export const reIndex = (boxes: Box[], incr: Incr) => {
+export const freeze = (boxes: Box[]) => {
+  reindex(boxes, newIncr())
+  assignParents(boxes)
+}
+
+const reindex = (boxes: Box[], incr: Incr) => {
+  for (const box of boxes) {
+    if (box.items) reindex(box.items, incr)
+    if (box.index >= 0) box.index = incr()
+  }
+}
+
+const assignParents = (boxes: Box[]) => {
   for (const box of boxes) {
     if (box.items) {
-      reIndex(box.items, incr)
-    } else {
-      if (box.index >= 0) { // only set for interactive boxes, not containers.
-        box.index = incr()
-      }
+      if (box.modes.has('control')) assignParent(box.index, box.xid, box.items)
+      assignParents(box.items)
+    }
+  }
+}
+
+const assignParent = (index: U, pid: S, boxes: Box[]) => {
+  for (const box of boxes) {
+    if (box.modes.has('tap')) {
+      box.index = index
+      box.pid = pid
+      // Don't recurse: ignore nested interactive areas.
+    } else if (box.items) {
+      assignParent(index, pid, box.items)
     }
   }
 }

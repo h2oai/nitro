@@ -128,13 +128,13 @@ export type BoxMode = 'box'
   | 'check'
   | 'col'
   | 'color'
+  | 'control'
   | 'critical'
   | 'date'
   | 'day'
   | 'error'
   | 'file'
   | 'group'
-  | 'image'
   | 'info'
   | 'md'
   | 'menu'
@@ -152,6 +152,7 @@ export type BoxMode = 'box'
   | 'svg'
   | 'table'
   | 'tag'
+  | 'tap' // control child
   | 'text'
   | 'time'
   | 'toggle'
@@ -169,6 +170,7 @@ export type BoxT = BoxMode | BoxModifier
 
 export type Box = {
   xid: S
+  pid?: S // (front-end only) xid of parent, if applicable
   index: I // (front-end only) don't record if -1
   ignore?: B // don't record if true
   text?: S

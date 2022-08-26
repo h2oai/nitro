@@ -128,7 +128,7 @@ def hint_localization(view: View):  # height 2
 
 
 # ## More examples
-# All boxes support `hint=` and `help=`, except containers like rows, columns, or tabs.
+# Almost all boxes in Nitro support `hint=` and `help=`.
 def help_examples(view: View):  # height 10
     hint = 'Here is a hint about this box!'
     flavors = ['Vanilla', 'Strawberry', 'Blueberry']
