@@ -403,20 +403,17 @@ const assignParent = (index: U, pid: S, boxes: Box[]) => {
 export const hasActions = (boxes: Box[]): B => { // recursive
   for (const box of boxes) {
     const { modes } = box
-    if (box.halt || modes.has('live')) return true
-    if (box.items) {
-      if (hasActions(box.items)) return true
-    } else {
-      if (modes.has('button')) {
-        if (box.options) return true
-      } else if (modes.has('md')) {
-        if (box.index >= 0) return true
-      } else if (modes.has('toggle') || modes.has('progress') || modes.has('spinner')) {
-        return true
-      } else if (modes.has('table')) {
-        if (modes.has('selectable') || modes.has('multi')) return false
-        if (box.headers) for (const header of box.headers) if (header.modes.has('link')) return true
-      }
+    if (box.halt || modes.has('live') || modes.has('control')) return true
+    if (box.items && hasActions(box.items)) return true
+    if (modes.has('button')) {
+      if (box.options) return true
+    } else if (modes.has('md')) {
+      if (box.index >= 0) return true
+    } else if (modes.has('toggle') || modes.has('progress') || modes.has('spinner')) {
+      return true
+    } else if (modes.has('table')) {
+      if (modes.has('selectable') || modes.has('multi')) return false
+      if (box.headers) for (const header of box.headers) if (header.modes.has('link')) return true
     }
   }
   return false
