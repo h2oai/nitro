@@ -48,11 +48,11 @@ def main(view: View):
         elif k == '.':
             y = y if y and k in y else y + k if y else '0.'
         elif k == '±':
-            y = calc(y, '*', '-1')
+            y = calc(y, '*', '-1') if y else None
         elif k in ops:
             x, op, y, r = calc(x or result, op, y), ops[k], None, None
         elif k == '%':
-            r = calc(calc(x or result, op, y), '/', '100')
+            r = calc(calc(x or result, op, y), '*', '100')
         elif k == '=':
             r = calc(x, op, y)
         elif k == 'AC':
