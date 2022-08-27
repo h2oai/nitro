@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { INavLink, INavLinkGroup, Nav, Pivot, PivotItem } from '@fluentui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Banner } from './banner';
 import { Buttons } from './buttons';
 import { Calendar } from './calendar';
@@ -68,7 +68,7 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
 
     return modes.has('group')
       ? <Expander box={box}>{children}</Expander>
-      : <NonTerminal context={context} box={box} >{children}</NonTerminal>
+      : <NonTerminal context={context} box={box}>{children}</NonTerminal>
 
   } // !items
 
@@ -140,10 +140,17 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
 
 const NonTerminal = ({ context, box, children }: BoxProps & { children: React.ReactNode }) => {
   const
-    { modes } = box,
+    { modes, hotkey } = box,
     background = box.image ? { backgroundImage: `url(${box.image})` } : undefined,
     flex = modes.has('col') ? 'flex flex-col gap-2' : modes.has('row') ? 'flex gap-2' : undefined,
-    onClick = createOnClick(context, box)
+    onClick = createOnClick(context, box),
+    unbind = hotkey && onClick ? context.hotkey(hotkey, onClick) : undefined,
+    dispose = () => {
+      if (unbind) unbind()
+    }
+
+  useEffect(() => dispose)
+
   return (
     <div
       className={css(flex, onClick ? 'cursor-pointer' : undefined, box.style)}
@@ -155,8 +162,22 @@ const NonTerminal = ({ context, box, children }: BoxProps & { children: React.Re
 }
 
 const Terminal = ({ context, box }: BoxProps) => {
-  const onClick = createOnClick(context, box)
-  return <div className={css(onClick ? 'cursor-pointer' : undefined, box.style)} onClick={onClick}>{box.text ?? ''}</div>
+  const
+    { hotkey } = box,
+    onClick = createOnClick(context, box),
+    unbind = hotkey && onClick ? context.hotkey(hotkey, onClick) : undefined,
+    dispose = () => {
+      if (unbind) unbind()
+    }
+
+  useEffect(() => dispose)
+
+  return (
+    <div
+      className={css(onClick ? 'cursor-pointer' : undefined, box.style)}
+      onClick={onClick}
+    >{box.text ?? ''}</div>
+  )
 }
 
 const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children: React.ReactNode }) => {
@@ -241,9 +262,9 @@ const createOnClick = (context: Context, box: Box) => {
       }
     }
     : path
-      ? (e: React.MouseEvent<HTMLDivElement>) => {
+      ? (e?: React.MouseEvent<HTMLDivElement>) => {
         jump(path ?? '')
-        e.preventDefault()
+        if (e) e.preventDefault()
       }
       : undefined
 }
