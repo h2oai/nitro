@@ -436,11 +436,11 @@ Show context-sensitive hints and help.
 - [Hint localization](help.md#hint-localization)
 - [More examples](help.md#more-examples)
 
-## Globals
+## Hotkeys
 
-Configure top-level menu, navigation and hotkeys.
+Assign keyboard shortcuts to actions.
 
-- [Hotkeys](globals.md#hotkeys)
+- [Tap](hotkeys.md#tap)
 
 ## Separator
 
