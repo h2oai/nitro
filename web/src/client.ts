@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import hotkeys from "hotkeys-js";
-import { B, Dict, isS, newIncr, on, S, Signal, signal, U, V } from './core';
+import { B, Dict, isS, on, S, Signal, signal, U, V } from './core';
 import { freeze, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
@@ -93,11 +93,12 @@ type ContextState = {
   switchE: Signal<Switch>
   commitE: Signal<Input[]>
   helpE: Signal<S>
+  hotkey(chord: S, callback: () => void): () => void
 }
 
 const newContext = (state: ContextState, index: any, xid: S): Context => {
   const
-    { inputs, switchE, commitE, helpE } = state,
+    { inputs, switchE, commitE, helpE, hotkey } = state,
     capture = (index: any, xid: S, value: InputValue) => {
       if (index >= 0) inputs[index] = [xid, value]
     },
@@ -112,7 +113,7 @@ const newContext = (state: ContextState, index: any, xid: S): Context => {
       switchE({ method, params })
     },
     scoped = (index: any, xid: S): Context => newContext(state, index, xid)
-  return { scoped, record, commit, switch: change, help: helpE }
+  return { scoped, record, commit, switch: change, help: helpE, hotkey }
 }
 
 const parseSwitch = (): Switch | null => {
@@ -203,7 +204,16 @@ export const newClient = (server: Server) => {
     switchE = signal<Switch>(),
     commitE = signal<Input[]>(),
     helpE = signal<S>(),
-    context = newContext({ inputs, commitE, switchE, helpE }, -1, ''),
+    registerHotkey = (chord: S, handle: () => void) => {
+      hotkeys.unbind(chord)
+      hotkeys(chord, e => {
+        e.preventDefault()
+        handle()
+        return false
+      })
+      return () => hotkeys.unbind(chord)
+    },
+    context = newContext({ inputs, commitE, switchE, helpE, hotkey: registerHotkey }, -1, ''),
     stateB = signal<ClientState>({ t: ClientStateT.Connecting }),
     connect = () => {
       server.connect(handleEvent)
@@ -214,19 +224,6 @@ export const newClient = (server: Server) => {
         const { method, params } = rpc
         context.switch(method, params)
       }
-    },
-    registerHotkeys = (options: Option[]) => {
-      hotkeys.unbind() // clear existing
-
-      options.forEach(o => {
-        if (o.text) {
-          hotkeys(o.text, e => {
-            e.preventDefault()
-            jump('#!' + o.value)
-            return false
-          })
-        }
-      })
     },
     handleEvent = (e: ServerEvent) => {
       switch (e.t) {
@@ -358,13 +355,12 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { settings } = msg,
-                    { title, caption, menu, nav, hotkeys, theme, plugins, mode, locale } = settings
+                    { title, caption, menu, nav, theme, plugins, mode, locale } = settings
 
                   if (title) titleB(title)
                   if (caption) captionB(caption)
                   if (menu) menuB(sanitizeOptions(menu))
                   if (nav) navB(sanitizeOptions(nav))
-                  if (hotkeys) registerHotkeys(hotkeys)
                   if (theme) themeB(theme)
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)

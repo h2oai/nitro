@@ -113,7 +113,6 @@ export type Settings = {
   caption?: S,
   menu?: Option[]
   nav?: Option[]
-  hotkeys?: Option[]
   theme?: Theme
   plugins?: Plugin[]
   mode?: DisplayMode
@@ -193,6 +192,7 @@ export type Box = {
   caption?: S
   hint?: S
   help?: S
+  hotkey?: S
   popup?: B
   style?: S
   image?: S // img tag or CSS background-image

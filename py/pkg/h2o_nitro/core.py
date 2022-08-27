@@ -297,6 +297,7 @@ class Box:
             caption: Optional[str] = None,
             hint: Optional[str] = None,
             help: Optional[str] = None,
+            hotkey: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
             image: Optional[str] = None,
@@ -328,6 +329,7 @@ class Box:
         self.caption = caption
         self.hint = hint
         self.help = help
+        self.hotkey = hotkey
         self.popup = popup
         self.style = style
         self.image = image
@@ -360,6 +362,7 @@ class Box:
             caption: Optional[str] = None,
             hint: Optional[str] = None,
             help: Optional[str] = None,
+            hotkey: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
             image: Optional[str] = None,
@@ -391,6 +394,7 @@ class Box:
             caption=self.caption if caption is None else caption,
             hint=self.hint if hint is None else hint,
             help=self.help if help is None else help,
+            hotkey=self.hotkey if hotkey is None else hotkey,
             popup=self.popup if popup is None else popup,
             style=self.style if style is None else f'{self.style} {style}',  # Additive!
             image=self.image if image is None else image,
@@ -424,6 +428,7 @@ class Box:
             caption=self.caption,
             hint=self.hint,
             help=self.help,
+            hotkey=self.hotkey,
             popup=self.popup,
             style=self.style,
             image=self.image,
@@ -463,6 +468,7 @@ class Box:
             caption=self.caption,
             hint=self.hint,
             help=self.help,
+            hotkey=self.hotkey,
             popup=self.popup,
             style=self.style,
             image=self.image,
