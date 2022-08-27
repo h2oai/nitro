@@ -34,6 +34,7 @@ import { FileUpload } from './file_upload';
 import { Help } from './help';
 import { PluginBox } from './plugin';
 import { ProgressBar } from './progress';
+import { Box } from './protocol';
 import { Rating } from './rating';
 import { Separator } from './separator';
 import { Slider } from './slider';
@@ -46,29 +47,13 @@ import { Textbox } from './textbox';
 import { TextBlock } from './text_block';
 import { TimePicker } from './time_picker';
 import { Toggle } from './toggle';
-import { BoxProps, make } from './ui';
+import { BoxProps, Context, make } from './ui';
 import { WebView } from './webview';
-
 
 export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   const
-    { modes, options, items, path } = box,
-    context = box.index >= 0 ? root.scoped(box.index, box.pid ?? box.xid) : root,
-    onClick = modes.has('tap')
-      ? () => {
-        const v = box.value ?? box.name ?? box.text
-        if (v) {
-          context.record(v as any)
-          context.commit()
-        }
-      }
-      : path
-        ? (e: React.MouseEvent<HTMLDivElement>) => {
-          jump(path ?? '')
-          e.preventDefault()
-        }
-        : undefined,
-    pointer = onClick ? 'cursor-pointer' : undefined
+    { modes, options, items } = box,
+    context = box.index >= 0 ? root.scoped(box.index, box.pid ?? box.xid) : root
 
   if (items) {
     if (options?.length) {
@@ -83,20 +68,10 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
       </Help>
     ))
 
-    if (modes.has('group')) return <Expander box={box}>{children}</Expander>
+    return modes.has('group')
+      ? <Expander box={box}>{children}</Expander>
+      : <NonTerminal context={context} box={box} >{children}</NonTerminal>
 
-    const
-      background = box.image ? { backgroundImage: `url(${box.image})` } : undefined,
-      flex = modes.has('col') ? 'flex flex-col gap-2' : modes.has('row') ? 'flex gap-2' : undefined
-
-    return (
-      <div
-        className={css(flex, pointer, box.style)}
-        data-name={box.name ?? undefined}
-        onClick={onClick}
-        style={background}
-      >{children}</div>
-    )
   } // !items
 
   if (box.image) return (
@@ -172,7 +147,28 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
     }
   }
 
-  return <div className={css(pointer, box.style)} onClick={onClick}>{box.text ?? ''}</div>
+  return <Terminal context={context} box={box} />
+}
+
+const NonTerminal = ({ context, box, children }: BoxProps & { children: React.ReactNode }) => {
+  const
+    { modes } = box,
+    background = box.image ? { backgroundImage: `url(${box.image})` } : undefined,
+    flex = modes.has('col') ? 'flex flex-col gap-2' : modes.has('row') ? 'flex gap-2' : undefined,
+    onClick = createOnClick(context, box)
+  return (
+    <div
+      className={css(flex, onClick ? 'cursor-pointer' : undefined, box.style)}
+      data-name={box.name ?? undefined}
+      onClick={onClick}
+      style={background}
+    >{children}</div>
+  )
+}
+
+const Terminal = ({ context, box }: BoxProps) => {
+  const onClick = createOnClick(context, box)
+  return <div className={css(onClick ? 'cursor-pointer' : undefined, box.style)} onClick={onClick}>{box.text ?? ''}</div>
 }
 
 const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children: React.ReactNode }) => {
@@ -244,4 +240,22 @@ const TabSet = ({ context, box }: BoxProps) => {
       <Pivot defaultSelectedKey={selectedKey}>{tabs}</Pivot>
     </div>
   )
+}
+
+const createOnClick = (context: Context, box: Box) => {
+  const { modes, path } = box
+  return modes.has('tap')
+    ? () => {
+      const v = box.value ?? box.name ?? box.text
+      if (v) {
+        context.record(v as any)
+        context.commit()
+      }
+    }
+    : path
+      ? (e: React.MouseEvent<HTMLDivElement>) => {
+        jump(path ?? '')
+        e.preventDefault()
+      }
+      : undefined
 }
