@@ -127,7 +127,7 @@ export const boxTypes = {
   check: { input: true, labeled: false },
   col: { input: false, labeled: false },
   color: { input: true, labeled: false },
-  control: { input: true, labeled: false },
+  input: { input: true, labeled: false },
   critical: { input: false, labeled: false },
   date: { input: true, labeled: true },
   day: { input: true, labeled: false },
@@ -151,7 +151,7 @@ export const boxTypes = {
   svg: { input: false, labeled: false },
   table: { input: true, labeled: false },
   tag: { input: true, labeled: true },
-  tap: { input: false, labeled: false }, // control child
+  tap: { input: false, labeled: false }, // input child
   text: { input: true, labeled: true },
   time: { input: true, labeled: false },
   toggle: { input: true, labeled: false },

@@ -297,7 +297,7 @@ const reindex = (boxes: Box[], incr: Incr) => {
 const assignParents = (boxes: Box[]) => {
   for (const box of boxes) {
     if (box.items) {
-      if (box.modes.has('control')) assignParent(box.index, box.xid, box.items)
+      if (box.modes.has('input')) assignParent(box.index, box.xid, box.items)
       assignParents(box.items)
     }
   }
@@ -318,7 +318,7 @@ const assignParent = (index: U, pid: S, boxes: Box[]) => {
 export const hasActions = (boxes: Box[]): B => { // recursive
   for (const box of boxes) {
     const { modes } = box
-    if (box.halt || modes.has('live') || modes.has('control')) return true
+    if (box.halt || modes.has('live') || modes.has('input')) return true
     if (box.items && hasActions(box.items)) return true
     if (modes.has('button')) {
       if (box.options) return true

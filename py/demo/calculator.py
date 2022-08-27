@@ -38,7 +38,7 @@ def main(view: View):
                     num('4'), num('5'), num('6'), sym('-'),
                     num('1'), num('2'), num('3'), sym('+'),
                     num('0') / 'grow', num('.'), sym('='),
-                    mode='control',
+                    mode='input',
                 ) / 'flex flex-wrap gap-0.5',
             ) / 'w-[394px] p-0.5 rounded-lg overflow-hidden shadow-2xl bg-zinc-800 text-white text-4xl font-light',
         )
