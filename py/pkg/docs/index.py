@@ -46,6 +46,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # #include color_palette.py
 # #include rating.py
 # #include file_upload.py
+# #include inputs.py
 # #include banner.py
 # #include progress_bar.py
 # #include spinner.py

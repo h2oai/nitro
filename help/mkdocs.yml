@@ -193,6 +193,7 @@ nav:
     - 'guide/color-palette.md'
     - 'guide/rating.md'
     - 'guide/file-upload.md'
+    - 'guide/inputs.md'
     - 'guide/banner.md'
     - 'guide/progress-bar.md'
     - 'guide/spinner.md'

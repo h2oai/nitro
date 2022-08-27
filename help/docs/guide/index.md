@@ -400,6 +400,12 @@ Use a file upload component to get one or more files from the user.
 - [Allow multiple files](file-upload.md#allow-multiple-files)
 - [Set upload path](file-upload.md#set-upload-path)
 
+## Inputs
+
+Create custom input components that respond to gestures.
+
+- [Tap](inputs.md#tap)
+
 ## Banner
 
 Use banners to show errors, warnings, or important information related to an operation.
