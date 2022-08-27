@@ -575,7 +575,6 @@ def _marshal_set(
         caption: str = None,
         menu: Optional[Sequence[Option]] = None,
         nav: Optional[Sequence[Option]] = None,
-        hotkeys: Optional[Sequence[Option]] = None,
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
         locale: Optional[Locale] = None,
@@ -588,7 +587,6 @@ def _marshal_set(
             caption=caption,
             menu=_dump(menu),
             nav=_dump(nav),
-            hotkeys=_dump(hotkeys),
             theme=_dump(theme),
             plugins=_dump(plugins),
             locale=locale,
@@ -654,7 +652,6 @@ class _View:
             caption: str = f'v{__version__}',
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
-            hotkeys: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
@@ -670,7 +667,6 @@ class _View:
         self._caption = caption
         self._menu = menu
         self._nav = nav
-        self._hotkeys = hotkeys
         self._routes = routes
         self._theme = theme
         self._plugins = plugins
@@ -679,7 +675,7 @@ class _View:
         # TODO clone instead? (to account for view-local closures)
         self._delegator = delegator or Delegator()
 
-        for options in [self._menu, self._nav, self._hotkeys, self._routes]:
+        for options in [self._menu, self._nav, self._routes]:
             self._delegator.scan_opts(options)
 
     def _ack(self, mode: Optional[str] = None, locale: Optional[str] = None):
@@ -688,7 +684,6 @@ class _View:
             caption=self._caption,
             menu=self._menu,
             nav=self._nav,
-            hotkeys=self._hotkeys,
             theme=self._theme,
             plugins=self._plugins,
             locale=_get_locale(self._locales, locale, self._default_locale),
@@ -729,7 +724,6 @@ class View(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
-            hotkeys: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
@@ -737,7 +731,7 @@ class View(_View):
             default_locale: Optional[str] = None,
             delegator: Optional[Delegator] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, hotkeys, routes, theme, plugins,
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins,
                          locales, default_locale, delegator)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
@@ -750,7 +744,6 @@ class View(_View):
             caption=self._caption,
             menu=self._menu,
             nav=self._nav,
-            hotkeys=self._hotkeys,
             routes=self._routes,
             theme=self._theme,
             plugins=self._plugins,
@@ -793,10 +786,9 @@ class View(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
-            hotkeys: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
     ):
-        for options in [menu, nav, hotkeys]:
+        for options in [menu, nav]:
             self._delegator.scan_opts(options)
 
         self._send(_marshal_set(
@@ -804,7 +796,6 @@ class View(_View):
             caption=caption,
             menu=menu,
             nav=nav,
-            hotkeys=hotkeys,
             theme=theme,
         ))
 
@@ -859,7 +850,6 @@ class AsyncView(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
-            hotkeys: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
@@ -867,7 +857,7 @@ class AsyncView(_View):
             default_locale: Optional[str] = None,
             delegator: Optional[Delegator] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, hotkeys, routes, theme, plugins,
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins,
                          locales, default_locale, delegator)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
@@ -880,7 +870,6 @@ class AsyncView(_View):
             caption=self._caption,
             menu=self._menu,
             nav=self._nav,
-            hotkeys=self._hotkeys,
             routes=self._routes,
             theme=self._theme,
             plugins=self._plugins,
@@ -923,10 +912,9 @@ class AsyncView(_View):
             caption: str = None,
             menu: Optional[Sequence[Option]] = None,
             nav: Optional[Sequence[Option]] = None,
-            hotkeys: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
     ):
-        for options in [menu, nav, hotkeys]:
+        for options in [menu, nav]:
             self._delegator.scan_opts(options)
 
         await self._send(_marshal_set(
@@ -934,7 +922,6 @@ class AsyncView(_View):
             caption=caption,
             menu=menu,
             nav=nav,
-            hotkeys=hotkeys,
             theme=theme,
         ))
 
