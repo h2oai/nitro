@@ -489,13 +489,14 @@ box = Box
 def row(
         *items: Item,
         name: Optional[str] = None,
+        mode: Optional[str] = None,
         style: Optional[str] = None,
         image: Optional[str] = None,
         path: Optional[str] = None,
 ) -> Box:
     return Box(
         *items,
-        mode='row',
+        mode=f'row {mode}' if mode else 'row',
         name=name,
         style=style,
         image=image,
@@ -506,13 +507,14 @@ def row(
 def col(
         *items: Item,
         name: Optional[str] = None,
+        mode: Optional[str] = None,
         style: Optional[str] = None,
         image: Optional[str] = None,
         path: Optional[str] = None,
 ) -> Box:
     return Box(
         *items,
-        mode='col',
+        mode=f'col {mode}' if mode else 'col',
         name=name,
         style=style,
         image=image,

@@ -135,7 +135,7 @@ export const boxTypes = {
   file: { input: true, labeled: false },
   group: { input: false, labeled: false },
   info: { input: false, labeled: false },
-  md: { input: true, labeled: false },// conditional: only if it has hyperlinks
+  md: { input: false, labeled: false }, // not an input unless it contains hyperlinks
   menu: { input: true, labeled: true },
   month: { input: true, labeled: false },
   number: { input: true, labeled: true },

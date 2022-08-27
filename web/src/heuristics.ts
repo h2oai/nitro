@@ -17,18 +17,8 @@ import { css } from './css';
 import { markdown } from './markdown';
 import { allBoxModes, Box, BoxMode, BoxT, Header, inputBoxModes, Option } from './protocol';
 
-
-const invert = <T>(xs: T[], ys: T[]) => {
-  const exclude = new Set(ys)
-  const include: T[] = []
-  for (const x of xs) if (!exclude.has(x)) include.push(x)
-  return include
-}
-
-const readonlyModes = invert(allBoxModes, inputBoxModes)
-
-const isReadOnly = (modes: Set<BoxT>) => {
-  for (const m of readonlyModes) if (modes.has(m)) return true
+const isInput = (modes: Set<BoxT>) => {
+  for (const m of inputBoxModes) if (modes.has(m)) return true
   return false
 }
 
@@ -247,7 +237,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     }
   }
 
-  let mdWithoutLinks = false
+  let mdHasLinks = false
   if (box.items) {
     box.items = box.items.map(b => sanitizeBox(locale, b))
   } else {
@@ -266,7 +256,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
     if (modes.has('md')) {
       const [md, hasLinks] = markdown(box.text ?? '')
       box.text = md
-      if (!hasLinks) mdWithoutLinks = true  // don't record
+      if (hasLinks) mdHasLinks = true
     }
 
     if (modes.has('table') && box.headers) {
@@ -278,7 +268,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
   }
 
   // if 0, box.index is set to a 1-up index later during re-indexing.
-  box.index = (mdWithoutLinks || box.ignore || isReadOnly(modes)) ? -1 : 0
+  box.index = !box.ignore && (mdHasLinks || isInput(modes)) ? 0 : -1
 
   // special-casing for row/col modes:
   if (isRowOrCol && box.items && !box.options && box.items.every(b => b.modes.has('group'))) {
