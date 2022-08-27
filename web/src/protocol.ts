@@ -120,45 +120,52 @@ export type Settings = {
   locale?: Dict<S>
 }
 
-// *** Warning ***
-// If you add a new mode here, update heuristics.tsx to mark it as non-interactive (index=0) if applicable.
-export type BoxMode = 'box'
-  | 'blocked'
-  | 'button'
-  | 'check'
-  | 'col'
-  | 'color'
-  | 'control'
-  | 'critical'
-  | 'date'
-  | 'day'
-  | 'error'
-  | 'file'
-  | 'group'
-  | 'info'
-  | 'md'
-  | 'menu'
-  | 'month'
-  | 'number'
-  | 'password'
-  | 'progress'
-  | 'radio'
-  | 'range'
-  | 'rating'
-  | 'row'
-  | 'separator'
-  | 'spinner'
-  | 'success'
-  | 'svg'
-  | 'table'
-  | 'tag'
-  | 'tap' // control child
-  | 'text'
-  | 'time'
-  | 'toggle'
-  | 'warning'
-  | 'web'
-  | 'week'
+export const boxTypes = {
+  box: { input: false, labeled: false },
+  blocked: { input: false, labeled: false },
+  button: { input: true, labeled: true },
+  check: { input: true, labeled: false },
+  col: { input: false, labeled: false },
+  color: { input: true, labeled: false },
+  control: { input: true, labeled: false },
+  critical: { input: false, labeled: false },
+  date: { input: true, labeled: true },
+  day: { input: true, labeled: false },
+  error: { input: false, labeled: false },
+  file: { input: true, labeled: false },
+  group: { input: false, labeled: false },
+  info: { input: false, labeled: false },
+  md: { input: true, labeled: false },// conditional: only if it has hyperlinks
+  menu: { input: true, labeled: true },
+  month: { input: true, labeled: false },
+  number: { input: true, labeled: true },
+  password: { input: true, labeled: false },
+  progress: { input: false, labeled: false },
+  radio: { input: true, labeled: false },
+  range: { input: true, labeled: false },
+  rating: { input: true, labeled: true },
+  row: { input: false, labeled: false },
+  separator: { input: false, labeled: false },
+  spinner: { input: false, labeled: false },
+  success: { input: false, labeled: false },
+  svg: { input: false, labeled: false },
+  table: { input: true, labeled: false },
+  tag: { input: true, labeled: true },
+  tap: { input: false, labeled: false }, // control child
+  text: { input: true, labeled: true },
+  time: { input: true, labeled: false },
+  toggle: { input: true, labeled: false },
+  warning: { input: false, labeled: false },
+  web: { input: false, labeled: false },
+  week: { input: true, labeled: false },
+}
+
+export type BoxMode = keyof typeof boxTypes
+
+export const allBoxModes = Object.keys(boxTypes) as BoxMode[]
+const boxEntries = Object.entries(boxTypes)
+export const inputBoxModes = boxEntries.filter(([_, v]) => v.input).map(([k, _]) => k as BoxMode)
+export const labeledBoxModes = boxEntries.filter(([_, v]) => v.labeled).map(([k, _]) => k as BoxMode)
 
 export type BoxModifier = 'live'
   | 'editable' | 'multi' | 'required' | 'selectable'

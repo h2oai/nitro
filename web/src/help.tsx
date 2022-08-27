@@ -15,9 +15,8 @@
 import { IButtonProps, IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import React from 'react';
 import { B, on, S, Signal, signal, splitLines, xid } from './core';
-import { labeledModes } from './heuristics';
 import { markdown } from './markdown';
-import { Box } from './protocol';
+import { Box, labeledBoxModes } from './protocol';
 import { BoxProps, Context, make } from './ui';
 
 const tokenize = (hint?: S) => {
@@ -73,7 +72,7 @@ const Hint = make(({ context, hint: rawHint, help }: { context: Context, hint?: 
 
 const hasLabel = (box: Box): B => {
   const { modes } = box
-  for (const t of labeledModes) if (modes.has(t) && box.text) return true
+  for (const t of labeledBoxModes) if (modes.has(t) && box.text) return true
   return false
 }
 

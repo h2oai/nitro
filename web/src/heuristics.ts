@@ -15,81 +15,8 @@
 import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
 import { css } from './css';
 import { markdown } from './markdown';
-import { Box, BoxMode, BoxT, Header, Option } from './protocol';
+import { allBoxModes, Box, BoxMode, BoxT, Header, inputBoxModes, Option } from './protocol';
 
-const knownModes: BoxMode[] = [
-  'blocked',
-  'box',
-  'button',
-  'check',
-  'col',
-  'color',
-  'control',
-  'critical',
-  'date',
-  'day',
-  'error',
-  'file',
-  'group',
-  'info',
-  'md',
-  'menu',
-  'month',
-  'number',
-  'password',
-  'progress',
-  'radio',
-  'range',
-  'rating',
-  'row',
-  'separator',
-  'spinner',
-  'success',
-  'svg',
-  'table',
-  'tag',
-  'tap',
-  'text',
-  'time',
-  'toggle',
-  'warning',
-  'web',
-  'week',
-]
-
-const interactiveModes: BoxMode[] = [
-  'button',
-  'check',
-  'color',
-  'control',
-  'date',
-  'day',
-  'file',
-  'md', // conditional: only if it has hyperlinks
-  'menu',
-  'month',
-  'number',
-  'password',
-  'radio',
-  'range',
-  'rating',
-  'table',
-  'tag',
-  'text',
-  'time',
-  'toggle',
-  'week',
-]
-
-export const labeledModes: BoxMode[] = [
-  'button',
-  'date',
-  'menu',
-  'number',
-  'rating',
-  'tag',
-  'text',
-]
 
 const invert = <T>(xs: T[], ys: T[]) => {
   const exclude = new Set(ys)
@@ -98,7 +25,7 @@ const invert = <T>(xs: T[], ys: T[]) => {
   return include
 }
 
-const readonlyModes = invert(knownModes, interactiveModes)
+const readonlyModes = invert(allBoxModes, inputBoxModes)
 
 const isReadOnly = (modes: Set<BoxT>) => {
   for (const m of readonlyModes) if (modes.has(m)) return true
@@ -276,7 +203,7 @@ const localizeHeader = (locale: Dict<S>, header: Header) => {
 
 const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
   if (modes.size === 0) return true
-  for (const m of knownModes) if (modes.has(m)) return false
+  for (const m of allBoxModes) if (modes.has(m)) return false
   for (const m of modes.values()) if (m.startsWith('plugin:')) return false
   return true
 }
@@ -342,12 +269,10 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
       if (!hasLinks) mdWithoutLinks = true  // don't record
     }
 
-    if (modes.has('table')) {
-      if (box.headers) {
-        for (const h of box.headers) {
-          const mode: any = (h as any).mode
-          h.modes = isS(mode) ? new Set(words(mode)) : new Set()
-        }
+    if (modes.has('table') && box.headers) {
+      for (const h of box.headers) {
+        const mode: any = (h as any).mode
+        h.modes = isS(mode) ? new Set(words(mode)) : new Set()
       }
     }
   }
