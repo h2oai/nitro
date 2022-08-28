@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .core import View, AsyncView, Box, Option, Theme, box, option, header, row, col, ProtocolError, \
+from .core import View, AsyncView, Box, Option, Theme, box, option, header, row, col, link, ProtocolError, \
     ContextSwitchError, RemoteError, lorem, Plugin, Script, Duplex
 
 from .version import __version__

@@ -156,7 +156,15 @@ Delegate = Union[V, Callable]
 
 
 def _address_of(delegate: Delegate) -> str:
-    return '#!' + _qual_name_of(delegate) if isinstance(delegate, FunctionType) else str(delegate)
+    return '#!' + urllib.parse.quote(_qual_name_of(delegate) if isinstance(delegate, FunctionType) else str(delegate))
+
+
+def link(delegate: Delegate, **kwargs) -> str:
+    method = _address_of(delegate)
+    if len(kwargs) == 0:
+        return method
+    params = '&'.join([f'{k}={urllib.parse.quote(str(v))}' for k, v in kwargs.items()])
+    return f'{method}?{params}'
 
 
 class Option:
