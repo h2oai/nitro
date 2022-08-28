@@ -78,9 +78,10 @@ class RemoteError(Exception):
 
 
 class ContextSwitchError(Exception):
-    def __init__(self, method: str):
+    def __init__(self, method: str, params: dict = None):
         super().__init__('Context switched')
         self.method = method
+        self.params = params
 
 
 class ProtocolError(Exception):
@@ -549,10 +550,9 @@ def _interpret(msg, expected_type: int):
             raise RemoteError(f'{text} (code {code})')
 
         if t == _MsgType.Switch:
-            # Decode nested function names:
-            # module.func.%3Clocals%3E.nested_func -> module.func.<locals>.nested_func
-            method = urllib.parse.unquote(msg.get('method'))
-            raise ContextSwitchError(method)
+            method = msg.get('method')
+            params = msg.get('params')
+            raise ContextSwitchError(method, params)
 
         if (expected_type > -1) and t != expected_type:
             raise ProtocolError(400, f'unexpected message: want {expected_type}, got {t}')
@@ -777,13 +777,23 @@ class View(_View):
         self._send(self._ack(mode, locale))
 
         # Event loop
+        params = None
         while True:
             try:
-                (self._delegator.lookup(method) if method else self._delegate)(self)
+                if method:
+                    delegate = self._delegator.lookup(method)
+                    if params:
+                        delegate(self, **params)
+                    else:
+                        delegate(self)
+                else:
+                    self._delegate(self)
             except ContextSwitchError as cse:
-                method = cse.method
+                method, params = cse.method, cse.params
             except ProtocolError as pe:
                 self._send(_marshal_error(pe.code, pe.text))
+            except TypeError as te:  # TODO trap all errors w/ stack trace
+                self._send(_marshal_error(0, str(te)))
             except InterruptError:
                 return
 
@@ -903,13 +913,23 @@ class AsyncView(_View):
         await self._send(self._ack(mode, locale))
 
         # Event loop
+        params = None
         while True:
             try:
-                await (self._delegator.lookup(method) if method else self._delegate)(self)
+                if method:
+                    delegate = self._delegator.lookup(method)
+                    if params:
+                        await delegate(self, **params)
+                    else:
+                        await delegate(self)
+                else:
+                    await self._delegate(self)
             except ContextSwitchError as cse:
-                method = cse.method
+                method, params = cse.method, cse.params
             except ProtocolError as pe:
                 await self._send(_marshal_error(pe.code, pe.text))
+            except TypeError as te:  # TODO trap all errors w/ stack trace
+                await self._send(_marshal_error(0, str(te)))
             except InterruptError:
                 return
 
