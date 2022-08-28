@@ -23,20 +23,16 @@ Supported special keys: `backspace`, `tab`, `clear`, `enter`, `return`, `esc`, `
 
 
 ```py
-style = 'text-white rounded-full px-5 py-2.5 text-center mr-2 mb-2 '
+def style(color):
+    return f'text-white rounded-full px-5 py-2.5 text-center mr-2 mb-2 bg-{color}-700 hover:bg-{color}-800'
+
 color = view(
     'This is your last chance. After this, there is no turning back.',
     row(
-        box(
-            'Press Alt+b to take the blue pill',
-            mode='tap', value='blue', hotkey='alt+b'
-        ) / (style + 'bg-blue-700 hover:bg-blue-800'),
-        box(
-            'Press Alt+r to take the red pill',
-            mode='tap', value='red', hotkey='alt+r'
-        ) / (style + 'bg-red-700 hover:bg-red-800'),
+        box('Blue pill (alt+b)', mode='tap', value='blue', hotkey='alt+b') / style('blue'),
+        box('Red pill (alt+r)', mode='tap', value='red', hotkey='alt+r') / style('red'),
         mode='input',
-        ),
+    ),
 )
 view(f'You took the {color} pill!')
 ```

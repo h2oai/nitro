@@ -14,12 +14,14 @@ The `tap` box returns its `value` when tapped or clicked, or its text if a `valu
 
 
 ```py
-style = 'text-white rounded-full px-5 py-2.5 text-center mr-2 mb-2 '
+def style(color):
+    return f'text-white rounded-full px-5 py-2.5 text-center mr-2 mb-2 bg-{color}-700 hover:bg-{color}-800'
+
 color = view(
     'This is your last chance. After this, there is no turning back.',
     row(
-        box('Blue Pill', mode='tap', value='blue') / (style + 'bg-blue-700 hover:bg-blue-800'),
-        box('Red Pill', mode='tap', value='red') / (style + 'bg-red-700 hover:bg-red-800'),
+        box('Blue pill', mode='tap', value='blue') / style('blue'),
+        box('Red pill', mode='tap', value='red') / style('red'),
         mode='input',
     ),
 )
