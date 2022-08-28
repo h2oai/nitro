@@ -204,7 +204,7 @@ export const newClient = (server: Server) => {
     switchE = signal<Switch>(),
     commitE = signal<Input[]>(),
     helpE = signal<S>(),
-    registerHotkey = (chord: S, handle: () => void) => {
+    hotkey = (chord: S, handle: () => void) => {
       hotkeys.unbind(chord)
       hotkeys(chord, e => {
         e.preventDefault()
@@ -213,7 +213,7 @@ export const newClient = (server: Server) => {
       })
       return () => hotkeys.unbind(chord)
     },
-    context = newContext({ inputs, commitE, switchE, helpE, hotkey: registerHotkey }, -1, ''),
+    context = newContext({ inputs, commitE, switchE, helpE, hotkey }, -1, ''),
     stateB = signal<ClientState>({ t: ClientStateT.Connecting }),
     connect = () => {
       server.connect(handleEvent)
@@ -412,6 +412,7 @@ export const newClient = (server: Server) => {
     body,
     popup,
     context,
+    hotkey,
     connect,
     jump,
     stateB,

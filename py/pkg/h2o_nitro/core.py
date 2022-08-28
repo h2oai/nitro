@@ -167,6 +167,7 @@ class Option:
             name: Optional[str] = None,
             icon: Optional[str] = None,
             caption: Optional[str] = None,
+            hotkey: Optional[str] = None,
             selected: Optional[bool] = None,
             options: Optional['Options'] = None,
     ):
@@ -175,6 +176,7 @@ class Option:
         self.name = name
         self.icon = icon
         self.caption = caption
+        self.hotkey = hotkey
         self.selected = selected
         self.options = options
 
@@ -185,6 +187,7 @@ class Option:
             name=self.name,
             icon=self.icon,
             caption=self.caption,
+            hotkey=self.hotkey,
             selected=self.selected,
             options=_dump(self.options),
         ))

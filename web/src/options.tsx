@@ -17,7 +17,7 @@ import { gensym, V, xid } from './core';
 import { Box, Option } from './protocol';
 
 export const
-  toContextualMenuItem = ({ name, value, text, caption, icon, options }: Option, record: (v: V) => void): IContextualMenuItem => {
+  toContextualMenuItem = ({ name, value, text, caption, icon, hotkey, options }: Option, record: (v: V) => void): IContextualMenuItem => {
     return text
       ? {
         key: String(value),
@@ -25,6 +25,7 @@ export const
         title: caption,
         iconProps: icon ? { iconName: icon } : undefined,
         subMenuProps: options ? toContextualMenuProps(options, record) : undefined,
+        secondaryText: hotkey ? hotkey : undefined,
         onClick: () => record(value),
         'data-name': name,
       } : {

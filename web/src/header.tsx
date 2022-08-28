@@ -14,20 +14,34 @@
 
 import { CommandBar, ContextualMenu } from '@fluentui/react';
 import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@fluentui/react-icons-mdl2';
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Client } from './client';
 import { css } from './css';
 import { toContextualMenuItem } from './options';
 import { Option } from './protocol';
 
+const manageHotkeys = (client: Client, options: Option[]) => {
+  const dispose: Array<() => void> = []
+  options.forEach(o => {
+    if (o.hotkey) dispose.push(client.hotkey(o.hotkey, () => client.jump(o.value)))
+  })
+  return () => dispose.forEach(d => d())
+}
+
 const Menu = ({ client, options }: { client: Client, options: Option[] }) => {
   const
     items = options.map(o => toContextualMenuItem(o, client.jump)),
     hasMenu = items.length > 0,
-    containerRef = React.useRef(null),
-    [visible, setVisible] = React.useState(false),
+    containerRef = useRef(null),
+    [visible, setVisible] = useState(false),
     showMenu = () => setVisible(true),
     hideMenu = () => setVisible(false)
+
+  useEffect(() => {
+    const dispose = manageHotkeys(client, options)
+    return () => dispose()
+  })
+
   return (
     <div
       ref={containerRef}
@@ -54,6 +68,12 @@ const Menu = ({ client, options }: { client: Client, options: Option[] }) => {
 
 const NavBar = ({ client, options }: { client: Client, options: Option[] }) => {
   const items = options.map(o => toContextualMenuItem(o, client.jump))
+
+  useEffect(() => {
+    const dispose = manageHotkeys(client, options)
+    return () => dispose()
+  })
+
   return (
     <div className={css('flex grow justify-end')}>
       <CommandBar items={items} />
