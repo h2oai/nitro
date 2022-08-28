@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { ContextualMenuItemType, DropdownMenuItemType, IContextualMenuItem, IContextualMenuProps, IDropdownOption } from '@fluentui/react';
-import { gensym, V, xid } from './core';
+import { Dict, gensym, S, V, xid } from './core';
 import { Box, Option } from './protocol';
 
 export const
@@ -25,7 +25,7 @@ export const
         title: caption,
         iconProps: icon ? { iconName: icon } : undefined,
         subMenuProps: options ? toContextualMenuProps(options, record) : undefined,
-        secondaryText: hotkey ? hotkey : undefined,
+        secondaryText: hotkey ? toHotkeyCaption(hotkey) : undefined,
         onClick: () => record(value),
         'data-name': name,
       } : {
@@ -67,4 +67,16 @@ export const
     ? Array.isArray(value)
       ? options.filter(c => value.includes(c.value))
       : options.filter(c => c.selected)
-    : []
+    : [],
+  hotkeySymbols: Dict<S> = {
+    shift: '⇧',
+    option: '⌥',
+    alt: '⌥',
+    ctrl: '^',
+    control: '^',
+    command: '⌘',
+  },
+  toHotkeyCaption = (h: S) => h
+    .replaceAll(/\b(shift|option|alt|ctrl|control|command)\b/gi, k => hotkeySymbols[k.toLowerCase()])
+    .replaceAll('+', ' ')
+
