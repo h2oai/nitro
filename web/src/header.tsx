@@ -16,74 +16,65 @@ import { CommandBar, ContextualMenu } from '@fluentui/react';
 import { GlobalNavButtonActiveIcon, GlobalNavButtonIcon, RocketIcon } from '@fluentui/react-icons-mdl2';
 import React from 'react';
 import { Client } from './client';
-import { signal, V } from './core';
 import { css } from './css';
 import { toContextualMenuItem } from './options';
 import { Option } from './protocol';
-import { make } from './ui';
 
-const Menu = make(({ client, options }: { client: Client, options: Option[] }) => {
+const Menu = ({ client, options }: { client: Client, options: Option[] }) => {
   const
-    // TODO jump to URL if option has path
     items = options.map(o => toContextualMenuItem(o, client.jump)),
     hasMenu = items.length > 0,
-    containerRef = React.createRef<HTMLDivElement>(),
-    showMenuB = signal(false),
-    showMenu = () => showMenuB(true),
-    hideMenu = () => showMenuB(false),
-    render = () => {
-      const isMenuVisible = showMenuB()
-      return (
-        <div ref={containerRef} className={css('flex items-center cursor-pointer w-6 h-6')} onClick={showMenu}>
-          {
-            hasMenu
-              ? isMenuVisible
-                ? <GlobalNavButtonActiveIcon />
-                : <GlobalNavButtonIcon />
-              : <RocketIcon />
-          }
-          <ContextualMenu
-            items={items}
-            hidden={!isMenuVisible}
-            target={containerRef}
-            onItemClick={hideMenu}
-            onDismiss={hideMenu}
-          />
-        </div>
-      )
-    }
-  return { render, showMenuB }
-})
+    containerRef = React.useRef(null),
+    [visible, setVisible] = React.useState(false),
+    showMenu = () => setVisible(true),
+    hideMenu = () => setVisible(false)
+  return (
+    <div
+      ref={containerRef}
+      className={css('flex items-center cursor-pointer w-6 h-6')}
+      onClick={showMenu}
+    >
+      {
+        hasMenu
+          ? visible
+            ? <GlobalNavButtonActiveIcon />
+            : <GlobalNavButtonIcon />
+          : <RocketIcon />
+      }
+      <ContextualMenu
+        items={items}
+        hidden={!visible}
+        target={containerRef}
+        onItemClick={hideMenu}
+        onDismiss={hideMenu}
+      />
+    </div>
+  )
+}
 
-const NavBar = make(({ client, options }: { client: Client, options: Option[] }) => {
+const NavBar = ({ client, options }: { client: Client, options: Option[] }) => {
+  const items = options.map(o => toContextualMenuItem(o, client.jump))
+  return (
+    <div className={css('flex grow justify-end')}>
+      <CommandBar items={items} />
+    </div>
+  )
+}
+
+
+export const Header = ({ client }: { client: Client }) => {
   const
-    // TODO jump to URL if option has path
-    items = options.map(o => toContextualMenuItem(o, client.jump)),
-    render = () => (
-      <div className={css('flex grow justify-end')}>
-        <CommandBar items={items} />
-      </div>
-    )
-  return { render }
-})
+    title = client.titleB(),
+    caption = client.captionB(),
+    menu = client.menuB() ?? [],
+    nav = client.navB() ?? []
 
-export const Header = make(({ client }: { client: Client }) => {
-  const
-    render = () => {
-      const
-        title = client.titleB(),
-        caption = client.captionB(),
-        menu = client.menuB() ?? [],
-        nav = client.navB() ?? []
-
-      return (
-        <div className={css('flex flex-row mt-4 mb-6 gap-2 items-center')}>
-          <Menu client={client} options={menu} />
-          <div className={css('text-sm font-extrabold tracking-wider uppercase')}>{title}</div>
-          <div className={css('text-sm')}>{caption}</div>
-          <NavBar client={client} options={nav} />
-        </div>
-      )
-    }
-  return { render }
-})
+  return (
+    <div className={css('flex flex-row mt-4 mb-6 gap-2 items-center')}>
+      <Menu client={client} options={menu} />
+      <div className={css('text-sm font-extrabold tracking-wider uppercase')}>{title}</div>
+      <div className={css('text-sm')}>{caption}</div>
+      <NavBar client={client} options={nav} />
+    </div>
+  )
+}
