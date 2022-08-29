@@ -11,7 +11,7 @@ Set `mode='web'` to embed external web pages.
 
 
 ```py
-view(box(mode='web', path='https://example.com', style='h-96'))
+view(box(mode='web', link='https://example.com', style='h-96'))
 ```
 
 
@@ -39,7 +39,7 @@ URLs can be opened in popup windows by passing `popup=1`.
 
 ```py
 view('Click Continue to open https://example.com in a new view.')
-view.jump('https://example.com', popup=1, width=400, height=300, left=100, top=100)
+view.jump('https://example.com', popup=True, width=400, height=300, left=100, top=100)
 ```
 
 

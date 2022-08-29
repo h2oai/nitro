@@ -398,7 +398,7 @@ Use a file upload component to get one or more files from the user.
 
 - [Basic](file-upload.md#basic)
 - [Allow multiple files](file-upload.md#allow-multiple-files)
-- [Set upload path](file-upload.md#set-upload-path)
+- [Set upload location](file-upload.md#set-upload-location)
 
 ## Inputs
 

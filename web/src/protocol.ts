@@ -207,7 +207,7 @@ export type Box = {
   suffix?: S
   // format?: S // TODO: displayed-value format string for spinbutton, slider
   placeholder?: S
-  path?: S // file upload path or web view path
+  link?: S
   error?: S
   lines?: U
 }

@@ -252,7 +252,7 @@ const TabSet = ({ context, box }: BoxProps) => {
 }
 
 const createOnClick = (context: Context, box: Box) => {
-  const { modes, path } = box
+  const { modes, link } = box
   return modes.has('tap')
     ? () => {
       const v = box.value ?? box.name ?? box.text
@@ -261,9 +261,9 @@ const createOnClick = (context: Context, box: Box) => {
         context.commit()
       }
     }
-    : path
+    : link
       ? (e?: React.MouseEvent<HTMLDivElement>) => {
-        jump(path ?? '')
+        jump(link ?? '')
         if (e) e.preventDefault()
       }
       : undefined

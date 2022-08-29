@@ -18,14 +18,14 @@ import { BoxProps } from './ui';
 
 export const WebView = ({ box }: BoxProps) => {
   const
-    { name: rawName, path, style } = box,
+    { name: rawName, link, style } = box,
     name = rawName ?? xid()
   return (
     <iframe
       className={css(style)}
       name={name}
       title={name}
-      src={path}
+      src={link}
     />
   )
 }

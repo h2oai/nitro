@@ -74,7 +74,7 @@ const determineMode = (box: Box): BoxMode => {
     return 'text'
   }
 
-  if (box.text && !box.path && !box.style) {
+  if (box.text && !box.link && !box.style) {
     return 'md'
   }
 

@@ -85,7 +85,7 @@ type Uploadable = {
 
 export const FileUpload = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, path, style } = box,
+    { modes, text, link, style } = box,
     multiple = modes.has('multi'),
     label = multiple ? 'Drag files here, or' : 'Drag a file here, or',
     inputID = xid(),
@@ -105,7 +105,7 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
 
       setTimeout(() => {
         uploadables.forEach(({ file, progressB, errorB }) => {
-          doUpload(path ?? '/upload', file, progressB, r => {
+          doUpload(link ?? '/upload', file, progressB, r => {
             switch (r.t) {
               case UploadResultT.Success:
                 progressB(1)

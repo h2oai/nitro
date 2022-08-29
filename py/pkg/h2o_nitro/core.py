@@ -323,7 +323,7 @@ class Box:
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
             placeholder: Optional[str] = None,
-            path: Optional[Delegate] = None,
+            link: Optional[Delegate] = None,
             error: Optional[str] = None,
             lines: Optional[int] = None,
             ignore: Optional[bool] = None,
@@ -355,7 +355,7 @@ class Box:
         self.prefix = prefix
         self.suffix = suffix
         self.placeholder = placeholder
-        self.path = path
+        self.link = link
         self.error = error
         self.lines = lines
         self.ignore = ignore
@@ -388,7 +388,7 @@ class Box:
             prefix: Optional[str] = None,
             suffix: Optional[str] = None,
             placeholder: Optional[str] = None,
-            path: Optional[str] = None,
+            link: Optional[str] = None,
             error: Optional[str] = None,
             lines: Optional[int] = None,
             ignore: Optional[bool] = None,
@@ -420,7 +420,7 @@ class Box:
             prefix=self.prefix if prefix is None else prefix,
             suffix=self.suffix if suffix is None else suffix,
             placeholder=self.placeholder if placeholder is None else placeholder,
-            path=self.path if path is None else path,
+            link=self.link if link is None else link,
             error=self.error if error is None else error,
             lines=self.lines if lines is None else lines,
             ignore=self.ignore if ignore is None else ignore,
@@ -454,7 +454,7 @@ class Box:
             prefix=self.prefix,
             suffix=self.suffix,
             placeholder=self.placeholder,
-            path=self.path,
+            link=self.link,
             error=self.error,
             lines=self.lines,
             ignore=self.ignore,
@@ -494,7 +494,7 @@ class Box:
             prefix=self.prefix,
             suffix=self.suffix,
             placeholder=self.placeholder,
-            path=self.path,
+            link=self.link,
             error=self.error,
             lines=self.lines,
             ignore=self.ignore,
@@ -510,7 +510,7 @@ def row(
         mode: Optional[str] = None,
         style: Optional[str] = None,
         image: Optional[str] = None,
-        path: Optional[str] = None,
+        link: Optional[str] = None,
 ) -> Box:
     return Box(
         *items,
@@ -518,7 +518,7 @@ def row(
         name=name,
         style=style,
         image=image,
-        path=path,
+        link=link,
     )
 
 
@@ -528,7 +528,7 @@ def col(
         mode: Optional[str] = None,
         style: Optional[str] = None,
         image: Optional[str] = None,
-        path: Optional[str] = None,
+        link: Optional[str] = None,
 ) -> Box:
     return Box(
         *items,
@@ -536,7 +536,7 @@ def col(
         name=name,
         style=style,
         image=image,
-        path=path,
+        link=link,
     )
 
 
@@ -638,8 +638,8 @@ class Delegator:
 
     def scan(self, b: Box):
         if isinstance(b, Box):
-            if isinstance(b.path, FunctionType):
-                b.path = self._add(b.path)
+            if isinstance(b.link, FunctionType):
+                b.link = self._add(b.link)
             if b.items:
                 for c in b.items:
                     self.scan(c)
