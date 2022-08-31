@@ -111,3 +111,12 @@ it('should translate date format', () => {
   expect(opt('tz-g-l')).toEqual({ timeZoneName: 'longGeneric' })
   expect(opt('tz-g-s')).toEqual({ timeZoneName: 'shortGeneric' })
 })
+
+it('should translate relative time format', () => {
+  ['dy', 'dq', 'dm', 'dw', 'dd', 'th', 'tm', 'ts'].forEach(x => {
+    expect(opt(`r-${x}`)).toEqual({})
+    expect(opt(`r-${x}-l`)).toEqual({ style: 'long' })
+    expect(opt(`r-${x}-s`)).toEqual({ style: 'short' })
+    expect(opt(`r-${x}-xs`)).toEqual({ style: 'narrow' })
+  })
+})

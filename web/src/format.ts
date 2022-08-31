@@ -12,21 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { optionProperties } from "@fluentui/react";
 import { Dict, S } from "./core";
 
 type V = string | number | boolean
 type Model = Dict<V | Model>
 
-type Rule = {
-}
-const rules: Dict<Rule> = {
-  decimal: {
-  }
-}
-
-enum FormatT { Number, DateTime, List }
-type FormatOptions = Intl.NumberFormatOptions & Intl.DateTimeFormatOptions
+enum FormatT { Number, DateTime, List, Plural, RelHour, RelMin, RelSec, RelYear, RelQuarter, RelWeek, RelMonth, RelDay }
+type FormatOptions = any
 
 const fsplit = (s: S): [S, S] => {
   const i = s.indexOf('-')
@@ -70,6 +62,16 @@ const evaluate = (path: S, model: Model): any => {
   return undefined
 }
 
+const relFormats: Dict<FormatT> = {
+  dy: FormatT.RelYear,
+  dq: FormatT.RelQuarter,
+  dm: FormatT.RelMonth,
+  dw: FormatT.RelWeek,
+  dd: FormatT.RelDay,
+  th: FormatT.RelHour,
+  tm: FormatT.RelMin,
+  ts: FormatT.RelSec,
+}
 
 export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
   let algo: FormatT = FormatT.Number
@@ -78,6 +80,19 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
   for (const token of tokens) {
     const [k, v] = fsplit(token)
     switch (k) {
+      case 'r':
+        {
+          const [unit, size] = fsplit(v)
+          const a = relFormats[unit]
+          if (!a) continue
+          algo = a
+          switch (size) {
+            case 'l': o.style = 'long'; break
+            case 's': o.style = 'short'; break
+            case 'xs': o.style = 'narrow'; break
+          }
+        }
+        break
       case 'n':
         algo = FormatT.Number
         switch (v) {
