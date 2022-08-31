@@ -120,3 +120,18 @@ it('should translate relative time format', () => {
     expect(opt(`rel-${x}-xs`)).toEqual({ style: 'narrow' })
   })
 })
+
+it('should translate list format', () => {
+  expect(opt('list')).toEqual({ type: 'unit' })
+  expect(opt('list-l')).toEqual({ type: 'unit', style: 'long' })
+  expect(opt('list-s')).toEqual({ type: 'unit', style: 'short' })
+  expect(opt('list-xs')).toEqual({ type: 'unit', style: 'narrow' })
+  expect(opt('and')).toEqual({ type: 'conjunction' })
+  expect(opt('and-l')).toEqual({ type: 'conjunction', style: 'long' })
+  expect(opt('and-s')).toEqual({ type: 'conjunction', style: 'short' })
+  expect(opt('and-xs')).toEqual({ type: 'conjunction', style: 'narrow' })
+  expect(opt('or')).toEqual({ type: 'disjunction' })
+  expect(opt('or-l')).toEqual({ type: 'disjunction', style: 'long' })
+  expect(opt('or-s')).toEqual({ type: 'disjunction', style: 'short' })
+  expect(opt('or-xs')).toEqual({ type: 'disjunction', style: 'narrow' })
+})

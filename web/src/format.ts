@@ -324,6 +324,33 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 'generic-l': o.timeZoneName = 'longGeneric'; break
         }
         break
+      case 'list':
+        algo = FormatT.List
+        o.type = 'unit'
+        switch (v) {
+          case 'l': o.style = 'long'; break
+          case 's': o.style = 'short'; break
+          case 'xs': o.style = 'narrow'; break
+        }
+        break
+      case 'and':
+        algo = FormatT.List
+        o.type = 'conjunction'
+        switch (v) {
+          case 'l': o.style = 'long'; break
+          case 's': o.style = 'short'; break
+          case 'xs': o.style = 'narrow'; break
+        }
+        break
+      case 'or':
+        algo = FormatT.List
+        o.type = 'disjunction'
+        switch (v) {
+          case 'l': o.style = 'long'; break
+          case 's': o.style = 'short'; break
+          case 'xs': o.style = 'narrow'; break
+        }
+        break
     }
   }
   return [algo, o]
