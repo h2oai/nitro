@@ -36,8 +36,9 @@ export const format = (locales: S[], s: S, model: Model): S => {
     const tokens = expr.split(/\s+/g)
     if (!tokens.length) return ''
 
-    const [path, ...attrs] = tokens
-    const value = evaluate(path, model)
+    const
+      [path, ...attrs] = tokens,
+      value = evaluate(path, model)
 
     if (attrs.length === 0) return String(value)
 
@@ -63,14 +64,14 @@ const evaluate = (path: S, model: Model): any => {
 }
 
 const relFormats: Dict<FormatT> = {
-  dy: FormatT.RelYear,
-  dq: FormatT.RelQuarter,
-  dm: FormatT.RelMonth,
-  dw: FormatT.RelWeek,
-  dd: FormatT.RelDay,
-  th: FormatT.RelHour,
-  tm: FormatT.RelMin,
-  ts: FormatT.RelSec,
+  year: FormatT.RelYear,
+  quarter: FormatT.RelQuarter,
+  month: FormatT.RelMonth,
+  week: FormatT.RelWeek,
+  day: FormatT.RelDay,
+  hour: FormatT.RelHour,
+  minute: FormatT.RelMin,
+  second: FormatT.RelSec,
 }
 
 export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
@@ -80,7 +81,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
   for (const token of tokens) {
     const [k, v] = fsplit(token)
     switch (k) {
-      case 'r':
+      case 'rel':
         {
           const [unit, size] = fsplit(v)
           const a = relFormats[unit]
@@ -93,7 +94,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           }
         }
         break
-      case 'n':
+      case 'num':
         algo = FormatT.Number
         switch (v) {
           case '': o.style = 'decimal'; break
@@ -101,7 +102,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 'xs': o.notation = 'compact'; break
         }
         break
-      case 'c':
+      case 'cur':
         algo = FormatT.Number
         switch (v) {
           case 'l': o.currencyDisplay = 'name'; break
@@ -113,33 +114,33 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
             o.currency = v
         }
         break
-      case 'a':
+      case 'acc':
         algo = FormatT.Number
         o.currencySign = 'accounting'
         break
-      case 's':
+      case 'sci':
         algo = FormatT.Number
         o.notation = 'scientific'
         break
-      case 'e':
+      case 'eng':
         algo = FormatT.Number
         o.notation = 'engineering'
         break
-      case 'g':
+      case 'sign':
         algo = FormatT.Number
         switch (v) {
-          case 'n0': o.signDisplay = 'auto'; break
-          case 'pn0': o.signDisplay = 'always'; break
-          case 'pn': o.signDisplay = 'exceptZero'; break
-          case 'n': o.signDisplay = 'negative' as any; break // experimental as of Aug 2022
-          case 'off': o.signDisplay = 'never'; break
+          case 'auto': o.signDisplay = 'auto'; break
+          case 'always': o.signDisplay = 'always'; break
+          case 'except-zero': o.signDisplay = 'exceptZero'; break
+          case 'negative': o.signDisplay = 'negative' as any; break // experimental as of Aug 2022
+          case 'none': o.signDisplay = 'never'; break
         }
         break
-      case 'p':
+      case 'pct':
         algo = FormatT.Number
         o.style = 'percent'
         break
-      case 'u':
+      case 'unit':
         algo = FormatT.Number
         switch (v) {
           case 'l': o.unitDisplay = 'long'; break
@@ -150,7 +151,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
             o.unit = v
         }
         break
-      case 'id':
+      case 'd':
         algo = FormatT.Number
         {
           const min = parseInt(v)
@@ -179,7 +180,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           if (!isNaN(max)) o.maximumSignificantDigits = max
         }
         break
-      case 'd':
+      case 'date':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.dateStyle = 'full'; break
@@ -188,7 +189,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 's': o.dateStyle = 'short'; break
         }
         break
-      case 't':
+      case 'time':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.timeStyle = 'full'; break
@@ -197,7 +198,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 's': o.timeStyle = 'short'; break
         }
         break
-      case 'dt':
+      case 'datetime':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.dateStyle = 'full'; o.timeStyle = 'full'; break
@@ -206,11 +207,11 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 's': o.dateStyle = 'short'; o.timeStyle = 'short'; break
         }
         break
-      case 'ca':
+      case 'calendar':
         algo = FormatT.DateTime
         o.calendar = v
         break
-      case 'dp':
+      case 'period':
         algo = FormatT.DateTime
         switch (v) {
           case 'l': o.dayPeriod = 'long'; break
@@ -218,16 +219,16 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 'xs': o.dayPeriod = 'narrow'; break
         }
         break
-      case 'nu':
+      case 'numbering':
         o.numberingSystem = v
         break
-      case 'lm':
+      case 'locale':
         switch (v) {
           case 'fit': o.localeMatcher = 'best fit'; break
           case 'lookup': o.localeMatcher = 'lookup'; break
         }
         break
-      case 'hc':
+      case 'cycle':
         algo = FormatT.DateTime
         switch (v) {
           case '12': o.hourCycle = 'h12'; break
@@ -236,13 +237,13 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case '23': o.hourCycle = 'h23'; break
         }
         break
-      case 'fm':
+      case 'format':
         switch (v) {
           case 'fit': o.formatMatcher = 'best fit'; break
           case 'basic': o.formatMatcher = 'basic'; break
         }
         break
-      case 'wd':
+      case 'weekday':
         algo = FormatT.DateTime
         switch (v) {
           case 'l': o.weekday = 'long'; break
@@ -250,7 +251,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 'xs': o.weekday = 'narrow'; break
         }
         break
-      case 'er':
+      case 'era':
         algo = FormatT.DateTime
         switch (v) {
           case 'l': o.era = 'long'; break
@@ -258,14 +259,14 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 'xs': o.era = 'narrow'; break
         }
         break
-      case 'dy':
+      case 'year':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.year = 'numeric'; break
           case '2': o.year = '2-digit'; break
         }
         break
-      case 'dm':
+      case 'month':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.month = 'numeric'; break
@@ -275,28 +276,28 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 'xs': o.month = 'narrow'; break
         }
         break
-      case 'dd':
+      case 'day':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.day = 'numeric'; break
           case '2': o.day = '2-digit'; break
         }
         break
-      case 'th':
+      case 'hour':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.hour = 'numeric'; break
           case '2': o.hour = '2-digit'; break
         }
         break
-      case 'tm':
+      case 'minute':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.minute = 'numeric'; break
           case '2': o.minute = '2-digit'; break
         }
         break
-      case 'ts':
+      case 'second':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.second = 'numeric'; break
@@ -312,15 +313,15 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case '3': o.fractionalSecondDigits = 3; break
         }
         break
-      case 'tz':
+      case 'zone':
         algo = FormatT.DateTime
         switch (v) {
           case 'l': o.timeZoneName = 'long'; break
           case 's': o.timeZoneName = 'short'; break
-          case 'o-s': o.timeZoneName = 'shortOffset'; break
-          case 'o-l': o.timeZoneName = 'longOffset'; break
-          case 'g-s': o.timeZoneName = 'shortGeneric'; break
-          case 'g-l': o.timeZoneName = 'longGeneric'; break
+          case 'offset-s': o.timeZoneName = 'shortOffset'; break
+          case 'offset-l': o.timeZoneName = 'longOffset'; break
+          case 'generic-s': o.timeZoneName = 'shortGeneric'; break
+          case 'generic-l': o.timeZoneName = 'longGeneric'; break
         }
         break
     }
