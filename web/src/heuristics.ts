@@ -191,7 +191,7 @@ const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
   return true
 }
 
-export const sanitizeBox = (fmt: Formatter, box: Box): Box => {
+export const sanitizeBox = (formatter: Formatter, box: Box): Box => {
   if (isS(box)) {
     box = { xid: xid(), index: 0, modes: new Set(['md']), text: box, options: [] }
   } else if (Array.isArray(box)) {
@@ -229,6 +229,8 @@ export const sanitizeBox = (fmt: Formatter, box: Box): Box => {
         break
     }
   }
+
+  const fmt = box.locale ? formatter.load(box.locale) : formatter
 
   let mdHasLinks = false
   if (box.items) {
