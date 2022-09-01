@@ -121,7 +121,6 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
       case 'num':
         algo = FormatT.Number
         switch (v) {
-          case '': o.style = 'decimal'; break
           case 's': o.notation = 'compact'; o.compactDisplay = 'long'; break
           case 'xs': o.notation = 'compact'; break
         }

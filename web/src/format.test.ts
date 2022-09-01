@@ -30,7 +30,7 @@ it('should interpolate format', () => {
 
 const opt = (s: S) => makeFormatOptions(words(s))[1]
 it('should translate number format', () => {
-  expect(opt('num')).toEqual({ style: 'decimal' })
+  expect(opt('num')).toEqual({}) // default to decimal
   expect(opt('pct')).toEqual({ style: 'percent' })
   expect(opt('sci')).toEqual({ notation: 'scientific' })
   expect(opt('eng')).toEqual({ notation: 'engineering' })
