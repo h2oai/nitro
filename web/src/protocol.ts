@@ -176,7 +176,7 @@ export type BoxModifier = 'live'
 
 export type BoxT = BoxMode | BoxModifier
 
-export type Data = Dict<P | P[] | Data>
+export type Data = Dict<P | Data> | Array<P | Data>
 
 export type Box = {
   xid: S
@@ -194,7 +194,7 @@ export type Box = {
   halt?: B
   title?: S
   caption?: S
-  locale?: S
+  locale?: S | S[]
   hint?: S
   help?: S
   hotkey?: S

@@ -112,6 +112,11 @@ def _clean(d: dict) -> dict:
 
 N = Union[int, float]
 V = Union[N, str]
+P = Union[str, int, float, bool]
+Data = Union[
+    Dict[str, Union[P, 'Data']],
+    Sequence[Union[P, 'Data']],
+]
 
 Length = Union[str, int, float]
 
@@ -303,7 +308,7 @@ class Box:
             value: Optional[Value] = None,
             options: Optional[Options] = None,
             headers: Optional[Headers] = None,
-            data: Optional[dict] = None,
+            data: Optional[Data] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             caption: Optional[str] = None,
@@ -368,7 +373,7 @@ class Box:
             value: Optional[Value] = None,
             options: Optional[Options] = None,
             headers: Optional[Headers] = None,
-            data: Optional[dict] = None,
+            data: Optional[Data] = None,
             halt: Optional[bool] = None,
             title: Optional[str] = None,
             caption: Optional[str] = None,
