@@ -12,20 +12,44 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, S } from "./core";
-
-type V = string | number | boolean
-type Model = Dict<V | Model>
+import { Dict, P, S } from "./core";
+import { Bundle, Data } from "./protocol";
 
 enum FormatT { Number, DateTime, List, Plural, RelHour, RelMin, RelSec, RelYear, RelQuarter, RelWeek, RelMonth, RelDay }
 type FormatOptions = any
+
+export type Formatter = {
+  load(locale: S): Formatter
+  translate(s: S, data?: Data): S
+}
+
+export const formatter = (d: Dict<Bundle>, locale: S): Formatter => {
+  const
+    bundle = d[locale],
+    load = (locale: S) => formatter(d, locale),
+    translate = (s: S, data?: Dict<P>) => {
+      if (!s || !bundle) return s
+
+      if (/^@\w+$/.test(s)) {
+        const x = bundle.resources[s.substring(1)]
+        if (x) s = x
+      }
+
+      if (data && /^=/.test(s)) {
+        s = format(bundle.locale, s.substring(1), data)
+      }
+
+      return s
+    }
+  return { load, translate }
+}
 
 const fsplit = (s: S): [S, S] => {
   const i = s.indexOf('-')
   return i < 0 ? [s, ''] : [s.substring(0, i), s.substring(i + 1)]
 }
 
-export const format = (locales: S[], s: S, model: Model): S => {
+export const format = (locale: S, s: S, data: Data): S => {
   if (!s) return s
   const result = s.replaceAll(/\{([^{}]*)\}/g, (_, expr) => {
     if (!expr) return expr
@@ -38,27 +62,27 @@ export const format = (locales: S[], s: S, model: Model): S => {
 
     const
       [path, ...attrs] = tokens,
-      value = evaluate(path, model)
+      value = evaluate(path, data)
 
     if (attrs.length === 0) return String(value)
 
     const [algo, opts] = makeFormatOptions(attrs)
     switch (algo) {
       case FormatT.Number:
-        const nf = new Intl.NumberFormat(locales, opts) // TODO cache
+        const nf = new Intl.NumberFormat(locale, opts) // TODO cache
         return nf.format(value)
       case FormatT.DateTime:
-        const dtf = new Intl.DateTimeFormat(locales, opts) // TODO cache
+        const dtf = new Intl.DateTimeFormat(locale, opts) // TODO cache
         return dtf.format(value)
     }
   })
   return result
 }
 
-const evaluate = (path: S, model: Model): any => {
+const evaluate = (path: S, data: Data): any => {
   const i = path.indexOf('.')
-  if (i < 0) return String(model[path])
-  const m = model[path.substring(0, i)]
+  if (i < 0) return String(data[path])
+  const m = data[path.substring(0, i)]
   if (m) return evaluate(path.substring(i + 1), m as any)
   return undefined
 }

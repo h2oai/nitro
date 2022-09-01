@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
+import { anyD, anyN, B, Incr, isB, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
 import { css } from './css';
+import { Formatter } from './format';
 import { markdown } from './markdown';
 import { allBoxModes, Box, BoxMode, BoxT, Header, inputBoxModes, Option } from './protocol';
 
@@ -157,38 +158,30 @@ export const sanitizeOptions = (x: any): Option[] => { // recursive
   return []
 }
 
-const translate = (locale: Dict<S>, s?: S) => {
-  if (s && /^@\w+$/.test(s)) {
-    const alt = locale[s.substring(1)]
-    if (alt) return alt
-  }
-  return s
+const localizeBox = (fmt: Formatter, box: Box) => {
+  const { text, title, caption, placeholder, prefix, suffix, hint, help, options, headers, data } = box
+  if (text) box.text = fmt.translate(text, data)
+  if (title) box.title = fmt.translate(title, data)
+  if (caption) box.caption = fmt.translate(caption, data)
+  if (placeholder) box.placeholder = fmt.translate(placeholder, data)
+  if (prefix) box.prefix = fmt.translate(prefix, data)
+  if (suffix) box.suffix = fmt.translate(suffix, data)
+  if (hint) box.hint = fmt.translate(hint, data)
+  if (help) box.help = fmt.translate(help, data)
+  if (options) for (const option of options) localizeOption(fmt, option)
+  if (headers) for (const header of headers) localizeHeader(fmt, header)
 }
 
-const localizeBox = (locale: Dict<S>, box: Box) => {
-  const { text, title, caption, placeholder, prefix, suffix, hint, help, options, headers } = box
-  if (text) box.text = translate(locale, text)
-  if (title) box.title = translate(locale, title)
-  if (caption) box.caption = translate(locale, caption)
-  if (placeholder) box.placeholder = translate(locale, placeholder)
-  if (prefix) box.prefix = translate(locale, prefix)
-  if (suffix) box.suffix = translate(locale, suffix)
-  if (hint) box.hint = translate(locale, hint)
-  if (help) box.help = translate(locale, help)
-  if (options) for (const option of options) localizeOption(locale, option)
-  if (headers) for (const header of headers) localizeHeader(locale, header)
+const localizeOption = (fmt: Formatter, option: Option) => {
+  const { text, caption, options, data } = option
+  if (text) option.text = fmt.translate(text, data)
+  if (caption) option.caption = fmt.translate(caption, data)
+  if (options) for (const option of options) localizeOption(fmt, option)
 }
 
-const localizeOption = (locale: Dict<S>, option: Option) => {
-  const { text, caption, options } = option
-  if (text) option.text = translate(locale, text)
-  if (caption) option.caption = translate(locale, caption)
-  if (options) for (const option of options) localizeOption(locale, option)
-}
-
-const localizeHeader = (locale: Dict<S>, header: Header) => {
+const localizeHeader = (fmt: Formatter, header: Header) => {
   const { text } = header
-  if (text) header.text = translate(locale, text) ?? ''
+  if (text) header.text = fmt.translate(text) ?? '' // TODO data?
 }
 
 const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
@@ -198,7 +191,7 @@ const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
   return true
 }
 
-export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
+export const sanitizeBox = (fmt: Formatter, box: Box): Box => {
   if (isS(box)) {
     box = { xid: xid(), index: 0, modes: new Set(['md']), text: box, options: [] }
   } else if (Array.isArray(box)) {
@@ -239,7 +232,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
 
   let mdHasLinks = false
   if (box.items) {
-    box.items = box.items.map(b => sanitizeBox(locale, b))
+    box.items = box.items.map(b => sanitizeBox(fmt, b))
   } else {
     const { value, options } = box
 
@@ -251,7 +244,7 @@ export const sanitizeBox = (locale: Dict<S>, box: Box): Box => {
 
     if (isB(value)) box.value = value ? 1 : 0 // TODO ugly: protocol should accept boolean
 
-    localizeBox(locale, box)
+    localizeBox(fmt, box)
 
     if (modes.has('md')) {
       const [md, hasLinks] = markdown(box.text ?? '')

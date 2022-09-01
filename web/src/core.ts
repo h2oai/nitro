@@ -26,6 +26,8 @@ export type N = number
 export type S = string
 /** Synonym for string or number. */
 export type V = S | N
+/** Synonym for primitive. */
+export type P = S | N | B
 /** Synonym for date. */
 export type D = Date
 /** Synonym for number, string or date. */

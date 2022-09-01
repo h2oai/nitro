@@ -14,9 +14,10 @@
 
 import hotkeys from "hotkeys-js";
 import { B, Dict, isS, on, S, Signal, signal, U, V } from './core';
+import { formatter } from "./format";
 import { freeze, sanitizeBox, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
-import { Box, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
+import { Box, Bundle, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
 import { applyTheme } from './theme';
 import { Context } from "./ui";
 
@@ -166,6 +167,8 @@ const getLocale = () => {
   return ''
 }
 
+const clientLocale = getLocale()
+
 export const jump = (v: V, params?: Dict<S>) => {
   if (!isS(v)) v = String(v)
 
@@ -188,6 +191,14 @@ export const jump = (v: V, params?: Dict<S>) => {
   window.open(v, target ?? '_blank', features.length ? features.join(',') : undefined)
 }
 
+const emptyBundle: Bundle = { locale: '', resources: {} }
+const toBundleLookup = (bs: Bundle[]) => {
+  const d: Dict<Bundle> = {}
+  for (const b of bs) d[b.locale] = b
+  return d
+}
+
+
 export const newClient = (server: Server) => {
   const
     body: Box[] = [],
@@ -198,7 +209,7 @@ export const newClient = (server: Server) => {
     navB = signal<Option[]>([]),
     themeB = signal<Theme>({}),
     modeB = signal<DisplayMode>('normal'),
-    localeB = signal<Dict<S>>({}),
+    formatterB = signal(formatter(toBundleLookup([emptyBundle]), '')),
     busyB = signal<B>(true, () => false),
     inputs: Input[] = [],
     switchE = signal<Switch>(),
@@ -230,7 +241,7 @@ export const newClient = (server: Server) => {
         case ServerEventT.Connect:
           if (server) {
             const
-              join: Message = { t: MessageType.Join, client: { locale: getLocale() } },
+              join: Message = { t: MessageType.Join, client: { locale: clientLocale } },
               rpc = parseSwitch()
             if (rpc) {
               const { method, params } = rpc
@@ -252,7 +263,7 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { box: rawBox, edit: rawEdit } = msg,
-                    box = sanitizeBox(localeB(), rawBox),
+                    box = sanitizeBox(formatterB(), rawBox),
                     boxes = box.items ?? [],
                     root = body[0]?.items ?? []
                   if (box.popup) {
@@ -355,7 +366,7 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { settings } = msg,
-                    { title, caption, menu, nav, theme, plugins, mode, locale } = settings
+                    { title, caption, menu, nav, theme, plugins, mode, bundles } = settings
 
                   if (title) titleB(title)
                   if (caption) captionB(caption)
@@ -364,8 +375,7 @@ export const newClient = (server: Server) => {
                   if (theme) themeB(theme)
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)
-                  if (locale) localeB(locale)
-
+                  if (bundles) formatterB(formatter(toBundleLookup(bundles), clientLocale))
                   const state = stateB()
                   if (state.t === ClientStateT.Connected) busyB(false)
                 }
@@ -406,7 +416,6 @@ export const newClient = (server: Server) => {
     navB,
     themeB,
     modeB,
-    localeB,
     helpE,
     busyB,
     body,

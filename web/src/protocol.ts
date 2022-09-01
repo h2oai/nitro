@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { B, Dict, I, N, Pair, S, U, V } from "./core"
+import { B, Dict, I, N, P, Pair, S, U, V } from "./core"
 
 export type Server = {
   connect(handler: ServerEventHandler): void
@@ -108,6 +108,8 @@ export type Script = {
 
 export type DisplayMode = 'normal' | 'chromeless'
 
+export type Bundle = { locale: S, resources: Dict<S> }
+
 export type Settings = {
   title?: S,
   caption?: S,
@@ -115,8 +117,8 @@ export type Settings = {
   nav?: Option[]
   theme?: Theme
   plugins?: Plugin[]
+  bundles?: Bundle[]
   mode?: DisplayMode
-  locale?: Dict<S>
 }
 
 export const boxTypes = {
@@ -174,6 +176,8 @@ export type BoxModifier = 'live'
 
 export type BoxT = BoxMode | BoxModifier
 
+export type Data = Dict<P | P[] | Data>
+
 export type Box = {
   xid: S
   pid?: S // (front-end only) xid of parent, if applicable
@@ -186,10 +190,11 @@ export type Box = {
   options?: Option[]
   headers?: Header[]
   items?: Box[]
-  data?: any
+  data?: Data
   halt?: B
   title?: S
   caption?: S
+  locale?: S
   hint?: S
   help?: S
   hotkey?: S
@@ -220,6 +225,7 @@ export type Option = {
   caption?: S
   hotkey?: S
   selected?: B
+  data?: Data
   options?: Option[]
 }
 
