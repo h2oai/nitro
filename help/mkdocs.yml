@@ -197,6 +197,7 @@ nav:
     - 'guide/banner.md'
     - 'guide/progress-bar.md'
     - 'guide/spinner.md'
+    - 'guide/format.md'
     - 'guide/help.md'
     - 'guide/hotkeys.md'
     - 'guide/separator.md'
