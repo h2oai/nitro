@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, P, S } from "./core";
+import { Dict, isN, P, S } from "./core";
 import { Bundle, Data } from "./protocol";
 
 enum FormatT { Number, DateTime, List, Plural, RelHour, RelMin, RelSec, RelYear, RelQuarter, RelWeek, RelMonth, RelDay }
@@ -62,7 +62,7 @@ export const format = (locale: S, s: S, data: Data): S => {
 
     const
       [path, ...attrs] = tokens,
-      value = evaluate(path, data)
+      value = read(path, data)
 
     if (attrs.length === 0) return String(value)
 
@@ -79,12 +79,18 @@ export const format = (locale: S, s: S, data: Data): S => {
   return result
 }
 
-const evaluate = (path: S, data: Data): any => {
+const read = (path: S, data?: any): any => {
+  if (!data) return data
   const i = path.indexOf('.')
-  if (i < 0) return String(data[path])
-  const m = data[path.substring(0, i)]
-  if (m) return evaluate(path.substring(i + 1), m as any)
-  return undefined
+  if (Array.isArray(data)) {
+    const k = parseInt(i < 0 ? path : path.substring(0, i))
+    return isNaN(k)
+      ? undefined
+      : i < 0
+        ? data[k]
+        : read(path.substring(i + 1), data[k])
+  }
+  return i < 0 ? data[path] : read(path.substring(i + 1), data[path.substring(0, i)])
 }
 
 const relFormats: Dict<FormatT> = {

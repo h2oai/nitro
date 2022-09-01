@@ -26,6 +26,9 @@ it('should interpolate format', () => {
   expect(format(en, '\n{\nfoo\n}\n', { foo: 'bar' })).toEqual('\nbar\n')
   expect(format(en, '  { foo   }  ', { foo: 'bar' })).toEqual('  bar  ')
   expect(format(en, '{foo} {qux}', { foo: 'bar', qux: 42 })).toEqual('bar 42')
+  expect(format(en, '{0} {1}', ['foo', 42])).toEqual('foo 42')
+  expect(format(en, '{foo.0} {foo.1}', { foo: ['bar', 42] })).toEqual('bar 42')
+  expect(format(en, '{foo.0} {foo.1.qux}', { foo: ['bar', { qux: 42 }] })).toEqual('bar 42')
 })
 
 const opt = (s: S) => makeFormatOptions(words(s))[1]
