@@ -30,7 +30,7 @@ def format_basic(view: View):  # height 2
 # Use dot-notation to access nested data.
 def format_nested(view: View):  # height 2
     view(box(
-        '={greeting}, {name.first} {name.last}!.',
+        '={greeting}, {name.first} {name.last}!',
         data=dict(
             greeting='Hello',
             name=dict(
@@ -46,13 +46,36 @@ def format_nested(view: View):  # height 2
 #
 # This notation is more compact, but less readable.
 def format_array(view: View):  # height 2
-    view(box('={0}, {1} {2}!.', data=['Hello', 'Boaty', 'McBoatface']))
+    view(box('={0}, {1} {2}!', data=['Hello', 'Boaty', 'McBoatface']))
 
 
 # ## Nested arrays
 # Combine dot-notation with 0-based integers to access nested arrays.
 def format_nested_array(view: View):  # height 2
     view(box(
-        '={greeting}, {name.0} {name.1}!.',
+        '={greeting}, {name.0} {name.1}!',
         data=dict(greeting='Hello', name=['Boaty', 'McBoatface'])
     ))
+
+
+# ## Format number
+# Set the `num`, `pct`, `sci`, `eng`, `cur`, or `unit` styles to format numbers.
+#
+# - `num`: decimal
+# - `pct`: percent
+# - `sci`: scientific notation
+# - `eng`: engineering notation
+# - `cur`: currency
+# - `unit`: units
+#
+# Advanced options are covered in a later section on number formatting.
+def format_number(view: View):
+    view(
+        # Format using active application-wide locale.
+        box('=Decimal: {donuts num}', data=dict(donuts=123456.789)),
+        box('=Percent: {donuts pct}', data=dict(donuts=123456.789)),
+        box('=Scientific: {donuts sci}', data=dict(donuts=123456.789)),
+        box('=Engineering: {donuts eng}', data=dict(donuts=123456.789)),
+        box('=Currency: {donuts cur-USD}', data=dict(donuts=123456.789)),
+        box('=unit: {donuts unit-ounce}', data=dict(donuts=123456.789)),
+    )
