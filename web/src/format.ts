@@ -12,31 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, isN, P, S } from "./core";
+import { Dict, P, S } from "./core";
 import { Bundle, Data } from "./protocol";
 
 enum FormatT { Number, DateTime, List, Plural, RelHour, RelMin, RelSec, RelYear, RelQuarter, RelWeek, RelMonth, RelDay }
 type FormatOptions = any
 
 export type Formatter = {
-  load(locale: S): Formatter
+  load(locale: S | S[]): Formatter
   translate(s: S, data?: Data): S
 }
 
-export const formatter = (d: Dict<Bundle>, locale: S): Formatter => {
+const loadBundle = (d: Dict<Bundle>, locale: S | S[]): Bundle | undefined => {
+  if (Array.isArray(locale)) {
+    for (const l of locale) {
+      const b = d[l]
+      if (b) return b
+    }
+    return undefined
+  }
+  return d[locale]
+}
+
+export const formatter = (d: Dict<Bundle>, locale: S | S[]): Formatter => {
+  let bundle: Bundle | null | undefined = null
+
   const
-    bundle = d[locale],
     load = (locale: S) => formatter(d, locale),
     translate = (s: S, data?: Dict<P>) => {
-      if (!s || !bundle) return s
+      if (!s) return s
 
-      if (/^@\w+$/.test(s)) {
+      // Lazy load: 
+      // translate() could be invoked purely for formatting, 
+      // in which case the lookup is wasteful 
+      if (!bundle === null) bundle = loadBundle(d, locale)
+
+      if (bundle && /^@\w+$/.test(s)) {
         const x = bundle.resources[s.substring(1)]
         if (x) s = x
       }
 
       if (data && /^=/.test(s)) {
-        s = format(bundle.locale, s.substring(1), data)
+        s = format(locale, s.substring(1), data)
       }
 
       return s
@@ -49,7 +66,7 @@ const fsplit = (s: S): [S, S] => {
   return i < 0 ? [s, ''] : [s.substring(0, i), s.substring(i + 1)]
 }
 
-export const format = (locale: S, s: S, data: Data): S => {
+export const format = (locale: S | S[], s: S, data: Data): S => {
   if (!s) return s
   const result = s.replaceAll(/\{([^{}]*)\}/g, (_, expr) => {
     if (!expr) return expr

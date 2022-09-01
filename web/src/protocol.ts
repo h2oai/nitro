@@ -194,9 +194,9 @@ export type Box = {
   halt?: B
   title?: S
   caption?: S
-  locale?: S | S[]
   hint?: S
   help?: S
+  locale?: S | S[]
   hotkey?: S
   popup?: B
   style?: S
