@@ -69,7 +69,6 @@ class _MsgType(IntEnum):
 
 _primitive = (bool, int, float, str)
 Primitive = Union[bool, int, float, str]
-Locale = Dict[str, str]
 Locales = Dict[str, Locale]
 
 
@@ -117,7 +116,7 @@ Data = Union[
     Dict[str, Union[P, 'Data']],
     Sequence[Union[P, 'Data']],
 ]
-
+Locale = Union[str, Sequence[str]]
 Length = Union[str, int, float]
 
 Sizing = Union[
@@ -314,6 +313,7 @@ class Box:
             caption: Optional[str] = None,
             hint: Optional[str] = None,
             help: Optional[str] = None,
+            locale: Optional[Locale] = None,
             hotkey: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
@@ -346,6 +346,7 @@ class Box:
         self.caption = caption
         self.hint = hint
         self.help = help
+        self.locale = locale
         self.hotkey = hotkey
         self.popup = popup
         self.style = style
@@ -379,6 +380,7 @@ class Box:
             caption: Optional[str] = None,
             hint: Optional[str] = None,
             help: Optional[str] = None,
+            locale: Optional[Locale] = None,
             hotkey: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
@@ -411,6 +413,7 @@ class Box:
             caption=self.caption if caption is None else caption,
             hint=self.hint if hint is None else hint,
             help=self.help if help is None else help,
+            locale=self.locale if locale is None else locale,
             hotkey=self.hotkey if hotkey is None else hotkey,
             popup=self.popup if popup is None else popup,
             style=self.style if style is None else f'{self.style} {style}',  # Additive!
@@ -445,6 +448,7 @@ class Box:
             caption=self.caption,
             hint=self.hint,
             help=self.help,
+            locale=self.locale,
             hotkey=self.hotkey,
             popup=self.popup,
             style=self.style,
@@ -485,6 +489,7 @@ class Box:
             caption=self.caption,
             hint=self.hint,
             help=self.help,
+            locale=self.locale,
             hotkey=self.hotkey,
             popup=self.popup,
             style=self.style,
