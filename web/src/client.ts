@@ -191,7 +191,7 @@ export const jump = (v: V, params?: Dict<S>) => {
   window.open(v, target ?? '_blank', features.length ? features.join(',') : undefined)
 }
 
-const emptyBundle: Bundle = { locale: '', resources: {} }
+const emptyBundle: Bundle = { locale: clientLocale, resources: {} }
 const toBundleLookup = (bs: Bundle[]) => {
   const d: Dict<Bundle> = {}
   for (const b of bs) d[b.locale] = b
@@ -209,7 +209,7 @@ export const newClient = (server: Server) => {
     navB = signal<Option[]>([]),
     themeB = signal<Theme>({}),
     modeB = signal<DisplayMode>('normal'),
-    formatterB = signal(formatter(toBundleLookup([emptyBundle]), '')),
+    formatterB = signal(formatter(toBundleLookup([emptyBundle]), emptyBundle.locale)),
     busyB = signal<B>(true, () => false),
     inputs: Input[] = [],
     switchE = signal<Switch>(),
