@@ -429,6 +429,24 @@ and it's unsure how long it will take to complete.
 - [Set alignment](spinner.md#set-alignment)
 - [Remove text](spinner.md#remove-text)
 
+## Format
+
+Learn the basics of formatting and templates.
+
+- [Basic](format.md#basic)
+- [Nested data](format.md#nested-data)
+- [Arrays](format.md#arrays)
+- [Nested arrays](format.md#nested-arrays)
+- [Format number](format.md#format-number)
+- [Format date](format.md#format-date)
+- [Format lists](format.md#format-lists)
+
+## Format Numbers
+
+Language-sensitive number and currency formatting.
+
+- [Basic](format-numbers.md#basic)
+
 ## Help
 
 Show context-sensitive hints and help.
