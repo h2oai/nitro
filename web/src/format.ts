@@ -247,7 +247,8 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
       case 'date':
         algo = FormatT.DateTime
         switch (v) {
-          case '': o.dateStyle = 'full'; break
+          case '': o.dateStyle = 'short'; break
+          case 'xl': o.dateStyle = 'full'; break
           case 'l': o.dateStyle = 'long'; break
           case 'm': o.dateStyle = 'medium'; break
           case 's': o.dateStyle = 'short'; break
@@ -256,19 +257,11 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
       case 'time':
         algo = FormatT.DateTime
         switch (v) {
-          case '': o.timeStyle = 'full'; break
+          case '': o.timeStyle = 'short'; break
+          case 'xl': o.timeStyle = 'full'; break
           case 'l': o.timeStyle = 'long'; break
           case 'm': o.timeStyle = 'medium'; break
           case 's': o.timeStyle = 'short'; break
-        }
-        break
-      case 'datetime':
-        algo = FormatT.DateTime
-        switch (v) {
-          case '': o.dateStyle = 'full'; o.timeStyle = 'full'; break
-          case 'l': o.dateStyle = 'long'; o.timeStyle = 'long'; break
-          case 'm': o.dateStyle = 'medium'; o.timeStyle = 'medium'; break
-          case 's': o.dateStyle = 'short'; o.timeStyle = 'short'; break
         }
         break
       case 'calendar':
