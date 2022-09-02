@@ -125,3 +125,21 @@ def format_date(view: View):  # height 3
         box('=Launch date and time: {launch date time}.', data=dict(launch=launch_date)),
     )
 
+
+# ## Format lists
+# Set the `and`, `or`, or `list` styles to format lists.
+def format_list(view: View):  # height 3
+    view(
+        # Locale-sensitive list
+        box('=Colors: {colors list}', data=dict(colors=['red', 'green', 'blue'])),
+
+        # The 'list' style is implied since 'color' is a list.
+        box('=Colors: {colors}', data=dict(colors=['red', 'green', 'blue'])),
+
+        # Locale-sensitive conjunction
+        box('=Colors: {colors and}', data=dict(colors=['red', 'green', 'blue'])),
+
+        # Locale-sensitive disjunction
+        box('=Colors: {colors or}', data=dict(colors=['red', 'green', 'blue'])),
+
+    )
