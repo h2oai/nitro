@@ -87,7 +87,11 @@ export const format = (locale: S | S[], s: S, data: Data): S => {
     switch (algo) {
       case FormatT.Number:
         const nf = new Intl.NumberFormat(locale, opts) // TODO cache
-        return nf.format(value)
+        try {
+          return nf.format(value) // value can be string for bignum
+        } catch (e) {
+          return `(${e})`
+        }
       case FormatT.DateTime:
         const dtf = new Intl.DateTimeFormat(locale, opts) // TODO cache
         const date = toDate(value)
