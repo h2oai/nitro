@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, P, S } from "./core";
+import { Dict, isN, P, S, toDate } from "./core";
 import { Bundle, Data } from "./protocol";
 
 enum FormatT { Number, DateTime, List, Plural, RelHour, RelMin, RelSec, RelYear, RelQuarter, RelWeek, RelMonth, RelDay }
@@ -90,7 +90,13 @@ export const format = (locale: S | S[], s: S, data: Data): S => {
         return nf.format(value)
       case FormatT.DateTime:
         const dtf = new Intl.DateTimeFormat(locale, opts) // TODO cache
-        return dtf.format(value)
+        const date = toDate(value)
+        if (!date) return '(ParseError: Invalid date)'
+        try {
+          return dtf.format(date)
+        } catch (e) {
+          return `(${e})`
+        }
     }
   })
   return result
