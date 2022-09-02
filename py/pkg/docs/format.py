@@ -20,11 +20,28 @@ from h2o_nitro import View, box, row, col, option, lorem
 # Learn the basics of formatting and templates.
 
 # ## Basic
-# Combine template strings with `data=` to perform string interpolation.
+# Combine _templates_ with `data=` to perform string interpolation.
 #
-# A _template string_ is any string that begins with a literal`=`.
+# A _template_ is any string that begins with a literal equals `=` symbol.
+#
+# Nitro's templates are more powerful than Python's formatted string literals (f-strings) in at least two ways:
+#
+# - Nitro's formatting is _locale-sensitive_. For example, if a number `123456.789` was used in a template, users in
+#   the United States would see `123,456.789`, Germany would see `123,456.789`, and India would see `1,23,456.789`.
+# - You can pass _styles_ to control how each element is displayed, much like a box's visual style.
+#   For example, the number `total` below uses the `cur-USD` currency style, which shows the number in US Dollars,
+#   and `quota` uses the `pct` style, which shows the percentage.
 def format_basic(view: View):  # height 2
-    view(box('=You bought {count} {product}.', data=dict(count=42, product='donuts')))
+    view(
+        box(
+            '=You bought {count} {product}.',
+            data=dict(count=42, product='donuts'),
+        ),
+        box(
+            '=Your total is {total cur-USD} ({quota pct} of your allowance).',
+            data=dict(total=84.99, quota=0.4178978625),
+        ),
+    )
 
 
 # ## Nested data
@@ -74,11 +91,27 @@ def format_number(view: View):
     view(
         # Format using active application-wide locale.
         box('=Decimal: {donuts num}', data=dict(donuts=123456.789)),
+
+        # The 'num' style is implied since 'donuts' is a number.
+        box('=Default: {donuts}', data=dict(donuts=123456.789)),
+
+        # Percent
         box('=Percent: {donuts pct}', data=dict(donuts=123456.789)),
+
+        # Scientific notation
         box('=Scientific: {donuts sci}', data=dict(donuts=123456.789)),
+
+        # Engineering notation
         box('=Engineering: {donuts eng}', data=dict(donuts=123456.789)),
+
+        # Currency
         box('=Currency: {donuts cur-USD}', data=dict(donuts=123456.789)),
-        box('=unit: {donuts unit-ounce}', data=dict(donuts=123456.789)),
+
+        # Units
+        box('=Units: {donuts unit-ounce}', data=dict(donuts=123456.789)),
+    )
+
+
 # ## Format date
 # Set the `date`, `time`, or `datetime` styles to format dates.
 #
