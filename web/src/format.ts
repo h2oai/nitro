@@ -101,6 +101,14 @@ export const format = (locale: S | S[], s: S, data: Data): S => {
         } catch (e) {
           return `(${e})`
         }
+      case FormatT.List:
+        const lf = new Intl.ListFormat(locale, opts) // TODO cache
+        if (!Array.isArray(value)) return '(ParseError: Invalid list)'
+        try {
+          return lf.format(value)
+        } catch (e) {
+          return `(${e})`
+        }
     }
   })
   return result
