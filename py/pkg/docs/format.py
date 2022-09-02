@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 from h2o_nitro import View, box, row, col, option, lorem
 
 
@@ -78,4 +79,16 @@ def format_number(view: View):
         box('=Engineering: {donuts eng}', data=dict(donuts=123456.789)),
         box('=Currency: {donuts cur-USD}', data=dict(donuts=123456.789)),
         box('=unit: {donuts unit-ounce}', data=dict(donuts=123456.789)),
+# ## Format date
+# Set the `date`, `time`, or `datetime` styles to format dates.
+#
+# Advanced options are covered in a later section on date and time formatting.
+def format_date(view: View):  # height 3
+    # Launch 100 days from now.
+    launch_date = (datetime.datetime.now() + datetime.timedelta(days=100)).isoformat()
+    view(
+        box('=Launch date: {launch date}.', data=dict(launch=launch_date)),
+        box('=Launch time: {launch time}.', data=dict(launch=launch_date)),
+        box('=Launch date and time: {launch date time}.', data=dict(launch=launch_date)),
     )
+
