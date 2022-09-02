@@ -30,7 +30,7 @@ def format_number_basic(view: View):  # height 2
         # US English
         box('=US: {donuts num}', data=dict(donuts=123456.789), locale='en-US'),
 
-        #  Arabic in most Arabic speaking countries uses real Arabic digits.
+        # Germany uses comma as decimal separator and period for thousands
         box('=Germany: {donuts num}', data=dict(donuts=123456.789), locale='de-DE'),
 
         # Arabic in most Arabic speaking countries uses real Arabic digits
