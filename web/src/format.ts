@@ -81,7 +81,15 @@ export const format = (locale: S | S[], s: S, data: Data): S => {
       [path, ...attrs] = tokens,
       value = read(path, data)
 
-    if (attrs.length === 0) return String(value)
+    if (attrs.length === 0) {
+      if (Array.isArray(value)) {
+        attrs.push('list')
+      } else if (isN(value)) {
+        attrs.push('num')
+      } else {
+        return String(value)
+      }
+    }
 
     const [algo, opts] = makeFormatOptions(attrs)
     switch (algo) {
