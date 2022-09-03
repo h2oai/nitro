@@ -128,8 +128,10 @@ def format_date(view: View):  # height 3
 
 # ## Format lists
 # Set the `and`, `or`, or `list` styles to format lists.
-def format_list(view: View):  # height 3
+def format_list(view: View):  # height 6
     view(
+        '## English',
+
         # Locale-sensitive list
         box('=Colors: {colors list}', data=dict(colors=['red', 'green', 'blue'])),
 
@@ -142,4 +144,11 @@ def format_list(view: View):  # height 3
         # Locale-sensitive disjunction
         box('=Colors: {colors or}', data=dict(colors=['red', 'green', 'blue'])),
 
+        '## German',
+        box('=Colors: {colors list}', data=dict(colors=['red', 'green', 'blue']), locale='de'),
+        box('=Colors: {colors}', data=dict(colors=['red', 'green', 'blue']), locale='de'),
+        box('=Colors: {colors and}', data=dict(colors=['red', 'green', 'blue']), locale='de'),
+        box('=Colors: {colors or}', data=dict(colors=['red', 'green', 'blue']), locale='de'),
+
     )
+
