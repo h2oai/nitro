@@ -171,3 +171,28 @@ def format_list_sizes(view: View):  # height 6
         box('=Colors: {colors or-s}', data=dict(colors=['red', 'green', 'blue'])),
         box('=Colors: {colors or-xs}', data=dict(colors=['red', 'green', 'blue'])),
     )
+
+
+# ## Format locale
+# Set `locale=` to change the formatting locale for a box.
+#
+# Locales apply to entire blocks, i.e. any child boxes inherit the locale of the parent box, which makes it simple to
+# author multilingual screens using Nitro.
+def format_locale(view: View):  # height 3
+    view(
+        row(
+            box(
+                '## English',
+                box('=Normal: {donuts num}', data=dict(donuts=1234567.89)),
+                box('=Short: {donuts num-s}', data=dict(donuts=1234567.89)),
+                box('=Extra Short: {donuts num-xs}', data=dict(donuts=1234567.89)),
+            ),
+            box(
+                '## German',
+                box('=Normal: {donuts num}', data=dict(donuts=1234567.89)),
+                box('=Short: {donuts num-s}', data=dict(donuts=1234567.89)),
+                box('=Extra Short: {donuts num-xs}', data=dict(donuts=1234567.89)),
+                locale='de'  # Apply locale to entire block
+            ),
+        ),
+    )
