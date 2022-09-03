@@ -161,6 +161,8 @@ Set the `and`, `or`, or `list` styles to format lists.
 
 ```py
 view(
+    '## English',
+
     # Locale-sensitive list
     box('=Colors: {colors list}', data=dict(colors=['red', 'green', 'blue'])),
 
@@ -173,8 +175,73 @@ view(
     # Locale-sensitive disjunction
     box('=Colors: {colors or}', data=dict(colors=['red', 'green', 'blue'])),
 
+    '## German',
+    box('=Colors: {colors list}', data=dict(colors=['red', 'green', 'blue']), locale='de'),
+    box('=Colors: {colors}', data=dict(colors=['red', 'green', 'blue']), locale='de'),
+    box('=Colors: {colors and}', data=dict(colors=['red', 'green', 'blue']), locale='de'),
+    box('=Colors: {colors or}', data=dict(colors=['red', 'green', 'blue']), locale='de'),
+
 )
 ```
 
 
 ![Screenshot](assets/screenshots/format_list.png)
+
+
+## Format list sizes
+
+Suffix the `and`, `or`, or `list` styles with `-l` (long), `-s` (short), or `-xs` (extra-short)
+to fine-tune formatting.
+
+
+```py
+view(
+    '## List',
+    box('=Colors: {colors list-l}', data=dict(colors=['red', 'green', 'blue'])),
+    box('=Colors: {colors list-s}', data=dict(colors=['red', 'green', 'blue'])),
+    box('=Colors: {colors list-xs}', data=dict(colors=['red', 'green', 'blue'])),
+    '## And',
+    box('=Colors: {colors and-l}', data=dict(colors=['red', 'green', 'blue'])),
+    box('=Colors: {colors and-s}', data=dict(colors=['red', 'green', 'blue'])),
+    box('=Colors: {colors and-xs}', data=dict(colors=['red', 'green', 'blue'])),
+    '## Or',
+    box('=Colors: {colors or-l}', data=dict(colors=['red', 'green', 'blue'])),
+    box('=Colors: {colors or-s}', data=dict(colors=['red', 'green', 'blue'])),
+    box('=Colors: {colors or-xs}', data=dict(colors=['red', 'green', 'blue'])),
+)
+```
+
+
+![Screenshot](assets/screenshots/format_list_sizes.png)
+
+
+## Format locale
+
+Set `locale=` to change the formatting locale for a box.
+
+Locales apply to entire blocks, i.e. any child boxes inherit the locale of the parent box, which makes it simple to
+author multilingual screens using Nitro.
+
+
+```py
+view(
+    row(
+        box(
+            '## English',
+            box('=Normal: {donuts num}', data=dict(donuts=1234567.89)),
+            box('=Short: {donuts num-s}', data=dict(donuts=1234567.89)),
+            box('=Extra Short: {donuts num-xs}', data=dict(donuts=1234567.89)),
+        ),
+        box(
+            '## German',
+            box('=Normal: {donuts num}', data=dict(donuts=1234567.89)),
+            box('=Short: {donuts num-s}', data=dict(donuts=1234567.89)),
+            box('=Extra Short: {donuts num-xs}', data=dict(donuts=1234567.89)),
+            locale='de'  # Apply locale to entire block
+        ),
+    ),
+)
+```
+
+
+![Screenshot](assets/screenshots/format_locale.png)

@@ -440,12 +440,28 @@ Learn the basics of formatting and templates.
 - [Format number](format.md#format-number)
 - [Format date](format.md#format-date)
 - [Format lists](format.md#format-lists)
+- [Format list sizes](format.md#format-list-sizes)
+- [Format locale](format.md#format-locale)
 
 ## Format Numbers
 
 Language-sensitive number and currency formatting.
 
 - [Basic](format-numbers.md#basic)
+- [Percent](format-numbers.md#percent)
+- [Scientific](format-numbers.md#scientific)
+- [Engineering](format-numbers.md#engineering)
+- [Compact](format-numbers.md#compact)
+- [Currency](format-numbers.md#currency)
+- [Accounting](format-numbers.md#accounting)
+- [Sign](format-numbers.md#sign)
+- [Numbering](format-numbers.md#numbering)
+
+## Format Dates
+
+Language-sensitive date, time, and relative time formatting.
+
+- [Basic](format-dates.md#basic)
 
 ## Help
 
