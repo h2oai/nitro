@@ -139,3 +139,18 @@ def format_number_sign(view: View):  # height 3
             data=data),
         box('=None: {0 sign-none} {1 sign-none} {2 sign-none} {3 sign-none}', data=data),
     )
+
+
+# ## Numbering
+# Set a `numbering-*` style to change the numbering system.
+#
+# Possible values include `arab`, `arabext`, `bali`, `beng`, `deva`, `fullwide`, `gujr`, `guru`, `hanidec`, `khmr`,
+# `knda`, `laoo`, `latn`, `limb`, `mlym`, `mong`, `mymr`, `orya`, `tamldec`, `telu`, `thai`, `tibt`.
+def format_number_numbering(view: View):  # height 3
+    view(
+        box('=Arabic: {donuts numbering-arab}', data=dict(donuts=123456.789)),
+        box('=Devanagari: {donuts numbering-deva}', data=dict(donuts=123456.789)),
+        box('=Gurumukhi: {donuts numbering-guru}', data=dict(donuts=123456.789)),
+        box('=Kannada: {donuts numbering-knda}', data=dict(donuts=123456.789)),
+        box('=Thai: {donuts numbering-thai}', data=dict(donuts=123456.789)),
+    )
