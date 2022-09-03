@@ -152,3 +152,22 @@ def format_list(view: View):  # height 6
 
     )
 
+
+# ## Format list sizes
+# Suffix the `and`, `or`, or `list` styles with `-l` (long), `-s` (short), or `-xs` (extra-short)
+# to fine-tune formatting.
+def format_list_sizes(view: View):  # height 6
+    view(
+        '## List',
+        box('=Colors: {colors list-l}', data=dict(colors=['red', 'green', 'blue'])),
+        box('=Colors: {colors list-s}', data=dict(colors=['red', 'green', 'blue'])),
+        box('=Colors: {colors list-xs}', data=dict(colors=['red', 'green', 'blue'])),
+        '## And',
+        box('=Colors: {colors and-l}', data=dict(colors=['red', 'green', 'blue'])),
+        box('=Colors: {colors and-s}', data=dict(colors=['red', 'green', 'blue'])),
+        box('=Colors: {colors and-xs}', data=dict(colors=['red', 'green', 'blue'])),
+        '## Or',
+        box('=Colors: {colors or-l}', data=dict(colors=['red', 'green', 'blue'])),
+        box('=Colors: {colors or-s}', data=dict(colors=['red', 'green', 'blue'])),
+        box('=Colors: {colors or-xs}', data=dict(colors=['red', 'green', 'blue'])),
+    )
