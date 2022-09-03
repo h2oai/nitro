@@ -22,7 +22,7 @@ import h2o_nitro.fake as fake
 
 # ## Basic
 # Set the `num` style to format numbers.
-def format_number_basic(view: View):  # height 2
+def format_number_basic(view: View):  # height 4
     view(
         # Format using active application-wide locale.
         box('=Active: {donuts num}', data=dict(donuts=123456.789)),
@@ -44,5 +44,29 @@ def format_number_basic(view: View):  # height 2
 
         # Use Balinese if available, else fallback to Indonesian.
         box('=Indonesia: {donuts num}', data=dict(donuts=123456.789), locale=('ban', 'id')),
-
     )
+
+
+# ## Percent
+# Set the `pct` style to format numbers as percentages.
+def format_number_percent(view: View):  # height 2
+    view(
+        box('=Percent: {donuts pct}', data=dict(donuts=0.6789))
+    )
+
+
+# ## Scientific
+# Set the `sci` style to format numbers using scientific notation.
+def format_number_scientific(view: View):  # height 2
+    view(
+        box('=Donuts: {donuts sci}', data=dict(donuts=123456.789))
+    )
+
+
+# ## Engineering
+# Set the `sci` style to format numbers using engineering notation.
+def format_number_engineering(view: View):  # height 2
+    view(
+        box('=Donuts: {donuts eng}', data=dict(donuts=123456.789))
+    )
+
