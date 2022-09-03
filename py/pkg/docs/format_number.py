@@ -122,3 +122,20 @@ def format_number_accounting(view: View):  # height 3
         box('=Negative: {price cur-EUR acc}', data=dict(price=-123456.789), locale='de'),
     )
 
+
+# ## Sign
+# Set a `sign-*` to control sign display.
+#
+# - `sign-auto`: sign display for negative numbers only, including negative zero.
+# - `sign-always`: always display sign.
+# - `sign-except-zero`: sign display for positive and negative numbers, but not zero.
+# - `sign-none`: never display sign.
+def format_number_sign(view: View):  # height 3
+    data = [-42, '-0', 0, 42]
+    view(
+        box('=Auto: {0 sign-auto} {1 sign-auto} {2 sign-auto} {3 sign-auto}', data=data),
+        box('=Always: {0 sign-always} {1 sign-always} {2 sign-always} {3 sign-always}', data=data),
+        box('=Except Zero: {0 sign-except-zero} {1 sign-except-zero} {2 sign-except-zero} {3 sign-except-zero}',
+            data=data),
+        box('=None: {0 sign-none} {1 sign-none} {2 sign-none} {3 sign-none}', data=data),
+    )
