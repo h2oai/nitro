@@ -85,3 +85,26 @@ def format_number_compact(view: View):  # height 4
         box('=Extra Short: {donuts num-xs}', data=dict(donuts=1234567.89), locale='de'),
     )
 
+
+# ## Currency
+# Set the `cur-*` style to format currencies.
+#
+# Possible values are the ISO 4217 currency codes, such as `cur-USD` for the US dollar, `cur-EUR` for the euro,
+# or `cur-CNY` for the Chinese RMB
+# — see the [Current currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=currency-codes).
+#
+# Add one of `cur-l` (long), `cur-m` (medium), `cur-s` (short), `cur-xs` (extra short) styles for additional control.
+#
+def format_number_currency(view: View):  # height 5
+    view(
+        '## Currencies',
+        box('={price cur-USD}', data=dict(price=123456.789)),
+        box('={price cur-EUR}', data=dict(price=123456.789)),
+        box('={price cur-RMB}', data=dict(price=123456.789)),
+        '## Notation',
+        box('={price cur-USD cur-l}', data=dict(price=123456.789)),
+        box('={price cur-USD cur-m}', data=dict(price=123456.789)),
+        box('={price cur-USD cur-s}', data=dict(price=123456.789)),
+        box('={price cur-USD cur-xs}', data=dict(price=123456.789)),
+    )
+
