@@ -70,3 +70,18 @@ def format_number_engineering(view: View):  # height 2
         box('=Donuts: {donuts eng}', data=dict(donuts=123456.789))
     )
 
+
+# ## Compact
+# Set the `num-s` (short) or `num-xs` (extra short) style to format numbers using a compact notation.
+def format_number_compact(view: View):  # height 4
+    view(
+        '## English',
+        box('=Normal: {donuts num}', data=dict(donuts=1234567.89)),
+        box('=Short: {donuts num-s}', data=dict(donuts=1234567.89)),
+        box('=Extra Short: {donuts num-xs}', data=dict(donuts=1234567.89)),
+        '## German',
+        box('=Normal: {donuts num}', data=dict(donuts=1234567.89), locale='de'),
+        box('=Short: {donuts num-s}', data=dict(donuts=1234567.89), locale='de'),
+        box('=Extra Short: {donuts num-xs}', data=dict(donuts=1234567.89), locale='de'),
+    )
+
