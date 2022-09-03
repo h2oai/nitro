@@ -108,3 +108,17 @@ def format_number_currency(view: View):  # height 5
         box('={price cur-USD cur-xs}', data=dict(price=123456.789)),
     )
 
+
+# ## Accounting
+# Set the `acc` style to wrap the number with parentheses instead of prefixing a minus sign.
+#
+# Note that this feature is locale-sensitive, and might not make a difference in many locales.
+def format_number_accounting(view: View):  # height 3
+    view(
+        box('=Positive: {price cur-USD acc}', data=dict(price=123456.789)),
+        box('=Negative: {price cur-USD acc}', data=dict(price=-123456.789)),
+
+        # Makes no difference in Germany:
+        box('=Negative: {price cur-EUR acc}', data=dict(price=-123456.789), locale='de'),
+    )
+
