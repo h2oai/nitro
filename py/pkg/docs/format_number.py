@@ -47,6 +47,54 @@ def format_number_basic(view: View):  # height 4
     )
 
 
+# ## Integer Digits
+# Set `id-*` to control the minimum number of integer digits to use.
+#
+# A value with a smaller number of integer digits than this number will be left-padded with zeros
+# (to the specified length) when formatted.
+#
+# Possible values are from `id-1` to `id-21`. The `num` style is implied.
+def format_number_integer_digits(view: View):  # height 3
+    view(
+        box('={score id-1}', data=dict(score=1.23456)),
+        box('={score id-2}', data=dict(score=1.23456)),
+        box('={score id-3}', data=dict(score=1.23456)),
+    )
+
+
+# ## Fraction digits
+# Set `fd-*-*` to control the minimum and maximum number of fraction digits to use.
+#
+# Possible values are from `fd-0-0` to `fd-20-20`. The `num` style is implied.
+#
+# To only specify minimum fraction digits, use `fd-*`. For example, `fd-5` to use minimum 5 fraction digits.
+# To only specify maximum fraction digits, use `fd--*`. For example, `fd--5` to use maximum 5 fraction digits.
+def format_number_fraction_digits(view: View):  # height 4
+    view(
+        box('={score fd-2-2}', data=dict(score=1.2)),
+        box('={score fd-2}', data=dict(score=1.2)),
+        box('={score fd--2}', data=dict(score=1.2)),
+        box('={score fd-2-2}', data=dict(score=1.23456)),
+        box('={score fd-2}', data=dict(score=1.23456)),
+        box('={score fd--2}', data=dict(score=1.23456)),
+    )
+
+
+# ## Significant digits
+# Set `sd-*-*` to control the minimum and maximum number of significant digits to use.
+#
+# Possible values are from `sd-1-1` to `sd-21-21`. The `num` style is implied.
+#
+# To only specify minimum significant digits, use `sd-*`. For example, `sd-5` to use minimum 5 significant digits.
+# To only specify maximum significant digits, use `sd--*`. For example, `sd--5` to use maximum 5 significant digits.
+def format_number_significant_digits(view: View):  # height 3
+    view(
+        box('={score sd-2-4}', data=dict(score=0.001234567)),
+        box('={score sd-2}', data=dict(score=0.001234567)),
+        box('={score sd--2}', data=dict(score=0.00123456567)),
+    )
+
+
 # ## Percent
 # Set the `pct` style to format numbers as percentages.
 def format_number_percent(view: View):  # height 2
@@ -124,7 +172,7 @@ def format_number_accounting(view: View):  # height 3
 
 
 # ## Sign
-# Set a `sign-*` to control sign display.
+# Set `sign-*` to control sign display.
 #
 # - `sign-auto`: sign display for negative numbers only, including negative zero.
 # - `sign-always`: always display sign.
