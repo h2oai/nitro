@@ -13,11 +13,11 @@ A _template_ is any string that begins with a literal equals `=` symbol.
 
 Nitro's templates are more powerful than Python's formatted string literals (f-strings) in at least two ways:
 
-- Nitro's formatting is _locale-sensitive_. For example, if a number `123456.789` was used in a template, users in
-the United States would see `123,456.789`, Germany would see `123,456.789`, and India would see `1,23,456.789`.
+- Nitro's formatting is _locale-sensitive_. For example, if a number `123456.789` was used in a template, the number
+would show up as `123,456.789` in the United States, `123.456,789` in Germany, and `1,23,456.789` in India.
 - You can pass _styles_ to control how each element is displayed, much like a box's visual style.
 For example, the number `total` below uses the `cur-USD` currency style, which shows the number in US Dollars,
-and `quota` uses the `pct` style, which shows the percentage.
+and `quota` uses the `pct` style, which shows the number as a percentage.
 
 
 ```py

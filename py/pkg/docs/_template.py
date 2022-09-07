@@ -36,6 +36,7 @@ import datetime
 from pathlib import Path
 from h2o_nitro import View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \
     __version__ as version
+import h2o_nitro.fake as fake
 from h2o_nitro_web import web_directory
 import simple_websocket
 from flask import Flask, request, send_from_directory
@@ -94,13 +95,13 @@ nitro = View(
     routes=[
         # ROUTES
     ],
-    locales={
-        'hi': dict(
+    resources=dict(
+        hi=dict(
             flavor_caption='एक स्वाद चुनें',
             flavor_hint='हमारे सभी स्वाद 100% प्राकृतिक हैं। कोई अतिरिक्त चीनी या रंग नहीं।',
             flavor_help='### स्वादिष्ट स्वाद\nहमारे सभी स्वाद 100% प्राकृतिक हैं। कोई अतिरिक्त चीनी या रंग नहीं।'
-        ),
-    },
+        )
+    ),
     default_locale='hi',
 )
 
@@ -138,4 +139,3 @@ def socket():
     except simple_websocket.ConnectionClosed:
         pass
     return ''
-

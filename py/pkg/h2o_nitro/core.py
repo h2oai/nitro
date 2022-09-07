@@ -69,7 +69,6 @@ class _MsgType(IntEnum):
 
 _primitive = (bool, int, float, str)
 Primitive = Union[bool, int, float, str]
-Locales = Dict[str, Locale]
 
 
 class RemoteError(Exception):
@@ -283,6 +282,18 @@ class Script:
             referrer_policy=self.referrer_policy,
             integrity=self.integrity
         ))
+
+
+class Bundle:
+    def __init__(self, locale: str, resources: Dict[str, str]):
+        self.locale = locale
+        self.resources = resources
+
+    def dump(self) -> dict:
+        return dict(
+            locale=self.locale,
+            resources=self.resources,
+        )
 
 
 class Plugin:
@@ -606,7 +617,7 @@ def _marshal_set(
         nav: Optional[Sequence[Option]] = None,
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
-        locale: Optional[Locale] = None,
+        bundles: Optional[Sequence[Bundle]] = None,
         mode: Optional[str] = None,
 ):
     return _marshal(dict(
@@ -618,7 +629,7 @@ def _marshal_set(
             nav=_dump(nav),
             theme=_dump(theme),
             plugins=_dump(plugins),
-            locale=locale,
+            bundles=_dump(bundles),
             mode=mode,
         ))))
 
@@ -631,10 +642,20 @@ def _marshal_switch(method: Delegate, params: Optional[dict]):
     )))
 
 
-def _get_locale(locales: Optional[Locales], locale: Optional[str], fallback: str) -> Optional[Locale]:
-    if locales is None or locale is None:
-        return None
-    return locales.get(locale) or locales.get(fallback)
+def _lookup_resources(
+        lookup: Optional[Dict[str, Dict[str, str]]],
+        *locales: Optional[str],
+) -> Optional[Bundle]:
+    if lookup:
+        for locale in locales:
+            r = lookup.get(locale)
+            if r:
+                return Bundle(locale, r)
+    return None
+
+
+def _to_bundles(lookup: Optional[Dict[str, Dict[str, str]]]):
+    return [Bundle(l, r) for l, r in lookup.items()] if lookup else None
 
 
 class Delegator:
@@ -684,7 +705,7 @@ class _View:
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
-            locales: Optional[Locales] = None,
+            resources: Optional[Dict[str, Dict[str, str]]] = None,
             default_locale: Optional[str] = None,
             delegator: Optional[Delegator] = None,
     ):
@@ -699,7 +720,7 @@ class _View:
         self._routes = routes
         self._theme = theme
         self._plugins = plugins
-        self._locales = locales
+        self._resources = resources
         self._default_locale = default_locale or 'en-US'
         # TODO clone instead? (to account for view-local closures)
         self._delegator = delegator or Delegator()
@@ -708,6 +729,8 @@ class _View:
             self._delegator.scan_opts(options)
 
     def _ack(self, mode: Optional[str] = None, locale: Optional[str] = None):
+        # TODO filter by locale?
+        bundles = _to_bundles(self._resources)
         return _marshal_set(
             title=self._title,
             caption=self._caption,
@@ -715,7 +738,7 @@ class _View:
             nav=self._nav,
             theme=self._theme,
             plugins=self._plugins,
-            locale=_get_locale(self._locales, locale, self._default_locale),
+            bundles=bundles,
             mode=mode,
         )
 
@@ -756,12 +779,12 @@ class View(_View):
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
-            locales: Optional[Locales] = None,
+            resources: Optional[Dict[str, Dict[str, str]]] = None,
             default_locale: Optional[str] = None,
             delegator: Optional[Delegator] = None,
     ):
         super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins,
-                         locales, default_locale, delegator)
+                         resources, default_locale, delegator)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
@@ -776,7 +799,7 @@ class View(_View):
             routes=self._routes,
             theme=self._theme,
             plugins=self._plugins,
-            locales=self._locales,
+            resources=self._resources,
             default_locale=self._default_locale,
             delegator=self._delegator,
         )._run()
@@ -892,12 +915,12 @@ class AsyncView(_View):
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
             plugins: Optional[Iterable[Plugin]] = None,
-            locales: Optional[Locales] = None,
+            resources: Optional[Dict[str, Dict[str, str]]] = None,
             default_locale: Optional[str] = None,
             delegator: Optional[Delegator] = None,
     ):
         super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins,
-                         locales, default_locale, delegator)
+                         resources, default_locale, delegator)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
@@ -912,7 +935,7 @@ class AsyncView(_View):
             routes=self._routes,
             theme=self._theme,
             plugins=self._plugins,
-            locales=self._locales,
+            resources=self._resources,
             default_locale=self._default_locale,
             delegator=self._delegator,
         )._run()
