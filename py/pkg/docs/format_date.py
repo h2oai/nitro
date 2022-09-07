@@ -174,3 +174,29 @@ def format_date_hour(view: View):  # height 4
         box('={now hh mm h11}', data=dict(now=now)),
     )
 
+
+# ## Day period
+# Set one of `period-l` (long), `period-s` (short), or `period-xs` (extra-short) to control day periods like
+# "in the morning", "am", "noon", "n" etc.
+#
+# Note that this style only has an effect if a 12-hour clock is used, and many locales use the same string
+# irrespective of the style specified.
+def format_date_period(view: View):  # height 3
+    now = datetime.datetime.now().astimezone().isoformat()
+    view(
+        box('=Long: {now period-l}', data=dict(now=now)),
+        box('=Short: {now period-s}', data=dict(now=now)),
+        box('=Extra-short: {now period-xs}', data=dict(now=now)),
+    )
+
+
+# ## Era
+# Set one of `era-l` (long), `era-s` (short), or `era-xs` (extra-short) to control the era.
+def format_date_era(view: View):  # height 3
+    now = datetime.datetime.now().astimezone().isoformat()
+    view(
+        box('=Long: {now era-l}', data=dict(now=now)),
+        box('=Short: {now era-s}', data=dict(now=now)),
+        box('=Extra-short: {now era-xs}', data=dict(now=now)),
+    )
+
