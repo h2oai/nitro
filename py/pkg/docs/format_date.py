@@ -200,3 +200,28 @@ def format_date_era(view: View):  # height 3
         box('=Extra-short: {now era-xs}', data=dict(now=now)),
     )
 
+
+# ## Time zone
+# Set a `tz-*` style to control the time zone display.
+#
+# - `tz-l` Long localized form (e.g., Pacific Standard Time, Nordamerikanische Westküsten-Normalzeit)
+# - `tz-s` Short localized form (e.g.: PST, GMT-8)
+# - `tz-offset-l` Long localized GMT format (e.g., GMT-0800)
+# - `tz-offset-s` Short localized GMT format (e.g., GMT-8)
+# - `tz-generic-s` Long generic non-location format (e.g.: Pacific Time, Nordamerikanische Westküstenzeit)
+# - `tz-generic-s` Short generic non-location format (e.g.: PT, Los Angeles Zeit).
+#
+# Note: Timezone display may fall back to another format if a required string is unavailable. For example, the
+# non-location formats should display the timezone without a specific country/city location like "Pacific Time",
+# but may fall back to a timezone like "Los Angeles Time".
+def format_date_zone(view: View):  # height 4
+    now = datetime.datetime.now().astimezone().isoformat()
+    view(
+        box('=Long: {now tz-l}', data=dict(now=now)),
+        box('=Short: {now tz-s}', data=dict(now=now)),
+        box('=Offset, long: {now tz-offset-l}', data=dict(now=now)),
+        box('=Offset, short: {now tz-offset-s}', data=dict(now=now)),
+        box('=Generic, long: {now tz-generic-l}', data=dict(now=now)),
+        box('=Generic, short: {now tz-generic-s}', data=dict(now=now)),
+    )
+
