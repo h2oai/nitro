@@ -199,6 +199,7 @@ nav:
     - 'guide/spinner.md'
     - 'guide/format.md'
     - 'guide/format-numbers.md'
+    - 'guide/format-dates.md'
     - 'guide/help.md'
     - 'guide/hotkeys.md'
     - 'guide/separator.md'

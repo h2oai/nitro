@@ -52,6 +52,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # #include spinner.py
 # #include format.py
 # #include format_number.py
+# #include format_date.py
 # #include help.py
 # #include hotkeys.py
 # #include separator.py
