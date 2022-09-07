@@ -225,3 +225,18 @@ def format_date_zone(view: View):  # height 4
         box('=Generic, short: {now tz-generic-s}', data=dict(now=now)),
     )
 
+
+# ## Numbering
+# Set a `numbering-*` style to change the numbering system.
+#
+# Possible values include `arab`, `arabext`, `bali`, `beng`, `deva`, `fullwide`, `gujr`, `guru`, `hanidec`, `khmr`,
+# `knda`, `laoo`, `latn`, `limb`, `mlym`, `mong`, `mymr`, `orya`, `tamldec`, `telu`, `thai`, `tibt`.
+def format_date_numbering(view: View):  # height 3
+    now = datetime.datetime.now().astimezone().isoformat()
+    view(
+        box('=Arabic: {now date time numbering-arab}', data=dict(now=now)),
+        box('=Devanagari: {now date time numbering-deva}', data=dict(now=now)),
+        box('=Gurumukhi: {now date time numbering-guru}', data=dict(now=now)),
+        box('=Kannada: {now date time numbering-knda}', data=dict(now=now)),
+        box('=Thai: {now date time numbering-thai}', data=dict(now=now)),
+    )
