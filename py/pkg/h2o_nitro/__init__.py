@@ -13,6 +13,8 @@
 # limitations under the License.
 
 from .core import View, AsyncView, Box, Option, Theme, box, option, header, row, col, link, ProtocolError, \
-    ContextSwitchError, RemoteError, lorem, Plugin, Script, Duplex
+    ContextSwitchError, RemoteError, Plugin, Script, Duplex
+
+from .fake import lorem
 
 from .version import __version__
