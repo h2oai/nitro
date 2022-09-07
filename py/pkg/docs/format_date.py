@@ -106,3 +106,21 @@ def format_date_time_length(view: View):  # height 6
         box('=Short: {now time-s}', data=dict(now=now), locale='en-GB'),
     )
 
+
+# ## Calendar
+# Set `cal-*` to set the calendar to use.
+#
+# Possible values include `cal-buddhist`, `cal-chinese`, `cal-coptic`, `cal-dangi`, `cal-ethioaa`, `cal-ethiopic`,
+# `cal-gregory`, `cal-hebrew`, `cal-indian`, `cal-islamic`, `cal-islamic-umalqura`, `cal-islamic-tbla`,
+# `cal-islamic-civil`, `cal-islamic-rgsa`, `cal-iso8601`, `cal-japanese`, `cal-persian`, `cal-roc`.
+def format_date_calendar(view: View):  # height 4
+    now = datetime.datetime.now().astimezone().isoformat()
+    view(
+        box('=ISO: {now}', data=dict(now=now)),  # Raw date string (not formatted)
+        box('=Buddhist: {now cal-buddhist}', data=dict(now=now)),
+        box('=Hebrew: {now cal-hebrew}', data=dict(now=now)),
+        box('=Indian: {now cal-indian}', data=dict(now=now)),
+        box('=Islamic: {now cal-islamic}', data=dict(now=now)),
+        box('=Japanese: {now cal-japanese}', data=dict(now=now)),
+    )
+
