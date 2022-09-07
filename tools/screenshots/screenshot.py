@@ -27,8 +27,8 @@ with sync_playwright() as p:
     for name, href in zip(example_names, example_hrefs):
         if name.endswith('_noop'):
             continue
-        print(f'Capturing {name}...')
-        chromeless_url = url + href.replace('docs.help_', 'docs.') + '?mode=chromeless'
+        chromeless_url = url + href.replace('docs.help_', 'docs.')
+        print(f'Capturing {chromeless_url}')
         page.goto(chromeless_url)
         page.wait_for_timeout(delay_between_screenshots)
         page.locator('.main>.flex>.flex:first-child').screenshot(path=str(output_dir / f'{name}.png'))
