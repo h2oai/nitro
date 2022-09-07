@@ -1,6 +1,7 @@
 ---
 template: overrides/main.html
 ---
+
 # Change Log
 
 ## Background
@@ -19,6 +20,25 @@ or `setup.py`, you should always use a version constraint such as `>=4.2, <5` (a
 For LTS releases, bug fixes are provided for 2 years and security fixes are provided for 3 years. These releases provide
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
+
+## v0.16.0
+
+Sep 07, 2022
+
+- Added
+    - Format strings (templates) with support for primitives, arrays, and nested objects.
+    - Locale-sensitive number formatting (decimal, percent, scientific, engineering, compact, currency, accounting, units and numbering systems).
+    - Locale-sensitive date and time formatting (styles, components, calendars, time zones, eras, periods, numbering systems).
+    - Locale-sensitive list formatting (lists, conjunctions, disjunctions).
+    - Block-specific locales (for multilingual user interfaces).
+    - Generic clickable inputs (`mode='input'` and `mode='tap'`).
+    - Keyboard shortcuts (`box(hotkey=...)`) for individual boxes, top level menu and nav.
+    - Allow view functions to accept arbitrary parameters.
+    - `link()` API to conjure internal links.
+    - `box(link=...)` can be set to functions in addition to strings.
+- Changed
+    - `box(path=...)` renamed to `box(link=...)` for consistency with `link()` API.
+    - Always launch external URLs in a new window.
 
 ## v0.15.0
 
