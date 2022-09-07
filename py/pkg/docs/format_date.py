@@ -36,3 +36,33 @@ def format_date_basic(view: View):  # height 4
         box('=UK: {now date}', data=dict(now=now), locale='en-GB'),
     )
 
+
+# ## Time
+# Set the `time` style to format time.
+def format_date_time(view: View):  # height 4
+    now = datetime.datetime.now().astimezone().isoformat()
+    view(
+        box('=ISO: {now}', data=dict(now=now)),  # Raw date string (not formatted)
+        box('=Active: {now time}', data=dict(now=now)),  # Active locale
+        box('=US: {now time}', data=dict(now=now), locale='en-US'),
+        box('=Germany: {now time}', data=dict(now=now), locale='de-DE'),
+        box('=Egypt: {now time}', data=dict(now=now), locale='ar-EG'),
+        box('=India: {now time}', data=dict(now=now), locale='en-IN'),
+        box('=UK: {now time}', data=dict(now=now), locale='en-GB'),
+    )
+
+
+# ## Date and time
+# Set both `date` and `time` styles to format date and time.
+def format_date_datetime(view: View):  # height 4
+    now = datetime.datetime.now().astimezone().isoformat()
+    view(
+        box('=ISO: {now}', data=dict(now=now)),  # Raw date string (not formatted)
+        box('=Active: {now date time}', data=dict(now=now)),  # Active locale
+        box('=US: {now date time}', data=dict(now=now), locale='en-US'),
+        box('=Germany: {now date time}', data=dict(now=now), locale='de-DE'),
+        box('=Egypt: {now date time}', data=dict(now=now), locale='ar-EG'),
+        box('=India: {now date time}', data=dict(now=now), locale='en-IN'),
+        box('=UK: {now date time}', data=dict(now=now), locale='en-GB'),
+    )
+
