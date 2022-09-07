@@ -466,6 +466,16 @@ Language-sensitive number and currency formatting.
 Language-sensitive date, time, and relative time formatting.
 
 - [Basic](format-dates.md#basic)
+- [Time](format-dates.md#time)
+- [Date and time](format-dates.md#date-and-time)
+- [Date style](format-dates.md#date-style)
+- [Time style](format-dates.md#time-style)
+- [Calendar](format-dates.md#calendar)
+- [Custom](format-dates.md#custom)
+- [Day period](format-dates.md#day-period)
+- [Era](format-dates.md#era)
+- [Time zone](format-dates.md#time-zone)
+- [Numbering](format-dates.md#numbering)
 
 ## Help
 
