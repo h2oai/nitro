@@ -189,6 +189,36 @@ def format_number_sign(view: View):  # height 3
     )
 
 
+# ## Units
+# Set a `unit-*` style to show units.
+#
+# Add one of `unit-l` (long), `unit-s` (short), `unit-xs` (extra short) styles for additional control.
+#
+# Supported units are:
+#
+# - `millimeter`, `centimeter`, `meter`, `kilometer`, `foot`, `yard`, `mile`, `mile-scandinavian`
+# - `milliliter`, `liter`, `fluid-ounce`, `gallon`
+# - `gram`, `kilogram`, `ounce`, `pound`, `stone`
+# - `acre`, `hectare`
+# - `year`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`
+# - `bit`, `kilobit`, `megabit`, `gigabit`, `terabit`
+# - `byte`, `kilobyte`, `megabyte`, `gigabyte`, `terabyte`, `petabyte`
+# - `celsius`, `fahrenheit`
+# - `percent`
+# - `degree`
+def format_number_unit(view: View):  # height 5
+    view(
+        '## Distance',
+        box('=Long: {distance unit-mile unit-l}', data=dict(distance=12.3456)),
+        box('=Short: {distance unit-mile unit-s}', data=dict(distance=12.3456)),
+        box('=Extra short: {distance unit-mile unit-xs}', data=dict(distance=12.3456)),
+        '## Size',
+        box('=Long: {size unit-megabyte unit-l}', data=dict(size=12.3456)),
+        box('=Short: {size unit-megabyte unit-s}', data=dict(size=12.3456)),
+        box('=Extra short: {size unit-megabyte unit-xs}', data=dict(size=12.3456)),
+    )
+
+
 # ## Numbering
 # Set a `numbering-*` style to change the numbering system.
 #
