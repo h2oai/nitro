@@ -34,18 +34,18 @@ const loadBundle = (d: Dict<Bundle>, locale: S | S[]): Bundle | undefined => {
   return d[locale]
 }
 
-export const formatter = (d: Dict<Bundle>, locale: S | S[]): Formatter => {
+export const formatter = (bundles: Dict<Bundle>, locale: S | S[]): Formatter => {
   let bundle: Bundle | null | undefined = null
 
   const
-    load = (locale: S) => formatter(d, locale),
+    load = (locale: S) => formatter(bundles, locale),
     translate = (s: S, data?: Dict<P>) => {
       if (!s) return s
 
       // Lazy load: 
       // translate() could be invoked purely for formatting, 
       // in which case the lookup is wasteful 
-      if (!bundle === null) bundle = loadBundle(d, locale)
+      if (!bundle) bundle = loadBundle(bundles, locale)
 
       if (bundle && /^@\w+$/.test(s)) {
         const x = bundle.resources[s.substring(1)]
