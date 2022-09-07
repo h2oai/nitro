@@ -39,6 +39,75 @@ view(
 ![Screenshot](assets/screenshots/format_number_basic.png)
 
 
+## Integer Digits
+
+Set `id-*` to control the minimum number of integer digits to use.
+
+A value with a smaller number of integer digits than this number will be left-padded with zeros
+(to the specified length) when formatted.
+
+Possible values are from `id-1` to `id-21`. The `num` style is implied.
+
+
+```py
+view(
+    box('={score id-1}', data=dict(score=1.23456)),
+    box('={score id-2}', data=dict(score=1.23456)),
+    box('={score id-3}', data=dict(score=1.23456)),
+)
+```
+
+
+![Screenshot](assets/screenshots/format_number_integer_digits.png)
+
+
+## Fraction digits
+
+Set `fd-*-*` to control the minimum and maximum number of fraction digits to use.
+
+Possible values are from `fd-0-0` to `fd-20-20`. The `num` style is implied.
+
+To only specify minimum fraction digits, use `fd-*`. For example, `fd-5` to use minimum 5 fraction digits.
+To only specify maximum fraction digits, use `fd--*`. For example, `fd--5` to use maximum 5 fraction digits.
+
+
+```py
+view(
+    box('={score fd-2-2}', data=dict(score=1.2)),
+    box('={score fd-2}', data=dict(score=1.2)),
+    box('={score fd--2}', data=dict(score=1.2)),
+    box('={score fd-2-2}', data=dict(score=1.23456)),
+    box('={score fd-2}', data=dict(score=1.23456)),
+    box('={score fd--2}', data=dict(score=1.23456)),
+)
+```
+
+
+![Screenshot](assets/screenshots/format_number_fraction_digits.png)
+
+
+## Significant digits
+
+Set `sd-*-*` to control the minimum and maximum number of significant digits to use.
+
+Possible values are from `sd-1-1` to `sd-21-21`. The `num` style is implied.
+
+To only specify minimum significant digits, use `sd-*`. For example, `sd-5` to use minimum 5 significant digits.
+To only specify maximum significant digits, use `sd--*`. For example, `sd--5` to use maximum 5 significant digits.
+
+
+```py
+view(
+    box('={score sd-2-4}', data=dict(score=0.001234567)),
+    box('={score sd-2}', data=dict(score=0.001234567)),
+    box('={score sd--2}', data=dict(score=0.00123456567)),
+)
+```
+
+
+![Screenshot](assets/screenshots/format_number_significant_digits.png)
+
+
 ## Percent
 
 Set the `pct` style to format numbers as percentages.
@@ -158,7 +227,7 @@ view(
 
 ## Sign
 
-Set a `sign-*` to control sign display.
+Set `sign-*` to control sign display.
 
 - `sign-auto`: sign display for negative numbers only, including negative zero.
 - `sign-always`: always display sign.
@@ -179,6 +248,43 @@ view(
 
 
 ![Screenshot](assets/screenshots/format_number_sign.png)
+
+
+## Units
+
+Set a `unit-*` style to show units.
+
+Add one of `unit-l` (long), `unit-s` (short), `unit-xs` (extra short) styles for additional control.
+
+Supported units are:
+
+- `millimeter`, `centimeter`, `meter`, `kilometer`, `foot`, `yard`, `mile`, `mile-scandinavian`
+- `milliliter`, `liter`, `fluid-ounce`, `gallon`
+- `gram`, `kilogram`, `ounce`, `pound`, `stone`
+- `acre`, `hectare`
+- `year`, `month`, `week`, `day`, `hour`, `minute`, `second`, `millisecond`
+- `bit`, `kilobit`, `megabit`, `gigabit`, `terabit`
+- `byte`, `kilobyte`, `megabyte`, `gigabyte`, `terabyte`, `petabyte`
+- `celsius`, `fahrenheit`
+- `percent`
+- `degree`
+
+
+```py
+view(
+    '## Distance',
+    box('=Long: {distance unit-mile unit-l}', data=dict(distance=12.3456)),
+    box('=Short: {distance unit-mile unit-s}', data=dict(distance=12.3456)),
+    box('=Extra short: {distance unit-mile unit-xs}', data=dict(distance=12.3456)),
+    '## Size',
+    box('=Long: {size unit-megabyte unit-l}', data=dict(size=12.3456)),
+    box('=Short: {size unit-megabyte unit-s}', data=dict(size=12.3456)),
+    box('=Extra short: {size unit-megabyte unit-xs}', data=dict(size=12.3456)),
+)
+```
+
+
+![Screenshot](assets/screenshots/format_number_unit.png)
 
 
 ## Numbering

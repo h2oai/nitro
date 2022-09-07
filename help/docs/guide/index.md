@@ -448,6 +448,9 @@ Learn the basics of formatting and templates.
 Language-sensitive number and currency formatting.
 
 - [Basic](format-numbers.md#basic)
+- [Integer Digits](format-numbers.md#integer-digits)
+- [Fraction digits](format-numbers.md#fraction-digits)
+- [Significant digits](format-numbers.md#significant-digits)
 - [Percent](format-numbers.md#percent)
 - [Scientific](format-numbers.md#scientific)
 - [Engineering](format-numbers.md#engineering)
@@ -455,6 +458,7 @@ Language-sensitive number and currency formatting.
 - [Currency](format-numbers.md#currency)
 - [Accounting](format-numbers.md#accounting)
 - [Sign](format-numbers.md#sign)
+- [Units](format-numbers.md#units)
 - [Numbering](format-numbers.md#numbering)
 
 ## Format Dates
