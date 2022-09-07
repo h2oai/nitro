@@ -124,3 +124,53 @@ def format_date_calendar(view: View):  # height 4
         box('=Japanese: {now cal-japanese}', data=dict(now=now)),
     )
 
+
+# ## Custom
+# For custom date/time formatting, use the following styles instead of `date` and `time`:
+#
+# - `y`: numeric year.
+# - `yy`: 2-digit year.
+# - `M`: numeric month.
+# - `MM`: 2-digit month.
+# - `M-l`: long month.
+# - `M-s`: short hours.
+# - `M-xs`: extra-short hours.
+# - `w-l`: long weekday.
+# - `w-s`: short weekday.
+# - `w-xs`: extra-short weekday.
+# - `d`: numeric day.
+# - `dd`: 2-digit day.
+# - `h`: numeric hours.
+# - `hh`: 2-digit hours.
+# - `m`: numeric minutes.
+# - `mm`: 2-digit minutes.
+# - `s`: numeric seconds.
+# - `ss`: 2-digit seconds.
+# - `fs-0` to `fs-3`: number of fractional second digits (`0` to `3`)
+#
+# Additionally, if `h` or `hh` are set, use `h12`, `h24`, `h11`, or `h23` to control the hour cycle to use.
+#
+# The following combinations are supported:
+#
+# - `w y M d h m s`
+# - `w y M d`
+# - `y M d`
+# - `y M`
+# - `M d`
+# - `h m s`
+# - `h m`
+#
+# The order of styles does not matter (e.g. `h m` is the same as `m h`).
+def format_date_hour(view: View):  # height 4
+    now = datetime.datetime.now().astimezone().isoformat()
+    view(
+        box('={now}', data=dict(now=now)),  # Raw date
+        box('={now w-l y M d h m s}', data=dict(now=now)),
+        box('={now w-s y M d}', data=dict(now=now)),
+        box('={now y M d}', data=dict(now=now)),
+        box('={now yy MM dd}', data=dict(now=now)),
+        box('={now h m s}', data=dict(now=now)),
+        box('={now hh mm ss h24}', data=dict(now=now)),
+        box('={now hh mm h11}', data=dict(now=now)),
+    )
+
