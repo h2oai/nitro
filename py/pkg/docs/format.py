@@ -26,11 +26,11 @@ from h2o_nitro import View, box, row, col, option, lorem
 #
 # Nitro's templates are more powerful than Python's formatted string literals (f-strings) in at least two ways:
 #
-# - Nitro's formatting is _locale-sensitive_. For example, if a number `123456.789` was used in a template, users in
-#   the United States would see `123,456.789`, Germany would see `123,456.789`, and India would see `1,23,456.789`.
+# - Nitro's formatting is _locale-sensitive_. For example, if a number `123456.789` was used in a template, the number
+#   would show up as `123,456.789` in the United States, `123.456,789` in Germany, and `1,23,456.789` in India.
 # - You can pass _styles_ to control how each element is displayed, much like a box's visual style.
 #   For example, the number `total` below uses the `cur-USD` currency style, which shows the number in US Dollars,
-#   and `quota` uses the `pct` style, which shows the percentage.
+#   and `quota` uses the `pct` style, which shows the number as a percentage.
 def format_basic(view: View):  # height 2
     view(
         box(
@@ -87,7 +87,7 @@ def format_nested_array(view: View):  # height 2
 # - `unit`: units
 #
 # Advanced options are covered in a later section on number formatting.
-def format_number(view: View):
+def format_number(view: View): # height 4
     view(
         # Format using active application-wide locale.
         box('=Decimal: {donuts num}', data=dict(donuts=123456.789)),

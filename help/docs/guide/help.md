@@ -65,6 +65,7 @@ choice = view(box(
     mode='menu',
     options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
     help='@flavor_help',
+    locale='hi',  # Not required. Uses current locale if omitted
 ))
 view(f'You chose {choice}.')
 ```
@@ -155,6 +156,7 @@ choice = view(box(
     mode='menu',
     options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
     hint='@flavor_hint',
+    locale='hi',  # Not required. Uses current locale if omitted
 ))
 view(f'You chose {choice}.')
 ```
@@ -178,7 +180,7 @@ view(
     box('Add sprinkles', mode='toggle', value=True, hint=hint),
     box('Choose a flavor', mode='button', options=flavors, hint=hint),
     box('Choose a flavor', mode='menu', options=flavors, hint=hint),
-    box('Choose a flavor', mode='multi menu', options=flavors,  hint=hint),
+    box('Choose a flavor', mode='multi menu', options=flavors, hint=hint),
     box('Choose a flavor', mode='radio', options=flavors, hint=hint),
     box('Choose a flavor', mode='check', options=flavors, hint=hint),
     box('How many donuts?', mode='range', value=5, hint=hint),
