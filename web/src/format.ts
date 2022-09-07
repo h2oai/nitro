@@ -223,7 +223,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
             o.unit = v
         }
         break
-      case 'd':
+      case 'id':
         algo = FormatT.Number
         {
           const min = parseInt(v)
@@ -272,7 +272,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 's': o.timeStyle = 'short'; break
         }
         break
-      case 'calendar':
+      case 'cal':
         algo = FormatT.DateTime
         o.calendar = v
         break
@@ -293,22 +293,13 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 'lookup': o.localeMatcher = 'lookup'; break
         }
         break
-      case 'cycle':
-        algo = FormatT.DateTime
-        switch (v) {
-          case '12': o.hourCycle = 'h12'; break
-          case '24': o.hourCycle = 'h24'; break
-          case '11': o.hourCycle = 'h11'; break
-          case '23': o.hourCycle = 'h23'; break
-        }
-        break
       case 'format':
         switch (v) {
           case 'fit': o.formatMatcher = 'best fit'; break
           case 'basic': o.formatMatcher = 'basic'; break
         }
         break
-      case 'weekday':
+      case 'w':
         algo = FormatT.DateTime
         switch (v) {
           case 'l': o.weekday = 'long'; break
@@ -324,50 +315,65 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case 'xs': o.era = 'narrow'; break
         }
         break
-      case 'year':
+      case 'y':
         algo = FormatT.DateTime
-        switch (v) {
-          case '': o.year = 'numeric'; break
-          case '2': o.year = '2-digit'; break
-        }
+        o.year = 'numeric'
         break
-      case 'month':
+      case 'yy':
+        algo = FormatT.DateTime
+        o.year = '2-digit'
+        break
+      case 'M':
         algo = FormatT.DateTime
         switch (v) {
           case '': o.month = 'numeric'; break
-          case '2': o.month = '2-digit'; break
           case 'l': o.month = 'long'; break
           case 's': o.month = 'short'; break
           case 'xs': o.month = 'narrow'; break
         }
         break
-      case 'day':
+      case 'MM':
         algo = FormatT.DateTime
-        switch (v) {
-          case '': o.day = 'numeric'; break
-          case '2': o.day = '2-digit'; break
-        }
+        o.month = '2-digit'
         break
-      case 'hour':
+      case 'd':
         algo = FormatT.DateTime
-        switch (v) {
-          case '': o.hour = 'numeric'; break
-          case '2': o.hour = '2-digit'; break
-        }
+        o.day = 'numeric'
         break
-      case 'minute':
+      case 'dd':
         algo = FormatT.DateTime
-        switch (v) {
-          case '': o.minute = 'numeric'; break
-          case '2': o.minute = '2-digit'; break
-        }
+        o.day = '2-digit'
         break
-      case 'second':
+      case 'h':
         algo = FormatT.DateTime
-        switch (v) {
-          case '': o.second = 'numeric'; break
-          case '2': o.second = '2-digit'; break
-        }
+        o.hour = 'numeric'
+        break
+      case 'hh':
+        algo = FormatT.DateTime
+        o.hour = '2-digit'
+        break
+      case 'h12':
+      case 'h24':
+      case 'h11':
+      case 'h23':
+        algo = FormatT.DateTime
+        o.hourCycle = k
+        break
+      case 'm':
+        algo = FormatT.DateTime
+        o.minute = 'numeric'
+        break
+      case 'mm':
+        algo = FormatT.DateTime
+        o.minute = '2-digit'
+        break
+      case 's':
+        algo = FormatT.DateTime
+        o.second = 'numeric'
+        break
+      case 'ss':
+        algo = FormatT.DateTime
+        o.second = '2-digit'
         break
       case 'fs':
         algo = FormatT.DateTime
@@ -378,7 +384,7 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
           case '3': o.fractionalSecondDigits = 3; break
         }
         break
-      case 'zone':
+      case 'tz':
         algo = FormatT.DateTime
         switch (v) {
           case 'l': o.timeZoneName = 'long'; break
