@@ -21,6 +21,14 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.16.1
+
+Sep 08, 2022
+
+- Fixed
+    - `view.jump()` to bare urls redirects to quoted hash.
+    - Revert intermediate exception handling until a permanent solution is in place.
+
 ## v0.16.0
 
 Sep 07, 2022
