@@ -160,7 +160,7 @@ Delegate = Union[V, Callable]
 
 
 def _address_of(delegate: Delegate) -> str:
-    return '#!' + urllib.parse.quote(_qual_name_of(delegate) if isinstance(delegate, FunctionType) else str(delegate))
+    return f'#!{urllib.parse.quote(_qual_name_of(delegate))}' if isinstance(delegate, FunctionType) else str(delegate)
 
 
 def link(delegate: Delegate, **kwargs) -> str:
