@@ -825,8 +825,6 @@ class View(_View):
                 method, params = cse.method, cse.params
             except ProtocolError as pe:
                 self._send(_marshal_error(pe.code, pe.text))
-            except TypeError as te:  # TODO trap all errors w/ stack trace
-                self._send(_marshal_error(0, str(te)))
             except InterruptError:
                 return
 
@@ -961,8 +959,6 @@ class AsyncView(_View):
                 method, params = cse.method, cse.params
             except ProtocolError as pe:
                 await self._send(_marshal_error(pe.code, pe.text))
-            except TypeError as te:  # TODO trap all errors w/ stack trace
-                await self._send(_marshal_error(0, str(te)))
             except InterruptError:
                 return
 
