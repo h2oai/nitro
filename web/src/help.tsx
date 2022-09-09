@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { IButtonProps, IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
-import React from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { B, on, S, Signal, signal, splitLines, xid } from './core';
 import { markdown } from './markdown';
 import { Box, labeledBoxModes } from './protocol';
@@ -100,41 +100,44 @@ export const Help = ({ context, box, children }: BoxProps & { children: JSX.Elem
   )
 }
 
-const Doc = make(({ html, helpE }: { html: S, helpE: Signal<S> }) => {
-  const
-    ref = React.createRef<HTMLDivElement>(),
-    update = () => {
-      const el = ref.current
-      if (!el) return
+const Doc = ({ html, helpE }: { html: S, helpE: Signal<S> }) => {
+  const ref = createRef<HTMLDivElement>()
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
 
-      el.querySelectorAll<HTMLAnchorElement>('a[data-jump]').forEach(link => {
-        const id = link.getAttribute('data-jump')
-        if (id) link.onclick = _ => { helpE(id) }
-      })
-    },
-    render = () => {
-      return <div className='prose' ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
-    }
-  return { init: update, update, render }
-})
+    el.querySelectorAll<HTMLAnchorElement>('a[data-jump]').forEach(link => {
+      const id = link.getAttribute('data-jump')
+      if (id) link.onclick = _ => {
+        // TODO this needs to point to client-global help index.
+        // helpE(id) 
+      }
+    })
+  })
 
-export const HelpPanel = make(({ helpE }: { helpE: Signal<S> }) => {
+  return <div className='prose' ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
+}
+
+export const HelpPanel = ({ helpE }: { helpE: Signal<S> }) => {
   const
-    closed = { open: false, help: '' },
-    stateB = signal(closed),
-    onDismiss = () => stateB(closed),
-    init = () => on(helpE, (help: S) => stateB({ open: true, help })),
-    render = () => {
-      const
-        { open, help } = stateB(),
-        [html] = markdown(help)
-      return (
-        <Panel
-          isBlocking={false}
-          isOpen={open}
-          onDismiss={onDismiss}
-        ><Doc html={html} helpE={helpE} /></Panel>
-      )
-    }
-  return { init, render, stateB }
-})
+    [open, setOpen] = useState(false),
+    [html, setHtml] = useState(''),
+    onDismiss = () => setOpen(false)
+
+  useEffect(() => {
+    const onHelp = on(helpE, help => {
+      const [html] = markdown(help)
+      setHtml(html)
+      setOpen(true)
+    })
+    return onHelp.dispose
+  })
+
+  return (
+    <Panel
+      isBlocking={false}
+      isOpen={open}
+      onDismiss={onDismiss}
+    ><Doc html={html} helpE={helpE} /></Panel>
+  )
+}
