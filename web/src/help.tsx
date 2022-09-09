@@ -14,10 +14,10 @@
 
 import { IButtonProps, IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import { createRef, useEffect, useState } from 'react';
-import { B, on, S, Signal, signal, splitLines, xid } from './core';
+import { B, on, S, Signal, splitLines, xid } from './core';
 import { markdown } from './markdown';
 import { Box, labeledBoxModes } from './protocol';
-import { BoxProps, Context, make } from './ui';
+import { BoxProps, Context } from './ui';
 
 const tokenize = (hint?: S) => {
   if (!hint) return []
@@ -27,48 +27,44 @@ const tokenize = (hint?: S) => {
   return lines.length > 1 ? [lines.slice(1).join('\n'), lines[0]] : lines
 }
 
-const Hint = make(({ context, hint: rawHint, help }: { context: Context, hint?: S, help?: S }) => {
+const Hint = ({ context, hint: rawHint, help }: { context: Context, hint?: S, help?: S }) => {
   const
     id = xid(),
-    visibleB = signal(false),
+    [visible, setVisible] = useState(false),
     [hint, headline] = tokenize(rawHint),
     showHint = () => {
       if (hint) {
-        visibleB(true)
+        setVisible(true)
       } else if (help) {
         context.help(help)
       }
     },
-    hideHint = () => visibleB(false),
+    hideHint = () => setVisible(false),
     moreButton: IButtonProps | undefined = help ? {
       children: 'More...',
       onClick: () => {
         context.help(help)
-        visibleB(false)
+        setVisible(false)
       }
     } : undefined,
-    render = () => {
-      const
-        bubble = visibleB() && hint
-          ? (
-            <TeachingBubble
-              target={'#' + id}
-              primaryButtonProps={moreButton}
-              hasCloseButton={true}
-              onDismiss={hideHint}
-              headline={headline}
-            >{hint}</TeachingBubble>
-          )
-          : null
-      return (
-        <>
-          {bubble}
-          <IconButton id={id} iconProps={{ iconName: 'Info' }} onClick={showHint} />
-        </>
+    bubble = visible && hint
+      ? (
+        <TeachingBubble
+          target={'#' + id}
+          primaryButtonProps={moreButton}
+          hasCloseButton={true}
+          onDismiss={hideHint}
+          headline={headline}
+        >{hint}</TeachingBubble>
       )
-    }
-  return { render, visibleB }
-})
+      : null
+  return (
+    <>
+      {bubble}
+      <IconButton id={id} iconProps={{ iconName: 'Info' }} onClick={showHint} />
+    </>
+  )
+}
 
 const hasLabel = (box: Box): B => {
   const { modes } = box
