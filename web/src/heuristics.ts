@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { anyD, anyN, B, Incr, isB, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
+import { anyD, anyN, B, Dict, Incr, isB, isN, isO, isPair, isS, isV, newIncr, S, U, words, xid } from './core';
 import { css } from './css';
 import { Formatter } from './format';
 import { markdown } from './markdown';
@@ -189,6 +189,17 @@ const hasNoMode = (modes: Set<S>): B => { // TODO PERF speed up
   for (const m of allBoxModes) if (modes.has(m)) return false
   for (const m of modes.values()) if (m.startsWith('plugin:')) return false
   return true
+}
+
+export const sanitizeHelp = (formatter: Formatter, help: Dict<S>): Dict<S> => {
+  for (const k in help) {
+    const
+      s = help[k],
+      md = formatter.translate(s),
+      [html] = markdown(md ?? '')
+    help[k] = html
+  }
+  return help
 }
 
 export const sanitizeBox = (formatter: Formatter, box: Box): Box => {

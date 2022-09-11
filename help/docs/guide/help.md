@@ -52,6 +52,51 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/help_markdown.png)
 
 
+## Navigation
+
+Use local markdown links (`#something`) to point to app-level help content.
+
+App-level help topics can be set by passing a `help=` dictionary when the Nitro view is initialized.
+
+
+```py
+# The #index and #faq links point to app-level help,
+# set during initialization, like this:
+#
+# nitro = View(
+#    main,
+#    title = '...',
+#    caption = '...',
+#    help=dict(
+#        index='...',
+#        topic1='...',
+#        topic2='...',
+#        topic3='...',
+#        faq='...',
+#    ),
+# )
+#
+choice = view(box(
+    'Choose a flavor',
+    mode='menu',
+    options=['Vanilla', 'Strawberry', 'Blueberry', 'Banana'],
+    help='''
+    ### No health risks!
+
+    All our flavors are **100% natural** - no added sugar or colors!
+    
+    Read more in the [FAQ](#faq).
+
+    [More help topics](#index).
+    ''',
+))
+view(f'You chose {choice}.')
+```
+
+
+![Screenshot](assets/screenshots/help_navigation.png)
+
+
 ## Localization
 
 Prefix the help with a `@` to show a locale-specific string.

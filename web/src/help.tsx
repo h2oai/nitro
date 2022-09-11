@@ -14,7 +14,7 @@
 
 import { IButtonProps, IconButton, Label, Panel, Stack, TeachingBubble } from '@fluentui/react';
 import { createRef, useEffect, useState } from 'react';
-import { B, on, S, Signal, splitLines, xid } from './core';
+import { B, Dict, on, S, Signal, splitLines, xid } from './core';
 import { markdown } from './markdown';
 import { Box, labeledBoxModes } from './protocol';
 import { BoxProps, Context } from './ui';
@@ -96,7 +96,7 @@ export const Help = ({ context, box, children }: BoxProps & { children: JSX.Elem
   )
 }
 
-const Doc = ({ html, helpE }: { html: S, helpE: Signal<S> }) => {
+const Doc = ({ html, loadHelp }: { html: S, loadHelp: (id: S) => void }) => {
   const ref = createRef<HTMLDivElement>()
   useEffect(() => {
     const el = ref.current
@@ -104,9 +104,9 @@ const Doc = ({ html, helpE }: { html: S, helpE: Signal<S> }) => {
 
     el.querySelectorAll<HTMLAnchorElement>('a[data-jump]').forEach(link => {
       const id = link.getAttribute('data-jump')
-      if (id) link.onclick = _ => {
-        // TODO this needs to point to client-global help index.
-        // helpE(id) 
+      if (id) link.onclick = e => {
+        loadHelp(id)
+        e.preventDefault()
       }
     })
   })
@@ -114,11 +114,15 @@ const Doc = ({ html, helpE }: { html: S, helpE: Signal<S> }) => {
   return <div className='prose' ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
-export const HelpPanel = ({ helpE }: { helpE: Signal<S> }) => {
+export const HelpPanel = ({ helpE, helpB }: { helpE: Signal<S>, helpB: Signal<Dict<S>> }) => {
   const
     [open, setOpen] = useState(false),
     [html, setHtml] = useState(''),
-    onDismiss = () => setOpen(false)
+    onDismiss = () => setOpen(false),
+    loadHelp = (id: S) => {
+      const d = helpB()
+      setHtml(d[id] ?? d['missing'] ?? 'Help topic not found.')
+    }
 
   useEffect(() => {
     const onHelp = on(helpE, help => {
@@ -134,6 +138,6 @@ export const HelpPanel = ({ helpE }: { helpE: Signal<S> }) => {
       isBlocking={false}
       isOpen={open}
       onDismiss={onDismiss}
-    ><Doc html={html} helpE={helpE} /></Panel>
+    ><Doc html={html} loadHelp={loadHelp} /></Panel>
   )
 }

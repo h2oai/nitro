@@ -15,7 +15,7 @@
 import hotkeys from "hotkeys-js";
 import { B, Dict, isS, on, S, Signal, signal, U, V } from './core';
 import { formatter } from "./format";
-import { freeze, sanitizeBox, sanitizeOptions } from './heuristics';
+import { freeze, sanitizeBox, sanitizeHelp, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
 import { Box, Bundle, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
 import { applyTheme } from './theme';
@@ -214,6 +214,7 @@ export const newClient = (server: Server) => {
     inputs: Input[] = [],
     switchE = signal<Switch>(),
     commitE = signal<Input[]>(),
+    helpB = signal<Dict<S>>({}),
     helpE = signal<S>(),
     hotkey = (chord: S, handle: () => void) => {
       hotkeys.unbind(chord)
@@ -366,7 +367,7 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { settings } = msg,
-                    { title, caption, menu, nav, theme, plugins, mode, bundles } = settings
+                    { title, caption, menu, nav, theme, plugins, help, mode, bundles } = settings
 
                   if (title) titleB(title)
                   if (caption) captionB(caption)
@@ -375,6 +376,7 @@ export const newClient = (server: Server) => {
                   if (theme) themeB(theme)
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)
+                  if (help) helpB(sanitizeHelp(formatterB(), help))
                   if (bundles) formatterB(formatter(toBundleLookup(bundles), clientLocale))
                   const state = stateB()
                   if (state.t === ClientStateT.Connected) busyB(false)
@@ -416,6 +418,7 @@ export const newClient = (server: Server) => {
     navB,
     themeB,
     modeB,
+    helpB,
     helpE,
     busyB,
     body,

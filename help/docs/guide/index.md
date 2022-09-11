@@ -483,6 +483,7 @@ Show context-sensitive hints and help.
 
 - [Basic](help.md#basic)
 - [Using Markdown](help.md#using-markdown)
+- [Navigation](help.md#navigation)
 - [Localization](help.md#localization)
 - [Hint](help.md#hint)
 - [Hint with title](help.md#hint-with-title)

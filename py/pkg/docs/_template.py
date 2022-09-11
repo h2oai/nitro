@@ -95,6 +95,51 @@ nitro = View(
     routes=[
         # ROUTES
     ],
+    help=dict(
+        index='''
+        ## Topics 
+        
+        - [Topic 1](#topic1)
+        - [Topic 2](#topic2)
+        - [Topic 3](#topic3)
+        - [FAQ](#faq)
+        
+        ''',
+        topic1='''
+        ## Topic 1
+        
+        Describe the topic here.
+        
+        [Topics](#index)
+        ''',
+        topic2='''
+        ## Topic 2
+        
+        Describe the topic here.
+        
+        [Topics](#index)
+        ''',
+        topic3='''
+        ## Topic 3
+        
+        Describe the topic here.
+        
+        [Topics](#index)
+        ''',
+        faq='''
+        ## FAQ
+        
+        ###  What's the answer to life, the universe, and everything?
+        
+        42.
+        
+        ### How many dishes does the Allen Telescope Array have?
+        
+        Also 42.
+        
+        [Topics](#index)
+        ''',
+    ),
     resources=dict(
         hi=dict(
             flavor_caption='एक स्वाद चुनें',

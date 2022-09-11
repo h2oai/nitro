@@ -80,7 +80,7 @@ export const App = make(({ client }: { client: Client }) => {
           return (
             <>
               {busyB() && <Busy timeout={500} />}
-              <HelpPanel helpE={client.helpE} />
+              <HelpPanel helpE={client.helpE} helpB={client.helpB} />
               <div className='view'>
                 {!isChromeless && <div className='stripe' />}
                 <div className={css('max-w-3xl mx-auto')}>

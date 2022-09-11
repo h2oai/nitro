@@ -117,6 +117,7 @@ export type Settings = {
   nav?: Option[]
   theme?: Theme
   plugins?: Plugin[]
+  help?: Dict<S>
   bundles?: Bundle[]
   mode?: DisplayMode
 }
