@@ -46,7 +46,7 @@ const Signage = ({ title, icon, children }: { title: S, icon: S, children: React
       <FontIcon className={css('text-5xl text-red-500 animate-pulse')} iconName={icon} />
       <div className={css('')}>
         <div className={css('text-4xl font-black tracking-tight')}>{title}</div>
-        <div>{children}</div>
+        <div className={css('prose')}>{children}</div>
       </div>
     </div>
   </div>
@@ -70,9 +70,21 @@ export const App = make(({ client }: { client: Client }) => {
             <Signage title='Disconnected' icon='PlugDisconnected'>Retrying in {state.retry} seconds...</Signage>
           )
         case ClientStateT.Invalid:
-          return (
-            <Signage title='Error' icon='Error'>Error: {state.error}</Signage>
-          )
+          {
+            const
+              { error, trace } = state,
+              body = trace ? (
+                <>
+                  <p>{error}</p>
+                  <pre>
+                    <code>{trace}</code>
+                  </pre>
+                </>
+              ) : (
+                <p>{error}</p>
+              )
+            return (<Signage title='Error' icon='Error'>{body}</Signage>)
+          }
         case ClientStateT.Connected:
           const
             { popup, busyB, modeB } = client,

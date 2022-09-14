@@ -31,6 +31,7 @@ export type ClientState = {
 } | {
   t: ClientStateT.Invalid
   error: S
+  trace?: S
 } | {
   t: ClientStateT.Connected
 }
@@ -257,8 +258,8 @@ export const newClient = (server: Server) => {
             const msg = e.message
             switch (msg.t) {
               case MessageType.Error:
-                const { text: error } = msg
-                stateB({ t: ClientStateT.Invalid, error })
+                const { text: error, trace } = msg
+                stateB({ t: ClientStateT.Invalid, error, trace })
                 break
               case MessageType.Output:
                 {

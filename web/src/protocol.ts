@@ -55,6 +55,7 @@ export type Message = {
   t: MessageType.Error
   code: U // code
   text: S // description
+  trace?: S // stack trace
 } | {
   t: MessageType.Join
   client: Client

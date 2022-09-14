@@ -13,7 +13,6 @@
 # limitations under the License.
 import asyncio
 import collections
-import random
 import urllib.parse
 from collections import OrderedDict
 from enum import IntEnum
@@ -606,8 +605,8 @@ def _unwrap_input(x):
     return None if x is None else x[1]
 
 
-def _marshal_error(code: int, text: str):
-    return _marshal(dict(t=_MsgType.Error, code=code, text=text))
+def _marshal_error(code: int, text: str, trace: Optional[str] = None):
+    return _marshal(_clean(dict(t=_MsgType.Error, code=code, text=text, trace=trace)))
 
 
 def _marshal_set(
