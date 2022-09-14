@@ -33,7 +33,8 @@ export const newSocketServer = (address: S): Server => {
   let
     _socket: WebSocket | null = null,
     _backoff = 1,
-    _handle = noopHandler
+    _handle = noopHandler,
+    _disconnected = false
 
   const
     connect = (handle: ServerEventHandler) => {
@@ -41,6 +42,7 @@ export const newSocketServer = (address: S): Server => {
       reconnect(toSocketAddress(address))
     },
     disconnect = () => {
+      _disconnected = true
       if (_socket) _socket.close()
     },
     reconnect = (address: S) => {
@@ -53,10 +55,12 @@ export const newSocketServer = (address: S): Server => {
         _backoff = 1
       }
       socket.onclose = (e) => {
-        if (e.code === 1013) { // try again later
-          return
-        }
+        if (e.code === 1013) return // try again later
+
         _socket = null
+
+        if (_disconnected) return // disconnected manually; don't reconnect
+
         _backoff *= 2
         if (_backoff > 16) _backoff = 16
         _handle({ t: ServerEventT.Disconnect, retry: _backoff })
@@ -75,6 +79,7 @@ export const newSocketServer = (address: S): Server => {
         }
       }
       socket.onerror = (error) => {
+        if (_disconnected) return // disconnected manually
         console.error(error)
         _handle({ t: ServerEventT.Error, error })
       }
