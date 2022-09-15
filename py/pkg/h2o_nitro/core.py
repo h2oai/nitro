@@ -967,9 +967,10 @@ class AsyncView(_View):
                     await self._delegate(self)
             except ContextSwitchError as cse:
                 method, params = cse.method, cse.params
-            except ProtocolError as pe:
-                await self._send(_marshal_error(pe.code, pe.text))
             except InterruptError:
+                return
+            except Exception as e:
+                await self._send(_marshal_error(0, str(e), traceback.format_exc()))
                 return
 
     async def _read(self, expected: int):
