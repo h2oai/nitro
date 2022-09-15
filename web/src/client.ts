@@ -260,6 +260,7 @@ export const newClient = (server: Server) => {
               case MessageType.Error:
                 const { text: error, trace } = msg
                 stateB({ t: ClientStateT.Invalid, error, trace })
+                server.disconnect()
                 break
               case MessageType.Output:
                 {

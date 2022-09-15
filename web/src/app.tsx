@@ -46,7 +46,7 @@ const Signage = ({ title, icon, children }: { title: S, icon: S, children: React
       <FontIcon className={css('text-5xl text-red-500 animate-pulse')} iconName={icon} />
       <div className={css('')}>
         <div className={css('text-4xl font-black tracking-tight')}>{title}</div>
-        <div className={css('prose')}>{children}</div>
+        <div className='prose'>{children}</div>
       </div>
     </div>
   </div>

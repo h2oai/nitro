@@ -13,6 +13,7 @@
 # limitations under the License.
 import asyncio
 import collections
+import traceback
 import urllib.parse
 from collections import OrderedDict
 from enum import IntEnum
@@ -616,7 +617,7 @@ def _marshal_set(
         nav: Optional[Sequence[Option]] = None,
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
-        help: Optional[Dict[str,str]]=None,
+        help: Optional[Dict[str, str]] = None,
         bundles: Optional[Sequence[Bundle]] = None,
         mode: Optional[str] = None,
 ):
@@ -829,9 +830,10 @@ class View(_View):
                     self._delegate(self)
             except ContextSwitchError as cse:
                 method, params = cse.method, cse.params
-            except ProtocolError as pe:
-                self._send(_marshal_error(pe.code, pe.text))
             except InterruptError:
+                return
+            except Exception as e:
+                self._send(_marshal_error(0, str(e), traceback.format_exc()))
                 return
 
     def _write(self, read: bool, b: Box, edit: Edit):
