@@ -21,6 +21,16 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.16.2
+
+Sep 22, 2022
+
+- Added
+    - Capture and display unhandled Python exceptions with stack trace.
+    - Ignore input messages in case of race during switch.
+- Fixed
+    - Help panel doesn't update if a different info icon is clicked
+
 ## v0.16.1
 
 Sep 08, 2022
