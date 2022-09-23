@@ -845,13 +845,7 @@ class View(_View):
     def _read(self, expected: int):
         m = self._recv()
         if m:
-            try:
-                return _interpret(_unmarshal(m), expected)
-            except ProtocolError as pe:
-                if pe.code == 409:  # switch/input race; discard and retry
-                    return self._read(expected)
-                raise pe
-
+            return _interpret(_unmarshal(m), expected)
         raise InterruptError()
 
     def set(
@@ -982,12 +976,7 @@ class AsyncView(_View):
     async def _read(self, expected: int):
         m = await self._recv()
         if m:
-            try:
-                return _interpret(_unmarshal(m), expected)
-            except ProtocolError as pe:
-                if pe.code == 409:  # switch/input race; discard and retry
-                    return await self._read(expected)
-                raise pe
+            return _interpret(_unmarshal(m), expected)
         raise InterruptError()
 
     async def _write(self, read: bool, b: Box, edit: Edit):
