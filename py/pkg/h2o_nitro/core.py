@@ -636,10 +636,10 @@ def _marshal_set(
         ))))
 
 
-def _marshal_switch(method: Delegate, params: Optional[dict]):
+def _marshal_switch(method: str, params: Optional[dict]):
     return _marshal(_clean(dict(
         t=_MsgType.Switch,
-        method=_address_of(method),
+        method=method,
         params=_clean(params),
     )))
 
@@ -877,6 +877,7 @@ class View(_View):
             left: Optional[int] = None,
             top: Optional[int] = None,
     ):
+        method = _address_of(method)
         self._send(_marshal_switch(method, dict(
             target=target,
             popup=popup,
@@ -885,7 +886,9 @@ class View(_View):
             left=left,
             top=top,
         )))
-        self._read(_MsgType.Switch)
+        # Don't wait for ack if redirect
+        if target is None and method.startswith('#'):
+            self._read(_MsgType.Switch)
 
     def __call__(
             self,
@@ -1014,6 +1017,7 @@ class AsyncView(_View):
             left: Optional[int] = None,
             top: Optional[int] = None,
     ):
+        method = _address_of(method)
         await self._send(_marshal_switch(method, dict(
             target=target,
             popup=popup,
@@ -1022,7 +1026,9 @@ class AsyncView(_View):
             left=left,
             top=top,
         )))
-        await self._read(_MsgType.Switch)
+        # Don't wait for ack if redirect
+        if target is None and method.startswith('#'):
+            await self._read(_MsgType.Switch)
 
     async def __call__(
             self,
