@@ -21,6 +21,14 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.16.3
+
+Sep 27, 2022
+
+- Fixed
+    - Hang when internal `jump()` is called after an external `jump()`.
+    - Misaligned compound button when it contains a submenu.
+
 ## v0.16.2
 
 Sep 22, 2022
