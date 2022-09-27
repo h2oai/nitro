@@ -57,7 +57,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
       return (
         <div className={css('flex flex-col')}>
           {text ? <Label>{text}</Label> : <Label>&nbsp;</Label>}
-          <div className={css('flex gap-2', horizontal ? 'flex-row' : 'flex-col', style)}>{buttons}</div>
+          <div className={css('flex gap-2', horizontal ? 'items-start' : 'flex-col', style)}>{buttons}</div>
         </div>
       )
     }
