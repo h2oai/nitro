@@ -203,6 +203,8 @@ export const sanitizeHelp = (formatter: Formatter, help: Dict<S>): Dict<S> => {
 }
 
 export const sanitizeBox = (formatter: Formatter, box: Box): Box => {
+  if (isN(box)) box = String(box) as any // number -> string, if a number was passed in
+
   if (isS(box)) {
     box = { xid: xid(), index: 0, modes: new Set(['md']), text: box, options: [] }
   } else if (Array.isArray(box)) {
