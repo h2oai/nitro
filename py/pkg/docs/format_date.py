@@ -240,3 +240,37 @@ def format_date_numbering(view: View):  # height 3
         box('=Kannada: {now date time numbering-knda}', data=dict(now=now)),
         box('=Thai: {now date time numbering-thai}', data=dict(now=now)),
     )
+
+
+# ## Relative Time
+# Set the `rel` style to enable language-sensitive relative time formatting (e.g. "10 days ago").
+# Use `rel-l`, `rel-s`, or `rel-xs` for long, short or extra-short format variants.
+#
+# - `rel y`: Relative years.
+# - `rel q`: Relative quarters.
+# - `rel M`: Relative months.
+# - `rel W`: Relative weeks.
+# - `rel d`: Relative days.
+# - `rel h`: Relative hours.
+# - `rel m`: Relative minutes.
+# - `rel s`: Relative seconds.
+def format_rel_date(view: View):  # height 6
+    view(
+        # Negative values
+        box('=Created {age rel y}', data=dict(age=-10)),
+        box('=Created {age rel q}', data=dict(age=-10)),
+        box('=Created {age rel M}', data=dict(age=-10)),
+        box('=Created {age rel W}', data=dict(age=-10)),
+        box('=Created {age rel d}', data=dict(age=-10)),
+        box('=Created {age rel h}', data=dict(age=-10)),
+        box('=Created {age rel m}', data=dict(age=-10)),
+        box('=Created {age rel s}', data=dict(age=-10)),
+        # Positive values
+        box('=Expires {age rel m}', data=dict(age=10)),
+        # Long
+        box('=Expires {age rel-l m}', data=dict(age=10)),
+        # Short
+        box('=Expires {age rel-s m}', data=dict(age=10)),
+        # Extra short
+        box('=Expires {age rel-xs m}', data=dict(age=10)),
+    )

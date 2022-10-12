@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dict, isN, P, S, toDate } from "./core";
+import { Dict, isN, isS, P, S, toDate } from "./core";
 import { Bundle, Data } from "./protocol";
 
-enum FormatT { Number, DateTime, List, Plural, RelHour, RelMin, RelSec, RelYear, RelQuarter, RelWeek, RelMonth, RelDay }
+enum FormatT { Number, DateTime, List, Plural, RelTime } // TODO Plural
 type FormatOptions = any
 
 export type Formatter = {
@@ -117,6 +117,17 @@ export const format = (locale: S | S[], s: S, data: Data): S => {
         } catch (e) {
           return `(${e})`
         }
+      case FormatT.RelTime:
+        {
+          const rf = new Intl.RelativeTimeFormat(locale, opts) // TODO cache
+          if (!isN(value)) return '(ParseError: Invalid number)'
+          if (!isS(opts._unit)) return '(ParseError: Invalid time unit)'
+          try {
+            return rf.format(value, opts._unit)
+          } catch (e) {
+            return `(${e})`
+          }
+        }
     }
   })
   return result
@@ -136,15 +147,15 @@ const read = (path: S, data?: any): any => {
   return i < 0 ? data[path] : read(path.substring(i + 1), data[path.substring(0, i)])
 }
 
-const relFormats: Dict<FormatT> = {
-  year: FormatT.RelYear,
-  quarter: FormatT.RelQuarter,
-  month: FormatT.RelMonth,
-  week: FormatT.RelWeek,
-  day: FormatT.RelDay,
-  hour: FormatT.RelHour,
-  minute: FormatT.RelMin,
-  second: FormatT.RelSec,
+const relFormats: Dict<S> = {
+  y: 'year',
+  q: 'quarter',
+  M: 'month',
+  W: 'week',
+  d: 'day',
+  h: 'hour',
+  m: 'minute',
+  s: 'second',
 }
 
 export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
@@ -156,11 +167,8 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
     switch (k) {
       case 'rel':
         {
-          const [unit, size] = fsplit(v)
-          const a = relFormats[unit]
-          if (!a) continue
-          algo = a
-          switch (size) {
+          algo = FormatT.RelTime
+          switch (v) {
             case 'l': o.style = 'long'; break
             case 's': o.style = 'short'; break
             case 'xs': o.style = 'narrow'; break
@@ -316,14 +324,28 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
         }
         break
       case 'y':
+        if (algo === FormatT.RelTime) {
+          o._unit = 'year'
+          continue
+        }
         algo = FormatT.DateTime
         o.year = 'numeric'
+        break
+      case 'q':
+        if (algo === FormatT.RelTime) {
+          o._unit = 'quarter'
+          continue
+        }
         break
       case 'yy':
         algo = FormatT.DateTime
         o.year = '2-digit'
         break
       case 'M':
+        if (algo === FormatT.RelTime) {
+          o._unit = 'month'
+          continue
+        }
         algo = FormatT.DateTime
         switch (v) {
           case '': o.month = 'numeric'; break
@@ -336,7 +358,17 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
         algo = FormatT.DateTime
         o.month = '2-digit'
         break
+      case 'W':
+        if (algo === FormatT.RelTime) {
+          o._unit = 'week'
+          continue
+        }
+        break
       case 'd':
+        if (algo === FormatT.RelTime) {
+          o._unit = 'day'
+          continue
+        }
         algo = FormatT.DateTime
         o.day = 'numeric'
         break
@@ -345,6 +377,10 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
         o.day = '2-digit'
         break
       case 'h':
+        if (algo === FormatT.RelTime) {
+          o._unit = 'hour'
+          continue
+        }
         algo = FormatT.DateTime
         o.hour = 'numeric'
         break
@@ -360,6 +396,10 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
         o.hourCycle = k
         break
       case 'm':
+        if (algo === FormatT.RelTime) {
+          o._unit = 'minute'
+          continue
+        }
         algo = FormatT.DateTime
         o.minute = 'numeric'
         break
@@ -368,6 +408,10 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
         o.minute = '2-digit'
         break
       case 's':
+        if (algo === FormatT.RelTime) {
+          o._unit = 'second'
+          continue
+        }
         algo = FormatT.DateTime
         o.second = 'numeric'
         break

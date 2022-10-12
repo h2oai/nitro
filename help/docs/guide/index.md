@@ -476,6 +476,7 @@ Language-sensitive date, time, and relative time formatting.
 - [Era](format-dates.md#era)
 - [Time zone](format-dates.md#time-zone)
 - [Numbering](format-dates.md#numbering)
+- [Relative Time](format-dates.md#relative-time)
 
 ## Help
 
