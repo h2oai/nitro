@@ -283,6 +283,6 @@ def format_rel_date(view: View):  # height 7
         box('=Expires {age rel d abbr}', data=dict(age=0)),
         # Shorten 'in 1 day' to 'tomorrow'
         box('=Expires {age rel d abbr}', data=dict(age=1)),
-        # Short 'in 0 hours' to 'this hour'
+        # Shorten 'in 0 hours' to 'this hour'
         box('=Expires {age rel h abbr}', data=dict(age=0)),
     )

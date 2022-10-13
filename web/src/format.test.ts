@@ -161,6 +161,9 @@ it('should translate relative time format', () => {
   expect(opt('rel-s s')).toEqual({ _unit: 'second', style: 'short' })
   expect(opt('rel-xs s')).toEqual({ _unit: 'second', style: 'narrow' })
   expect(opt('rel abbr')).toEqual({ numeric: 'auto' }) // default is 'always'
+  expect(opt('rel-l abbr')).toEqual({ style: 'long', numeric: 'auto' })
+  expect(opt('rel-s abbr')).toEqual({ style: 'short', numeric: 'auto' })
+  expect(opt('rel-xs abbr')).toEqual({ style: 'narrow', numeric: 'auto' })
 })
 
 it('should translate list format', () => {

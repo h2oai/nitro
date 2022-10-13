@@ -15,7 +15,7 @@
 import { Dict, isN, isS, P, S, toDate } from "./core";
 import { Bundle, Data } from "./protocol";
 
-enum FormatT { Number, DateTime, List, Plural, RelTime } // TODO Plural
+enum FormatT { Number, DateTime, List, RelTime } // TODO Plural
 type FormatOptions = any
 
 export type Formatter = {
