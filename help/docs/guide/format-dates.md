@@ -307,7 +307,6 @@ view(
 ## Relative Time
 
 Set the `rel` style to enable language-sensitive relative time formatting (e.g. "10 days ago").
-Use `rel-l`, `rel-s`, or `rel-xs` for long, short or extra-short format variants.
 
 - `rel y`: Relative years.
 - `rel q`: Relative quarters.
@@ -317,6 +316,11 @@ Use `rel-l`, `rel-s`, or `rel-xs` for long, short or extra-short format variants
 - `rel h`: Relative hours.
 - `rel m`: Relative minutes.
 - `rel s`: Relative seconds.
+
+Use `rel-l` (long), `rel-s` (short), or `rel-xs` (extra-short) to control the message length.
+The `rel-xs` style could be similar to the `rel-s` style for some locales.
+
+Add the `abbr` (abbreviate) style to omit numbers if possible (e.g. "yesterday" instead of "1 day ago").
 
 
 ```py
@@ -338,6 +342,14 @@ view(
     box('=Expires {age rel-s m}', data=dict(age=10)),
     # Extra short
     box('=Expires {age rel-xs m}', data=dict(age=10)),
+    # Shorten '1 day ago' to 'yesterday'
+    box('=Expires {age rel d abbr}', data=dict(age=-1)),
+    # Shorten 'in 0 days' to 'today'.
+    box('=Expires {age rel d abbr}', data=dict(age=0)),
+    # Shorten 'in 1 day' to 'tomorrow'
+    box('=Expires {age rel d abbr}', data=dict(age=1)),
+    # Short 'in 0 hours' to 'this hour'
+    box('=Expires {age rel h abbr}', data=dict(age=0)),
 )
 ```
 

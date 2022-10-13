@@ -147,17 +147,6 @@ const read = (path: S, data?: any): any => {
   return i < 0 ? data[path] : read(path.substring(i + 1), data[path.substring(0, i)])
 }
 
-const relFormats: Dict<S> = {
-  y: 'year',
-  q: 'quarter',
-  M: 'month',
-  W: 'week',
-  d: 'day',
-  h: 'hour',
-  m: 'minute',
-  s: 'second',
-}
-
 export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
   let algo: FormatT = FormatT.Number
   const o: FormatOptions = {}
@@ -174,6 +163,9 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
             case 'xs': o.style = 'narrow'; break
           }
         }
+        break
+      case 'abbr':
+        o.numeric = 'auto'// '1 day ago' -> 'yesterday' (default is 'always')
         break
       case 'num':
         algo = FormatT.Number
