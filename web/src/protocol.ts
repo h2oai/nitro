@@ -109,9 +109,9 @@ export type Script = {
 
 export type DisplayMode = 'normal' | 'chromeless'
 
-export type Bundle = { locale: S, strings: Dict<S> }
+export type Translation = { locale: S, strings: Dict<S> }
 
-export type Resources = { locale: S, translations: Bundle[] }
+export type Resources = { locale: S, translations: Translation[] }
 
 export type Settings = {
   title?: S,

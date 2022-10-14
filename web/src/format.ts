@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Dict, isN, isS, P, S, toDate } from "./core";
-import { Bundle, Data } from "./protocol";
+import { Translation, Data } from "./protocol";
 
 enum FormatT { Number, DateTime, List, RelTime } // TODO Plural
 type FormatOptions = any
@@ -23,7 +23,7 @@ export type Formatter = {
   translate(s: S, data?: Data): S
 }
 
-const loadBundle = (d: Dict<Bundle>, locale: S | S[]): Bundle | undefined => {
+const loadTranslation = (d: Dict<Translation>, locale: S | S[]): Translation | undefined => {
   if (Array.isArray(locale)) {
     for (const l of locale) {
       const b = d[l]
@@ -34,21 +34,21 @@ const loadBundle = (d: Dict<Bundle>, locale: S | S[]): Bundle | undefined => {
   return d[locale]
 }
 
-export const formatter = (bundles: Dict<Bundle>, locale: S | S[]): Formatter => {
-  let bundle: Bundle | null | undefined = null
+export const formatter = (translations: Dict<Translation>, locale: S | S[]): Formatter => {
+  let translation: Translation | null | undefined = null
 
   const
-    load = (locale: S) => formatter(bundles, locale),
+    load = (locale: S) => formatter(translations, locale),
     translate = (s: S, data?: Dict<P>) => {
       if (!s) return s
 
       // Lazy load: 
       // translate() could be invoked purely for formatting, 
       // in which case the lookup is wasteful 
-      if (!bundle) bundle = loadBundle(bundles, locale)
+      if (!translation) translation = loadTranslation(translations, locale)
 
-      if (bundle && /^@\w+$/.test(s)) {
-        const x = bundle.strings[s.substring(1)]
+      if (translation && /^@\w+$/.test(s)) {
+        const x = translation.strings[s.substring(1)]
         if (x) s = x
       }
 

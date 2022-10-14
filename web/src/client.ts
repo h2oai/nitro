@@ -17,7 +17,7 @@ import { B, Dict, isS, on, S, Signal, signal, U, V } from './core';
 import { formatter } from "./format";
 import { freeze, sanitizeBox, sanitizeHelp, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
-import { Box, Bundle, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
+import { Box, Translation, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
 import { applyTheme } from './theme';
 import { Context } from "./ui";
 
@@ -192,9 +192,9 @@ export const jump = (v: V, params?: Dict<S>) => {
   window.open(v, target ?? '_blank', features.length ? features.join(',') : undefined)
 }
 
-const emptyBundle: Bundle = { locale: clientLocale, strings: {} }
-const toBundleLookup = (bs: Bundle[]) => {
-  const d: Dict<Bundle> = {}
+const emptyTranslation: Translation = { locale: clientLocale, strings: {} }
+const toTranslationLookup = (bs: Translation[]) => {
+  const d: Dict<Translation> = {}
   for (const b of bs) d[b.locale] = b
   return d
 }
@@ -210,7 +210,7 @@ export const newClient = (server: Server) => {
     navB = signal<Option[]>([]),
     themeB = signal<Theme>({}),
     modeB = signal<DisplayMode>('normal'),
-    formatterB = signal(formatter(toBundleLookup([emptyBundle]), emptyBundle.locale)),
+    formatterB = signal(formatter(toTranslationLookup([emptyTranslation]), emptyTranslation.locale)),
     busyB = signal<B>(true, () => false),
     inputs: Input[] = [],
     switchE = signal<Switch>(),
@@ -379,7 +379,7 @@ export const newClient = (server: Server) => {
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)
                   if (help) helpB(sanitizeHelp(formatterB(), help))
-                  if (resources) formatterB(formatter(toBundleLookup(resources.translations), resources.locale))
+                  if (resources) formatterB(formatter(toTranslationLookup(resources.translations), resources.locale))
                   const state = stateB()
                   if (state.t === ClientStateT.Connected) busyB(false)
                 }
