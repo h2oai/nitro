@@ -147,7 +147,6 @@ nitro = View(
             flavor_help='### स्वादिष्ट स्वाद\nहमारे सभी स्वाद 100% प्राकृतिक हैं। कोई अतिरिक्त चीनी या रंग नहीं।'
         )
     ),
-    default_locale='hi',
 )
 
 app = Flask(__name__, static_folder=web_directory, static_url_path='')

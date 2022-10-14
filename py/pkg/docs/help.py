@@ -93,7 +93,7 @@ def help_navigation(view: View):  # height 3
 # ## Localization
 # Prefix the help with a `@` to show a locale-specific string.
 #
-# For example `help='@flavor_help` shows a locale-specific string named `flavor_help`, if available.
+# For example `help='@flavor_help'` shows a locale-specific string named `flavor_help`, if available.
 def help_localization(view: View):  # height 3
     choice = view(box(
         '@flavor_caption',

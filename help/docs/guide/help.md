@@ -101,7 +101,7 @@ view(f'You chose {choice}.')
 
 Prefix the help with a `@` to show a locale-specific string.
 
-For example `help='@flavor_help` shows a locale-specific string named `flavor_help`, if available.
+For example `help='@flavor_help'` shows a locale-specific string named `flavor_help`, if available.
 
 
 ```py
