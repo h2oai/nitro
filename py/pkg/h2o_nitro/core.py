@@ -284,15 +284,27 @@ class Script:
         ))
 
 
-class Bundle:
-    def __init__(self, locale: str, resources: Dict[str, str]):
+class Translation:
+    def __init__(self, locale: str, strings: Dict[str, str]):
         self.locale = locale
-        self.resources = resources
+        self.strings = strings
 
     def dump(self) -> dict:
         return dict(
             locale=self.locale,
-            resources=self.resources,
+            strings=self.strings,
+        )
+
+
+class Resources:
+    def __init__(self, locale: str, translations: Sequence[Translation]):
+        self.locale = locale
+        self.translations = translations
+
+    def dump(self) -> dict:
+        return dict(
+            locale=self.locale,
+            translations=_dump(self.translations),
         )
 
 
@@ -618,7 +630,7 @@ def _marshal_set(
         theme: Optional[Theme] = None,
         plugins: Optional[Iterable[Plugin]] = None,
         help: Optional[Dict[str, str]] = None,
-        bundles: Optional[Sequence[Bundle]] = None,
+        resources: Optional[Resources] = None,
         mode: Optional[str] = None,
 ):
     return _marshal(dict(
@@ -631,7 +643,7 @@ def _marshal_set(
             theme=_dump(theme),
             plugins=_dump(plugins),
             help=_dump(help),
-            bundles=_dump(bundles),
+            resources=_dump(resources),
             mode=mode,
         ))))
 
@@ -647,17 +659,30 @@ def _marshal_switch(method: str, params: Optional[dict]):
 def _lookup_resources(
         lookup: Optional[Dict[str, Dict[str, str]]],
         *locales: Optional[str],
-) -> Optional[Bundle]:
+) -> Optional[Translation]:
     if lookup:
         for locale in locales:
             r = lookup.get(locale)
             if r:
-                return Bundle(locale, r)
+                return Translation(locale, r)
     return None
 
 
-def _to_bundles(lookup: Optional[Dict[str, Dict[str, str]]]):
-    return [Bundle(l, r) for l, r in lookup.items()] if lookup else None
+def _to_resources(locale: str, lookup: Optional[Dict[str, Dict[str, str]]]):
+    translations = [Translation(l, r) for l, r in lookup.items()] if lookup else None
+    return Resources(locale, translations)
+
+
+TranslateLocale = Callable[[str], str]
+LocaleOrTranslate = Union[str, TranslateLocale]
+
+
+def _translate_locale(translate: LocaleOrTranslate, locale: str) -> str:
+    if translate:
+        if isinstance(translate, str):
+            return translate
+        return translate(locale)
+    return locale or 'en-US'
 
 
 class Delegator:
@@ -709,7 +734,7 @@ class _View:
             plugins: Optional[Iterable[Plugin]] = None,
             help: Optional[Dict[str, str]] = None,
             resources: Optional[Dict[str, Dict[str, str]]] = None,
-            default_locale: Optional[str] = None,
+            locale: Optional[LocaleOrTranslate] = None,
             delegator: Optional[Delegator] = None,
     ):
         self._delegate = delegate
@@ -725,7 +750,7 @@ class _View:
         self._plugins = plugins
         self._help = help
         self._resources = resources
-        self._default_locale = default_locale or 'en-US'
+        self._locale = locale
         # TODO clone instead? (to account for view-local closures)
         self._delegator = delegator or Delegator()
 
@@ -733,8 +758,7 @@ class _View:
             self._delegator.scan_opts(options)
 
     def _ack(self, mode: Optional[str] = None, locale: Optional[str] = None):
-        # TODO filter by locale?
-        bundles = _to_bundles(self._resources)
+        resources = _to_resources(locale, self._resources)
         return _marshal_set(
             title=self._title,
             caption=self._caption,
@@ -743,7 +767,7 @@ class _View:
             theme=self._theme,
             plugins=self._plugins,
             help=self._help,
-            bundles=bundles,
+            resources=resources,
             mode=mode,
         )
 
@@ -786,11 +810,11 @@ class View(_View):
             plugins: Optional[Iterable[Plugin]] = None,
             help: Optional[Dict[str, str]] = None,
             resources: Optional[Dict[str, Dict[str, str]]] = None,
-            default_locale: Optional[str] = None,
+            locale: Optional[LocaleOrTranslate] = None,
             delegator: Optional[Delegator] = None,
     ):
         super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins,
-                         help, resources, default_locale, delegator)
+                         help, resources, locale, delegator)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
         View(
@@ -807,14 +831,14 @@ class View(_View):
             plugins=self._plugins,
             help=self._help,
             resources=self._resources,
-            default_locale=self._default_locale,
+            locale=self._locale,
             delegator=self._delegator,
         )._run()
 
     def _run(self):
         # Handshake
         method, mode, locale = self._read(_MsgType.Join)
-        self._send(self._ack(mode, locale))
+        self._send(self._ack(mode, _translate_locale(self._locale, locale)))
 
         # Event loop
         params = None
@@ -926,11 +950,11 @@ class AsyncView(_View):
             plugins: Optional[Iterable[Plugin]] = None,
             help: Optional[Dict[str, str]] = None,
             resources: Optional[Dict[str, Dict[str, str]]] = None,
-            default_locale: Optional[str] = None,
+            locale: Optional[LocaleOrTranslate] = None,
             delegator: Optional[Delegator] = None,
     ):
         super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins,
-                         help, resources, default_locale, delegator)
+                         help, resources, locale, delegator)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
         await AsyncView(
@@ -947,14 +971,14 @@ class AsyncView(_View):
             plugins=self._plugins,
             help=self._help,
             resources=self._resources,
-            default_locale=self._default_locale,
+            locale=self._locale,
             delegator=self._delegator,
         )._run()
 
     async def _run(self):
         # Handshake
         method, mode, locale = await self._read(_MsgType.Join)
-        await self._send(self._ack(mode, locale))
+        await self._send(self._ack(mode, _translate_locale(self._locale, locale)))
 
         # Event loop
         params = None

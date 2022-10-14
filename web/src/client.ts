@@ -192,7 +192,7 @@ export const jump = (v: V, params?: Dict<S>) => {
   window.open(v, target ?? '_blank', features.length ? features.join(',') : undefined)
 }
 
-const emptyBundle: Bundle = { locale: clientLocale, resources: {} }
+const emptyBundle: Bundle = { locale: clientLocale, strings: {} }
 const toBundleLookup = (bs: Bundle[]) => {
   const d: Dict<Bundle> = {}
   for (const b of bs) d[b.locale] = b
@@ -369,7 +369,7 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { settings } = msg,
-                    { title, caption, menu, nav, theme, plugins, help, mode, bundles } = settings
+                    { title, caption, menu, nav, theme, plugins, help, mode, resources } = settings
 
                   if (title) titleB(title)
                   if (caption) captionB(caption)
@@ -379,7 +379,7 @@ export const newClient = (server: Server) => {
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)
                   if (help) helpB(sanitizeHelp(formatterB(), help))
-                  if (bundles) formatterB(formatter(toBundleLookup(bundles), clientLocale))
+                  if (resources) formatterB(formatter(toBundleLookup(resources.translations), resources.locale))
                   const state = stateB()
                   if (state.t === ClientStateT.Connected) busyB(false)
                 }

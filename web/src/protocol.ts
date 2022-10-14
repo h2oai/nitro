@@ -109,7 +109,9 @@ export type Script = {
 
 export type DisplayMode = 'normal' | 'chromeless'
 
-export type Bundle = { locale: S, resources: Dict<S> }
+export type Bundle = { locale: S, strings: Dict<S> }
+
+export type Resources = { locale: S, translations: Bundle[] }
 
 export type Settings = {
   title?: S,
@@ -119,7 +121,7 @@ export type Settings = {
   theme?: Theme
   plugins?: Plugin[]
   help?: Dict<S>
-  bundles?: Bundle[]
+  resources?: Resources
   mode?: DisplayMode
 }
 

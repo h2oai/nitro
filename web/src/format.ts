@@ -48,7 +48,7 @@ export const formatter = (bundles: Dict<Bundle>, locale: S | S[]): Formatter => 
       if (!bundle) bundle = loadBundle(bundles, locale)
 
       if (bundle && /^@\w+$/.test(s)) {
-        const x = bundle.resources[s.substring(1)]
+        const x = bundle.strings[s.substring(1)]
         if (x) s = x
       }
 
