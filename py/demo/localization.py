@@ -45,6 +45,16 @@ lang_hindi = dict(
     say_feeling='=क्या संयोग है, {name}, मुझे भी {feel} महसूस हो रहा है!',
 )
 
+
+# This is a sample callback function that lets you dictate how the client locale is interpreted.
+def _english_or_hindi(locale: str):
+    # Return US English for any locale that demands English.
+    if locale.startswith('en'):
+        return 'en-US'
+    # Return Hindi for everything else.
+    return 'hi-IN'
+
+
 nitro = View(
     main,
     title='Hello Nitro!',
@@ -54,6 +64,10 @@ nitro = View(
         'hi-IN': lang_hindi,
         # Add more language dictionaries here.
     },
+    # Uncomment to ignore client locale and always use Hindi.
+    # locale='hi-IN',
+    # Uncomment to customize when to use English or Hindi.
+    # locale=_english_or_hindi,
 )
 
 # ┌─────────────── Flask Boilerplate ───────────────┐
