@@ -6,6 +6,7 @@ template: overrides/main.html
 
 This sections contains reference level documentation on advanced topics related to Nitro.
 
+- [Localization](localization.md) - Learn how to translate and adapt your Nitro app to different locales.
 - [Web Assembly](wasm.md) - Learn how to package your Nitro app for web browsers. Useful if you want others to use your
   app without hosting it on a server or cloud.
 - [Nitrogen](nitrogen.md) - Learn about the mini-language used by `nitro run` to set up and launch apps. Useful if you

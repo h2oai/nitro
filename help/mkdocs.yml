@@ -215,6 +215,7 @@ nav:
     - 'plugins/writing.md'
   - Reference:
     - 'reference/index.md'
+    - 'reference/localization.md'
     - 'reference/wasm.md'
     - 'reference/nitrogen.md'
     - 'reference/protocol.md'
