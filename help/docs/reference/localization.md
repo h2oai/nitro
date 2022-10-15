@@ -5,10 +5,11 @@ template: overrides/main.html
 
 Nitro includes comprehensive support for internationalization and localization, including:
 
-- Locale-detection
-- Translation dictionaries
+- Locale detection.
+- Translation dictionaries.
 - Locale-specific number, currency, units, accounting, date, time, relative time, and list formatting.
 - Alternative numbering and calendar systems.
+- Multi-lingual screens: use different languages on different parts of the same screen.
 
 ## Basics
 
@@ -131,6 +132,6 @@ nitro = View(
 
 See:
 
-- [Formatting basics](/guide/format.md)
-- [Formatting numbers](/guide/format-numbers.md)
-- [Formatting dates](/guide/format-dates.md)
+- [Formatting basics](../guide/format.md)
+- [Formatting numbers](../guide/format-numbers.md)
+- [Formatting dates](../guide/format-dates.md)
