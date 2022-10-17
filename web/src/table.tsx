@@ -119,6 +119,10 @@ export const Table = make(({ context, box }: BoxProps) => {
         data: h,
         isResizable: !modes.has('fixed'),
         isMultiline: modes.has('multiline'),
+        onRenderHeader: (props, render) => (
+          // Set tooltip
+          <span title={text}>{(render && render(props)) || <></>}</span>
+        ),
       }
     }),
     isRow = ({ options }: Option) => {
