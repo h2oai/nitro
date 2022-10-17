@@ -13,34 +13,32 @@
 // limitations under the License.
 
 import { FontIcon } from '@fluentui/react';
-import React from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Body, Popup } from './body';
 import { Client, ClientStateT } from './client';
-import { S, signal, U } from './core';
+import { on, S, U } from './core';
 import { css } from './css';
 import { Header } from './header';
 import { HelpPanel } from './help';
 import loadingAnimation from './loading.gif';
-import { make } from './ui';
 
-const Busy = make(({ timeout }: { timeout: U }) => {
-  const
-    visibleB = signal(false),
-    render = () => (
-      <div
-        className={css('absolute inset-0 flex flex-col justify-center items-center bg-black opacity-0 transition-opacity')}
-        style={{ zIndex: 1000, opacity: visibleB() ? 0.5 : 0 }}
-      >
-        <img alt='Busy' src={loadingAnimation} />
-      </div>
-    )
+const Busy = ({ timeout }: { timeout: U }) => {
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => { setVisible(true) }, timeout)
+    return () => clearTimeout(timer)
+  })
+  return (
+    <div
+      className={css('absolute inset-0 flex flex-col justify-center items-center bg-black opacity-0 transition-opacity')}
+      style={{ zIndex: 1000, opacity: visible ? 0.5 : 0 }}
+    >
+      <img alt='Busy' src={loadingAnimation} />
+    </div>
+  )
+}
 
-  setTimeout(() => { visibleB(true) }, timeout)
-
-  return { render, visibleB }
-})
-
-const Signage = ({ title, icon, children }: { title: S, icon: S, children: React.ReactNode }) => (
+const Signage = ({ title, icon, children }: { title: S, icon: S, children: ReactNode }) => (
   <div className={css('absolute inset-0 flex justify-center items-center')}>
     <div className={css('flex gap-4')}>
       <FontIcon className={css('text-5xl text-red-500 animate-pulse')} iconName={icon} />
@@ -52,60 +50,55 @@ const Signage = ({ title, icon, children }: { title: S, icon: S, children: React
   </div>
 )
 
-export const App = make(({ client }: { client: Client }) => {
-  const
-    { stateB } = client,
-    init = () => {
-      client.connect()
-    },
-    render = () => {
-      const state = stateB()
-      switch (state.t) {
-        case ClientStateT.Connecting:
-          return (
-            <Busy timeout={500000} />
-          )
-        case ClientStateT.Disconnected:
-          return (
-            <Signage title='Disconnected' icon='PlugDisconnected'>Retrying in {state.retry} seconds...</Signage>
-          )
-        case ClientStateT.Invalid:
-          {
-            const
-              { error, trace } = state,
-              body = trace ? (
-                <>
-                  <p>{error}</p>
-                  <pre>
-                    <code>{trace}</code>
-                  </pre>
-                </>
-              ) : (
-                <p>{error}</p>
-              )
-            return (<Signage title='Error' icon='Error'>{body}</Signage>)
-          }
-        case ClientStateT.Connected:
-          const
-            { popup, busyB, modeB } = client,
-            isChromeless = modeB() === 'chromeless'
-          return (
+export const App = ({ client }: { client: Client }) => {
+  const [state, setState] = useState(client.stateB())
+  useEffect(() => {
+    on(client.stateB, s => { setState(s) })
+  })
+  switch (state.t) {
+    case ClientStateT.Connecting:
+      return (
+        <Busy timeout={500000} />
+      )
+    case ClientStateT.Disconnected:
+      return (
+        <Signage title='Disconnected' icon='PlugDisconnected'>Retrying in {state.retry} seconds...</Signage>
+      )
+    case ClientStateT.Invalid:
+      {
+        const
+          { error, trace } = state,
+          body = trace ? (
             <>
-              {busyB() && <Busy timeout={500} />}
-              <HelpPanel helpE={client.helpE} helpB={client.helpB} />
-              <div className='view'>
-                {!isChromeless && <div className='stripe' />}
-                <div className={css('max-w-3xl mx-auto')}>
-                  {!isChromeless && <Header client={client} />}
-                  <Body client={client} />
-                  {popup.length ? <Popup client={client} /> : <></>}
-                </div>
-              </div>
+              <p>{error}</p>
+              <pre>
+                <code>{trace}</code>
+              </pre>
             </>
+          ) : (
+            <p>{error}</p>
           )
+        return (<Signage title='Error' icon='Error'>{body}</Signage>)
       }
-      return <div>Hello!</div>
-    }
-  return { init, render, stateB }
-})
+    case ClientStateT.Connected:
+      const
+        { popup, busyB, modeB } = client,
+        isChromeless = modeB() === 'chromeless'
+      return (
+        <>
+          {busyB() && <Busy timeout={500} />}
+          <HelpPanel helpE={client.helpE} helpB={client.helpB} />
+          <div className='view'>
+            {!isChromeless && <div className='stripe' />}
+            <div className={css('max-w-3xl mx-auto')}>
+              {!isChromeless && <Header client={client} />}
+              <Body client={client} />
+              {popup.length ? <Popup client={client} /> : <></>}
+            </div>
+          </div>
+        </>
+      )
+  }
+}
+
 
