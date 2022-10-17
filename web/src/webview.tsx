@@ -26,6 +26,7 @@ export const WebView = ({ box }: BoxProps) => {
       name={name}
       title={name}
       src={link}
+      data-name={rawName}
     />
   )
 }

@@ -21,7 +21,7 @@ import { BoxProps, make } from './ui';
 
 export const ComboBox = make(({ context, box }: BoxProps) => {
   const
-    { modes, value, text, placeholder, error, options: rawOptions, style } = box,
+    { name, modes, value, text, placeholder, error, options: rawOptions, style } = box,
     options = rawOptions ?? [],
     required = modes.has('required'),
     items: IComboBoxOption[] = options.map(c => ({ key: String(c.value), text: c.text ?? '' })),
@@ -34,7 +34,7 @@ export const ComboBox = make(({ context, box }: BoxProps) => {
       if (v) context.record(v)
     },
     render = () => (
-      <div className={css(style)}>
+      <div className={css(style)} data-name={name}>
         <FComboBox
           label={text}
           text={initialValue}

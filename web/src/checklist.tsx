@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const Checklist = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, options: rawOptions, style } = box,
+    { name, modes, text, options: rawOptions, style } = box,
     options = rawOptions ?? [],
     live = modes.has('live'),
     selecteds = selectedsOf(box),
@@ -38,7 +38,7 @@ export const Checklist = make(({ context, box }: BoxProps) => {
     render = () => {
       const
         checkboxes = options.map(c => (
-          <div key={c.value}>
+          <div key={c.value} data-name={c.name}>
             <Checkbox
               label={c.text}
               defaultChecked={selection.has(String(c.value))}
@@ -51,7 +51,7 @@ export const Checklist = make(({ context, box }: BoxProps) => {
           : <div>&mdash;</div>
 
       return (
-        <div className={css('flex flex-col gap-2')}>
+        <div className={css('flex flex-col gap-2')} data-name={name}>
           {text && <Label>{text}</Label>}
           {contents}
         </div>

@@ -18,7 +18,7 @@ import { BoxProps } from './ui';
 
 export const Separator = ({ box }: BoxProps) => {
   const
-    { text, modes, style } = box,
+    { name, text, modes, style } = box,
     vertical = modes.has('top') || modes.has('middle') || modes.has('bottom'),
     align = (modes.has('left') || modes.has('top'))
       ? 'start'
@@ -27,7 +27,7 @@ export const Separator = ({ box }: BoxProps) => {
         : undefined
 
   return (
-    <div className={css(style)}>
+    <div className={css(style)} data-name={name}>
       <FSeparator vertical={vertical} alignContent={align} >{text}</FSeparator>
     </div>
   )

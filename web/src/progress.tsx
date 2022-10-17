@@ -18,9 +18,9 @@ import { css } from './css';
 import { BoxProps } from './ui';
 
 export const ProgressBar = ({ box }: BoxProps) => {
-  const { text, caption, value, style } = box
+  const { name, text, caption, value, style } = box
   return (
-    <div className={css(style)}>
+    <div className={css(style)} data-name={name}>
       <ProgressIndicator label={text} description={caption ?? ''} percentComplete={isN(value) ? value : undefined} />
     </div>
   )

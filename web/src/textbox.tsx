@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const Textbox = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, value, placeholder, icon, mask, prefix, suffix, error, lines, style } = box,
+    { name, modes, text, value, placeholder, icon, mask, prefix, suffix, error, lines, style } = box,
     required = modes.has('required'),
     password = modes.has('password'),
     onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
@@ -48,7 +48,7 @@ export const Textbox = make(({ context, box }: BoxProps) => {
           : lines && (lines >= 1)
             ? <TextField {...field} multiline resizable autoAdjustHeight rows={lines} />
             : <TextField {...field} />
-      return <div className={css(style)}>{textbox}</div>
+      return <div className={css(style)} data-name={name}>{textbox}</div>
     }
 
   context.record((value as any) ?? '')

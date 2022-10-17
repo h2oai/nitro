@@ -36,12 +36,12 @@ const typeFrom = (modes: Set<S>) => {
 
 export const Banner = ({ box }: BoxProps) => {
   const
-    { modes, text, style } = box,
+    { name, modes, text, style } = box,
     type = typeFrom(modes)
 
   // TODO include link
   return (
-    <div className={css(style)}>
+    <div className={css(style)} data-name={name}>
       <MessageBar messageBarType={type}>{text}</MessageBar>
     </div>
   )

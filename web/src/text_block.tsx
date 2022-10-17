@@ -42,6 +42,7 @@ export const TextBlock = make(({ context, box }: BoxProps) => {
           className={box.style ? 'prose ' + box.style : 'prose'}
           ref={ref}
           dangerouslySetInnerHTML={{ __html: box.text ?? '' }}
+          data-name={box.name}
         />
       )
     }

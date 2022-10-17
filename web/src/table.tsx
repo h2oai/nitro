@@ -27,7 +27,7 @@ type TableGroup = { key: S, text: S, rows: TableRow[], groups: TableGroup[] }
 
 export const Table = make(({ context, box }: BoxProps) => {
   const
-    { modes, headers, options, style } = box,
+    { name, modes, headers, options, style } = box,
     live = modes.has('live'),
     isMultiple = modes.has('multi'),
     isList = isMultiple || modes.has('selectable'),
@@ -236,7 +236,7 @@ export const Table = make(({ context, box }: BoxProps) => {
     render = () => {
       const [columns, rows] = contentB()
       return (
-        <div className={css(style)}>
+        <div className={css(style)} data-name={name}>
           <DetailsList
             items={rows}
             groups={groups.length ? groups : undefined}

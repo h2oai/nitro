@@ -45,7 +45,7 @@ const
 
 export const TimePicker = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, value, style } = box,
+    { name, modes, text, value, style } = box,
     live = modes.has('live'),
     clock = parseClock(String(value).toLowerCase()),
     record = () => {
@@ -72,7 +72,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <div className={css('flex flex-col', style)}>
+        <div className={css('flex flex-col', style)} data-name={name}>
           {text && <Label>{text}</Label>}
           <Stack horizontal horizontalAlign='start' tokens={{ childrenGap: 5 }}>
             <Stack.Item styles={isNaN(clock.hh) ? hide : undefined}>

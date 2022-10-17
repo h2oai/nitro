@@ -31,13 +31,13 @@ const
 
 export const Expander = make(({ box, children }: { box: Box, children: React.ReactNode }) => {
   const
-    { title, modes } = box,
+    { name, title, modes } = box,
     expandedB = signal(modes.has('open')),
     toggle = () => expandedB(!expandedB()),
     render = () => {
       const expanded = expandedB()
       return (
-        <div>
+        <div data-name={name}>
           <div>
             <ActionButton
               iconProps={expanded ? down : right}

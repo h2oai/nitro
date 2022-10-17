@@ -16,7 +16,7 @@ import { css } from './css';
 import { BoxProps } from './ui';
 
 export const SVGBox = ({ box }: BoxProps) => {
-  const { text, style } = box
+  const { name, text, style } = box
   if (text) {
     // TODO: clean up asset lookup implementation. 
     // TODO: look up assets on a different dict. 
@@ -28,10 +28,10 @@ export const SVGBox = ({ box }: BoxProps) => {
     //   if (icon) return <div className={css(style)}>{icon}</div>
     // }
     return (
-      <div className={css(style)} dangerouslySetInnerHTML={{ __html: text ?? '' }} />
+      <div className={css(style)} dangerouslySetInnerHTML={{ __html: text ?? '' }} data-name={name} />
     )
   }
-  return <span className={css(style)} />
+  return <span className={css(style)} data-name={name} />
 }
 
 

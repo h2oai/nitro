@@ -21,7 +21,7 @@ import { BoxProps, make } from './ui';
 // TODO support icons on items. See "Customized Dropdown" Fluent example.
 export const Dropdown = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, placeholder, error, options: rawOptions, style } = box,
+    { name, modes, text, placeholder, error, options: rawOptions, style } = box,
     options = rawOptions ?? [],
     required = modes.has('required'),
     live = modes.has('live'),
@@ -36,7 +36,7 @@ export const Dropdown = make(({ context, box }: BoxProps) => {
       }
     },
     render = () => (
-      <div className={css(style)}>
+      <div className={css(style)} data-name={name}>
         <FDropdown
           label={text}
           placeholder={placeholder}

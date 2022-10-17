@@ -173,7 +173,7 @@ export const
       init = () => {
         if (ref.current) execPlugin(plugin, method, context, ref.current, box.data)
       },
-      render = () => (<div id={id} ref={ref} />)
+      render = () => (<div id={id} ref={ref} data-name={box.name} />)
 
     return { init, render }
   })

@@ -85,7 +85,7 @@ type Uploadable = {
 
 export const FileUpload = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, link, style } = box,
+    { name, modes, text, link, style } = box,
     multiple = modes.has('multi'),
     label = multiple ? 'Drag files here, or' : 'Drag a file here, or',
     inputID = xid(),
@@ -161,7 +161,7 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
           onDragOver={onDrag}
           onDrop={onDrop}
         >
-          <div className={css('flex flex-col gap-1', style)}>
+          <div className={css('flex flex-col gap-1', style)} data-name={name}>
             <Label>{text}</Label>
             {warning ? <MessageBar messageBarType={MessageBarType.severeWarning}>{warning}</MessageBar> : <></>}
             <div className={css('flex flex-col gap-1')}>{items}</div>

@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const ColorPicker = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, value, style } = box,
+    { name, modes, text, value, style } = box,
     live = modes.has('live'),
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
@@ -32,7 +32,7 @@ export const ColorPicker = make(({ context, box }: BoxProps) => {
     onChange = (_: React.SyntheticEvent<HTMLElement>, color: IColor) => record(color),
     render = () => {
       return (
-        <div className={css('flex flex-col', style)}>
+        <div className={css('flex flex-col', style)} data-name={name}>
           {text && <Label>{text}</Label>}
           <FColorPicker
             color={colorValue}

@@ -19,7 +19,7 @@ import { BoxProps } from './ui';
 // TODO add size variants 
 export const Spinner = ({ box }: BoxProps) => {
   const
-    { text, modes, style } = box,
+    { name, text, modes, style } = box,
     labelPosition = modes.has('top')
       ? 'bottom'
       : modes.has('right')
@@ -31,7 +31,7 @@ export const Spinner = ({ box }: BoxProps) => {
             : undefined
 
   return (
-    <div className={css(style)}>
+    <div className={css(style)} data-name={name}>
       <FSpinner label={text ?? undefined} labelPosition={labelPosition} />
     </div>
   )

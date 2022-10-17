@@ -19,7 +19,7 @@ import { BoxProps, make } from './ui';
 
 export const DatePicker = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, placeholder, value, min, max, style } = box,
+    { name, modes, text, placeholder, value, min, max, style } = box,
     required = modes.has('required'),
     live = modes.has('live'),
     defaultDate = toDate(value) ?? new Date(),
@@ -34,7 +34,7 @@ export const DatePicker = make(({ context, box }: BoxProps) => {
       // TODO firstDayOfWeek, firstWeekOfYear customization
       // TODO pass strings for localization
       return (
-        <div className={css(style)}>
+        <div className={css(style)} data-name={name}>
           <FDatePicker
             label={text}
             value={defaultDate}

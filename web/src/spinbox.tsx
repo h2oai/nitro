@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const Spinbox = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, value, min, max, step, precision, placeholder, style } = box,
+    { name, modes, text, value, min, max, step, precision, placeholder, style } = box,
     live = modes.has('live'),
     defaultValue = valueFromRange(value, min, max, step),
     onChange = (_: React.SyntheticEvent<HTMLElement>, value?: string): void => {
@@ -31,7 +31,7 @@ export const Spinbox = make(({ context, box }: BoxProps) => {
       }
     },
     render = () => (
-      <div className={css(style)}>
+      <div className={css(style)} data-name={name}>
         <SpinButton
           label={text}
           placeholder={placeholder}

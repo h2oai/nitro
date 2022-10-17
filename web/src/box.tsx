@@ -75,7 +75,7 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   if (box.image) return (
     <img
       className={css(box.style)}
-      data-name={box.name ?? undefined}
+      data-name={box.name}
       alt={box.text}
       src={box.image}
     />
@@ -140,7 +140,7 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
 
 const NonTerminal = ({ context, box, children }: BoxProps & { children: React.ReactNode }) => {
   const
-    { modes, hotkey } = box,
+    { name, modes, hotkey } = box,
     background = box.image ? { backgroundImage: `url(${box.image})` } : undefined,
     flex = modes.has('col') ? 'flex flex-col gap-2' : modes.has('row') ? 'flex gap-2' : undefined,
     onClick = createOnClick(context, box),
@@ -154,16 +154,16 @@ const NonTerminal = ({ context, box, children }: BoxProps & { children: React.Re
   return (
     <div
       className={css(flex, onClick ? 'cursor-pointer' : undefined, box.style)}
-      data-name={box.name ?? undefined}
       onClick={onClick}
       style={background}
+      data-name={name}
     >{children}</div>
   )
 }
 
 const Terminal = ({ context, box }: BoxProps) => {
   const
-    { hotkey } = box,
+    { name, hotkey } = box,
     onClick = createOnClick(context, box),
     unbind = hotkey && onClick ? context.hotkey(hotkey, onClick) : undefined,
     dispose = () => {
@@ -176,6 +176,7 @@ const Terminal = ({ context, box }: BoxProps) => {
     <div
       className={css(onClick ? 'cursor-pointer' : undefined, box.style)}
       onClick={onClick}
+      data-name={name}
     >{box.text ?? ''}</div>
   )
 }
@@ -191,7 +192,7 @@ const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children
 
 const NavSet = make(({ context, box }: BoxProps) => {
   const
-    { style, items: rawItems, options: rawOptions } = box,
+    { name, style, items: rawItems, options: rawOptions } = box,
     items = rawItems ?? [],
     options = rawOptions ?? [],
     selectedIndex = items.findIndex(box => box.modes.has('open')),
@@ -214,7 +215,7 @@ const NavSet = make(({ context, box }: BoxProps) => {
       if (item) selectedIndexB(links.indexOf(item))
     },
     render = () => (
-      <div className={css('flex gap-4', style)}>
+      <div className={css('flex gap-4', style)} data-name={name}>
         <div className={css('border-r')}>
           <Nav groups={groups} onLinkClick={onLinkClick} selectedKey={selectedKeyB()} />
         </div>
@@ -229,7 +230,7 @@ const NavSet = make(({ context, box }: BoxProps) => {
 
 const TabSet = ({ context, box }: BoxProps) => {
   const
-    { style, items: rawItems, options: rawOptions } = box,
+    { name, style, items: rawItems, options: rawOptions } = box,
     items = rawItems ?? [],
     options = rawOptions ?? [],
     tabs = zip(options, items, (opt, box, i) => (
@@ -245,7 +246,7 @@ const TabSet = ({ context, box }: BoxProps) => {
     selectedKey = (items.find(box => box.modes.has('open')) ?? items[0]).xid
 
   return (
-    <div className={css(style)} data-name={box.name ?? undefined} >
+    <div className={css(style)} data-name={name} >
       <Pivot defaultSelectedKey={selectedKey}>{tabs}</Pivot>
     </div>
   )

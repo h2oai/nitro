@@ -19,14 +19,14 @@ import { BoxProps, make } from './ui';
 
 export const Toggle = make(({ context, box }: BoxProps) => {
   const
-    { value, text } = box,
+    { name, value, text } = box,
     onChecked = (checked?: B) => {
       context.record(checked ? true : false)
       context.commit()
     },
     render = () => {
       return (
-        <div className={css(box.style)}>
+        <div className={css(box.style)} data-name={name}>
           <FToggle
             label={text}
             defaultChecked={value ? true : false}

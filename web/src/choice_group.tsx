@@ -21,16 +21,17 @@ import { BoxProps, make } from './ui';
 
 export const ChoiceGroup = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, placeholder, options: rawOptions, style } = box,
+    { name, modes, text, placeholder, options: rawOptions, style } = box,
     options = rawOptions ?? [],
     required = modes.has('required'),
     live = modes.has('live'),
     hasNoPrimary = options.every(o => !isB(o.selected)),
     selected = selectedOf(box),
-    items: IChoiceGroupOption[] = options.map(({ value, text, icon: iconName }) => ({
+    items: IChoiceGroupOption[] = options.map(({ name, value, text, icon: iconName }) => ({
       key: String(value),
       text: String(text),
       iconProps: iconName ? { iconName } : undefined,
+      'data-name': name,
     })),
     selectedKey = selected ? selected.value : (hasNoPrimary && options.length > 0) ? options[0].value : undefined,
     onChange = (_?: React.FormEvent<HTMLElement>, option?: IChoiceGroupOption) => {
@@ -40,7 +41,7 @@ export const ChoiceGroup = make(({ context, box }: BoxProps) => {
       }
     },
     render = () => (
-      <div className={css(style)}>
+      <div className={css(style)} data-name={name}>
         <FChoiceGroup
           label={text}
           placeholder={placeholder}

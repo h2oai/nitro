@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const Rating = make(({ context, box }: BoxProps) => {
   const
-    { modes, text, placeholder, min, max, value, style } = box,
+    { name, modes, text, placeholder, min, max, value, style } = box,
     live = modes.has('live'),
     allowZeroStars = isN(min) && min <= 0,
     defaultRating = toN(value) ?? (allowZeroStars ? 0 : 1),
@@ -31,7 +31,7 @@ export const Rating = make(({ context, box }: BoxProps) => {
     },
     render = () => {
       return (
-        <div className={css('flex flex-col', style)}>
+        <div className={css('flex flex-col', style)} data-name={name}>
           {text && <Label>{text}</Label>}
           <FRating
             defaultRating={defaultRating}

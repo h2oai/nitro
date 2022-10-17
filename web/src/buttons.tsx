@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const Buttons = make(({ context, box }: BoxProps) => {
   const
-    { value } = box,
+    { name, value } = box,
     selection = new Set<V>(Array.isArray(value) ? value : value ? [value] : []),
     render = () => {
       const
@@ -55,7 +55,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                 : <DefaultButton key={o.value} data-name={o.name} text={text} styles={styles} onClick={onClick} />
         })
       return (
-        <div className={css('flex flex-col')}>
+        <div className={css('flex flex-col')} data-name={name}>
           {text ? <Label>{text}</Label> : <Label>&nbsp;</Label>}
           <div className={css('flex gap-2', horizontal ? 'items-start' : 'flex-col', style)}>{buttons}</div>
         </div>
