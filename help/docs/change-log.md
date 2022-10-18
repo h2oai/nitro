@@ -21,6 +21,19 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.17.0
+
+Oct 18, 2022
+
+- Added
+    - Relative time formatting (N days ago, in N days, yesterday, today, tomorrow).
+    - Allow customizing how client locale is interpreted (`locale=`).
+    - Disabled state for all widgets and buttons (`box(disabled=True)` and `option(disabled=True)`).
+    - Set `data-name` HTML attribute for all boxes where a `name=` is supplied (for test automation).
+    - Always show tooltips on table column headers.
+- Fixed
+    - Mode `multi live menu` doesn't block UI when changed.
+
 ## v0.16.3
 
 Sep 27, 2022
