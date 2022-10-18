@@ -19,7 +19,7 @@ import { BoxProps, make } from './ui';
 
 export const Slider = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, value, placeholder, min, max, step, style } = box,
+    { name, modes, text, value, placeholder, min, max, step, style, disabled } = box,
     live = modes.has('live'),
     originFromZero = isN(min) && min < 0 && isN(max) && max > 0,
     ranged = isPair(value) && isN(value[0]) && isN(value[1]),
@@ -41,6 +41,7 @@ export const Slider = make(({ context, box }: BoxProps) => {
           originFromZero,
           ranged,
           onChanged,
+          disabled: disabled === true,
         }
 
       const slider = ranged

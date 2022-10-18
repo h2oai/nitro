@@ -119,3 +119,9 @@ def range_slider_live(view: View):  # height 2
             box('Speed range (km/h)', mode='live', value=(start, end)),
             f'Your speed ranges between {start} and {end} km/h',
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def range_slider_disable(view: View):  # height 2
+    view(box('Speed range (km/h)', value=(3, 7), disabled=True))

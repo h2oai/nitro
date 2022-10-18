@@ -190,3 +190,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/range_slider_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Speed range (km/h)', value=(3, 7), disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/range_slider_disable.png)

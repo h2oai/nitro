@@ -126,3 +126,9 @@ def slider_live(view: View):  # height 2
             box('Speed (km/h)', mode='live range', value=speed),
             f'Your speed is {speed} km/h',
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def slider_disable(view: View):  # height 2
+    view(box('Speed (km/h)', mode='range', disabled=True))
