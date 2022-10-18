@@ -105,3 +105,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/time_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Set alarm for:', mode='time', value='3:04PM', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/time_disable.png)

@@ -45,7 +45,8 @@ const
 
 export const TimePicker = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, value, style } = box,
+    { name, modes, text, value, style, disabled: rawDisabled } = box,
+    disabled = rawDisabled === true,
     live = modes.has('live'),
     clock = parseClock(String(value).toLowerCase()),
     record = () => {
@@ -73,7 +74,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
     render = () => {
       return (
         <div className={css('flex flex-col', style)} data-name={name}>
-          {text && <Label>{text}</Label>}
+          {text && <Label disabled={disabled}>{text}</Label>}
           <Stack horizontal horizontalAlign='start' tokens={{ childrenGap: 5 }}>
             <Stack.Item styles={isNaN(clock.hh) ? hide : undefined}>
               <SpinButton
@@ -84,6 +85,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
                 max={clock.c24 ? 23 : 12}
                 styles={narrow}
                 onChange={onHoursChange}
+                disabled={disabled}
               />
             </Stack.Item>
             <Stack.Item styles={isNaN(clock.mm) ? hide : undefined}>
@@ -95,6 +97,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
                 max={59}
                 styles={narrow}
                 onChange={onMinutesChange}
+                disabled={disabled}
               />
             </Stack.Item>
             <Stack.Item styles={isNaN(clock.ss) ? hide : undefined}>
@@ -106,6 +109,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
                 max={59}
                 styles={narrow}
                 onChange={onSecondsChange}
+                disabled={disabled}
               />
             </Stack.Item>
             <Stack.Item styles={clock.c24 ? hide : undefined} align='end'>
@@ -114,6 +118,7 @@ export const TimePicker = make(({ context, box }: BoxProps) => {
                 onText='PM'
                 defaultChecked={clock.pm}
                 onChange={onToggleChange}
+                disabled={disabled}
               />
             </Stack.Item>
           </Stack>

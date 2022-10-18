@@ -69,3 +69,9 @@ def time_live(view: View):  # height 3
             box('Set alarm for:', mode='live time', value=time),
             f'Alarm will be set for {time}.',
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def time_disable(view: View):  # height 2
+    view(box('Set alarm for:', mode='time', value='3:04PM', disabled=True))
