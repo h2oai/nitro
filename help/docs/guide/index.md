@@ -196,6 +196,7 @@ They can be thought of as pickers that produce an immediate result when selected
 - [Add a menu to a primary button](buttons.md#add-a-menu-to-a-primary-button)
 - [Set a caption](buttons.md#set-a-caption)
 - [Lay out buttons vertically](buttons.md#lay-out-buttons-vertically)
+- [Disable button](buttons.md#disable-button)
 
 ## Radio Buttons
 

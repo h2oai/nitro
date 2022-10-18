@@ -173,3 +173,17 @@ def buttons_layout(view: View):  # height 3
         ])
     )
     view(f'You chose {choice}.')
+
+
+# ## Disable button
+# Set `disabled=True` to disable the button.
+def buttons_disable(view: View):  # height 3
+    choice = view(
+        '## Updates are available!',
+        box([
+            option('now', 'Update now'),
+            option('tomorrow', 'Remind me tomorrow'),
+            option('never', 'Never update', disabled=True),
+        ])
+    )
+    view(f'You chose to update {choice}.')
