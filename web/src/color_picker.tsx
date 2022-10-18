@@ -15,12 +15,14 @@
 import { ColorPicker as FColorPicker, cssColor, IColor, IRGB, Label } from '@fluentui/react';
 import React from 'react';
 import { css } from './css';
+import { Dimmer } from './dimmer';
 import { BoxProps, make } from './ui';
 
 
 export const ColorPicker = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, value, style } = box,
+    { name, modes, text, value, style, disabled: rawDisabled } = box,
+    disabled = rawDisabled === true,
     live = modes.has('live'),
     colorValue = value ? String(value) : '#000',
     defaultColor = cssColor(colorValue),
@@ -32,7 +34,7 @@ export const ColorPicker = make(({ context, box }: BoxProps) => {
     onChange = (_: React.SyntheticEvent<HTMLElement>, color: IColor) => record(color),
     render = () => {
       return (
-        <div className={css('flex flex-col', style)} data-name={name}>
+        <div className={css('flex flex-col relative', style)} data-name={name}>
           {text && <Label>{text}</Label>}
           <FColorPicker
             color={colorValue}
@@ -40,6 +42,7 @@ export const ColorPicker = make(({ context, box }: BoxProps) => {
             onChange={onChange}
             showPreview
           />
+          {disabled && <Dimmer />}
         </div>
       )
     }

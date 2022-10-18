@@ -73,3 +73,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/color_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Choose a color', mode='color', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/color_disable.png)

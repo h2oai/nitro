@@ -65,3 +65,9 @@ def color_live(view: View):  # height 6
             ),
             f'You chose {color}.'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def color_disable(view: View):  # height 6
+    view(box('Choose a color', mode='color', disabled=True))
