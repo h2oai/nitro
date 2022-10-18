@@ -22,7 +22,8 @@ import { BoxProps, make } from './ui';
 const swatchCellSize = 25
 export const ColorPalette = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, options: rawOptions, style } = box,
+    { name, modes, text, options: rawOptions, style, disabled: rawDisabled } = box,
+    disabled = rawDisabled === true,
     options = rawOptions ?? [],
     live = modes.has('live'),
     selected = selectedOf(box),
@@ -40,7 +41,7 @@ export const ColorPalette = make(({ context, box }: BoxProps) => {
     render = () => {
       return (
         <div className={css('flex flex-col', style)} data-name={name}>
-          {text && <Label>{text}</Label>}
+          {text && <Label disabled={disabled}>{text}</Label>}
           <SwatchColorPicker
             columnCount={10}
             colorCells={cells}
@@ -48,6 +49,7 @@ export const ColorPalette = make(({ context, box }: BoxProps) => {
             cellHeight={swatchCellSize}
             defaultSelectedId={selected ? String(selected.value) : undefined}
             onChange={onChange}
+            disabled={disabled}
           />
         </div>
       )

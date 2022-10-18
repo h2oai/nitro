@@ -85,3 +85,18 @@ def palette_live(view: View):  # height 2
             ),
             f'You chose {color}.'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def palette_disable(view: View):  # height 2
+    view(box(
+        'Choose a color',
+        mode='color',
+        options=[
+            option('#ff0000', 'Red'),
+            option('#00ff00', 'Green'),
+            option('#0000ff', 'Blue'),
+        ],
+        disabled=True,
+    ))

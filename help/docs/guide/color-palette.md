@@ -100,3 +100,25 @@ while True:
 
 
 ![Screenshot](assets/screenshots/palette_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box(
+    'Choose a color',
+    mode='color',
+    options=[
+        option('#ff0000', 'Red'),
+        option('#00ff00', 'Green'),
+        option('#0000ff', 'Blue'),
+    ],
+    disabled=True,
+))
+```
+
+
+![Screenshot](assets/screenshots/palette_disable.png)
