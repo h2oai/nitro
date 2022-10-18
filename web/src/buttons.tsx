@@ -41,18 +41,78 @@ export const Buttons = make(({ context, box }: BoxProps) => {
           return (hasNoPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
             ? o.options
               ? o.value === ''
-                ? <PrimaryButton key={o.value} data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, record)} />
-                : <PrimaryButton key={o.value} data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, record)} onClick={onClick} />
+                ? <PrimaryButton
+                  key={o.value}
+                  data-name={o.name}
+                  text={text ?? 'Choose an action'}
+                  menuProps={toContextualMenuProps(o.options, record)}
+                  disabled={o.disabled}
+                />
+                : <PrimaryButton
+                  key={o.value}
+                  data-name={o.name}
+                  split
+                  text={text}
+                  styles={styles}
+                  menuProps={toContextualMenuProps(o.options, record)}
+                  onClick={onClick}
+                  disabled={o.disabled}
+                />
               : o.caption
-                ? <CompoundButton key={o.value} data-name={o.name} primary text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
-                : <PrimaryButton key={o.value} data-name={o.name} text={text} styles={styles} onClick={onClick} />
+                ? <CompoundButton
+                  key={o.value}
+                  data-name={o.name}
+                  primary text={text}
+                  secondaryText={o.caption}
+                  styles={compoundStyles}
+                  onClick={onClick}
+                  disabled={o.disabled}
+                />
+                : <PrimaryButton
+                  key={o.value}
+                  data-name={o.name}
+                  text={text}
+                  styles={styles}
+                  onClick={onClick}
+                  disabled={o.disabled}
+                />
             : o.options
               ? o.value === ''
-                ? <DefaultButton key={o.value} data-name={o.name} text={text ?? 'Choose an action'} menuProps={toContextualMenuProps(o.options, record)} />
-                : <DefaultButton key={o.value} data-name={o.name} split text={text} styles={styles} menuProps={toContextualMenuProps(o.options, record)} onClick={onClick} />
+                ? <DefaultButton
+                  key={o.value}
+                  data-name={o.name}
+                  text={text ?? 'Choose an action'}
+                  menuProps={toContextualMenuProps(o.options, record)}
+                  disabled={o.disabled}
+                />
+                : <DefaultButton
+                  key={o.value}
+                  data-name={o.name}
+                  split
+                  text={text}
+                  styles={styles}
+                  menuProps={toContextualMenuProps(o.options, record)}
+                  onClick={onClick}
+                  disabled={o.disabled}
+                />
               : o.caption
-                ? <CompoundButton key={o.value} data-name={o.name} text={text} secondaryText={o.caption} styles={compoundStyles} onClick={onClick} />
-                : <DefaultButton key={o.value} data-name={o.name} text={text} styles={styles} onClick={onClick} />
+                ? <CompoundButton
+                  key={o.value}
+                  data-name={o.name}
+                  text={text}
+                  secondaryText={o.caption}
+                  styles={compoundStyles}
+                  onClick={onClick}
+                  disabled={o.disabled}
+                />
+                : <DefaultButton
+                  key={o.value}
+                  data-name={o.name}
+                  text={text}
+                  styles={styles}
+                  onClick={onClick}
+                  disabled={o.disabled}
+                />
         })
       return (
         <div className={css('flex flex-col')} data-name={name}>

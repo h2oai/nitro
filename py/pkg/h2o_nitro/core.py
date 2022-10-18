@@ -181,6 +181,7 @@ class Option:
             caption: Optional[str] = None,
             hotkey: Optional[str] = None,
             selected: Optional[bool] = None,
+            disabled: Optional[bool] = None,
             options: Optional['Options'] = None,
     ):
         self.value = value
@@ -190,6 +191,7 @@ class Option:
         self.caption = caption
         self.hotkey = hotkey
         self.selected = selected
+        self.disabled = disabled
         self.options = options
 
     def dump(self) -> dict:
@@ -201,6 +203,7 @@ class Option:
             caption=self.caption,
             hotkey=self.hotkey,
             selected=self.selected,
+            disabled=self.disabled,
             options=_dump(self.options),
         ))
 

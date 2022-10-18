@@ -229,6 +229,7 @@ export type Option = {
   caption?: S
   hotkey?: S
   selected?: B
+  disabled?: B
   data?: Data
   options?: Option[]
 }
