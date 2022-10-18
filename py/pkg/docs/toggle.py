@@ -41,3 +41,9 @@ def toggle_basic(view: View):  # height 4
             box('Make it hot', mode='toggle', value=hot),
             description,
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def toggle_disable(view: View):  # height 2
+    view(box('Make it glazed', mode='toggle', value=True, disabled=True))

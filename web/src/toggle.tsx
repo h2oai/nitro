@@ -19,7 +19,7 @@ import { BoxProps, make } from './ui';
 
 export const Toggle = make(({ context, box }: BoxProps) => {
   const
-    { name, value, text } = box,
+    { name, value, text, disabled } = box,
     onChecked = (checked?: B) => {
       context.record(checked ? true : false)
       context.commit()
@@ -32,6 +32,7 @@ export const Toggle = make(({ context, box }: BoxProps) => {
             defaultChecked={value ? true : false}
             onChange={(_, checked) => onChecked(checked)}
             inlineLabel
+            disabled={disabled === true}
           />
         </div>
       )

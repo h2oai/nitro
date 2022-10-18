@@ -35,3 +35,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/toggle_basic.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Make it glazed', mode='toggle', value=True, disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/toggle_disable.png)
