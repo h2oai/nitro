@@ -155,13 +155,11 @@ export const makeFormatOptions = (tokens: S[]): [FormatT, FormatOptions] => {
     const [k, v] = fsplit(token)
     switch (k) {
       case 'rel':
-        {
-          algo = FormatT.RelTime
-          switch (v) {
-            case 'l': o.style = 'long'; break
-            case 's': o.style = 'short'; break
-            case 'xs': o.style = 'narrow'; break
-          }
+        algo = FormatT.RelTime
+        switch (v) {
+          case 'l': o.style = 'long'; break
+          case 's': o.style = 'short'; break
+          case 'xs': o.style = 'narrow'; break
         }
         break
       case 'abbr':
