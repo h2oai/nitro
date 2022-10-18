@@ -21,7 +21,7 @@ import { BoxProps, make } from './ui';
 
 export const ChoiceGroup = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, placeholder, options: rawOptions, style } = box,
+    { name, modes, text, placeholder, options: rawOptions, style, disabled } = box,
     options = rawOptions ?? [],
     required = modes.has('required'),
     live = modes.has('live'),
@@ -49,10 +49,10 @@ export const ChoiceGroup = make(({ context, box }: BoxProps) => {
           defaultSelectedKey={selectedKey}
           required={required ? true : false}
           onChange={onChange}
+          disabled={disabled === true}
         />
       </div>
     )
-
 
   context.record(selectedKey ?? null)
 

@@ -80,3 +80,11 @@ def radio_live(view: View):  # height 4
             ]),
             f'You chose {color}.'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def radio_disable(view: View):  # height 4
+    view(box('Choose a color', mode='radio', options=[
+        'blue', 'green', 'yellow', 'orange', 'red', 'black'
+    ], disabled=True))

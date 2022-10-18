@@ -102,3 +102,18 @@ while True:
 
 
 ![Screenshot](assets/screenshots/radio_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Choose a color', mode='radio', options=[
+    'blue', 'green', 'yellow', 'orange', 'red', 'black'
+], disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/radio_disable.png)
