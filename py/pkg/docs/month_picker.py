@@ -74,3 +74,9 @@ def month_live(view: View):  # height 4
             box('Pick a month', mode='live month', value=month),
             f'You picked {month} (UTC).'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def month_disable(view: View):  # height 4
+    view(box('Pick a month', mode='month', disabled=True))

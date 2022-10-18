@@ -15,11 +15,12 @@
 import { Calendar as FCalendar, DateRangeType, Label } from '@fluentui/react';
 import { dateToString, signal, toDate } from './core';
 import { css } from './css';
+import { Dimmer } from './dimmer';
 import { BoxProps, make } from './ui';
 
 export const Calendar = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, value, min, max, style } = box,
+    { name, modes, text, value, min, max, style, disabled } = box,
     live = modes.has('live'),
     dateB = signal(toDate(value) ?? new Date()),
     minDate = toDate(min),
@@ -40,7 +41,7 @@ export const Calendar = make(({ context, box }: BoxProps) => {
       // TODO firstDayOfWeek, firstWeekOfYear customization
       // TODO pass strings for localization
       return (
-        <div className={css('flex flex-col', style)} data-name={name}>
+        <div className={css('relative flex flex-col', style)} data-name={name}>
           {text && <Label>{text}</Label>}
           <FCalendar
             dateRangeType={dateRangeType}
@@ -52,6 +53,7 @@ export const Calendar = make(({ context, box }: BoxProps) => {
             highlightSelectedMonth
             showGoToToday
           />
+          {disabled && <Dimmer />}
         </div>
       )
     }

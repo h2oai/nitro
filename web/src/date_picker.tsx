@@ -19,7 +19,7 @@ import { BoxProps, make } from './ui';
 
 export const DatePicker = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, placeholder, value, min, max, style } = box,
+    { name, modes, text, placeholder, value, min, max, style, disabled } = box,
     required = modes.has('required'),
     live = modes.has('live'),
     defaultDate = toDate(value) ?? new Date(),
@@ -45,6 +45,7 @@ export const DatePicker = make(({ context, box }: BoxProps) => {
             isRequired={required}
             highlightSelectedMonth
             showGoToToday
+            disabled={disabled === true}
           />
         </div>
       )

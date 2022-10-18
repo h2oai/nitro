@@ -75,3 +75,9 @@ def day_live(view: View):  # height 4
             box('Pick a date', mode='live day', value=date),
             f'You picked {date} (UTC).'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def day_disable(view: View):  # height 4
+    view(box('Pick a date', mode='day', disabled=True))

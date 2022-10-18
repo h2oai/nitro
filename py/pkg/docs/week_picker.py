@@ -74,3 +74,9 @@ def week_live(view: View):  # height 4
             box('Pick a week', mode='live week', value=week),
             f'You picked {week} (UTC).'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def week_disable(view: View):  # height 4
+    view(box('Pick a week', mode='week', disabled=True))

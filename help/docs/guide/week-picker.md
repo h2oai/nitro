@@ -110,3 +110,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/week_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Pick a week', mode='week', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/week_disable.png)

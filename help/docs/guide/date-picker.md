@@ -138,3 +138,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/date_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Pick a date', mode='date', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/date_disable.png)

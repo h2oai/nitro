@@ -110,3 +110,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/month_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Pick a month', mode='month', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/month_disable.png)
