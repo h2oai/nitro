@@ -127,3 +127,18 @@ while True:
 
 
 ![Screenshot](assets/screenshots/dropdown_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Choose a color', mode='menu', options=[
+    'yellow', 'orange', 'red', 'black'
+], disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/dropdown_disabled.png)

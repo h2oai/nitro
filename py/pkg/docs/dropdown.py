@@ -98,3 +98,11 @@ def dropdown_live(view: View):  # height 3
             ),
             f'You chose {choice}.'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def dropdown_disabled(view: View):  # height 2
+    view(box('Choose a color', mode='menu', options=[
+        'yellow', 'orange', 'red', 'black'
+    ], disabled=True))
