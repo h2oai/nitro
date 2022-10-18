@@ -109,3 +109,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/rating_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Rate your experience', mode='rating', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/rating_disable.png)

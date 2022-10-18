@@ -73,3 +73,9 @@ def rating_live(view: View):  # height 2
             box('Rate your experience', mode='live rating', value=stars),
             f'Your rating was {stars} stars.'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def rating_disable(view: View):  # height 2
+    view(box('Rate your experience', mode='rating', disabled=True))

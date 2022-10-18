@@ -121,6 +121,7 @@ Use textboxes to capture text inputs and passwords.
 - [Show an error message](textbox.md#show-an-error-message)
 - [Accept a password](textbox.md#accept-a-password)
 - [Enable multiple lines](textbox.md#enable-multiple-lines)
+- [Disable](textbox.md#disable)
 
 ## Spinbox
 
@@ -140,6 +141,7 @@ A spinbox lets users incrementally adjust a value in small steps.
 - [Use zero-crossing ranges](spinbox.md#use-zero-crossing-ranges)
 - [Use fractional steps](spinbox.md#use-fractional-steps)
 - [Handle changes immediately](spinbox.md#handle-changes-immediately)
+- [Disable](spinbox.md#disable)
 
 ## Checkbox
 
@@ -148,12 +150,14 @@ Use a checkbox to choose between two mutually exclusive options.
 - [Basic](checkbox.md#basic)
 - [Set initial value](checkbox.md#set-initial-value)
 - [Handle changes immediately](checkbox.md#handle-changes-immediately)
+- [Disable](checkbox.md#disable)
 
 ## Toggle
 
 Use a toggle to choose between two mutually exclusive options, with an immediate result.
 
 - [Basic](toggle.md#basic)
+- [Disable](toggle.md#disable)
 
 ## Pickers
 
@@ -196,7 +200,7 @@ They can be thought of as pickers that produce an immediate result when selected
 - [Add a menu to a primary button](buttons.md#add-a-menu-to-a-primary-button)
 - [Set a caption](buttons.md#set-a-caption)
 - [Lay out buttons vertically](buttons.md#lay-out-buttons-vertically)
-- [Disable button](buttons.md#disable-button)
+- [Disable](buttons.md#disable)
 
 ## Radio Buttons
 
@@ -207,6 +211,7 @@ Use radio buttons to pick one option from a small number of options.
 - [Mark options as selected](radio-buttons.md#mark-options-as-selected)
 - [Show pictorial options](radio-buttons.md#show-pictorial-options)
 - [Handle changes immediately](radio-buttons.md#handle-changes-immediately)
+- [Disable](radio-buttons.md#disable)
 
 ## Dropdown
 
@@ -218,6 +223,7 @@ Use a dropdown to pick one option from a large number of options.
 - [Group options](dropdown.md#group-options)
 - [Enable arbitrary input](dropdown.md#enable-arbitrary-input)
 - [Handle changes immediately](dropdown.md#handle-changes-immediately)
+- [Disable](dropdown.md#disable)
 
 ## Dropdown List
 
@@ -227,6 +233,7 @@ Use a dropdown list to pick one or more options from a large number of options.
 - [Set initial selection](dropdown-list.md#set-initial-selection)
 - [Mark options as selected](dropdown-list.md#mark-options-as-selected)
 - [Handle changes immediately](dropdown-list.md#handle-changes-immediately)
+- [Disable](dropdown-list.md#disable)
 
 ## Checklist
 
@@ -236,6 +243,7 @@ Use checkboxes to pick one or more options from a small number of options.
 - [Set initial selection](checklist.md#set-initial-selection)
 - [Mark options as checked](checklist.md#mark-options-as-checked)
 - [Handle changes immediately](checklist.md#handle-changes-immediately)
+- [Disable](checklist.md#disable)
 
 ## Table
 
@@ -275,6 +283,7 @@ Use sliders to allow picking a number in a given range.
 - [Zero-crossing range](slider.md#zero-crossing-range)
 - [Set fractional steps](slider.md#set-fractional-steps)
 - [Handle changes immediately](slider.md#handle-changes-immediately)
+- [Disable](slider.md#disable)
 
 ## Range Slider
 
@@ -292,6 +301,7 @@ Use range sliders to allow picking a numeric range within a given range.
 - [Use zero-crossing range](range-slider.md#use-zero-crossing-range)
 - [Set fractional steps](range-slider.md#set-fractional-steps)
 - [Handle changes immediately](range-slider.md#handle-changes-immediately)
+- [Disable](range-slider.md#disable)
 
 ## Time Picker
 
@@ -304,6 +314,7 @@ Use a time picker to pick a time using a 12- or 24-hour clock.
 - [Show 24-hour clock, with seconds](time-picker.md#show-24-hour-clock-with-seconds)
 - [Show 24-hour clock, with hour only](time-picker.md#show-24-hour-clock-with-hour-only)
 - [Handle changes immediately](time-picker.md#handle-changes-immediately)
+- [Disable](time-picker.md#disable)
 
 ## Date Picker
 
@@ -318,6 +329,7 @@ Use a date picker to pick a date within a range. A date picker is a compact form
 - [Set range](date-picker.md#set-range)
 - [Mark as required](date-picker.md#mark-as-required)
 - [Handle changes immediately](date-picker.md#handle-changes-immediately)
+- [Disable](date-picker.md#disable)
 
 ## Calendar
 
@@ -330,6 +342,7 @@ Use a calendar to pick a date within a range. The calendar is an expanded form o
 - [Combine min and max dates](calendar.md#combine-min-and-max-dates)
 - [Set range](calendar.md#set-range)
 - [Handle changes immediately](calendar.md#handle-changes-immediately)
+- [Disable](calendar.md#disable)
 
 ## Week Picker
 
@@ -342,6 +355,7 @@ Use a week picker to pick a week in a given range.
 - [Combine min and max dates](week-picker.md#combine-min-and-max-dates)
 - [Set range](week-picker.md#set-range)
 - [Handle changes immediately](week-picker.md#handle-changes-immediately)
+- [Disable](week-picker.md#disable)
 
 ## Month Picker
 
@@ -354,6 +368,7 @@ Use a month picker to pick a month in a given range.
 - [Combine min and max dates](month-picker.md#combine-min-and-max-dates)
 - [Set range](month-picker.md#set-range)
 - [Handle changes immediately](month-picker.md#handle-changes-immediately)
+- [Disable](month-picker.md#disable)
 
 ## Tag Picker
 
@@ -363,6 +378,7 @@ Use a tag picker to pick one or more tags (short strings or labels) from a group
 - [Set initial tags](tag-picker.md#set-initial-tags)
 - [Mark tags as selected](tag-picker.md#mark-tags-as-selected)
 - [Handle changes immediately](tag-picker.md#handle-changes-immediately)
+- [Disable](tag-picker.md#disable)
 
 ## Color Picker
 
@@ -371,6 +387,7 @@ Use a color picker to pick an arbitrary color.
 - [Basic](color-picker.md#basic)
 - [Set initial color](color-picker.md#set-initial-color)
 - [Handle changes immediately](color-picker.md#handle-changes-immediately)
+- [Disable](color-picker.md#disable)
 
 ## Color Palette
 
@@ -380,6 +397,7 @@ Use a color palette to pick one color from a group of colors.
 - [Set initial color](color-palette.md#set-initial-color)
 - [Mark colors as selected](color-palette.md#mark-colors-as-selected)
 - [Handle changes immediately](color-palette.md#handle-changes-immediately)
+- [Disable](color-palette.md#disable)
 
 ## Rating
 
@@ -392,6 +410,7 @@ Use a rating component to capture a star-rating.
 - [Combine min and max stars](rating.md#combine-min-and-max-stars)
 - [Set range](rating.md#set-range)
 - [Handle changes immediately](rating.md#handle-changes-immediately)
+- [Disable](rating.md#disable)
 
 ## File Upload
 
@@ -400,6 +419,7 @@ Use a file upload component to get one or more files from the user.
 - [Basic](file-upload.md#basic)
 - [Allow multiple files](file-upload.md#allow-multiple-files)
 - [Set upload location](file-upload.md#set-upload-location)
+- [Disable](file-upload.md#disable)
 
 ## Inputs
 
