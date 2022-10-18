@@ -88,3 +88,21 @@ while True:
 
 
 ![Screenshot](assets/screenshots/checklist_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box(
+    'Choose some colors',
+    mode='check',
+    options=['green', 'yellow', 'orange', 'red'],
+    disabled=True,
+))
+```
+
+
+![Screenshot](assets/screenshots/checklist_disable.png)

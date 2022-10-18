@@ -20,7 +20,8 @@ import { BoxProps, make } from './ui';
 
 export const Checklist = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, options: rawOptions, style } = box,
+    { name, modes, text, options: rawOptions, style, disabled: rawDisabled } = box,
+    disabled = rawDisabled === true,
     options = rawOptions ?? [],
     live = modes.has('live'),
     selecteds = selectedsOf(box),
@@ -43,6 +44,7 @@ export const Checklist = make(({ context, box }: BoxProps) => {
               label={c.text}
               defaultChecked={selection.has(String(c.value))}
               onChange={(_, checked) => onChecked(c.value, checked)}
+              disabled={disabled}
             />
           </div>
         )),
@@ -52,7 +54,7 @@ export const Checklist = make(({ context, box }: BoxProps) => {
 
       return (
         <div className={css('flex flex-col gap-2')} data-name={name}>
-          {text && <Label>{text}</Label>}
+          {text && <Label disabled={disabled}>{text}</Label>}
           {contents}
         </div>
       )

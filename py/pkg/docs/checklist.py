@@ -73,3 +73,14 @@ def checklist_live(view: View):  # height 3
             ),
             f'You chose {choices}.'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def checklist_disable(view: View):  # height 3
+    view(box(
+        'Choose some colors',
+        mode='check',
+        options=['green', 'yellow', 'orange', 'red'],
+        disabled=True,
+    ))
