@@ -56,3 +56,16 @@ view(f'You uploaded {filename}.')
 
 
 ![Screenshot](assets/screenshots/file_upload_path.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Upload a document', mode='file', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/file_upload_disable.png)

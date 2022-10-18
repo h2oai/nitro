@@ -48,3 +48,9 @@ def file_upload_multiple(view: View):  # height 4
 def file_upload_path(view: View):  # height 4
     filename = view(box('Upload a document', mode='file', link='/upload'))
     view(f'You uploaded {filename}.')
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def file_upload_disable(view: View):  # height 4
+    view(box('Upload a document', mode='file', disabled=True))

@@ -16,6 +16,7 @@ import { FontIcon, Label, MessageBar, MessageBarType, ProgressIndicator } from '
 import React from 'react';
 import { F, S, signal, Signal, xid } from './core';
 import { css } from './css';
+import { Dimmer } from './dimmer';
 import { BoxProps, make } from './ui';
 
 const fileIconSize = 24
@@ -85,7 +86,7 @@ type Uploadable = {
 
 export const FileUpload = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, link, style } = box,
+    { name, modes, text, link, style, disabled } = box,
     multiple = modes.has('multi'),
     label = multiple ? 'Drag files here, or' : 'Drag a file here, or',
     inputID = xid(),
@@ -161,7 +162,7 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
           onDragOver={onDrag}
           onDrop={onDrop}
         >
-          <div className={css('flex flex-col gap-1', style)} data-name={name}>
+          <div className={css('flex flex-col relative gap-1', style)} data-name={name}>
             <Label>{text}</Label>
             {warning ? <MessageBar messageBarType={MessageBarType.severeWarning}>{warning}</MessageBar> : <></>}
             <div className={css('flex flex-col gap-1')}>{items}</div>
@@ -173,6 +174,7 @@ export const FileUpload = make(({ context, box }: BoxProps) => {
                 htmlFor={inputID}
               ><span>Browse...</span></label>
             </div>
+            {disabled && <Dimmer />}
           </div>
         </form>
       )
