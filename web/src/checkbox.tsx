@@ -19,7 +19,7 @@ import { BoxProps, make } from './ui';
 
 export const Checkbox = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, value, text, } = box,
+    { name, modes, value, text, disabled } = box,
     live = modes.has('live'),
     onChecked = (checked?: B) => {
       context.record(checked ? true : false)
@@ -32,6 +32,7 @@ export const Checkbox = make(({ context, box }: BoxProps) => {
             label={text}
             defaultChecked={value ? true : false}
             onChange={(_, checked) => onChecked(checked)}
+            disabled={disabled === true}
           />
         </div>
       )

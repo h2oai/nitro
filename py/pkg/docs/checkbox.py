@@ -45,3 +45,9 @@ def checkbox_live(view: View):  # height 2
             box('Remember me', mode='live', value=keep_signed_in),
             "Keep me signed in." if keep_signed_in else "Don't keep me signed in.",
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def checkbox_disabled(view: View):  # height 2
+    view(box('Keep me signed in', mode='check', disabled=True))

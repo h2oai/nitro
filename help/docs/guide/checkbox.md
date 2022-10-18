@@ -53,3 +53,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/checkbox_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Keep me signed in', mode='check', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/checkbox_disabled.png)
