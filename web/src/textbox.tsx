@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const Textbox = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, value, placeholder, icon, mask, prefix, suffix, error, lines, style } = box,
+    { name, modes, text, value, placeholder, icon, mask, prefix, suffix, error, lines, style, disabled } = box,
     required = modes.has('required'),
     password = modes.has('password'),
     onChange = ({ target }: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, v?: S) => {
@@ -39,6 +39,7 @@ export const Textbox = make(({ context, box }: BoxProps) => {
           suffix,
           errorMessage: error,
           required: required === true,
+          disabled: disabled === true,
           onChange,
         }
       const textbox = password === true

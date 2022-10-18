@@ -203,3 +203,16 @@ and `lines=` only sets the initial height of the textbox.
 
 
 ![Screenshot](assets/screenshots/textarea.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box(mode='text', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/textbox_disabled.png)

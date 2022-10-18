@@ -121,5 +121,11 @@ def textarea(view: View):  # height 3
     bio = view(box('Bio:', lines=5))
     view(f'**Bio:** {bio}')
 
+
 # Note that multi-line textboxes can be resized by the user,
 # and `lines=` only sets the initial height of the textbox.
+
+# ## Disable
+# Set `disabled=True` to disable.
+def textbox_disabled(view: View):  # height 2
+    view(box(mode='text', disabled=True))
