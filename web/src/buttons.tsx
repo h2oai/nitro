@@ -37,7 +37,8 @@ export const Buttons = make(({ context, box }: BoxProps) => {
         buttons = options.map((o, i) => {
           const
             text = o.text,
-            onClick = () => record(o.value)
+            onClick = () => record(o.value),
+            disabled = o.disabled === true
           return (hasNoPrimary && i === 0) || o.selected || selection.has(o.value) // make first button primary if none are.
             ? o.options
               ? o.value === ''
@@ -46,7 +47,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                   data-name={o.name}
                   text={text ?? 'Choose an action'}
                   menuProps={toContextualMenuProps(o.options, record)}
-                  disabled={o.disabled}
+                  disabled={disabled}
                 />
                 : <PrimaryButton
                   key={o.value}
@@ -56,7 +57,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                   styles={styles}
                   menuProps={toContextualMenuProps(o.options, record)}
                   onClick={onClick}
-                  disabled={o.disabled}
+                  disabled={disabled}
                 />
               : o.caption
                 ? <CompoundButton
@@ -66,7 +67,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                   secondaryText={o.caption}
                   styles={compoundStyles}
                   onClick={onClick}
-                  disabled={o.disabled}
+                  disabled={disabled}
                 />
                 : <PrimaryButton
                   key={o.value}
@@ -74,7 +75,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                   text={text}
                   styles={styles}
                   onClick={onClick}
-                  disabled={o.disabled}
+                  disabled={disabled}
                 />
             : o.options
               ? o.value === ''
@@ -83,7 +84,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                   data-name={o.name}
                   text={text ?? 'Choose an action'}
                   menuProps={toContextualMenuProps(o.options, record)}
-                  disabled={o.disabled}
+                  disabled={disabled}
                 />
                 : <DefaultButton
                   key={o.value}
@@ -93,7 +94,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                   styles={styles}
                   menuProps={toContextualMenuProps(o.options, record)}
                   onClick={onClick}
-                  disabled={o.disabled}
+                  disabled={disabled}
                 />
               : o.caption
                 ? <CompoundButton
@@ -103,7 +104,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                   secondaryText={o.caption}
                   styles={compoundStyles}
                   onClick={onClick}
-                  disabled={o.disabled}
+                  disabled={disabled}
                 />
                 : <DefaultButton
                   key={o.value}
@@ -111,7 +112,7 @@ export const Buttons = make(({ context, box }: BoxProps) => {
                   text={text}
                   styles={styles}
                   onClick={onClick}
-                  disabled={o.disabled}
+                  disabled={disabled}
                 />
         })
       return (

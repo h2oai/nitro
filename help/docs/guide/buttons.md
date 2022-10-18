@@ -228,7 +228,7 @@ view(f'You chose {choice}.')
 ![Screenshot](assets/screenshots/buttons_layout.png)
 
 
-## Disable button
+## Disable
 
 Set `disabled=True` to disable the button.
 

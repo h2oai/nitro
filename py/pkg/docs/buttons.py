@@ -175,7 +175,7 @@ def buttons_layout(view: View):  # height 3
     view(f'You chose {choice}.')
 
 
-# ## Disable button
+# ## Disable
 # Set `disabled=True` to disable the button.
 def buttons_disable(view: View):  # height 3
     choice = view(
