@@ -210,3 +210,16 @@ while True:
 
 
 ![Screenshot](assets/screenshots/spinbox_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box('Speed (km/h)', mode='number', disabled=True))
+```
+
+
+![Screenshot](assets/screenshots/spinbox_disabled.png)

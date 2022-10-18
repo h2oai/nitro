@@ -203,6 +203,7 @@ export type Box = {
   locale?: S | S[]
   hotkey?: S
   popup?: B
+  disabled?: B
   style?: S
   image?: S // img tag or CSS background-image
   icon?: S

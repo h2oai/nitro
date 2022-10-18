@@ -131,3 +131,9 @@ def spinbox_live(view: View):  # height 2
             box('Speed (km/h)', mode='live', value=speed),
             f'Your speed is {speed} km/h',
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def spinbox_disabled(view: View):  # height 2
+    view(box('Speed (km/h)', mode='number', disabled=True))

@@ -20,7 +20,7 @@ import { BoxProps, make } from './ui';
 
 export const Spinbox = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, value, min, max, step, precision, placeholder, style } = box,
+    { name, modes, text, value, min, max, step, precision, placeholder, style, disabled } = box,
     live = modes.has('live'),
     defaultValue = valueFromRange(value, min, max, step),
     onChange = (_: React.SyntheticEvent<HTMLElement>, value?: string): void => {
@@ -43,6 +43,7 @@ export const Spinbox = make(({ context, box }: BoxProps) => {
           precision={precision}
           styles={{ labelWrapper: { marginBottom: -4 } }} // Make textbox top match textfield
           onChange={onChange}
+          disabled={disabled === true}
         />
       </div>
     )

@@ -343,6 +343,7 @@ class Box:
             hotkey: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
+            disabled: Optional[bool] = None,
             image: Optional[str] = None,
             icon: Optional[str] = None,
             min: Optional[V] = None,
@@ -376,6 +377,7 @@ class Box:
         self.hotkey = hotkey
         self.popup = popup
         self.style = style
+        self.disabled = disabled
         self.image = image
         self.icon = icon
         self.min = min
@@ -410,6 +412,7 @@ class Box:
             hotkey: Optional[str] = None,
             popup: Optional[bool] = None,
             style: Optional[str] = None,
+            disabled: Optional[bool] = None,
             image: Optional[str] = None,
             icon: Optional[str] = None,
             min: Optional[V] = None,
@@ -443,6 +446,7 @@ class Box:
             hotkey=self.hotkey if hotkey is None else hotkey,
             popup=self.popup if popup is None else popup,
             style=self.style if style is None else f'{self.style} {style}',  # Additive!
+            disabled=self.disabled if disabled is None else disabled,
             image=self.image if image is None else image,
             icon=self.icon if icon is None else icon,
             min=self.min if min is None else min,
@@ -478,6 +482,7 @@ class Box:
             hotkey=self.hotkey,
             popup=self.popup,
             style=self.style,
+            disabled=self.disabled,
             image=self.image,
             icon=self.icon,
             min=self.min,
@@ -519,6 +524,7 @@ class Box:
             hotkey=self.hotkey,
             popup=self.popup,
             style=self.style,
+            disabled= self.disabled,
             image=self.image,
             icon=self.icon,
             min=self.min,
