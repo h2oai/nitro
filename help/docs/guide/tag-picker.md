@@ -85,3 +85,21 @@ while True:
 
 
 ![Screenshot](assets/screenshots/tag_picker_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box(
+    'Choose some tags',
+    mode='tag',
+    options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'],
+    disabled=True,
+))
+```
+
+
+![Screenshot](assets/screenshots/tag_picker_disable.png)

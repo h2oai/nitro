@@ -70,3 +70,14 @@ def tag_picker_live(view: View):  # height 2
             ),
             f'You chose {tags}.'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def tag_picker_disable(view: View):  # height 2
+    view(box(
+        'Choose some tags',
+        mode='tag',
+        options=['violet', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red'],
+        disabled=True,
+    ))

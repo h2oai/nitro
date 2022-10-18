@@ -22,7 +22,8 @@ const keysFromTags = (tags: ITag[]) => tags.map(tag => String(tag.key))
 
 export const TagPicker = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, options: rawOptions, style } = box,
+    { name, modes, text, options: rawOptions, style, disabled: rawDisabled } = box,
+    disabled = rawDisabled === true,
     options = rawOptions ?? [],
     live = modes.has('live'),
     selectedOptions = selectedsOf(box),
@@ -48,7 +49,7 @@ export const TagPicker = make(({ context, box }: BoxProps) => {
     render = () => {
       return (
         <div className={css('flex flex-col', style)} data-name={name}>
-          {text && <Label>{text}</Label>}
+          {text && <Label disabled={disabled}>{text}</Label>}
           <FTagPicker
             pickerSuggestionsProps={{
               suggestionsHeaderText: 'Suggestions',
@@ -59,6 +60,7 @@ export const TagPicker = make(({ context, box }: BoxProps) => {
             onEmptyResolveSuggestions={whenEmpty}
             defaultSelectedItems={initialTags}
             onChange={onChange}
+            disabled={disabled}
           />
         </div>
       )
