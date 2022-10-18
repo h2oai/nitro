@@ -21,7 +21,7 @@ import { BoxProps, make } from './ui';
 
 export const Droplist = make(({ context, box }: BoxProps) => {
   const
-    { name, modes, text, placeholder, error, options: rawOptions, style } = box,
+    { name, modes, text, placeholder, error, options: rawOptions, style, disabled } = box,
     options = rawOptions ?? [],
     required = modes.has('required'),
     live = modes.has('live'),
@@ -53,6 +53,7 @@ export const Droplist = make(({ context, box }: BoxProps) => {
           errorMessage={error}
           required={required ? true : false}
           onChange={onChange}
+          disabled={disabled === true}
         />
       </div>
     )

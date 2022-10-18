@@ -73,3 +73,14 @@ def multi_dropdown_live(view: View):  # height 3
             ),
             f'You chose {choices}.'
         )
+
+
+# ## Disable
+# Set `disabled=True` to disable.
+def multi_dropdown_disable(view: View):  # height 2
+    view(box(
+        'Choose some colors',
+        mode='multi menu',
+        options=['green', 'yellow', 'orange', 'red'],
+        disabled=True
+    ))

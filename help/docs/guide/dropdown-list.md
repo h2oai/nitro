@@ -88,3 +88,21 @@ while True:
 
 
 ![Screenshot](assets/screenshots/multi_dropdown_live.png)
+
+
+## Disable
+
+Set `disabled=True` to disable.
+
+
+```py
+view(box(
+    'Choose some colors',
+    mode='multi menu',
+    options=['green', 'yellow', 'orange', 'red'],
+    disabled=True
+))
+```
+
+
+![Screenshot](assets/screenshots/multi_dropdown_disable.png)
