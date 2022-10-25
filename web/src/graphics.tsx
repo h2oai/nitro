@@ -29,6 +29,18 @@ const
       d: Array<S | F> = []
     for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i], h, 0))
     return d.join(' ')
+  },
+  makeAreaY = (ys: F[], w: F, h: F) => {
+    const n = ys.length
+    if (n < 2) return ''
+    const
+      dx = w / (n - 1),
+      d: Array<S | F> = []
+    d.push('M', 0, h)
+    for (let i = 0; i < n; i++) d.push('L', dx * i, lerp(ys[i], h, 0))
+    d.push('L', w, h)
+    d.push('Z')
+    return d.join(' ')
   }
 export const Graphic = ({ context, box }: BoxProps) => {
   const { modes, style, data } = box
@@ -52,6 +64,14 @@ export const Graphic = ({ context, box }: BoxProps) => {
         path.setAttribute('d', makeLineY(clamp1s(data as F[]), w, h));
         path.setAttribute('fill', 'none');
         path.setAttribute('stroke', color);
+        path.setAttribute('stroke-linecap', 'round')
+        path.setAttribute('stroke-linejoin', 'round')
+        svg.appendChild(path)
+      } else if (modes.has('area-y')) {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        path.setAttribute('d', makeAreaY(clamp1s(data as F[]), w, h));
+        path.setAttribute('fill', color);
+        path.setAttribute('stroke', 'none');
         path.setAttribute('stroke-linecap', 'round')
         path.setAttribute('stroke-linejoin', 'round')
         svg.appendChild(path)
