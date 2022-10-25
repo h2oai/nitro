@@ -50,6 +50,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 # #include banner.py
 # #include progress_bar.py
 # #include spinner.py
+# #include graphics.py
 # #include format.py
 # #include format_number.py
 # #include format_date.py

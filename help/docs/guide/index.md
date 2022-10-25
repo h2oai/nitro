@@ -450,6 +450,11 @@ and it's unsure how long it will take to complete.
 - [Set alignment](spinner.md#set-alignment)
 - [Remove text](spinner.md#remove-text)
 
+## Graphics
+
+Draw microcharts, sparklines, and other data graphics.
+
+- [Line Y](graphics.md#line-y)
 ## Format
 
 Learn the basics of formatting and templates.

@@ -31,6 +31,7 @@ import { Dropdown } from './dropdown';
 import { Droplist } from './droplist';
 import { Expander } from './expander';
 import { FileUpload } from './file_upload';
+import { Graphic } from './graphics';
 import { Help } from './help';
 import { PluginBox } from './plugin';
 import { ProgressBar } from './progress';
@@ -98,6 +99,7 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   if (modes.has('day') || modes.has('month') || modes.has('week'))
     return <Calendar context={context} box={box} />
   if (modes.has('file')) return <FileUpload context={context} box={box} />
+  if (modes.has('g')) return <Graphic context={context} box={box} />
   if (modes.has('menu')) return (
     modes.has('editable')
       ? <ComboBox context={context} box={box} />
@@ -126,6 +128,7 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   if (modes.has('text') || modes.has('password')) return <Textbox context={context} box={box} />
   if (modes.has('time')) return <TimePicker context={context} box={box} />
   if (modes.has('web')) return <WebView context={context} box={box} />
+
 
   for (const mode of modes) {
     const i = mode.indexOf(':')

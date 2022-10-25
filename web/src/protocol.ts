@@ -139,6 +139,7 @@ export const boxTypes = {
   error: { input: false, labeled: false },
   file: { input: true, labeled: false },
   group: { input: false, labeled: false },
+  g: { input: false, labeled: false },
   info: { input: false, labeled: false },
   md: { input: false, labeled: false }, // not an input unless it contains hyperlinks
   menu: { input: true, labeled: true },
@@ -177,6 +178,7 @@ export type BoxModifier = 'live'
   | 'vertical'
   | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
   | 'open' | 'closed'
+  | 'line-y' | 'area-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'winloss'
 
 export type BoxT = BoxMode | BoxModifier
 

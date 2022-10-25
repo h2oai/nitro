@@ -197,6 +197,7 @@ nav:
     - 'guide/banner.md'
     - 'guide/progress-bar.md'
     - 'guide/spinner.md'
+    - 'guide/graphics.md'
     - 'guide/format.md'
     - 'guide/format-numbers.md'
     - 'guide/format-dates.md'
