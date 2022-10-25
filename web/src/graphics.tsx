@@ -42,6 +42,21 @@ const
     d.push('Z')
     return d.join(' ')
   },
+  makeStepY = (ys: F[], w: F, h: F) => {
+    const n = ys.length
+    if (n < 1) return ''
+    const
+      dx = w / n,
+      d: Array<S | F> = []
+    d.push('M', 0, h)
+    for (let i = 0; i < n; i++) {
+      d.push('V', lerp(ys[i], h, 0))
+      d.push('h', dx)
+    }
+    d.push('V', w, h)
+    d.push('Z')
+    return d.join(' ')
+  },
   makeBarY = (ys: F[], w: F, h: F) => {
     const n = ys.length
     if (n < 1) return ''
@@ -92,6 +107,14 @@ export const Graphic = ({ context, box }: BoxProps) => {
       } else if (modes.has('area-y')) {
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
         path.setAttribute('d', makeAreaY(clamp1s(data as F[]), w, h));
+        path.setAttribute('fill', color);
+        path.setAttribute('stroke', 'none');
+        path.setAttribute('stroke-linecap', 'round')
+        path.setAttribute('stroke-linejoin', 'round')
+        svg.appendChild(path)
+      } else if (modes.has('step-y')) {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        path.setAttribute('d', makeStepY(clamp1s(data as F[]), w, h));
         path.setAttribute('fill', color);
         path.setAttribute('stroke', 'none');
         path.setAttribute('stroke-linecap', 'round')
