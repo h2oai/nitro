@@ -178,7 +178,7 @@ export type BoxModifier = 'live'
   | 'vertical'
   | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
   | 'open' | 'closed'
-  | 'line-y' | 'area-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'winloss'
+  | 'line-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y'
 
 export type BoxT = BoxMode | BoxModifier
 

@@ -21,40 +21,36 @@ from h2o_nitro import View, box, row, col, option, lorem
 # ## Line Y
 def graphics_line_y(view: View):  # height 3
     view(
-        box(mode='g line-y', style='h-8', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
-    )
-
-
-# ## Area Y
-def graphics_area_y(view: View):  # height 3
-    view(
-        box(mode='g area-y', style='h-8', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+        box(mode='g line-y', style='h-8 fill-indigo-100 stroke-indigo-700',
+            data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
     )
 
 
 # ## Step Y
 def graphics_step_y(view: View):  # height 3
     view(
-        box(mode='g step-y', style='h-8', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+        box(mode='g step-y', style='h-8 fill-indigo-100 stroke-indigo-700',
+            data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
     )
 
 
 # ## Bar Y
 def graphics_bar_y(view: View):  # height 3
     view(
-        box(mode='g bar-y', style='h-8', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+        box(mode='g bar-y', style='h-8 fill-indigo-100 stroke-indigo-700',
+            data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
     )
 
 
 # ## Stroke Y
 def graphics_stroke_y(view: View):  # height 3
     view(
-        box(mode='g stroke-y', style='h-8', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+        box(mode='g stroke-y', style='h-8 stroke-indigo-700', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
     )
 
 
 # ## Tick Y
 def graphics_tick_y(view: View):  # height 3
     view(
-        box(mode='g tick-y', style='h-8', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+        box(mode='g tick-y', style='h-8 stroke-indigo-700', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
     )
