@@ -18,7 +18,7 @@ collectSlugs = () ->
     a = await sublinks.nth i
     slugs.push await a.getAttribute 'href'
   start = slugs.indexOf '/docs/aspect-ratio'
-  end = slugs.indexOf '/docs/will-change'
+  end = slugs.indexOf '/docs/stroke-width'
   slugs.slice start, end + 1
 
 collectNames = (names, slug) ->
