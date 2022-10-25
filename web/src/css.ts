@@ -23,6 +23,7 @@ const palette = createPalette()
 const
   strs = (xs: U[]) => xs.map(x => '' + x),
   eq = (k: S) => (x: S) => { if (x === k) return x },
+  int = (x: S) => { if (/^\d+$/.test(x)) return x },
   either = (...matchers: Match[]) => (x: S) => {
     for (const m of matchers) {
       const v = m(x)
@@ -1054,6 +1055,19 @@ rule('will-change', [map({
   contents: 'contents',
   transform: 'transform',
 }), v => `will-change:${v}`])
+
+rule('fill',
+  [namedColor, v => `fill:${v}`],
+  [color, v => `fill:rgb(${v})`],
+)
+rule('stroke',
+  [namedColor, v => `stroke:${v}`],
+  [color, v => `stroke:rgb(${v})`],
+  // Tailwind only supports 0, 1, and 2, which is odd.
+  // Other widths requires stroke-[10px] syntax, which might lead to conflicts with stroke-color, since both color and width use stroke-.
+  // We deviate from Tailwind here by accepting any integer as a valid stroke-width.
+  [int, v => `stroke-width:${v}`],
+)
 
 repl('content-none', '--tw-content:none;content:var(--tw-content)')
 
