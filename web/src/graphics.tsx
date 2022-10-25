@@ -78,6 +78,19 @@ const
     d.push('V', w, h)
     d.push('Z')
     return d.join(' ')
+  },
+  makeStrokeY = (ys: F[], w: F, h: F) => {
+    const n = ys.length
+    if (n < 1) return ''
+    const
+      dx = Math.floor(w / n),
+      dx2 = dx / 2,
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) {
+      d.push('M', dx2 + dx * i, h)
+      d.push('V', lerp(ys[i], h, 0))
+    }
+    return d.join(' ')
   }
 export const Graphic = ({ context, box }: BoxProps) => {
   const { modes, style, data } = box
