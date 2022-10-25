@@ -30,7 +30,7 @@ const
     for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i], h, 0))
     return d.join(' ')
   },
-  makeAreaY = (ys: F[], w: F, h: F) => {
+  makeLineYFill = (ys: F[], w: F, h: F) => {
     const n = ys.length
     if (n < 2) return ''
     const
@@ -43,6 +43,23 @@ const
     return d.join(' ')
   },
   makeStepY = (ys: F[], w: F, h: F) => {
+    const n = ys.length
+    if (n < 1) return ''
+    const
+      dx = w / n,
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) {
+      const y = lerp(ys[i], h, 0)
+      if (i) {
+        d.push('V', y)
+      } else {
+        d.push('M', 0, y)
+      }
+      d.push('h', dx)
+    }
+    return d.join(' ')
+  },
+  makeStepYFill = (ys: F[], w: F, h: F) => {
     const n = ys.length
     if (n < 1) return ''
     const
@@ -61,7 +78,7 @@ const
     const n = ys.length
     if (n < 1) return ''
     const
-      dx = Math.floor(w / n),
+      dx = (w / n) - 1, // 1px gap
       d: Array<S | F> = [],
       n1 = n - 1
     d.push('M', 0, h)
@@ -71,7 +88,7 @@ const
       d.push('h', dx)
       if (i < n1) {
         d.push('V', h)
-        d.push('h', 1)
+        d.push('h', 1) // gap
         d.push('V', y)
       }
     }
@@ -83,7 +100,7 @@ const
     const n = ys.length
     if (n < 1) return ''
     const
-      dx = Math.floor(w / n),
+      dx = w / n,
       dx2 = dx / 2,
       d: Array<S | F> = []
     for (let i = 0; i < n; i++) {
@@ -96,7 +113,7 @@ const
     const n = ys.length
     if (n < 1) return ''
     const
-      dx = Math.floor(w / n),
+      dx = w / n,
       d: Array<S | F> = []
     for (let i = 0; i < n; i++) {
       d.push('M', dx * i, lerp(ys[i], h, 0))
@@ -128,18 +145,24 @@ export const Graphic = ({ context, box }: BoxProps) => {
         line.setAttribute('stroke-linejoin', 'round')
         svg.appendChild(line)
         const area = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        area.setAttribute('d', makeAreaY(clamp1s(data as F[]), w, h));
+        area.setAttribute('d', makeLineYFill(clamp1s(data as F[]), w, h));
         area.setAttribute('stroke', 'none'); // inherit fill
         area.setAttribute('stroke-linecap', 'round')
         area.setAttribute('stroke-linejoin', 'round')
         svg.appendChild(area)
       } else if (modes.has('step-y')) {
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        path.setAttribute('d', makeStepY(clamp1s(data as F[]), w, h));
-        path.setAttribute('stroke', 'none');
-        path.setAttribute('stroke-linecap', 'round')
-        path.setAttribute('stroke-linejoin', 'round')
-        svg.appendChild(path)
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        line.setAttribute('d', makeStepY(clamp1s(data as F[]), w, h));
+        line.setAttribute('fill', 'none');
+        line.setAttribute('stroke-linecap', 'round')
+        line.setAttribute('stroke-linejoin', 'round')
+        svg.appendChild(line)
+        const area = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        area.setAttribute('d', makeStepYFill(clamp1s(data as F[]), w, h));
+        area.setAttribute('stroke', 'none'); // inherit fill
+        area.setAttribute('stroke-linecap', 'round')
+        area.setAttribute('stroke-linejoin', 'round')
+        svg.appendChild(area)
       } else if (modes.has('bar-y')) {
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
         path.setAttribute('d', makeBarY(clamp1s(data as F[]), w, h));

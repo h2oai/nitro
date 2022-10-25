@@ -9,8 +9,11 @@ Draw microcharts, sparklines, and other data graphics.
 
 ```py
 view(
-    box(mode='g line-y', style='h-8 fill-indigo-100 stroke-indigo-700',
-        data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+    box(
+        mode='g line-y',
+        style='h-8 fill-indigo-100 stroke-indigo-700',
+        data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 6,
+    ),
 )
 ```
 
@@ -22,8 +25,11 @@ view(
 
 ```py
 view(
-    box(mode='g step-y', style='h-8 fill-indigo-100 stroke-indigo-700',
-        data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+    box(
+        mode='g step-y',
+        style='h-8 fill-indigo-100 stroke-indigo-700',
+        data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 6,
+    ),
 )
 ```
 
@@ -35,8 +41,11 @@ view(
 
 ```py
 view(
-    box(mode='g bar-y', style='h-8 fill-indigo-100 stroke-indigo-700',
-        data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+    box(
+        mode='g bar-y',
+        style='h-8 fill-indigo-700',
+        data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 6,
+    ),
 )
 ```
 
@@ -48,7 +57,11 @@ view(
 
 ```py
 view(
-    box(mode='g stroke-y', style='h-8 stroke-indigo-700', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+    box(
+        mode='g stroke-y',
+        style='h-8 stroke-indigo-700',
+        data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 12,
+    ),
 )
 ```
 
@@ -60,7 +73,11 @@ view(
 
 ```py
 view(
-    box(mode='g tick-y', style='h-8 stroke-indigo-700', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+    box(
+        mode='g tick-y',
+        style='h-8 stroke-indigo-700',
+        data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 12,
+    ),
 )
 ```
 
