@@ -91,6 +91,18 @@ const
       d.push('V', lerp(ys[i], h, 0))
     }
     return d.join(' ')
+  },
+  makeTickY = (ys: F[], w: F, h: F) => {
+    const n = ys.length
+    if (n < 1) return ''
+    const
+      dx = Math.floor(w / n),
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) {
+      d.push('M', dx * i, lerp(ys[i], h, 0))
+      d.push('h', dx)
+    }
+    return d.join(' ')
   }
 export const Graphic = ({ context, box }: BoxProps) => {
   const { modes, style, data } = box
@@ -141,7 +153,24 @@ export const Graphic = ({ context, box }: BoxProps) => {
         path.setAttribute('stroke-linecap', 'round')
         path.setAttribute('stroke-linejoin', 'round')
         svg.appendChild(path)
+      } else if (modes.has('stroke-y')) {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        path.setAttribute('d', makeStrokeY(clamp1s(data as F[]), w, h));
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-linecap', 'round')
+        path.setAttribute('stroke-linejoin', 'round')
+        svg.appendChild(path)
+      } else if (modes.has('tick-y')) {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        path.setAttribute('d', makeTickY(clamp1s(data as F[]), w, h));
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-linecap', 'round')
+        path.setAttribute('stroke-linejoin', 'round')
+        svg.appendChild(path)
       }
+
       while (div.firstChild) div.removeChild(div.firstChild)
       div.appendChild(svg)
     }

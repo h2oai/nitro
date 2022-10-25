@@ -459,6 +459,8 @@ Draw microcharts, sparklines, and other data graphics.
 - [Step Y](graphics.md#step-y)
 - [Bar Y](graphics.md#bar-y)
 - [Stroke Y](graphics.md#stroke-y)
+- [Tick Y](graphics.md#tick-y)
+
 ## Format
 
 Learn the basics of formatting and templates.

@@ -52,3 +52,9 @@ def graphics_stroke_y(view: View):  # height 3
         box(mode='g stroke-y', style='h-8', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
     )
 
+
+# ## Tick Y
+def graphics_tick_y(view: View):  # height 3
+    view(
+        box(mode='g tick-y', style='h-8', data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5]),
+    )
