@@ -83,3 +83,35 @@ view(
 
 
 ![Screenshot](assets/screenshots/graphics_tick_y.png)
+
+
+## Guide X
+
+```py
+view(
+    box(
+        mode='g guide-x',
+        style='h-8 stroke-indigo-700',
+        data=[0, 0.2, 0.4, 0.6, 0.8, 0.85, 0.9, 0.95, 0.975, 1],
+    ),
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_guide_x.png)
+
+
+## Guide Y
+
+```py
+view(
+    box(
+        mode='g guide-y',
+        style='h-48 w-8 stroke-indigo-700',
+        data=[0, 0.2, 0.4, 0.6, 0.8, 0.85, 0.9, 0.95, 0.975, 1],
+    ),
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_guide_y.png)

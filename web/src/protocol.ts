@@ -178,7 +178,10 @@ export type BoxModifier = 'live'
   | 'vertical'
   | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
   | 'open' | 'closed'
-  | 'line-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y'
+  // Graphics ("g") modes:
+  | 'arc' | 'circle'
+  | 'guide-x'
+  | 'line-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'guide-y'
 
 export type BoxT = BoxMode | BoxModifier
 

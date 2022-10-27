@@ -71,3 +71,14 @@ def graphics_tick_y(view: View):  # height 3
             data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 12,
         ),
     )
+
+
+# ## Guide X
+def graphics_guide_x(view: View):  # height 3
+    view(
+        box(
+            mode='g guide-x',
+            style='h-8 stroke-indigo-700',
+            data=[0, 0.2, 0.4, 0.6, 0.8, 0.85, 0.9, 0.95, 0.975, 1],
+        ),
+    )
