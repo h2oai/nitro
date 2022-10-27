@@ -137,15 +137,22 @@ const
       d: Array<S | F> = []
     for (let i = 0; i < n; i++) {
       if (i) {
-        d.push('V', lerp(ys[i][0], h, 0))
+        d.push(
+          'V', lerp(ys[i][0], h, 0),
+          'h', dx
+        )
       } else {
-        d.push('M', 0, lerp(ys[i][0], h, 0))
+        d.push(
+          'M', 0, lerp(ys[i][0], h, 0),
+          'h', dx
+        )
       }
-      d.push('h', dx)
     }
     for (let i = n - 1; i >= 0; i--) {
-      d.push('V', lerp(ys[i][1], h, 0))
-      d.push('h', -dx)
+      d.push(
+        'V', lerp(ys[i][1], h, 0),
+        'h', -dx
+      )
     }
     d.push('Z')
     return newFill(d)
@@ -193,25 +200,50 @@ const
       n = ys.length,
       dx = w / n,
       d: Array<S | F> = []
-    for (let i = 0; i < n; i++) {
-      d.push('M', dx * i, lerp(ys[i], h, 0))
-      d.push('h', dx)
+    let x = 0
+    for (const y of ys) {
+      d.push(
+        'M', x, lerp(y, h, 0),
+        'h', dx
+      )
+      x += dx
+    }
+    return newStroke(d)
+  },
+  makeTickYi = (ys: Pairs, w: F, h: F) => {
+    const
+      n = ys.length,
+      dx = w / n,
+      d: Array<S | F> = []
+    let x = 0
+    for (const y of ys) {
+      d.push(
+        'M', x, lerp(y[0], h, 0),
+        'h', dx,
+        'M', x, lerp(y[1], h, 0),
+        'h', dx
+      )
+      x += dx
     }
     return newStroke(d)
   },
   makeGuideX = (xs: F[], w: F, h: F) => {
     const d: Array<S | F> = []
     for (const x of xs) {
-      d.push('M', lerp(x, 0, w), 0)
-      d.push('v', h)
+      d.push(
+        'M', lerp(x, 0, w), 0,
+        'v', h
+      )
     }
     return newStroke(d)
   },
   makeGuideY = (ys: F[], w: F, h: F) => {
     const d: Array<S | F> = []
     for (const y of ys) {
-      d.push('M', 0, lerp(y, h, 0))
-      d.push('h', w)
+      d.push(
+        'M', 0, lerp(y, h, 0),
+        'h', w
+      )
     }
     return newStroke(d)
   },
@@ -373,7 +405,11 @@ export const Graphic = ({ context, box }: BoxProps) => {
             svg.appendChild(makeStrokeY(data, w, h))
           }
         } else if (modes.has('tick-y')) {
-          svg.appendChild(makeTickY(data, w, h))
+          if (paired) {
+            svg.appendChild(makeTickYi(data, w, h))
+          } else {
+            svg.appendChild(makeTickY(data, w, h))
+          }
         } else if (modes.has('guide-x')) {
           svg.appendChild(makeGuideX(data, w, h))
         } else if (modes.has('guide-y')) {

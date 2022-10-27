@@ -87,8 +87,13 @@ def graphics_tick_y(view: View):  # height 3
     view(
         box(
             mode='g tick-y',
-            style='h-8 stroke-indigo-700',
-            data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 12,
+            style='w-48 h-8 stroke-indigo-700',
+            data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 3,
+        ),
+        box(
+            mode='g tick-y',
+            style='w-48 h-8 stroke-indigo-700',
+            data=[[0.5, 0.8], [0.2, 0.6], [0.3, 0.9], [0.6, 0.7]] * 6,
         ),
     )
 
