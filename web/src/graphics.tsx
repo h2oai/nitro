@@ -17,10 +17,25 @@ import { css } from './css';
 import { useEffect, useRef } from 'react';
 import { F, isN, S } from './core';
 
+type PathD = Array<S | F>
+
 const
   lerp = (f: F, a: F, b: F) => a * (1.0 - f) + (b * f),
   clamp1 = (f: F) => f < 0 ? 0 : f > 1 ? 1 : f,
   clamp1s = (fs: F[]) => fs.map(clamp1),
+  newPath = () => document.createElementNS('http://www.w3.org/2000/svg', 'path'),
+  newFill = (d: PathD) => {
+    const p = newPath()
+    p.setAttribute('stroke', 'none')
+    p.setAttribute('d', d.join(' '))
+    return p
+  },
+  newStroke = (d: PathD) => {
+    const p = newPath()
+    p.setAttribute('fill', 'none')
+    p.setAttribute('d', d.join(' '))
+    return p
+  },
   makeLineY = (ys: F[], w: F, h: F) => {
     const n = ys.length
     if (n < 2) return ''
@@ -151,11 +166,13 @@ const
     r1 *= rmax
     r2 *= rmax
     const r = (r1 + r2) / 2
-    return [
+    const path = newStroke([
       'M', w / 2 - r * Math.cos(t1), h / 2 - r * Math.sin(t1),
       'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(tt), h / 2 - r * Math.sin(tt),
       'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(t2), h / 2 - r * Math.sin(t2)
-    ].join(' ')
+    ])
+    path.setAttribute('stroke-width', String(r2 - r1))
+    return path
   },
   makeCircleFill = (xs: F[], w: F, h: F) => {
     let [a1, a2, r1, r2] = xs
@@ -165,7 +182,7 @@ const
     r1 *= rmax
     r2 *= rmax
     const d1 = r1 * 2, d2 = r2 * 2
-    return [
+    return newFill([
       'M', w / 2, h / 2 - r2,
       'a', r2, r2, 0, 0, 1, 0, d2, // outer arc  1
       'a', r2, r2, 0, 0, 1, 0, -d2, // outer arc 2
@@ -173,7 +190,7 @@ const
       'a', r1, r1, 0, 0, 0, 0, d1, // inner arc 1
       'a', r1, r1, 0, 0, 0, 0, -d1, // inner arc 2
       'Z'
-    ].join(' ')
+    ])
   },
   makeArc = (xs: F[], w: F, h: F) => {
     let [a1, a2, r1, r2] = xs
@@ -188,10 +205,12 @@ const
     r1 *= rmax
     r2 *= rmax
     const r = (r1 + r2) / 2
-    return [
+    const path = newStroke([
       'M', w / 2 - r * Math.cos(t1), h - r * Math.sin(t1),
       'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(t2), h - r * Math.sin(t2)
-    ].join(' ')
+    ])
+    path.setAttribute('stroke-width', String(r2 - r1))
+    return path
   },
   makeArcFill = (xs: F[], w: F, h: F) => {
     const rmax = Math.min(w / 2, h)
@@ -200,13 +219,13 @@ const
     if (!isN(r2)) r2 = 1
     r1 *= rmax
     r2 *= rmax
-    return [
+    return newFill([
       'M', w / 2 - r2, h,
       'a', r2, r2, 0, 0, 1, r2 * 2, 0, // outer arc
       'h', r1 - r2, // slit
       'a', r1, r1, 0, 0, 0, -r1 * 2, 0, // inner arc
       'Z'
-    ].join(' ')
+    ])
   }
 
 export const Graphic = ({ context, box }: BoxProps) => {
@@ -287,28 +306,11 @@ export const Graphic = ({ context, box }: BoxProps) => {
         path.setAttribute('stroke-linejoin', 'round')
         svg.appendChild(path)
       } else if (modes.has('arc')) {
-        const fill = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        fill.setAttribute('d', makeArcFill(clamp1s(data as F[]), w, h))
-        fill.setAttribute('stroke', 'none')
-        // fill.setAttribute('stroke-linecap', 'round')
-        // fill.setAttribute('stroke-linejoin', 'round')
-        svg.appendChild(fill)
-        const stroke = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        stroke.setAttribute('d', makeArc(clamp1s(data as F[]), w, h))
-        stroke.setAttribute('fill', 'none')
-        stroke.setAttribute('stroke-width', '10')
-        svg.appendChild(stroke)
+        svg.appendChild(makeArcFill(clamp1s(data as F[]), w, h))
+        svg.appendChild(makeArc(clamp1s(data as F[]), w, h))
       } else if (modes.has('circle')) {
-        const fill = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        fill.setAttribute('d', makeCircleFill(clamp1s(data as F[]), w, h))
-        fill.setAttribute('stroke', 'none')
-        fill.setAttribute('stroke-linecap', 'round')
-        fill.setAttribute('stroke-linejoin', 'round')
-        svg.appendChild(fill)
-        const stroke = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        stroke.setAttribute('d', makeCircle(clamp1s(data as F[]), w, h))
-        stroke.setAttribute('fill', 'none')
-        svg.appendChild(stroke)
+        svg.appendChild(makeCircleFill(clamp1s(data as F[]), w, h))
+        svg.appendChild(makeCircle(clamp1s(data as F[]), w, h))
       }
 
       while (div.firstChild) div.removeChild(div.firstChild)

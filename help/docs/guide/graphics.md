@@ -126,6 +126,7 @@ view(row(
     box(mode='g circle', style=style, data=[0, 0.35, 0.5, 1]),
     box(mode='g circle', style=style, data=[0, 0.35, 0.5]),
     box(mode='g circle', style=style, data=[0, 0.35, 0.5, 0.75]),
+    box(mode='g circle', style=style, data=[1, 0.35, 0.5, 1]),
 ))
 ```
 
@@ -138,10 +139,10 @@ view(row(
 ```py
 style = 'w-24 h-12 fill-indigo-100 stroke-indigo-700'
 view(row(
-    box(mode='g arc', style=style, data=[0, 0.5]),
-    box(mode='g arc', style=style, data=[0, 0.5, 0.5, 1]),
-    box(mode='g arc', style=style, data=[0, 0.5, 0.5]),
-    box(mode='g arc', style=style, data=[0, 0.5, 0.5, 0.75]),
+    box(mode='g arc', style=style, data=[0, 0.35]),
+    box(mode='g arc', style=style, data=[0, 0.35, 0.5, 1]),
+    box(mode='g arc', style=style, data=[0, 0.35, 0.5]),
+    box(mode='g arc', style=style, data=[0, 0.35, 0.5, 0.75]),
     box(mode='g arc', style=style, data=[1, 0.35, 0.5, 1]),
 ))
 ```
