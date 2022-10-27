@@ -461,6 +461,7 @@ Draw microcharts, sparklines, and other data graphics.
 - [Tick Y](graphics.md#tick-y)
 - [Guide X](graphics.md#guide-x)
 - [Guide Y](graphics.md#guide-y)
+- [Circle](graphics.md#circle)
 
 ## Format
 

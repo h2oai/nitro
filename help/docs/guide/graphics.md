@@ -115,3 +115,19 @@ view(
 
 
 ![Screenshot](assets/screenshots/graphics_guide_y.png)
+
+
+## Circle
+
+```py
+style = 'w-24 h-24 fill-indigo-100 stroke-indigo-700'
+view(row(
+    box(mode='g circle', style=style, data=[0, 0.35]),
+    box(mode='g circle', style=style, data=[0, 0.35, 0.5, 1]),
+    box(mode='g circle', style=style, data=[0, 0.35, 0.5]),
+    box(mode='g circle', style=style, data=[0, 0.35, 0.5, 0.75]),
+))
+```
+
+
+![Screenshot](assets/screenshots/graphics_circle.png)
