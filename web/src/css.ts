@@ -1056,12 +1056,14 @@ rule('will-change', [map({
   transform: 'transform',
 }), v => `will-change:${v}`])
 
+const noneOrNamed = either(none, namedColor)
+
 rule('fill',
-  [namedColor, v => `fill:${v}`],
+  [noneOrNamed, v => `fill:${v}`],
   [color, v => `fill:rgb(${v})`],
 )
 rule('stroke',
-  [namedColor, v => `stroke:${v}`],
+  [noneOrNamed, v => `stroke:${v}`],
   [color, v => `stroke:rgb(${v})`],
   // Tailwind only supports 0, 1, and 2, which is odd.
   // Other widths requires stroke-[10px] syntax, which might lead to conflicts with stroke-color, since both color and width use stroke-.
