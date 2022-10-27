@@ -174,7 +174,41 @@ const
       'a', r1, r1, 0, 0, 0, 0, -d1, // inner arc 2
       'Z'
     ].join(' ')
+  },
+  makeArc = (xs: F[], w: F, h: F) => {
+    let [a1, a2, r1, r2] = xs
+    if (!isN(a1)) a1 = 0
+    if (!isN(a2)) a2 = 0
+    if (!isN(r1)) r1 = 0
+    if (!isN(r2)) r2 = 1
+    const
+      rmax = Math.min(w / 2, h),
+      t1 = Math.PI * Math.min(a1, a2),
+      t2 = Math.PI * Math.max(a1, a2)
+    r1 *= rmax
+    r2 *= rmax
+    const r = (r1 + r2) / 2
+    return [
+      'M', w / 2 - r * Math.cos(t1), h - r * Math.sin(t1),
+      'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(t2), h - r * Math.sin(t2)
+    ].join(' ')
+  },
+  makeArcFill = (xs: F[], w: F, h: F) => {
+    const rmax = Math.min(w / 2, h)
+    let [a1, a2, r1, r2] = xs
+    if (!isN(r1)) r1 = 0
+    if (!isN(r2)) r2 = 1
+    r1 *= rmax
+    r2 *= rmax
+    return [
+      'M', w / 2 - r2, h,
+      'a', r2, r2, 0, 0, 1, r2 * 2, 0, // outer arc
+      'h', r1 - r2, // slit
+      'a', r1, r1, 0, 0, 0, -r1 * 2, 0, // inner arc
+      'Z'
+    ].join(' ')
   }
+
 export const Graphic = ({ context, box }: BoxProps) => {
   const { modes, style, data } = box
   const ref = useRef<HTMLDivElement>(null)
@@ -252,6 +286,18 @@ export const Graphic = ({ context, box }: BoxProps) => {
         path.setAttribute('stroke-linecap', 'round')
         path.setAttribute('stroke-linejoin', 'round')
         svg.appendChild(path)
+      } else if (modes.has('arc')) {
+        const fill = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        fill.setAttribute('d', makeArcFill(clamp1s(data as F[]), w, h))
+        fill.setAttribute('stroke', 'none')
+        // fill.setAttribute('stroke-linecap', 'round')
+        // fill.setAttribute('stroke-linejoin', 'round')
+        svg.appendChild(fill)
+        const stroke = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        stroke.setAttribute('d', makeArc(clamp1s(data as F[]), w, h))
+        stroke.setAttribute('fill', 'none')
+        stroke.setAttribute('stroke-width', '10')
+        svg.appendChild(stroke)
       } else if (modes.has('circle')) {
         const fill = document.createElementNS('http://www.w3.org/2000/svg', 'path')
         fill.setAttribute('d', makeCircleFill(clamp1s(data as F[]), w, h))
