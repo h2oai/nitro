@@ -65,8 +65,10 @@ const
       n = ys.length,
       dx = w / (n - 1),
       d: Array<S | F> = []
-    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][0], h, 0))
-    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][1], h, 0))
+    for (const j of [0, 1]) {
+      for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][j], h, 0))
+    }
+
     return newStroke(d)
   },
   makeLineYFilli = (ys: Pairs, w: F, h: F) => {
@@ -106,6 +108,45 @@ const
       d.push('h', dx)
     }
     d.push('V', w, h)
+    d.push('Z')
+    return newFill(d)
+  },
+  makeStepYi = (ys: Pairs, w: F, h: F) => {
+    const
+      n = ys.length,
+      dx = w / n,
+      d: Array<S | F> = []
+    for (const j of [0, 1]) {
+      for (let i = 0; i < n; i++) {
+        const y = lerp(ys[i][j], h, 0)
+        if (i) {
+          d.push('V', y)
+        } else {
+          d.push('M', 0, y)
+        }
+        d.push('h', dx)
+      }
+    }
+    return newStroke(d)
+  },
+  makeStepYFilli = (ys: Pairs, w: F, h: F) => {
+    console.log('in filli')
+    const
+      n = ys.length,
+      dx = w / n,
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) {
+      if (i) {
+        d.push('V', lerp(ys[i][0], h, 0))
+      } else {
+        d.push('M', 0, lerp(ys[i][0], h, 0))
+      }
+      d.push('h', dx)
+    }
+    for (let i = n - 1; i >= 0; i--) {
+      d.push('V', lerp(ys[i][1], h, 0))
+      d.push('h', -dx)
+    }
     d.push('Z')
     return newFill(d)
   },
@@ -307,8 +348,13 @@ export const Graphic = ({ context, box }: BoxProps) => {
             svg.appendChild(makeLineY(data, w, h))
           }
         } else if (modes.has('step-y')) {
-          svg.appendChild(makeStepYFill(data, w, h))
-          svg.appendChild(makeStepY(data, w, h))
+          if (paired) {
+            svg.appendChild(makeStepYFilli(data, w, h))
+            svg.appendChild(makeStepYi(data, w, h))
+          } else {
+            svg.appendChild(makeStepYFill(data, w, h))
+            svg.appendChild(makeStepY(data, w, h))
+          }
         } else if (modes.has('interval-y')) {
           svg.appendChild(makeIntervalY(data, w, h))
         } else if (modes.has('stroke-y')) {
