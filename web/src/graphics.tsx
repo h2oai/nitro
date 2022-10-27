@@ -60,6 +60,25 @@ const
     d.push('Z')
     return newFill(d)
   },
+  makeLineYi = (ys: Pairs, w: F, h: F) => {
+    const
+      n = ys.length,
+      dx = w / (n - 1),
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][0], h, 0))
+    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][1], h, 0))
+    return newStroke(d)
+  },
+  makeLineYFilli = (ys: Pairs, w: F, h: F) => {
+    const
+      n = ys.length,
+      dx = w / (n - 1),
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][0], h, 0))
+    for (let i = n - 1; i >= 0; i--) d.push('L', dx * i, lerp(ys[i][1], h, 0))
+    d.push('Z')
+    return newFill(d)
+  },
   makeStepY = (ys: F[], w: F, h: F) => {
     const
       n = ys.length,
@@ -259,9 +278,11 @@ const
 
 export const Graphic = ({ context, box }: BoxProps) => {
   const
-    { modes, style, data: unclamped } = box,
+    { modes, style, data: rawData } = box,
     ref = useRef<HTMLDivElement>(null),
-    data = clamp1s(unclamped as F[])
+    unclamped: any = rawData || [],
+    paired = arePairs(unclamped),
+    data: any = paired ? unclamped.map(clamp1s) : clamp1s(unclamped)
 
   useEffect(() => {
     const div = ref.current
@@ -278,11 +299,16 @@ export const Graphic = ({ context, box }: BoxProps) => {
 
       if (data.length) {
         if (modes.has('line-y')) {
-          svg.appendChild(makeLineY(data, w, h))
-          svg.appendChild(makeLineYFill(data, w, h))
+          if (paired) {
+            svg.appendChild(makeLineYFilli(data, w, h))
+            svg.appendChild(makeLineYi(data, w, h))
+          } else {
+            svg.appendChild(makeLineYFill(data, w, h))
+            svg.appendChild(makeLineY(data, w, h))
+          }
         } else if (modes.has('step-y')) {
-          svg.appendChild(makeStepY(data, w, h))
           svg.appendChild(makeStepYFill(data, w, h))
+          svg.appendChild(makeStepY(data, w, h))
         } else if (modes.has('interval-y')) {
           svg.appendChild(makeIntervalY(data, w, h))
         } else if (modes.has('stroke-y')) {
