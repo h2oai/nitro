@@ -151,35 +151,40 @@ const
     return newFill(d)
   },
   makeIntervalY = (ys: F[], w: F, h: F) => {
-    const
-      n = ys.length,
-      dx = (w / n) - 1, // 1px gap
-      d: Array<S | F> = [],
-      n1 = n - 1
-    d.push('M', 0, h)
-    for (let i = 0; i < n; i++) {
-      const y = lerp(ys[i], h, 0)
-      d.push('V', y)
-      d.push('h', dx)
-      if (i < n1) {
-        d.push('V', h)
-        d.push('h', 1) // gap
-        d.push('V', y)
-      }
-    }
-    d.push('V', w, h)
-    d.push('Z')
-    return newFill(d)
+    const p = makeStrokeY(ys, w, h)
+    p.setAttribute('stroke-width', String(w / ys.length - 1)) // 1px gap
+    return p
+  },
+  makeIntervalYi = (ys: Pairs, w: F, h: F) => {
+    const p = makeStrokeYi(ys, w, h)
+    p.setAttribute('stroke-width', String(w / ys.length - 1)) // 1px gap
+    return p
   },
   makeStrokeY = (ys: F[], w: F, h: F) => {
     const
-      n = ys.length,
-      dx = w / n,
-      dx2 = dx / 2,
-      d: Array<S | F> = []
-    for (let i = 0; i < n; i++) {
-      d.push('M', dx2 + dx * i, h)
-      d.push('V', lerp(ys[i], h, 0))
+      d: Array<S | F> = [],
+      dx = w / ys.length
+    let x = dx / 2
+    for (const y of ys) {
+      d.push(
+        'M', x, h,
+        'V', lerp(y, h, 0)
+      )
+      x += dx
+    }
+    return newStroke(d)
+  },
+  makeStrokeYi = (ys: Pairs, w: F, h: F) => {
+    const
+      d: Array<S | F> = [],
+      dx = w / ys.length
+    let x = dx / 2
+    for (const y of ys) {
+      d.push(
+        'M', x, lerp(y[0], h, 0),
+        'V', lerp(y[1], h, 0)
+      )
+      x += dx
     }
     return newStroke(d)
   },
@@ -356,9 +361,17 @@ export const Graphic = ({ context, box }: BoxProps) => {
             svg.appendChild(makeStepY(data, w, h))
           }
         } else if (modes.has('interval-y')) {
-          svg.appendChild(makeIntervalY(data, w, h))
+          if (paired) {
+            svg.appendChild(makeIntervalYi(data, w, h))
+          } else {
+            svg.appendChild(makeIntervalY(data, w, h))
+          }
         } else if (modes.has('stroke-y')) {
-          svg.appendChild(makeStrokeY(data, w, h))
+          if (paired) {
+            svg.appendChild(makeStrokeYi(data, w, h))
+          } else {
+            svg.appendChild(makeStrokeY(data, w, h))
+          }
         } else if (modes.has('tick-y')) {
           svg.appendChild(makeTickY(data, w, h))
         } else if (modes.has('guide-x')) {
