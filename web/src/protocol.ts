@@ -180,8 +180,8 @@ export type BoxModifier = 'live'
   | 'open' | 'closed'
   // Graphics ("g") modes:
   | 'arc' | 'circle'
-  | 'guide-x'
-  | 'line-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'guide-y'
+  | 'guide-x' | 'bar-x'
+  | 'line-y' | 'step-y' | 'interval-y' | 'stroke-y' | 'tick-y' | 'guide-y' | 'bar-y'
 
 export type BoxT = BoxMode | BoxModifier
 

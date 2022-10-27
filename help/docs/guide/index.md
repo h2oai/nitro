@@ -456,11 +456,13 @@ Draw microcharts, sparklines, and other data graphics.
 
 - [Line Y](graphics.md#line-y)
 - [Step Y](graphics.md#step-y)
-- [Bar Y](graphics.md#bar-y)
+- [Interval Y](graphics.md#interval-y)
 - [Stroke Y](graphics.md#stroke-y)
 - [Tick Y](graphics.md#tick-y)
 - [Guide X](graphics.md#guide-x)
 - [Guide Y](graphics.md#guide-y)
+- [Bar X](graphics.md#bar-x)
+- [Bar Y](graphics.md#bar-y)
 - [Circle](graphics.md#circle)
 - [Arc](graphics.md#arc)
 

@@ -37,12 +37,12 @@ view(
 ![Screenshot](assets/screenshots/graphics_step_y.png)
 
 
-## Bar Y
+## Interval Y
 
 ```py
 view(
     box(
-        mode='g bar-y',
+        mode='g interval-y',
         style='h-8 fill-indigo-700',
         data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 6,
     ),
@@ -50,7 +50,7 @@ view(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_bar_y.png)
+![Screenshot](assets/screenshots/graphics_interval_y.png)
 
 
 ## Stroke Y
@@ -115,6 +115,34 @@ view(
 
 
 ![Screenshot](assets/screenshots/graphics_guide_y.png)
+
+
+## Bar X
+
+```py
+style = 'w-48 h-2 fill-indigo-100 stroke-indigo-700'
+view(
+    box(mode='g bar-x', style=style, data=[0, 0.35]),
+    box(mode='g bar-x', style=style, data=[0.35, 1]),
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_bar_x.png)
+
+
+## Bar Y
+
+```py
+style = 'w-2 h-48 fill-indigo-100 stroke-indigo-700'
+view(row(
+    box(mode='g bar-y', style=style, data=[0, 0.35]),
+    box(mode='g bar-y', style=style, data=[0.35, 1]),
+))
+```
+
+
+![Screenshot](assets/screenshots/graphics_bar_y.png)
 
 
 ## Circle

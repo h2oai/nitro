@@ -18,11 +18,15 @@ import { useEffect, useRef } from 'react';
 import { F, isN, S } from './core';
 
 type PathD = Array<S | F>
+type Pair = [F, F]
+type Pairs = Pair[]
 
 const
   lerp = (f: F, a: F, b: F) => a * (1.0 - f) + (b * f),
-  clamp1 = (f: F) => f < 0 ? 0 : f > 1 ? 1 : f,
+  clamp1 = (f: F) => isN(f) ? f < 0 ? 0 : f > 1 ? 1 : f : 0,
   clamp1s = (fs: F[]) => fs.map(clamp1),
+  isPair = (x: any) => Array.isArray(x) && x.length === 2,
+  arePairs = (xs: any[]): xs is Pairs => xs.every(isPair),
   newPath = () => document.createElementNS('http://www.w3.org/2000/svg', 'path'),
   newFill = (d: PathD) => {
     const p = newPath()
@@ -86,7 +90,7 @@ const
     d.push('Z')
     return newFill(d)
   },
-  makeBarY = (ys: F[], w: F, h: F) => {
+  makeIntervalY = (ys: F[], w: F, h: F) => {
     const
       n = ys.length,
       dx = (w / n) - 1, // 1px gap
@@ -145,6 +149,37 @@ const
       d.push('h', w)
     }
     return newStroke(d)
+  },
+  makeBarX = (ds: F[], w: F, h: F) => {
+    let [a, b] = ds
+    if (!isN(a)) a = 0
+    if (!isN(b)) b = 0
+    const p = newStroke([
+      'M', a * w, h / 2,
+      'H', b * w,
+    ])
+    p.setAttribute('stroke-width', String(h))
+    return p
+  },
+  makeBarXFill = (ds: F[], w: F, h: F) => {
+    return newFill([
+      'M', 0, 0,
+      'h', w,
+      'v', h,
+      'h', -w,
+      'Z'
+    ])
+  },
+  makeBarY = (ds: F[], w: F, h: F) => {
+    let [a, b] = ds
+    if (!isN(a)) a = 0
+    if (!isN(b)) b = 0
+    const p = newStroke([
+      'M', w / 2, (1 - a) * h,
+      'V', (1 - b) * h,
+    ])
+    p.setAttribute('stroke-width', String(w))
+    return p
   },
   makeCircle = (xs: F[], w: F, h: F) => {
     let [a1, a2, r1, r2] = xs
@@ -248,8 +283,8 @@ export const Graphic = ({ context, box }: BoxProps) => {
         } else if (modes.has('step-y')) {
           svg.appendChild(makeStepY(data, w, h))
           svg.appendChild(makeStepYFill(data, w, h))
-        } else if (modes.has('bar-y')) {
-          svg.appendChild(makeBarY(data, w, h))
+        } else if (modes.has('interval-y')) {
+          svg.appendChild(makeIntervalY(data, w, h))
         } else if (modes.has('stroke-y')) {
           svg.appendChild(makeStrokeY(data, w, h))
         } else if (modes.has('tick-y')) {
@@ -258,12 +293,18 @@ export const Graphic = ({ context, box }: BoxProps) => {
           svg.appendChild(makeGuideX(data, w, h))
         } else if (modes.has('guide-y')) {
           svg.appendChild(makeGuideY(data, w, h))
-        } else if (modes.has('arc')) {
-          svg.appendChild(makeArcFill(data, w, h))
-          svg.appendChild(makeArc(data, w, h))
+        } else if (modes.has('bar-x')) {
+          svg.appendChild(makeBarXFill(data, w, h))
+          svg.appendChild(makeBarX(data, w, h))
+        } else if (modes.has('bar-y')) {
+          svg.appendChild(makeBarXFill(data, w, h))
+          svg.appendChild(makeBarY(data, w, h))
         } else if (modes.has('circle')) {
           svg.appendChild(makeCircleFill(data, w, h))
           svg.appendChild(makeCircle(data, w, h))
+        } else if (modes.has('arc')) {
+          svg.appendChild(makeArcFill(data, w, h))
+          svg.appendChild(makeArc(data, w, h))
         }
       }
 

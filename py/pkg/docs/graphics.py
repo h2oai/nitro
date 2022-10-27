@@ -40,11 +40,11 @@ def graphics_step_y(view: View):  # height 3
     )
 
 
-# ## Bar Y
-def graphics_bar_y(view: View):  # height 3
+# ## Interval Y
+def graphics_interval_y(view: View):  # height 3
     view(
         box(
-            mode='g bar-y',
+            mode='g interval-y',
             style='h-8 fill-indigo-700',
             data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 6,
         ),
@@ -93,6 +93,24 @@ def graphics_guide_y(view: View):  # height 3
             data=[0, 0.2, 0.4, 0.6, 0.8, 0.85, 0.9, 0.95, 0.975, 1],
         ),
     )
+
+
+# ## Bar X
+def graphics_bar_x(view: View):  # height 3
+    style = 'w-48 h-2 fill-indigo-100 stroke-indigo-700'
+    view(
+        box(mode='g bar-x', style=style, data=[0, 0.35]),
+        box(mode='g bar-x', style=style, data=[0.35, 1]),
+    )
+
+
+# ## Bar Y
+def graphics_bar_y(view: View):  # height 3
+    style = 'w-2 h-48 fill-indigo-100 stroke-indigo-700'
+    view(row(
+        box(mode='g bar-y', style=style, data=[0, 0.35]),
+        box(mode='g bar-y', style=style, data=[0.35, 1]),
+    ))
 
 
 # ## Circle
