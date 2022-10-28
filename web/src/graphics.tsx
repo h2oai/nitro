@@ -130,7 +130,6 @@ const
     return newStroke(d)
   },
   makeStepYFilli = (ys: Pairs, w: F, h: F) => {
-    console.log('in filli')
     const
       n = ys.length,
       dx = w / n,
@@ -157,12 +156,12 @@ const
     d.push('Z')
     return newFill(d)
   },
-  makeIntervalY = (ys: F[], w: F, h: F) => {
+  makeBarY = (ys: F[], w: F, h: F) => {
     const p = makeStrokeY(ys, w, h)
     p.setAttribute('stroke-width', String(w / ys.length - 1)) // 1px gap
     return p
   },
-  makeIntervalYi = (ys: Pairs, w: F, h: F) => {
+  makeBarYi = (ys: Pairs, w: F, h: F) => {
     const p = makeStrokeYi(ys, w, h)
     p.setAttribute('stroke-width', String(w / ys.length - 1)) // 1px gap
     return p
@@ -247,7 +246,7 @@ const
     }
     return newStroke(d)
   },
-  makeBarX = (ds: F[], w: F, h: F) => {
+  makeGaugeX = (ds: F[], w: F, h: F) => {
     let [a, b] = ds
     if (!isN(a)) a = 0
     if (!isN(b)) b = 0
@@ -258,7 +257,7 @@ const
     p.setAttribute('stroke-width', String(h))
     return p
   },
-  makeBarXFill = (ds: F[], w: F, h: F) => {
+  makeGaugeXFill = (ds: F[], w: F, h: F) => {
     return newFill([
       'M', 0, 0,
       'h', w,
@@ -267,7 +266,7 @@ const
       'Z'
     ])
   },
-  makeBarY = (ds: F[], w: F, h: F) => {
+  makeGaugeY = (ds: F[], w: F, h: F) => {
     let [a, b] = ds
     if (!isN(a)) a = 0
     if (!isN(b)) b = 0
@@ -278,7 +277,7 @@ const
     p.setAttribute('stroke-width', String(w))
     return p
   },
-  makeCircle = (xs: F[], w: F, h: F) => {
+  makeGaugeC = (xs: F[], w: F, h: F) => {
     let [a1, a2, r1, r2] = xs
     if (!isN(a1)) a1 = 0
     if (!isN(a2)) a2 = 0
@@ -300,7 +299,7 @@ const
     path.setAttribute('stroke-width', String(r2 - r1))
     return path
   },
-  makeCircleFill = (xs: F[], w: F, h: F) => {
+  makeGaugeCFill = (xs: F[], w: F, h: F) => {
     let [a1, a2, r1, r2] = xs
     if (!isN(r1)) r1 = 0
     if (!isN(r2)) r2 = 1
@@ -318,7 +317,7 @@ const
       'Z'
     ])
   },
-  makeArc = (xs: F[], w: F, h: F) => {
+  makeGaugeSC = (xs: F[], w: F, h: F) => {
     let [a1, a2, r1, r2] = xs
     if (!isN(a1)) a1 = 0
     if (!isN(a2)) a2 = 0
@@ -338,7 +337,7 @@ const
     path.setAttribute('stroke-width', String(r2 - r1))
     return path
   },
-  makeArcFill = (xs: F[], w: F, h: F) => {
+  makeGaugeSCFill = (xs: F[], w: F, h: F) => {
     const rmax = Math.min(w / 2, h)
     let [a1, a2, r1, r2] = xs
     if (!isN(r1)) r1 = 0
@@ -392,11 +391,11 @@ export const Graphic = ({ context, box }: BoxProps) => {
             svg.appendChild(makeStepYFill(data, w, h))
             svg.appendChild(makeStepY(data, w, h))
           }
-        } else if (modes.has('interval-y')) {
+        } else if (modes.has('bar-y')) {
           if (paired) {
-            svg.appendChild(makeIntervalYi(data, w, h))
+            svg.appendChild(makeBarYi(data, w, h))
           } else {
-            svg.appendChild(makeIntervalY(data, w, h))
+            svg.appendChild(makeBarY(data, w, h))
           }
         } else if (modes.has('stroke-y')) {
           if (paired) {
@@ -414,18 +413,18 @@ export const Graphic = ({ context, box }: BoxProps) => {
           svg.appendChild(makeGuideX(data, w, h))
         } else if (modes.has('guide-y')) {
           svg.appendChild(makeGuideY(data, w, h))
-        } else if (modes.has('bar-x')) {
-          svg.appendChild(makeBarXFill(data, w, h))
-          svg.appendChild(makeBarX(data, w, h))
-        } else if (modes.has('bar-y')) {
-          svg.appendChild(makeBarXFill(data, w, h))
-          svg.appendChild(makeBarY(data, w, h))
-        } else if (modes.has('circle')) {
-          svg.appendChild(makeCircleFill(data, w, h))
-          svg.appendChild(makeCircle(data, w, h))
-        } else if (modes.has('arc')) {
-          svg.appendChild(makeArcFill(data, w, h))
-          svg.appendChild(makeArc(data, w, h))
+        } else if (modes.has('gauge-x')) {
+          svg.appendChild(makeGaugeXFill(data, w, h))
+          svg.appendChild(makeGaugeX(data, w, h))
+        } else if (modes.has('gauge-y')) {
+          svg.appendChild(makeGaugeXFill(data, w, h))
+          svg.appendChild(makeGaugeY(data, w, h))
+        } else if (modes.has('gauge-c')) {
+          svg.appendChild(makeGaugeCFill(data, w, h))
+          svg.appendChild(makeGaugeC(data, w, h))
+        } else if (modes.has('gauge-sc')) {
+          svg.appendChild(makeGaugeSCFill(data, w, h))
+          svg.appendChild(makeGaugeSC(data, w, h))
         }
       }
 

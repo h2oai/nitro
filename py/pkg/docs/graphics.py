@@ -126,23 +126,23 @@ def graphics_step_y(view: View):  # height 3
     ))
 
 
-# ## Interval Y
-# Set `mode='g interval-y'` to draw bar/column charts.
+# ## Bar Y
+# Set `mode='g bar-y'` to draw bar/column charts.
 #
 # For simple bars, set `data=` to a sequence of normalized y-coordinates.
 #
 # For interval-valued bars, set `data=` to a sequence of normalized `[low, high]` y-coordinates.
-def graphics_interval_y(view: View):  # height 3
+def graphics_bar_y(view: View):  # height 3
     view(
         # "Column chart":
         box(
-            mode='g interval-y',
+            mode='g bar-y',
             style='w-48 h-8 stroke-indigo-700',
             data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 3,
         ),
         # Interval-valued:
         box(
-            mode='g interval-y',
+            mode='g bar-y',
             style='w-48 h-8 stroke-indigo-700',
             data=[[0.1, 0.9], [0.2, 0.8], [0.3, 0.7], [0.4, 0.6]] * 6,
         ),
@@ -150,7 +150,7 @@ def graphics_interval_y(view: View):  # height 3
 
 
 # ## Stroke Y
-# Set `mode='g stroke-y'` to draw a sequence of vertical strokes. The `stroke-y` mode is similar to the `interval-y`
+# Set `mode='g stroke-y'` to draw a sequence of vertical strokes. The `stroke-y` mode is similar to the `bar-y`
 # mode, except that you can control the thickness of the strokes (bars) when using `stroke-y`.
 #
 # For simple strokes, set `data=` to a sequence of normalized y-coordinates.
@@ -236,59 +236,59 @@ def graphics_guide_y(view: View):  # height 3
     )
 
 
-# ## Bar X
-# Set `mode='g bar-x'` to draw a horizontal bar gauge.
+# ## Gauge X
+# Set `mode='g gauge-x'` to draw a horizontal gauge.
 #
 # Set `data=` to normalized `[start, end]` values.
-def graphics_bar_x(view: View):  # height 3
+def graphics_gauge_x(view: View):  # height 3
     style = 'w-48 h-2 fill-indigo-100 stroke-indigo-700'
     view(
-        box(mode='g bar-x', style=style, data=[0, 0.35]),
-        box(mode='g bar-x', style=style, data=[0.35, 1]),
+        box(mode='g gauge-x', style=style, data=[0, 0.35]),
+        box(mode='g gauge-x', style=style, data=[0.35, 1]),
     )
 
 
-# ## Bar Y
-# Set `mode='g bar-y'` to draw a vertical bar gauge.
+# ## Gauge Y
+# Set `mode='g gauge-y'` to draw a vertical gauge.
 #
 # Set `data=` to normalized `[start, end]` values.
-def graphics_bar_y(view: View):  # height 3
+def graphics_gauge_y(view: View):  # height 3
     style = 'w-2 h-48 fill-indigo-100 stroke-indigo-700'
     view(row(
-        box(mode='g bar-y', style=style, data=[0, 0.35]),
-        box(mode='g bar-y', style=style, data=[0.35, 1]),
+        box(mode='g gauge-y', style=style, data=[0, 0.35]),
+        box(mode='g gauge-y', style=style, data=[0.35, 1]),
     ))
 
 
-# ## Circle
-# Set `mode='g circle'` to draw a circular gauge.
+# ## Circular Gauge
+# Set `mode='g gauge-c'` to draw a circular gauge.
 #
 # Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius]` values.
 #
 # `inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
-def graphics_circle(view: View):  # height 3
+def graphics_gauge_c(view: View):  # height 3
     style = 'w-24 h-24 fill-indigo-100 stroke-indigo-700'
     view(row(
-        box(mode='g circle', style=style, data=[0, 0.35]),
-        box(mode='g circle', style=style, data=[0, 0.35, 0.5, 1]),
-        box(mode='g circle', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
-        box(mode='g circle', style=style, data=[0, 0.35, 0.5, 0.75]),
-        box(mode='g circle', style=style, data=[1, 0.35, 0.5, 1]),
+        box(mode='g gauge-c', style=style, data=[0, 0.35]),
+        box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 1]),
+        box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
+        box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 0.75]),
+        box(mode='g gauge-c', style=style, data=[1, 0.35, 0.5, 1]),
     ))
 
 
-# ## Arc
-# Set `mode='g arc'` to draw a semi-circular gauge.
+# ## Semi-circular Gauge
+# Set `mode='g gauge-sc'` to draw a semi-circular gauge.
 #
 # Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius]` values.
 #
 # `inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
-def graphics_arc(view: View):  # height 3
+def graphics_gauge_sc(view: View):  # height 3
     style = 'w-24 h-12 fill-indigo-100 stroke-indigo-700'
     view(row(
-        box(mode='g arc', style=style, data=[0, 0.35]),
-        box(mode='g arc', style=style, data=[0, 0.35, 0.5, 1]),
-        box(mode='g arc', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
-        box(mode='g arc', style=style, data=[0, 0.35, 0.5, 0.75]),
-        box(mode='g arc', style=style, data=[1, 0.35, 0.5, 1]),
+        box(mode='g gauge-sc', style=style, data=[0, 0.35]),
+        box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 1]),
+        box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
+        box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 0.75]),
+        box(mode='g gauge-sc', style=style, data=[1, 0.35, 0.5, 1]),
     ))

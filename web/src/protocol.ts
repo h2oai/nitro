@@ -179,9 +179,9 @@ export type BoxModifier = 'live'
   | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
   | 'open' | 'closed'
   // Graphics ("g") modes:
-  | 'arc' | 'circle'
-  | 'guide-x' | 'bar-x'
-  | 'line-y' | 'step-y' | 'interval-y' | 'stroke-y' | 'tick-y' | 'guide-y' | 'bar-y'
+  | 'gauge-c' | 'gauge-sc'
+  | 'guide-x' | 'gauge-x'
+  | 'line-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'guide-y' | 'gauge-y'
 
 export type BoxT = BoxMode | BoxModifier
 
