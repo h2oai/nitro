@@ -465,6 +465,7 @@ Draw microcharts, sparklines, and other data graphics.
 - [Gauge Y](graphics.md#gauge-y)
 - [Circular Gauge](graphics.md#circular-gauge)
 - [Semicircular Gauge](graphics.md#semicircular-gauge)
+- [Win Loss](graphics.md#win-loss)
 
 ## Format
 

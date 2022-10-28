@@ -304,3 +304,16 @@ def graphics_gauge_sc(view: View):  # height 3
         box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 0.75]),
         box(mode='g gauge-sc', style=style, data=[0.25, 0.75, 0.5, 1]),
     ))
+
+
+# ## Win Loss
+# A win-loss graphic can be produced by using two bar graphics stacked vertically.
+def graphics_win_loss(view: View):  # height 3
+    wins = [1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1] * 2
+    losses = [(x + 1) % 2 for x in wins]  # invert wins
+    view(
+        box(
+            box(mode='g bar-y', style='w-48 h-4 stroke-green-700', data=wins),
+            box(mode='g bar-y', style='w-48 h-4 stroke-red-700', data=losses),
+        )
+    )

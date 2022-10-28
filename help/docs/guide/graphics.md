@@ -368,3 +368,23 @@ view(row(
 
 
 ![Screenshot](assets/screenshots/graphics_gauge_sc.png)
+
+
+## Win Loss
+
+A win-loss graphic can be produced by using two bar graphics stacked vertically.
+
+
+```py
+wins = [1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1] * 2
+losses = [(x + 1) % 2 for x in wins]  # invert wins
+view(
+    box(
+        box(mode='g bar-y', style='w-48 h-4 stroke-green-700', data=wins),
+        box(mode='g bar-y', style='w-48 h-4 stroke-red-700', data=losses),
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_win_loss.png)
