@@ -388,3 +388,25 @@ view(
 
 
 ![Screenshot](assets/screenshots/graphics_win_loss.png)
+
+
+## Stacked bar
+
+A stacked bar can be produced by overlaying multiple gauges.
+
+
+```py
+bar = box(mode='g gauge-x') / 'absolute inset-0 fill-none'
+view(
+    box(
+        bar(data=[0, 0.1]) / 'stroke-red-400',
+        bar(data=[0.1, 0.3]) / 'stroke-orange-400',
+        bar(data=[0.3, 0.7]) / 'stroke-amber-400',
+        bar(data=[0.7, 0.8]) / 'stroke-lime-400',
+        bar(data=[0.8, 1.0]) / 'stroke-green-400',
+    ) / 'relative w-48 h-4 ',
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_stacked_bar.png)
