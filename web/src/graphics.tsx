@@ -247,17 +247,18 @@ const
     return newStroke(d)
   },
   makeGaugeX = (ds: F[], w: F, h: F) => {
-    let [a, b] = ds
+    let [a, b, s] = ds
     if (!isN(a)) a = 0
     if (!isN(b)) b = 0
+    if (!isN(s)) s = 1
     const p = newStroke([
       'M', a * w, h / 2,
       'H', b * w,
     ])
-    p.setAttribute('stroke-width', String(h))
+    p.setAttribute('stroke-width', String(h * s))
     return p
   },
-  makeGaugeXFill = (ds: F[], w: F, h: F) => {
+  makeGaugeFill = (ds: F[], w: F, h: F) => {
     return newFill([
       'M', 0, 0,
       'h', w,
@@ -267,22 +268,24 @@ const
     ])
   },
   makeGaugeY = (ds: F[], w: F, h: F) => {
-    let [a, b] = ds
+    let [a, b, s] = ds
     if (!isN(a)) a = 0
     if (!isN(b)) b = 0
+    if (!isN(s)) s = 1
     const p = newStroke([
       'M', w / 2, (1 - a) * h,
       'V', (1 - b) * h,
     ])
-    p.setAttribute('stroke-width', String(w))
+    p.setAttribute('stroke-width', String(w * s))
     return p
   },
   makeGaugeC = (xs: F[], w: F, h: F) => {
-    let [a1, a2, r1, r2] = xs
+    let [a1, a2, r1, r2, s] = xs
     if (!isN(a1)) a1 = 0
     if (!isN(a2)) a2 = 0
     if (!isN(r1)) r1 = 0
     if (!isN(r2)) r2 = 1
+    if (!isN(s)) s = 1
     const
       rmax = Math.min(w, h) / 2,
       t1 = Math.PI * (2 * Math.min(a1, a2) + 0.5),
@@ -296,7 +299,7 @@ const
       'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(tt), h / 2 - r * Math.sin(tt),
       'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(t2), h / 2 - r * Math.sin(t2)
     ])
-    path.setAttribute('stroke-width', String(r2 - r1))
+    path.setAttribute('stroke-width', String((r2 - r1) * s))
     return path
   },
   makeGaugeCFill = (xs: F[], w: F, h: F) => {
@@ -318,11 +321,12 @@ const
     ])
   },
   makeGaugeSC = (xs: F[], w: F, h: F) => {
-    let [a1, a2, r1, r2] = xs
+    let [a1, a2, r1, r2, s] = xs
     if (!isN(a1)) a1 = 0
     if (!isN(a2)) a2 = 0
     if (!isN(r1)) r1 = 0
     if (!isN(r2)) r2 = 1
+    if (!isN(s)) s = 1
     const
       rmax = Math.min(w / 2, h),
       t1 = Math.PI * Math.min(a1, a2),
@@ -334,7 +338,7 @@ const
       'M', w / 2 - r * Math.cos(t1), h - r * Math.sin(t1),
       'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(t2), h - r * Math.sin(t2)
     ])
-    path.setAttribute('stroke-width', String(r2 - r1))
+    path.setAttribute('stroke-width', String((r2 - r1) * s))
     return path
   },
   makeGaugeSCFill = (xs: F[], w: F, h: F) => {
@@ -414,10 +418,10 @@ export const Graphic = ({ context, box }: BoxProps) => {
         } else if (modes.has('guide-y')) {
           svg.appendChild(makeGuideY(data, w, h))
         } else if (modes.has('gauge-x')) {
-          svg.appendChild(makeGaugeXFill(data, w, h))
+          svg.appendChild(makeGaugeFill(data, w, h))
           svg.appendChild(makeGaugeX(data, w, h))
         } else if (modes.has('gauge-y')) {
-          svg.appendChild(makeGaugeXFill(data, w, h))
+          svg.appendChild(makeGaugeFill(data, w, h))
           svg.appendChild(makeGaugeY(data, w, h))
         } else if (modes.has('gauge-c')) {
           svg.appendChild(makeGaugeCFill(data, w, h))

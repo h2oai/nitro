@@ -276,14 +276,17 @@ view(
 
 Set `mode='g gauge-x'` to draw a horizontal gauge.
 
-Set `data=` to normalized `[start, end]` values.
+Set `data=` to normalized `[start, end, size]` values.
+
+`size` defines the size of the bar relative to the rail, and defaults to 1.
 
 
 ```py
-style = 'w-48 h-2 fill-indigo-100 stroke-indigo-700'
+style = 'w-48 h-4 fill-indigo-100 stroke-indigo-700'
 view(
     box(mode='g gauge-x', style=style, data=[0, 0.35]),
     box(mode='g gauge-x', style=style, data=[0.35, 1]),
+    box(mode='g gauge-x', style=style, data=[0, 0.35, 0.5]),  # thinner bar
 )
 ```
 
@@ -295,14 +298,17 @@ view(
 
 Set `mode='g gauge-y'` to draw a vertical gauge.
 
-Set `data=` to normalized `[start, end]` values.
+Set `data=` to normalized `[start, end, size]` values.
+
+`size` defines the size of the bar relative to the rail, and defaults to 1.
 
 
 ```py
-style = 'w-2 h-48 fill-indigo-100 stroke-indigo-700'
+style = 'w-4 h-48 fill-indigo-100 stroke-indigo-700'
 view(row(
     box(mode='g gauge-y', style=style, data=[0, 0.35]),
     box(mode='g gauge-y', style=style, data=[0.35, 1]),
+    box(mode='g gauge-y', style=style, data=[0, 0.35, 0.5]),  # thinner bar
 ))
 ```
 
@@ -314,9 +320,11 @@ view(row(
 
 Set `mode='g gauge-c'` to draw a circular gauge.
 
-Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius]` values.
+Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius, size]` values.
 
 `inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
+
+`size` defines the size of the bar relative to the rail, and defaults to 1.
 
 
 ```py
@@ -325,8 +333,9 @@ view(row(
     box(mode='g gauge-c', style=style, data=[0, 0.35]),
     box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 1]),
     box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
+    box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 1, 0.5]),  # thinner bar
     box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 0.75]),
-    box(mode='g gauge-c', style=style, data=[1, 0.35, 0.5, 1]),
+    box(mode='g gauge-c', style=style, data=[0.25, 0.75, 0.5, 1]),
 ))
 ```
 
@@ -334,13 +343,15 @@ view(row(
 ![Screenshot](assets/screenshots/graphics_gauge_c.png)
 
 
-## Semi-circular Gauge
+## Semicircular Gauge
 
-Set `mode='g gauge-sc'` to draw a semi-circular gauge.
+Set `mode='g gauge-sc'` to draw a semicircular gauge.
 
-Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius]` values.
+Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius, size]` values.
 
 `inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
+
+`size` defines the size of the bar relative to the rail, and defaults to 1.
 
 
 ```py
@@ -349,8 +360,9 @@ view(row(
     box(mode='g gauge-sc', style=style, data=[0, 0.35]),
     box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 1]),
     box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
+    box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 1, 0.5]),  # thinner bar
     box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 0.75]),
-    box(mode='g gauge-sc', style=style, data=[1, 0.35, 0.5, 1]),
+    box(mode='g gauge-sc', style=style, data=[0.25, 0.75, 0.5, 1]),
 ))
 ```
 

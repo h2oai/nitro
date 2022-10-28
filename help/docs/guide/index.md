@@ -464,7 +464,7 @@ Draw microcharts, sparklines, and other data graphics.
 - [Gauge X](graphics.md#gauge-x)
 - [Gauge Y](graphics.md#gauge-y)
 - [Circular Gauge](graphics.md#circular-gauge)
-- [Semi-circular Gauge](graphics.md#semi-circular-gauge)
+- [Semicircular Gauge](graphics.md#semicircular-gauge)
 
 ## Format
 
