@@ -274,16 +274,31 @@ def graphics_gauge_y(view: View):  # height 3
 # `inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
 #
 # `size` defines the size of the bar relative to the rail, and defaults to 1.
-def graphics_gauge_c(view: View):  # height 3
+def graphics_gauge_c(view: View):  # height 4
     style = 'w-24 h-24 fill-indigo-100 stroke-indigo-700'
-    view(row(
-        box(mode='g gauge-c', style=style, data=[0, 0.35]),
-        box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 1]),
-        box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
-        box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 1, 0.5]),  # thinner bar
-        box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 0.75]),
-        box(mode='g gauge-c', style=style, data=[0.25, 0.75, 0.5, 1]),
-    ))
+    view(
+        row(
+            box(mode='g gauge-c', style=style, data=[0, 0.35]),
+            box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 1]),
+            box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
+            box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 1, 0.5]),  # thinner bar
+            box(mode='g gauge-c', style=style, data=[0, 0.35, 0.5, 0.75]),
+            box(mode='g gauge-c', style=style, data=[0.25, 0.75, 0.5, 1]),
+        ),
+        row(
+            # With label:
+            box(
+                box(mode='g gauge-c', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+                box('35%') / 'text-sm font-bold',
+            ) / 'relative flex w-24 h-24 justify-center items-center',
+            # Stacked:
+            box(
+                box(mode='g gauge-c', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+                box(mode='g gauge-c', data=[0.35, 0.65, 0.5]) / 'absolute inset-0 fill-none stroke-red-500',
+                box(mode='g gauge-c', data=[0.65, 0.8, 0.5]) / 'absolute inset-0 fill-none stroke-red-300',
+            ) / 'relative w-24 h-24',
+        )
+    )
 
 
 # ## Semicircular Gauge
@@ -296,14 +311,29 @@ def graphics_gauge_c(view: View):  # height 3
 # `size` defines the size of the bar relative to the rail, and defaults to 1.
 def graphics_gauge_sc(view: View):  # height 3
     style = 'w-24 h-12 fill-indigo-100 stroke-indigo-700'
-    view(row(
-        box(mode='g gauge-sc', style=style, data=[0, 0.35]),
-        box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 1]),
-        box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
-        box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 1, 0.5]),  # thinner bar
-        box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 0.75]),
-        box(mode='g gauge-sc', style=style, data=[0.25, 0.75, 0.5, 1]),
-    ))
+    view(
+        row(
+            box(mode='g gauge-sc', style=style, data=[0, 0.35]),
+            box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 1]),
+            box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
+            box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 1, 0.5]),  # thinner bar
+            box(mode='g gauge-sc', style=style, data=[0, 0.35, 0.5, 0.75]),
+            box(mode='g gauge-sc', style=style, data=[0.25, 0.75, 0.5, 1]),
+        ),
+        row(
+            # With label:
+            box(
+                box(mode='g gauge-sc', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+                box('35%') / 'text-xs font-medium',
+            ) / 'relative flex w-24 h-12 justify-center items-end',
+            # Stacked:
+            box(
+                box(mode='g gauge-sc', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+                box(mode='g gauge-sc', data=[0.35, 0.65, 0.5]) / 'absolute inset-0 fill-none stroke-red-500',
+                box(mode='g gauge-sc', data=[0.65, 0.8, 0.5]) / 'absolute inset-0 fill-none stroke-red-300',
+            ) / 'relative w-24 h-12',
+        ),
+    )
 
 
 # ## Win Loss
