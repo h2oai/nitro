@@ -452,7 +452,7 @@ and it's unsure how long it will take to complete.
 
 ## Graphics
 
-Draw microcharts, sparklines, and other data graphics.
+Draw visualizations, microcharts, sparklines, and other data graphics.
 
 - [Line Y](graphics.md#line-y)
 - [Curve Y](graphics.md#curve-y)
@@ -466,6 +466,7 @@ Draw microcharts, sparklines, and other data graphics.
 - [Gauge Y](graphics.md#gauge-y)
 - [Circular Gauge](graphics.md#circular-gauge)
 - [Semicircular Gauge](graphics.md#semicircular-gauge)
+- [Label](graphics.md#label)
 - [Win Loss](graphics.md#win-loss)
 - [Stacked bar](graphics.md#stacked-bar)
 - [Bullet graph](graphics.md#bullet-graph)

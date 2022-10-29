@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { BoxProps } from './ui';
-import { css } from './css';
 import { useEffect, useRef } from 'react';
 import { B, F, isN, S } from './core';
+import { css } from './css';
+import { BoxProps } from './ui';
 
 type PathD = Array<S | F>
 type Pair = [F, F]
@@ -438,6 +438,32 @@ const
       'Z'
     ])
   }
+
+export const GraphicLabel = ({ context, box }: BoxProps) => {
+  const
+    { style, data: rawData } = box,
+    data = Array.isArray(rawData) ? rawData : []
+
+  const labels = data.map((item, i) => {
+    if (Array.isArray(item)) {
+      const
+        [x, y, text, j, a] = item,
+        left = clamp1(x as any) * 100 + '%',
+        top = (1 - clamp1(y as any)) * 100 + '%',
+        justify = j === 0 ? 'start' : j === 1 ? 'end' : 'center',
+        align = a === 0 ? 'end' : a === 1 ? 'start' : 'center'
+      return (
+        <div
+          key={i}
+          className={css(`absolute w-0 h-0 flex justify-${justify} items-${align}`)}
+          style={{ left, top }}
+        >
+          <div>{text}</div>
+        </div>)
+    }
+  })
+  return <div className={css('relative', style)}>{labels}</div>
+}
 
 export const Graphic = ({ context, box }: BoxProps) => {
   const

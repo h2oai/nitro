@@ -31,7 +31,7 @@ import { Dropdown } from './dropdown';
 import { Droplist } from './droplist';
 import { Expander } from './expander';
 import { FileUpload } from './file_upload';
-import { Graphic } from './graphics';
+import { Graphic, GraphicLabel } from './graphics';
 import { Help } from './help';
 import { PluginBox } from './plugin';
 import { ProgressBar } from './progress';
@@ -99,7 +99,9 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   if (modes.has('day') || modes.has('month') || modes.has('week'))
     return <Calendar context={context} box={box} />
   if (modes.has('file')) return <FileUpload context={context} box={box} />
+  if (modes.has('g-label')) return <GraphicLabel context={context} box={box} />
   if (modes.has('g')) return <Graphic context={context} box={box} />
+
   if (modes.has('menu')) return (
     modes.has('editable')
       ? <ComboBox context={context} box={box} />

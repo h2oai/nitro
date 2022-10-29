@@ -16,7 +16,7 @@ from h2o_nitro import View, box, row, col, option, lorem
 
 
 # # Graphics
-# Draw microcharts, sparklines, and other data graphics.
+# Draw visualizations, microcharts, sparklines, and other data graphics.
 
 # ## Line Y
 # Set `mode='g line-y'` to draw line and area charts.
@@ -398,6 +398,40 @@ def graphics_gauge_sc(view: View):  # height 3
                 box(mode='g gauge-sc', data=[0, 0.65, 0.5, 0.7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
                 box(mode='g gauge-sc', data=[0, 0.85, 0.2, 0.4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
             ) / 'relative w-24 h-12',
+        ),
+    )
+
+
+# ## Label
+# Set `mode='g-label'` to draw a sequence of labels.
+#
+# - Set `data=` to a sequence of normalized `[x, y, text, justify, align]` values.
+# - Set `justify` to `0` (left), `1` (right), or omit to center (default).
+# - Set `align` to `0` (top), `1` (bottom), or omit to center (default).
+def graphics_annotation(view: View):  # height 3
+    view(
+        box(
+            mode='g-label',
+            style='w-48 h-8 text-xs bg-slate-100',
+            data=[
+                [0, 0.5, '0', 0],  # first label, left-justify
+                [0.25, 0.5, '100'],
+                [0.5, 0.5, '200'],
+                [0.75, 0.5, '300'],
+                [1, 0.5, '400', 1],  # last label, right-justify
+            ],
+        ),
+        box(
+            mode='g-label',
+            style='w-8 h-48 text-xs bg-slate-100',
+            data=[
+                # All labels are right-justified
+                [1, 0, '0', 1, 0],  # first label, align top
+                [1, 0.25, '100', 1],
+                [1, 0.5, '200', 1],
+                [1, 0.75, '300', 1],
+                [1, 1, '400', 1, 1],  # last label, align bottom
+            ],
         ),
     )
 

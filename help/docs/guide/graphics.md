@@ -3,7 +3,7 @@ template: overrides/main.html
 ---
 # Graphics
 
-Draw microcharts, sparklines, and other data graphics.
+Draw visualizations, microcharts, sparklines, and other data graphics.
 
 ## Line Y
 
@@ -471,6 +471,47 @@ view(
 
 
 ![Screenshot](assets/screenshots/graphics_gauge_sc.png)
+
+
+## Label
+
+Set `mode='g-label'` to draw a sequence of labels.
+
+- Set `data=` to a sequence of normalized `[x, y, text, justify, align]` values.
+- Set `justify` to `0` (left), `1` (right), or omit to center (default).
+- Set `align` to `0` (top), `1` (bottom), or omit to center (default).
+
+
+```py
+view(
+    box(
+        mode='g-label',
+        style='w-48 h-8 text-xs bg-slate-100',
+        data=[
+            [0, 0.5, '0', 0],  # first label, left-justify
+            [0.25, 0.5, '100'],
+            [0.5, 0.5, '200'],
+            [0.75, 0.5, '300'],
+            [1, 0.5, '400', 1],  # last label, right-justify
+        ],
+    ),
+    box(
+        mode='g-label',
+        style='w-8 h-48 text-xs bg-slate-100',
+        data=[
+            # All labels are right-justified
+            [1, 0, '0', 1, 0],  # first label, align top
+            [1, 0.25, '100', 1],
+            [1, 0.5, '200', 1],
+            [1, 0.75, '300', 1],
+            [1, 1, '400', 1, 1],  # last label, align bottom
+        ],
+    ),
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_annotation.png)
 
 
 ## Win Loss
