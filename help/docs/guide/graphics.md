@@ -372,7 +372,7 @@ view(row(
 
 ## Win Loss
 
-A win-loss graphic can be produced by using two bar graphics stacked vertically.
+Stack two bar graphics vertically to create a win-loss graphic.
 
 
 ```py
@@ -392,7 +392,7 @@ view(
 
 ## Stacked bar
 
-A stacked bar can be produced by overlaying multiple gauges.
+Overlay multiple gauges to create a stacked bar.
 
 
 ```py
@@ -404,9 +404,32 @@ view(
         bar(data=[0.3, 0.7]) / 'stroke-amber-400',
         bar(data=[0.7, 0.8]) / 'stroke-lime-400',
         bar(data=[0.8, 1.0]) / 'stroke-green-400',
-    ) / 'relative w-48 h-4 ',
+    ) / 'relative w-48 h-4',
 )
 ```
 
 
 ![Screenshot](assets/screenshots/graphics_stacked_bar.png)
+
+
+## Bullet graph
+
+Overlay multiple gauge and guide graphics to create a bullet graph.
+
+
+```py
+layer = box() / 'absolute inset-0 fill-none'
+bar = layer(mode='g gauge-x')
+view(
+    box(
+        bar(data=[0, 0.6]) / 'stroke-slate-400',  # band
+        bar(data=[0.6, 0.8]) / 'stroke-slate-300',  # band
+        bar(data=[0.8, 1]) / 'stroke-slate-200',  # band
+        bar(data=[0, 0.7, 0.25]) / 'stroke-slate-900',  # measure
+        layer(mode='g guide-x', data=[0.9]) / 'stroke-red-800',  # comparative measure
+    ) / 'relative w-48 h-6',
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_bullet_graph.png)

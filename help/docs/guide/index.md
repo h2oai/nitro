@@ -467,6 +467,7 @@ Draw microcharts, sparklines, and other data graphics.
 - [Semicircular Gauge](graphics.md#semicircular-gauge)
 - [Win Loss](graphics.md#win-loss)
 - [Stacked bar](graphics.md#stacked-bar)
+- [Bullet graph](graphics.md#bullet-graph)
 
 ## Format
 
