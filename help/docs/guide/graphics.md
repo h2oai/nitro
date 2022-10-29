@@ -66,6 +66,67 @@ view(row(
 ![Screenshot](assets/screenshots/graphics_line_y.png)
 
 
+## Curve Y
+
+Set `mode='g curve-y'` to draw line and area curves.
+
+For a single curve, set `data=` to a sequence of normalized y-coordinates.
+
+For dual curves, set `data=` to a sequence of normalized `[low, high]` y-coordinates.
+
+
+```py
+view(row(
+    # Single curve:
+    col(
+        # Stroke and fill:
+        box(
+            mode='g curve-y',
+            style='w-48 h-8 fill-indigo-100 stroke-indigo-700',
+            data=[0.5, 0.65, 0.5, 0.4, 0.95, 0.05, 0.5, 0.5, 0.6, 0.5, 0.5],
+        ),
+        # Stroke only:
+        box(
+            mode='g curve-y',
+            style='w-48 h-8 fill-none stroke-indigo-700',
+            data=[0.5, 0.65, 0.5, 0.4, 0.95, 0.05, 0.5, 0.5, 0.6, 0.5, 0.5],
+        ),
+        # Fill only:
+        box(
+            mode='g curve-y',
+            style='w-48 h-8 fill-indigo-700 stroke-none',
+            data=[0.5, 0.65, 0.5, 0.4, 0.95, 0.05, 0.5, 0.5, 0.6, 0.5, 0.5],
+        ),
+    ),
+    # Dual curve:
+    col(
+        # Stroke and fill:
+        box(
+            mode='g curve-y',
+            style='w-48 h-8 fill-indigo-100 stroke-indigo-700',
+            data=[[0.5, 0.8], [0.2, 0.6], [0.3, 0.9], [0.6, 0.7]] * 6,
+        ),
+
+        # Stroke only:
+        box(
+            mode='g curve-y',
+            style='w-48 h-8 fill-none stroke-indigo-700',
+            data=[[0.5, 0.8], [0.2, 0.6], [0.3, 0.9], [0.6, 0.7]] * 6,
+        ),
+        # Fill only:
+        box(
+            mode='g curve-y',
+            style='w-48 h-8 fill-indigo-700 stroke-none',
+            data=[[0.5, 0.8], [0.2, 0.6], [0.3, 0.9], [0.6, 0.7]] * 6,
+        ),
+    ),
+))
+```
+
+
+![Screenshot](assets/screenshots/graphics_curve_y.png)
+
+
 ## Step Y
 
 Set `mode='g step-y'` to draw step charts. Step charts are similar to line charts, except that adjacent points are
@@ -355,7 +416,7 @@ view(
             box(mode='g gauge-c', data=[0, 0.35, 0.8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
             box(mode='g gauge-c', data=[0, 0.65, 0.5, 0.7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
             box(mode='g gauge-c', data=[0, 0.85, 0.2, 0.4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
-            ) / 'relative w-24 h-24',
+        ) / 'relative w-24 h-24',
     )
 )
 ```

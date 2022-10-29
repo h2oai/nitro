@@ -181,7 +181,7 @@ export type BoxModifier = 'live'
   // Graphics ("g") modes:
   | 'gauge-c' | 'gauge-sc'
   | 'guide-x' | 'gauge-x'
-  | 'line-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'guide-y' | 'gauge-y'
+  | 'line-y' | 'curve-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'guide-y' | 'gauge-y'
 
 export type BoxT = BoxMode | BoxModifier
 

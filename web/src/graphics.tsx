@@ -15,7 +15,7 @@
 import { BoxProps } from './ui';
 import { css } from './css';
 import { useEffect, useRef } from 'react';
-import { F, isN, S } from './core';
+import { B, F, isN, S } from './core';
 
 type PathD = Array<S | F>
 type Pair = [F, F]
@@ -49,6 +49,31 @@ const
     for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i], h, 0))
     return newStroke(d)
   },
+  joinCurveX = (ps: Pair[]) => {
+    const d: F[][] = []
+    for (let i = 0; i < ps.length; i++) {
+      const [x, y] = ps[i]
+      if (i) {
+        const [x0, y0] = ps[i - 1]
+        // B-spline, with control points 1/3 away from nodes.
+        const dx = (x - x0) / 3
+        d.push([x0 + dx, y0, x - dx, y, x, y])
+      } else {
+        d.push([0, 0, 0, 0, x, y])
+      }
+    }
+    return d
+  },
+  makeCurveYPoints = (ys: F[], w: F, h: F, rev: B) => {
+    const
+      n = ys.length,
+      dx = w / (n - 1),
+      d = new Array<Pair>(n)
+    for (let i = 0; i < n; i++) {
+      d[i] = [rev ? w - dx * i : dx * i, lerp(ys[i], h, 0)]
+    }
+    return joinCurveX(d)
+  },
   makeLineYFill = (ys: F[], w: F, h: F) => {
     const
       n = ys.length,
@@ -78,6 +103,63 @@ const
       d: Array<S | F> = []
     for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][0], h, 0))
     for (let i = n - 1; i >= 0; i--) d.push('L', dx * i, lerp(ys[i][1], h, 0))
+    d.push('Z')
+    return newFill(d)
+  },
+  drawCurveY = (ps: F[][], d: Array<S | F>) => {
+    for (let i = 0; i < ps.length; i++) {
+      const p = ps[i]
+      if (i) {
+        d.push('C', ...p)
+      } else {
+        d.push('M', p[4], p[5])
+      }
+    }
+  },
+  makeCurveY = (ps: F[][]) => {
+    const d: Array<S | F> = []
+    drawCurveY(ps, d)
+    return newStroke(d)
+  },
+  makeCurveYFill = (ps: F[][], w: F, h: F) => {
+    const d: Array<S | F> = []
+    d.push('M', 0, h)
+    for (let i = 0; i < ps.length; i++) {
+      const p = ps[i]
+      if (i) {
+        d.push('C', ...p)
+      } else {
+        d.push('L', p[4], p[5])
+      }
+    }
+    d.push('L', w, h)
+    d.push('Z')
+    return newFill(d)
+  },
+  makeCurveYi = (ps0: F[][], ps1: F[][]) => {
+    const d: Array<S | F> = []
+    drawCurveY(ps0, d)
+    drawCurveY(ps1, d)
+    return newStroke(d)
+  },
+  makeCurveYFilli = (ps0: F[][], ps1: F[][]) => {
+    const d: Array<S | F> = []
+    for (let i = 0; i < ps1.length; i++) {
+      const p = ps1[i]
+      if (i) {
+        d.push('C', ...p)
+      } else {
+        d.push('M', p[4], p[5])
+      }
+    }
+    for (let i = 0; i < ps0.length; i++) {
+      const p = ps0[i]
+      if (i) {
+        d.push('C', ...p)
+      } else {
+        d.push('L', p[4], p[5])
+      }
+    }
     d.push('Z')
     return newFill(d)
   },
@@ -386,6 +468,18 @@ export const Graphic = ({ context, box }: BoxProps) => {
           } else {
             svg.appendChild(makeLineYFill(data, w, h))
             svg.appendChild(makeLineY(data, w, h))
+          }
+        } else if (modes.has('curve-y')) {
+          if (paired) {
+            const
+              ps0 = makeCurveYPoints(data.map((x: Pair) => x[0]).slice(0).reverse(), w, h, true),
+              ps1 = makeCurveYPoints(data.map((x: Pair) => x[1]), w, h, false)
+            svg.appendChild(makeCurveYFilli(ps0, ps1))
+            svg.appendChild(makeCurveYi(ps0, ps1))
+          } else {
+            const ps = makeCurveYPoints(data, w, h, false)
+            svg.appendChild(makeCurveYFill(ps, w, h))
+            svg.appendChild(makeCurveY(ps))
           }
         } else if (modes.has('step-y')) {
           if (paired) {
