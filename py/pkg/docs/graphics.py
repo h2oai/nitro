@@ -297,6 +297,12 @@ def graphics_gauge_c(view: View):  # height 4
                 box(mode='g gauge-c', data=[0.35, 0.65, 0.5]) / 'absolute inset-0 fill-none stroke-red-500',
                 box(mode='g gauge-c', data=[0.65, 0.8, 0.5]) / 'absolute inset-0 fill-none stroke-red-300',
             ) / 'relative w-24 h-24',
+            # Concentric:
+            box(
+                box(mode='g gauge-c', data=[0, 0.35, 0.8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+                box(mode='g gauge-c', data=[0, 0.65, 0.5, 0.7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
+                box(mode='g gauge-c', data=[0, 0.85, 0.2, 0.4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
+                ) / 'relative w-24 h-24',
         )
     )
 
@@ -331,6 +337,12 @@ def graphics_gauge_sc(view: View):  # height 3
                 box(mode='g gauge-sc', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
                 box(mode='g gauge-sc', data=[0.35, 0.65, 0.5]) / 'absolute inset-0 fill-none stroke-red-500',
                 box(mode='g gauge-sc', data=[0.65, 0.8, 0.5]) / 'absolute inset-0 fill-none stroke-red-300',
+            ) / 'relative w-24 h-12',
+            # Concentric:
+            box(
+                box(mode='g gauge-sc', data=[0, 0.35, 0.8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+                box(mode='g gauge-sc', data=[0, 0.65, 0.5, 0.7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
+                box(mode='g gauge-sc', data=[0, 0.85, 0.2, 0.4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
             ) / 'relative w-24 h-12',
         ),
     )
