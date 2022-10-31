@@ -338,8 +338,7 @@ view(
 Set `mode='g gauge-x'` to draw a horizontal gauge.
 
 Set `data=` to normalized `[start, end, size]` values.
-
-`size` defines the size of the bar relative to the rail, and defaults to 1.
+`size` defines the thickness of the bar relative to the rail, and defaults to 1 (bar is as thick as the rail).
 
 
 ```py
@@ -360,8 +359,7 @@ view(
 Set `mode='g gauge-y'` to draw a vertical gauge.
 
 Set `data=` to normalized `[start, end, size]` values.
-
-`size` defines the size of the bar relative to the rail, and defaults to 1.
+`size` defines the thickness of the bar relative to the rail, and defaults to 1 (bar is as thick as the rail).
 
 
 ```py
@@ -513,6 +511,28 @@ view(
 
 ![Screenshot](assets/screenshots/graphics_annotation.png)
 
+
+## Rectangle
+
+Set `mode='g-rect'` to draw multiple rectangles.
+
+
+```py
+view(
+    box(
+        mode='g-rect',
+        style='w-32 h-16 fill-indigo-100 stroke-indigo-700',
+        data=[
+            [0.1, 0.1, 0.3, 0.9],
+            [0.4, 0.3, 0.6, 0.7],
+            [0.7, 0.1, 0.9, 0.9, 10],
+        ],
+    ),
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_rect.png)
 
 ## Win Loss
 

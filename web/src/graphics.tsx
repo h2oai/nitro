@@ -23,20 +23,20 @@ type Pairs = Pair[]
 
 const
   lerp = (f: F, a: F, b: F) => a * (1.0 - f) + (b * f),
-  clamp1 = (f: F) => isN(f) ? f < 0 ? 0 : f > 1 ? 1 : f : 0,
+  clamp1 = (f: any) => isN(f) ? f < 0 ? 0 : f > 1 ? 1 : f : 0,
   clamp1s = (fs: F[]) => fs.map(clamp1),
   isPair = (x: any) => Array.isArray(x) && x.length === 2,
   arePairs = (xs: any[]): xs is Pairs => xs.every(isPair),
-  newPath = () => document.createElementNS('http://www.w3.org/2000/svg', 'path'),
+  newEl = (t: S) => document.createElementNS('http://www.w3.org/2000/svg', t),
   newFill = (d: PathD) => {
-    const p = newPath()
+    const p = newEl('path')
     p.setAttribute('stroke', 'none')
     p.setAttribute('stroke-linejoin', 'round')
     p.setAttribute('d', d.join(' '))
     return p
   },
   newStroke = (d: PathD) => {
-    const p = newPath()
+    const p = newEl('path')
     p.setAttribute('fill', 'none')
     p.setAttribute('d', d.join(' '))
     return p
@@ -465,6 +465,58 @@ export const GraphicLabel = ({ context, box }: BoxProps) => {
   return <div className={css('relative', style)}>{labels}</div>
 }
 
+export const Graphic2 = ({ box }: BoxProps) => {
+  const
+    { modes, style, data } = box,
+    ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const div = ref.current
+    if (div && Array.isArray(data) && data.length) {
+      const
+        bounds = div.getBoundingClientRect(),
+        width = Math.round(bounds.width),
+        height = Math.round(bounds.height),
+        svg = newEl('svg')
+
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
+      svg.setAttribute('width', `${width}`)
+      svg.setAttribute('height', `${height}`)
+
+      if (modes.has('g-rect')) {
+        for (const d of data) {
+          if (Array.isArray(d)) {
+            let [xa, ya, xb, yb, r] = d
+            xa = clamp1(xa)
+            ya = 1 - clamp1(ya)
+            xb = clamp1(xb)
+            yb = 1 - clamp1(yb)
+
+            const
+              rect = newEl('rect'),
+              x1 = Math.min(xa, xb) * width,
+              y1 = Math.min(ya, yb) * height,
+              x2 = Math.max(xa, xb) * width,
+              y2 = Math.max(ya, yb) * height
+
+            rect.setAttribute('x', String(x1))
+            rect.setAttribute('y', String(y1))
+            rect.setAttribute('width', String(x2 - x1))
+            rect.setAttribute('height', String(y2 - y1))
+            if (isN(r)) rect.setAttribute('rx', String(r)) // ry = rx
+
+            svg.appendChild(rect)
+          }
+        }
+      }
+
+      while (div.firstChild) div.removeChild(div.firstChild)
+      div.appendChild(svg)
+    }
+  })
+  return <div ref={ref} className={css(style)} />
+}
+
 export const Graphic = ({ context, box }: BoxProps) => {
   const
     { modes, style, data: rawData } = box,
@@ -480,7 +532,7 @@ export const Graphic = ({ context, box }: BoxProps) => {
         rect = div.getBoundingClientRect(),
         w = Math.round(rect.width),
         h = Math.round(rect.height),
-        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        svg = newEl('svg')
 
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`)
       svg.setAttribute('width', `${w}`)

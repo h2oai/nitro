@@ -179,7 +179,7 @@ export type BoxModifier = 'live'
   | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
   | 'open' | 'closed'
   // Graphics ("g") modes:
-  | 'g-label'
+  | 'g-label' | 'g-rect' | 'g-circle' | 'g-polygon' | 'g-polyline'
   | 'gauge-c' | 'gauge-sc'
   | 'guide-x' | 'gauge-x'
   | 'line-y' | 'curve-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'guide-y' | 'gauge-y'
