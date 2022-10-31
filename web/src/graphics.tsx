@@ -24,7 +24,7 @@ type Pairs = Pair[]
 const
   lerp = (f: F, a: F, b: F) => a * (1.0 - f) + (b * f),
   clamp1 = (f: any) => isN(f) ? f < 0 ? 0 : f > 1 ? 1 : f : 0,
-  clamp1s = (fs: F[]) => fs.map(clamp1),
+  clamp1s = (fs: any[]) => fs.map(clamp1),
   isPair = (x: any) => Array.isArray(x) && x.length === 2,
   arePairs = (xs: any[]): xs is Pairs => xs.every(isPair),
   newEl = (t: S) => document.createElementNS('http://www.w3.org/2000/svg', t),
@@ -545,6 +545,28 @@ export const Graphic2 = ({ box }: BoxProps) => {
             const el = newEl('polygon')
             el.setAttribute('points', makePolyline(d, width, height))
             svg.appendChild(el)
+          }
+        }
+      } else if (modes.has('g-link-x')) {
+        for (const d of data) {
+          if (Array.isArray(d)) {
+            let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
+            x1 *= width
+            y1 = (1 - y1) * height
+            x2 *= width
+            y2 = (1 - y2) * height
+            if (isN(t1)) {
+              if (!isN(t2)) t2 = t1
+              t1 *= height / 2
+              t2 *= height / 2
+              const el = newEl('polygon')
+              el.setAttribute('points', `${x1},${y1 - t1} ${x2},${y2 - t2} ${x2},${y2 + t2} ${x1},${y1 + t1}`)
+              svg.appendChild(el)
+            } else {
+              const el = newEl('polyline')
+              el.setAttribute('points', `${x1},${y1} ${x2},${y2}`)
+              svg.appendChild(el)
+            }
           }
         }
       }

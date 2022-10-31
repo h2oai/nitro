@@ -106,6 +106,10 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   if (modes.has('g-circle')) return <Graphic2 context={context} box={box} />
   if (modes.has('g-polyline')) return <Graphic2 context={context} box={box} />
   if (modes.has('g-polygon')) return <Graphic2 context={context} box={box} />
+  if (modes.has('g-link-x')) return <Graphic2 context={context} box={box} />
+  if (modes.has('g-link-y')) return <Graphic2 context={context} box={box} />
+  if (modes.has('g-spline-x')) return <Graphic2 context={context} box={box} />
+  if (modes.has('g-spline-y')) return <Graphic2 context={context} box={box} />
   if (modes.has('g')) return <Graphic context={context} box={box} />
 
   if (modes.has('menu')) return (

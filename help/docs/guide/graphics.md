@@ -626,6 +626,54 @@ view(
 ![Screenshot](assets/screenshots/graphics_polygon.png)
 
 
+## Link X
+
+Set `mode='g-link-x'` to draw connecting lines between pairs of points.
+
+Set `data=` to a sequence of normalized `[x1, y1, x2, y2, t1, t2]` values, where:
+
+- `(x1, y1)` is the start point.
+- `(x2, y2)` is the end point.
+- `t1` (optional) is the start thickness. If omitted, the stroke thickness can be controlled using `style=`.
+- `t2` (optional) is the end thickness. Defaults to `t1` if omitted.
+
+
+```py
+view(row(
+    box(
+        mode='g-link-x',
+        style='h-32 w-32 fill-none stroke-indigo-700',
+        data=[
+            [0.1, 0.75, 0.9, 0.95],
+            [0.1, 0.5, 0.9, 0.5],
+            [0.1, 0.25, 0.9, 0.05],
+        ],
+    ),
+    box(
+        mode='g-link-x',
+        style='h-32 w-32 fill-indigo-700 stroke-none',
+        data=[
+            [0.1, 0.75, 0.9, 0.75, 0.05],  # add thickness
+            [0.1, 0.5, 0.9, 0.5, 0.1],  # more thickness
+            [0.1, 0.25, 0.9, 0.25, 0.25],  # even more thickness
+        ],
+    ),
+    box(
+        mode='g-link-x',
+        style='h-32 w-32 fill-indigo-700 stroke-none',
+        data=[
+            [0.1, 0.75, 0.9, 0.75, 0.1, 0.2],  # start thin, end thick
+            [0.1, 0.5, 0.9, 0.5, 0.2, 0.1],  # start thick, end thin
+            [0.1, 0.25, 0.9, 0.25, 0.1, 0.1],  # uniform thickness
+        ],
+    ),
+))
+```
+
+
+![Screenshot](assets/screenshots/graphics_link_x.png)
+
+
 ## Win Loss
 
 Stack two bar graphics vertically to create a win-loss graphic.
