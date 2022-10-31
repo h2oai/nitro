@@ -442,9 +442,25 @@ def graphics_rect(view: View):  # height 3
             mode='g-rect',
             style='w-32 h-16 fill-indigo-100 stroke-indigo-700',
             data=[
-                [0.1, 0.1, 0.3, 0.9],
-                [0.4, 0.3, 0.6, 0.7],
-                [0.7, 0.1, 0.9, 0.9, 10],
+                [0.25, 0.5, 0.2, 0.9],
+                [0.5, 0.5, 0.2, 0.5],
+                [0.75, 0.5, 0.2, 0.9, 10],
+            ],
+        ),
+    )
+
+
+# ## Circle
+# Set `mode='g-circle'` to draw multiple circles.
+def graphics_circle(view: View):  # height 3
+    view(
+        box(
+            mode='g-circle',
+            style='w-32 h-32 fill-indigo-100 stroke-indigo-700',
+            data=[
+                [0.05, 0.5, 0.05],
+                [0.25, 0.5, 0.15],
+                [0.7, 0.5, 0.3],
             ],
         ),
     )

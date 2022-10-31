@@ -486,24 +486,37 @@ export const Graphic2 = ({ box }: BoxProps) => {
       if (modes.has('g-rect')) {
         for (const d of data) {
           if (Array.isArray(d)) {
-            let [xa, ya, xb, yb, r] = d
-            xa = clamp1(xa)
-            ya = 1 - clamp1(ya)
-            xb = clamp1(xb)
-            yb = 1 - clamp1(yb)
+            let [x, y, w, h, r] = d
+            x = clamp1(x) * width
+            y = (1 - clamp1(y)) * height
+            w = clamp1(w) * width
+            h = clamp1(h) * height
 
-            const
-              rect = newEl('rect'),
-              x1 = Math.min(xa, xb) * width,
-              y1 = Math.min(ya, yb) * height,
-              x2 = Math.max(xa, xb) * width,
-              y2 = Math.max(ya, yb) * height
+            const rect = newEl('rect')
+            rect.setAttribute('x', String(x - w / 2))
+            rect.setAttribute('y', String(y - h / 2))
+            rect.setAttribute('width', String(w))
+            rect.setAttribute('height', String(h))
+            if (isN(r)) {
+              rect.setAttribute('rx', String(r))
+              rect.setAttribute('ry', String(r))
+            }
 
-            rect.setAttribute('x', String(x1))
-            rect.setAttribute('y', String(y1))
-            rect.setAttribute('width', String(x2 - x1))
-            rect.setAttribute('height', String(y2 - y1))
-            if (isN(r)) rect.setAttribute('rx', String(r)) // ry = rx
+            svg.appendChild(rect)
+          }
+        }
+      } else if (modes.has('g-circle')) {
+        for (const d of data) {
+          if (Array.isArray(d)) {
+            let [x, y, r] = d
+            x = clamp1(x) * width
+            y = (1 - clamp1(y)) * height
+            r = clamp1(r) * Math.min(width, height)
+
+            const rect = newEl('circle')
+            rect.setAttribute('cx', String(x))
+            rect.setAttribute('cy', String(y))
+            rect.setAttribute('r', String(r))
 
             svg.appendChild(rect)
           }

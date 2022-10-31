@@ -103,6 +103,7 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   if (modes.has('g-label')) return <GraphicLabel context={context} box={box} />
   // TODO simplify:
   if (modes.has('g-rect')) return <Graphic2 context={context} box={box} />
+  if (modes.has('g-circle')) return <Graphic2 context={context} box={box} />
   if (modes.has('g')) return <Graphic context={context} box={box} />
 
   if (modes.has('menu')) return (
