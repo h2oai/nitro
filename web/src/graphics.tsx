@@ -437,6 +437,16 @@ const
       'a', r1, r1, 0, 0, 0, -r1 * 2, 0, // inner arc
       'Z'
     ])
+  },
+  makePolyline = (d: any, width: F, height: F) => {
+    const points: S[] = []
+    for (let i = 0; i < d.length; i += 2) {
+      const
+        x = clamp1(d[i]) * width,
+        y = (1 - clamp1(d[i + 1])) * height
+      points.push(`${x},${y}`)
+    }
+    return points.join(' ')
   }
 
 export const GraphicLabel = ({ context, box }: BoxProps) => {
@@ -492,17 +502,17 @@ export const Graphic2 = ({ box }: BoxProps) => {
             w = clamp1(w) * width
             h = clamp1(h) * height
 
-            const rect = newEl('rect')
-            rect.setAttribute('x', String(x - w / 2))
-            rect.setAttribute('y', String(y - h / 2))
-            rect.setAttribute('width', String(w))
-            rect.setAttribute('height', String(h))
+            const el = newEl('rect')
+            el.setAttribute('x', String(x - w / 2))
+            el.setAttribute('y', String(y - h / 2))
+            el.setAttribute('width', String(w))
+            el.setAttribute('height', String(h))
             if (isN(r)) {
-              rect.setAttribute('rx', String(r))
-              rect.setAttribute('ry', String(r))
+              el.setAttribute('rx', String(r))
+              el.setAttribute('ry', String(r))
             }
 
-            svg.appendChild(rect)
+            svg.appendChild(el)
           }
         }
       } else if (modes.has('g-circle')) {
@@ -513,12 +523,28 @@ export const Graphic2 = ({ box }: BoxProps) => {
             y = (1 - clamp1(y)) * height
             r = clamp1(r) * Math.min(width, height)
 
-            const rect = newEl('circle')
-            rect.setAttribute('cx', String(x))
-            rect.setAttribute('cy', String(y))
-            rect.setAttribute('r', String(r))
+            const el = newEl('circle')
+            el.setAttribute('cx', String(x))
+            el.setAttribute('cy', String(y))
+            el.setAttribute('r', String(r))
 
-            svg.appendChild(rect)
+            svg.appendChild(el)
+          }
+        }
+      } else if (modes.has('g-polyline')) {
+        for (const d of data) {
+          if (Array.isArray(d)) {
+            const el = newEl('polyline')
+            el.setAttribute('points', makePolyline(d, width, height))
+            svg.appendChild(el)
+          }
+        }
+      } else if (modes.has('g-polygon')) {
+        for (const d of data) {
+          if (Array.isArray(d)) {
+            const el = newEl('polygon')
+            el.setAttribute('points', makePolyline(d, width, height))
+            svg.appendChild(el)
           }
         }
       }

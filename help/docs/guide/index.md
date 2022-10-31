@@ -469,6 +469,8 @@ Draw visualizations, microcharts, sparklines, and other data graphics.
 - [Label](graphics.md#label)
 - [Rectangle](graphics.md#rectangle)
 - [Circle](graphics.md#circle)
+- [Polyline](graphics.md#polyline)
+- [Polygon](graphics.md#polygon)
 - [Win Loss](graphics.md#win-loss)
 - [Stacked bar](graphics.md#stacked-bar)
 - [Bullet graph](graphics.md#bullet-graph)

@@ -104,6 +104,8 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   // TODO simplify:
   if (modes.has('g-rect')) return <Graphic2 context={context} box={box} />
   if (modes.has('g-circle')) return <Graphic2 context={context} box={box} />
+  if (modes.has('g-polyline')) return <Graphic2 context={context} box={box} />
+  if (modes.has('g-polygon')) return <Graphic2 context={context} box={box} />
   if (modes.has('g')) return <Graphic context={context} box={box} />
 
   if (modes.has('menu')) return (
@@ -134,7 +136,6 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
   if (modes.has('text') || modes.has('password')) return <Textbox context={context} box={box} />
   if (modes.has('time')) return <TimePicker context={context} box={box} />
   if (modes.has('web')) return <WebView context={context} box={box} />
-
 
   for (const mode of modes) {
     const i = mode.indexOf(':')

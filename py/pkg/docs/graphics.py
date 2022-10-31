@@ -465,6 +465,61 @@ def graphics_circle(view: View):  # height 3
         ),
     )
 
+
+# ## Polyline
+# Set `mode='g-polyline'` to draw multiple polylines.
+def graphics_polyline(view: View):  # height 3
+    view(
+        box(
+            mode='g-polyline',
+            style='w-32 h-8 fill-none stroke-indigo-700',
+            data=[
+                [
+                    0.1, 0.1, 0.1, 0.9,
+                    0.2, 0.1, 0.2, 0.9,
+                    0.3, 0.1, 0.3, 0.9,
+                    0.4, 0.1, 0.4, 0.9,
+                    0.5, 0.1, 0.5, 0.9,
+                ],
+                [
+                    0.6, 0.1, 0.9, 0.1,
+                    0.6, 0.3, 0.9, 0.3,
+                    0.6, 0.5, 0.9, 0.5,
+                    0.6, 0.7, 0.9, 0.7,
+                    0.6, 0.9, 0.9, 0.9,
+                ],
+            ],
+        ),
+    )
+
+
+# ## Polygon
+# Set `mode='g-polygon'` to draw multiple polygon.
+def graphics_polygon(view: View):  # height 3
+    view(
+        box(
+            mode='g-polygon',
+            style='w-32 h-8 fill-indigo-100 stroke-indigo-700',
+            data=[
+                [
+                    0.1, 0.05, 0.1, 0.9,
+                    0.2, 0.1, 0.2, 0.9,
+                    0.3, 0.1, 0.3, 0.9,
+                    0.4, 0.1, 0.4, 0.9,
+                    0.5, 0.05
+                ],
+                [
+                    0.55, 0.1, 0.9, 0.1,
+                    0.6, 0.3, 0.9, 0.3,
+                    0.6, 0.5, 0.9, 0.5,
+                    0.6, 0.7, 0.9, 0.7,
+                    0.55, 0.9
+                ],
+            ],
+        ),
+    )
+
+
 # ## Win Loss
 # Stack two bar graphics vertically to create a win-loss graphic.
 def graphics_win_loss(view: View):  # height 3
