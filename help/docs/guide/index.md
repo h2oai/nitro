@@ -472,6 +472,7 @@ Draw visualizations, microcharts, sparklines, and other data graphics.
 - [Polyline](graphics.md#polyline)
 - [Polygon](graphics.md#polygon)
 - [Link X](graphics.md#link-x)
+- [Spline X](graphics.md#spline-x)
 - [Win Loss](graphics.md#win-loss)
 - [Stacked bar](graphics.md#stacked-bar)
 - [Bullet graph](graphics.md#bullet-graph)

@@ -674,6 +674,54 @@ view(row(
 ![Screenshot](assets/screenshots/graphics_link_x.png)
 
 
+## Spline X
+
+Set `mode='g-spline-x'` to draw connecting splines (curves) between pairs of points.
+
+Set `data=` to a sequence of normalized `[x1, y1, x2, y2, t1, t2]` values, where:
+
+- `(x1, y1)` is the start point.
+- `(x2, y2)` is the end point.
+- `t1` (optional) is the start thickness. If omitted, the stroke thickness can be controlled using `style=`.
+- `t2` (optional) is the end thickness. Defaults to `t1` if omitted.
+
+
+```py
+view(row(
+    box(
+        mode='g-spline-x',
+        style='h-32 w-32 fill-none stroke-indigo-700',
+        data=[
+            [0.1, 0.75, 0.9, 0.95],
+            [0.1, 0.5, 0.9, 0.5],
+            [0.1, 0.25, 0.9, 0.05],
+        ],
+    ),
+    box(
+        mode='g-spline-x',
+        style='h-32 w-32 fill-indigo-700 stroke-none',
+        data=[
+            [0.1, 0.75, 0.9, 0.75, 0.05],  # add thickness
+            [0.1, 0.5, 0.9, 0.5, 0.1],  # more thickness
+            [0.1, 0.25, 0.9, 0.25, 0.25],  # even more thickness
+        ],
+    ),
+    box(
+        mode='g-spline-x',
+        style='h-32 w-32 fill-indigo-700 stroke-none',
+        data=[
+            [0.1, 0.8, 0.9, 0.65, 0.2, 0.3],  # variable thickness
+            [0.1, 0.5, 0.9, 0.3, 0.2, 0.3],  # variable thickness
+            [0.1, 0.25, 0.9, 0.05, 0.1, 0.1],  # uniform thickness
+        ],
+    ),
+))
+```
+
+
+![Screenshot](assets/screenshots/graphics_spline_x.png)
+
+
 ## Win Loss
 
 Stack two bar graphics vertically to create a win-loss graphic.
