@@ -537,16 +537,17 @@ export const Graphic2 = ({ box }: BoxProps) => {
               isArc = Math.abs(a2 - a1) < 1,
               t1 = Math.PI * (2 * Math.min(a1, a2) + 0.5),
               t2 = Math.PI * (2 * Math.max(a1, a2) + 0.5),
-              tt = (t1 + t2) / 2,
-              path: PathD = []
+              tt = (t1 + t2) / 2
 
             if (isArc) {
+              const path: PathD = []
               path.push(
                 'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
                 'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
                 'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
               )
               if (r1 < r2) {
+                // reverse arc
                 path.push(
                   'L', x + r1 * Math.cos(t2), y + r1 * Math.sin(t2),
                   'A', r1, r1, 0, 0, 0, x + r1 * Math.cos(tt), y + r1 * Math.sin(tt),
@@ -554,28 +555,34 @@ export const Graphic2 = ({ box }: BoxProps) => {
                   'Z'
                 )
               } else {
+                // connect to center
                 path.push(
                   'L', x, y,
                   'Z'
                 )
               }
+              svg.appendChild(newPath(path))
             } else {
-              path.push(
-                'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
-                'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
-                'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
-                'Z'
-              )
               if (r1 < r2) {
-                path.push(
+                // donut
+                svg.appendChild(newPath([
+                  'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
+                  'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
+                  'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
+                  'Z',
                   'M', x + r1 * Math.cos(t1), y + r1 * Math.sin(t1),
                   'A', r1, r1, 0, 1, 0, x + r1 * Math.cos(tt), y + r1 * Math.sin(tt),
                   'A', r1, r1, 0, 1, 0, x + r1 * Math.cos(t2), y + r1 * Math.sin(t2),
                   'Z'
-                )
+                ]))
+              } else {
+                const circle = newEl('circle')
+                circle.setAttribute('cx', String(x))
+                circle.setAttribute('cy', String(y))
+                circle.setAttribute('r', String(r2))
+                svg.appendChild(circle)
               }
             }
-            svg.appendChild(newPath(path))
           }
         }
       } else if (modes.has('g-polyline')) {
