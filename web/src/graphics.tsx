@@ -28,17 +28,20 @@ const
   isPair = (x: any) => Array.isArray(x) && x.length === 2,
   arePairs = (xs: any[]): xs is Pairs => xs.every(isPair),
   newEl = (t: S) => document.createElementNS('http://www.w3.org/2000/svg', t),
-  newFill = (d: PathD) => {
+  newPath = (d: PathD) => {
     const p = newEl('path')
-    p.setAttribute('stroke', 'none')
-    p.setAttribute('stroke-linejoin', 'round')
     p.setAttribute('d', d.join(' '))
     return p
   },
+  newFill = (d: PathD) => {
+    const p = newPath(d)
+    p.setAttribute('stroke', 'none')
+    p.setAttribute('stroke-linejoin', 'round')
+    return p
+  },
   newStroke = (d: PathD) => {
-    const p = newEl('path')
+    const p = newPath(d)
     p.setAttribute('fill', 'none')
-    p.setAttribute('d', d.join(' '))
     return p
   },
   makeLineY = (ys: F[], w: F, h: F) => {
@@ -582,7 +585,7 @@ export const Graphic2 = ({ box }: BoxProps) => {
               if (!isN(t2)) t2 = t1
               t1 *= height / 2
               t2 *= height / 2
-              svg.appendChild(newFill([
+              svg.appendChild(newPath([
                 'M', x1, y1 - t1,
                 'C', xm, y1 - t1, xm, y2 - t2, x2, y2 - t2,
                 'v', t2 * 2,
