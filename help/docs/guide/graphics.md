@@ -535,27 +535,37 @@ view(
 ![Screenshot](assets/screenshots/graphics_rect.png)
 
 
-## Circle
+## Arc
 
-Set `mode='g-circle'` to draw multiple circles.
+Set `mode='g-arc'` to draw multiple arcs or circles.
 
 
 ```py
-view(
+view(row(
     box(
-        mode='g-circle',
+        mode='g-arc',
         style='w-32 h-32 fill-indigo-100 stroke-indigo-700',
         data=[
-            [0.05, 0.5, 0.05],
-            [0.25, 0.5, 0.15],
-            [0.7, 0.5, 0.3],
+            [0.05, 0.5, 0.1],
+            [0.25, 0.5, 0.3],
+            [0.7, 0.5, 0.6],
         ],
     ),
-)
+    box(
+        mode='g-arc',
+        style='w-32 h-32 fill-indigo-100 stroke-indigo-700',
+        data=[
+            [1/8, 0.5, 1/5, 0, 1/2],
+            [3/8, 0.5, 1/5, 1/4, 3/4],
+            [5/8, 0.5, 1/5, 3/4, 1/2],
+            [7/8, 0.5, 1/5, 1/12, 11/12],
+        ],
+    ),
+))
 ```
 
 
-![Screenshot](assets/screenshots/graphics_circle.png)
+![Screenshot](assets/screenshots/graphics_arc.png)
 
 
 ## Polyline

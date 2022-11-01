@@ -518,20 +518,32 @@ export const Graphic2 = ({ box }: BoxProps) => {
             svg.appendChild(el)
           }
         }
-      } else if (modes.has('g-circle')) {
+      } else if (modes.has('g-arc')) {
         for (const d of data) {
           if (Array.isArray(d)) {
-            let [x, y, r] = d
+            let [x, y, r, a1, a2] = d
             x = clamp1(x) * width
             y = (1 - clamp1(y)) * height
-            r = clamp1(r) * Math.min(width, height)
+            r = clamp1(r) * Math.min(width, height) / 2
 
-            const el = newEl('circle')
-            el.setAttribute('cx', String(x))
-            el.setAttribute('cy', String(y))
-            el.setAttribute('r', String(r))
-
-            svg.appendChild(el)
+            if (isN(a1)) {
+              if (!isN(a2)) a2 = 1
+              const
+                t1 = Math.PI * (2 * Math.min(a1, a2) + 0.5),
+                t2 = Math.PI * (2 * Math.max(a1, a2) + 0.5),
+                tt = (t1 + t2) / 2
+              svg.appendChild(newPath([
+                'M', x + r * Math.cos(t1), y + r * Math.sin(t1),
+                'A', r, r, 0, 0, 1, x + r * Math.cos(tt), y + r * Math.sin(tt),
+                'A', r, r, 0, 0, 1, x + r * Math.cos(t2), y + r * Math.sin(t2),
+              ]))
+            } else {
+              const el = newEl('circle')
+              el.setAttribute('cx', String(x))
+              el.setAttribute('cy', String(y))
+              el.setAttribute('r', String(r))
+              svg.appendChild(el)
+            }
           }
         }
       } else if (modes.has('g-polyline')) {

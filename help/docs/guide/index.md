@@ -468,7 +468,7 @@ Draw visualizations, microcharts, sparklines, and other data graphics.
 - [Semicircular Gauge](graphics.md#semicircular-gauge)
 - [Label](graphics.md#label)
 - [Rectangle](graphics.md#rectangle)
-- [Circle](graphics.md#circle)
+- [Arc](graphics.md#arc)
 - [Polyline](graphics.md#polyline)
 - [Polygon](graphics.md#polygon)
 - [Link X](graphics.md#link-x)
