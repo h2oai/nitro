@@ -521,29 +521,61 @@ export const Graphic2 = ({ box }: BoxProps) => {
       } else if (modes.has('g-arc')) {
         for (const d of data) {
           if (Array.isArray(d)) {
-            let [x, y, r, a1, a2] = d
+            let [x, y, r2, r1, a1, a2] = d
+
+            if (!isN(r1)) r1 = 0
+            if (!isN(a1)) a1 = 0
+            if (!isN(a2)) a2 = 1
+
+
             x = clamp1(x) * width
             y = (1 - clamp1(y)) * height
-            r = clamp1(r) * Math.min(width, height) / 2
+            r2 = clamp1(r2) * Math.min(width, height) / 2
+            r1 = (1 - clamp1(r1)) * r2
 
-            if (isN(a1)) {
-              if (!isN(a2)) a2 = 1
-              const
-                t1 = Math.PI * (2 * Math.min(a1, a2) + 0.5),
-                t2 = Math.PI * (2 * Math.max(a1, a2) + 0.5),
-                tt = (t1 + t2) / 2
-              svg.appendChild(newPath([
-                'M', x + r * Math.cos(t1), y + r * Math.sin(t1),
-                'A', r, r, 0, 0, 1, x + r * Math.cos(tt), y + r * Math.sin(tt),
-                'A', r, r, 0, 0, 1, x + r * Math.cos(t2), y + r * Math.sin(t2),
-              ]))
+            const
+              isArc = Math.abs(a2 - a1) < 1,
+              t1 = Math.PI * (2 * Math.min(a1, a2) + 0.5),
+              t2 = Math.PI * (2 * Math.max(a1, a2) + 0.5),
+              tt = (t1 + t2) / 2,
+              path: PathD = []
+
+            if (isArc) {
+              path.push(
+                'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
+                'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
+                'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
+              )
+              if (r1 < r2) {
+                path.push(
+                  'L', x + r1 * Math.cos(t2), y + r1 * Math.sin(t2),
+                  'A', r1, r1, 0, 0, 0, x + r1 * Math.cos(tt), y + r1 * Math.sin(tt),
+                  'A', r1, r1, 0, 0, 0, x + r1 * Math.cos(t1), y + r1 * Math.sin(t1),
+                  'Z'
+                )
+              } else {
+                path.push(
+                  'L', x, y,
+                  'Z'
+                )
+              }
             } else {
-              const el = newEl('circle')
-              el.setAttribute('cx', String(x))
-              el.setAttribute('cy', String(y))
-              el.setAttribute('r', String(r))
-              svg.appendChild(el)
+              path.push(
+                'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
+                'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
+                'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
+                'Z'
+              )
+              if (r1 < r2) {
+                path.push(
+                  'M', x + r1 * Math.cos(t1), y + r1 * Math.sin(t1),
+                  'A', r1, r1, 0, 1, 0, x + r1 * Math.cos(tt), y + r1 * Math.sin(tt),
+                  'A', r1, r1, 0, 1, 0, x + r1 * Math.cos(t2), y + r1 * Math.sin(t2),
+                  'Z'
+                )
+              }
             }
+            svg.appendChild(newPath(path))
           }
         }
       } else if (modes.has('g-polyline')) {

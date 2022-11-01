@@ -452,6 +452,8 @@ def graphics_rect(view: View):  # height 3
 
 # ## Arc
 # Set `mode='g-arc'` to draw multiple arcs or circles.
+#
+# Set `data=` to a sequence of normalized `[x, y, diameter, size, start-angle, end-angle]` values.
 def graphics_arc(view: View):  # height 3
     view(row(
         box(
@@ -460,17 +462,17 @@ def graphics_arc(view: View):  # height 3
             data=[
                 [0.05, 0.5, 0.1],
                 [0.25, 0.5, 0.3],
-                [0.7, 0.5, 0.6],
+                [0.7, 0.5, 0.6, 0.5],  # donut
             ],
         ),
         box(
             mode='g-arc',
             style='w-32 h-32 fill-indigo-100 stroke-indigo-700',
             data=[
-                [1/8, 0.5, 1/5, 0, 1/2],
-                [3/8, 0.5, 1/5, 1/4, 3/4],
-                [5/8, 0.5, 1/5, 3/4, 1/2],
-                [7/8, 0.5, 1/5, 1/12, 11/12],
+                [1 / 8, 0.5, 1 / 5, 1, 0, 1 / 2],
+                [3 / 8, 0.5, 1 / 3, .5, 1 / 4, 3 / 4],
+                [5 / 8, 0.5, 1 / 5, 1, 3 / 4, 1 / 2],
+                [7 / 8, 0.5, 1 / 5, .75, 1 / 12, 11 / 12],
             ],
         ),
     ))
