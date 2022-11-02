@@ -500,22 +500,16 @@ export const Graphic2 = ({ box }: BoxProps) => {
         const path: PathD = []
         for (const d of data) {
           if (Array.isArray(d)) {
-            let [x, y, size, shape, rot] = d
+            let [x, y, w, shape, rot] = d
             x = clamp1(x) * width
             y = (1 - clamp1(y)) * height
-            if (!isN(size)) size = 10
+            if (!isN(w)) w = 10
             rot = clamp1(rot)
-
-            const a = Math.PI * size * size / 4 // area of circle that fits in size x size.
-
-            // TODO handle rotation
 
             switch (shape) {
               case 's':
-              case 't':
-              case 'v':
                 {
-                  const r = Math.sqrt(a) / 2, w = 2 * r
+                  const r = w / 2
                   path.push(
                     'M', x - r, y - r,
                     'h', w,
@@ -525,9 +519,94 @@ export const Graphic2 = ({ box }: BoxProps) => {
                   )
                 }
                 break
+              case 'd':
+                {
+                  const r = w / 2
+                  path.push(
+                    'M', x, y - r,
+                    'l', r, r,
+                    'l', -r, r,
+                    'l', -r, -r,
+                    'Z'
+                  )
+                }
+                break
+              case 'tu':
+                {
+                  const s = w * 2 / Math.sqrt(3)
+                  path.push(
+                    'M', x, y - w * 2 / 3,
+                    'l', s / 2, w,
+                    'h', -s,
+                    'Z'
+                  )
+                }
+                break
+              case 'tr':
+                {
+                  const s = w * 2 / Math.sqrt(3)
+                  path.push(
+                    'M', x + w * 2 / 3, y,
+                    'l', -w, s / 2,
+                    'v', -s,
+                    'Z'
+                  )
+                }
+                break
+              case 'td':
+                {
+                  const s = w * 2 / Math.sqrt(3)
+                  path.push(
+                    'M', x, y + w * 2 / 3,
+                    'l', s / 2, -w,
+                    'h', -s,
+                    'Z'
+                  )
+                }
+                break
+              case 'tl':
+                {
+                  const s = w * 2 / Math.sqrt(3)
+                  path.push(
+                    'M', x - w * 2 / 3, y,
+                    'l', w, s / 2,
+                    'v', -s,
+                    'Z'
+                  )
+                }
+                break
+              case 'h':
+                {
+                  const r = w / 2
+                  path.push(
+                    'M', x - r, y,
+                    'h', w,
+                  )
+                }
+                break
+              case 'v':
+                {
+                  const r = w / 2
+                  path.push(
+                    'M', x, y - r,
+                    'v', w,
+                  )
+                }
+                break
+              case 'p':
+                {
+                  const r = w / 2
+                  path.push(
+                    'M', x, y - r,
+                    'v', w,
+                    'M', x - r, y,
+                    'h', w,
+                  )
+                }
+                break
               case 'x':
                 {
-                  const r = Math.sqrt(a) / 2, w = 2 * r
+                  const r = w / 2
                   path.push(
                     'M', x - r, y - r,
                     'l', w, w,
@@ -536,13 +615,53 @@ export const Graphic2 = ({ box }: BoxProps) => {
                   )
                 }
                 break
+              case 'au':
+                {
+                  const r = w / 2
+                  path.push(
+                    'M', x - r, y + r,
+                    'l', r, -r,
+                    'l', r, r,
+                  )
+                }
+                break
+              case 'ar':
+                {
+                  const r = w / 2
+                  path.push(
+                    'M', x - r, y - r,
+                    'l', r, r,
+                    'l', -r, r,
+                  )
+                }
+                break
+              case 'ad':
+                {
+                  const r = w / 2
+                  path.push(
+                    'M', x + r, y - r,
+                    'l', -r, r,
+                    'l', -r, -r,
+                  )
+                }
+                break
+              case 'al':
+                {
+                  const r = w / 2
+                  path.push(
+                    'M', x + r, y - r,
+                    'l', -r, r,
+                    'l', r, r,
+                  )
+                }
+                break
               default:
                 {
-                  const r = size / 2
+                  const r = w / 2
                   path.push(
                     'M', x - r, y,
-                    'a', r, r, 0, 0, 1, size, 0,
-                    'a', r, r, 0, 0, 1, -size, 0,
+                    'a', r, r, 0, 0, 1, w, 0,
+                    'a', r, r, 0, 0, 1, -w, 0,
                     'Z'
                   )
                 }
