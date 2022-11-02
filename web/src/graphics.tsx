@@ -496,7 +496,61 @@ export const Graphic2 = ({ box }: BoxProps) => {
       svg.setAttribute('width', `${width}`)
       svg.setAttribute('height', `${height}`)
 
-      if (modes.has('g-rect')) {
+      if (modes.has('g-point')) {
+        const path: PathD = []
+        for (const d of data) {
+          if (Array.isArray(d)) {
+            let [x, y, size, shape, rot] = d
+            x = clamp1(x) * width
+            y = (1 - clamp1(y)) * height
+            if (!isN(size)) size = 10
+            rot = clamp1(rot)
+
+            const a = Math.PI * size * size / 4 // area of circle that fits in size x size.
+
+            // TODO handle rotation
+
+            switch (shape) {
+              case 's':
+              case 't':
+              case 'v':
+                {
+                  const r = Math.sqrt(a) / 2, w = 2 * r
+                  path.push(
+                    'M', x - r, y - r,
+                    'h', w,
+                    'v', w,
+                    'h', -w,
+                    'Z'
+                  )
+                }
+                break
+              case 'x':
+                {
+                  const r = Math.sqrt(a) / 2, w = 2 * r
+                  path.push(
+                    'M', x - r, y - r,
+                    'l', w, w,
+                    'M', x - r, y + r,
+                    'l', w, -w,
+                  )
+                }
+                break
+              default:
+                {
+                  const r = size / 2
+                  path.push(
+                    'M', x - r, y,
+                    'a', r, r, 0, 0, 1, size, 0,
+                    'a', r, r, 0, 0, 1, -size, 0,
+                    'Z'
+                  )
+                }
+            }
+          }
+        }
+        svg.appendChild(newPath(path))
+      } else if (modes.has('g-rect')) {
         for (const d of data) {
           if (Array.isArray(d)) {
             let [x, y, w, h, r] = d
@@ -521,7 +575,7 @@ export const Graphic2 = ({ box }: BoxProps) => {
       } else if (modes.has('g-arc')) {
         for (const d of data) {
           if (Array.isArray(d)) {
-            let [x, y, dia, size, len, rot] = clamp1s(d)
+            let [x, y, dia, len, size, rot] = clamp1s(d)
 
             if (!isN(dia)) dia = 0
             if (!isN(rot)) rot = 0

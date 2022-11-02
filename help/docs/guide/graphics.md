@@ -381,6 +381,8 @@ Set `mode='g gauge-c'` to draw a circular gauge.
 
 Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius, size]` values.
 
+Set `data=` to normalized `[length, width, track-length, track-width, rotation]` values.
+
 `inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
 
 `size` defines the size of the bar relative to the rail, and defaults to 1.
@@ -512,6 +514,41 @@ view(
 ![Screenshot](assets/screenshots/graphics_annotation.png)
 
 
+## Point
+
+Set `mode='g-point'` to draw shapes at multiple points.
+
+Set `data=` to a sequence of normalized `[x, y, size, shape, rotation]` values, where:
+
+- `(x, y)` is the center of the point.
+- `size` determines the size of the shape, in pixels (note that this is a fixed size, not normalized).
+- `shape` is one of `c` (circle), `s` (square), `x` (cross), `t` (triangle), `v` (vane).
+
+
+```py
+view(row(
+    box(
+        mode='g-point',
+        style='w-32 h-8 fill-none stroke-indigo-700',
+        data=[
+            [.1, .5, 10],
+            [.2, .5, 10, 'c'],
+            [.3, .5, 10, 's'],
+            [.4, .5, 10, 'x'],
+            [.5, .5, 10, 'x', .25],
+            [.6, .5, 10, 't'],
+            [.7, .5, 10, 'v'],
+            [.8, .5, 10, 'v'],
+            [.9, .5, 10, 'v'],
+        ],
+    ),
+))
+```
+
+
+![Screenshot](assets/screenshots/graphics_point.png)
+
+
 ## Rectangle
 
 Set `mode='g-rect'` to draw multiple rectangles.
@@ -539,7 +576,7 @@ view(
 
 Set `mode='g-arc'` to draw multiple arcs or circles.
 
-Set `data=` to a sequence of normalized `[x, y, diameter, size, length, rotation]` values.
+Set `data=` to a sequence of normalized `[x, y, diameter, length, width, rotation]` values.
 
 
 ```py
@@ -550,17 +587,17 @@ view(row(
         data=[
             [0.05, 0.5, 0.1],
             [0.25, 0.5, 0.3],
-            [0.7, 0.5, 0.6, 0.5],  # donut
+            [0.7, 0.5, 0.6, 1, 0.5],  # donut
         ],
     ),
     box(
         mode='g-arc',
         style='w-32 h-32 fill-indigo-100 stroke-indigo-700',
         data=[
-            [1 / 8, 0.5, 1 / 5, 1, 1 / 2, 3 / 4],
-            [3 / 8, 0.5, 1 / 3, .5, 3 / 4, 0],
-            [5 / 8, 0.5, 1 / 5, 1, 4 / 12, 1 / 12],
-            [7 / 8, 0.5, 1 / 5, .75, 3 / 4, 1 / 12],
+            [1 / 8, 0.5, 1 / 5, 1 / 2, 1, 3 / 4],
+            [3 / 8, 0.5, 1 / 3, 3 / 4, .5, 0],
+            [5 / 8, 0.5, 1 / 5, 4 / 12, 1, 1 / 12],
+            [7 / 8, 0.5, 1 / 5, 3 / 4, .75, 1 / 12],
         ],
     ),
 ))
