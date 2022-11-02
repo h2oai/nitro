@@ -521,22 +521,21 @@ export const Graphic2 = ({ box }: BoxProps) => {
       } else if (modes.has('g-arc')) {
         for (const d of data) {
           if (Array.isArray(d)) {
-            let [x, y, r2, r1, a1, len] = d
+            let [x, y, dia, size, len, rot] = clamp1s(d)
 
-            if (!isN(r1)) r1 = 0
-            if (!isN(a1)) a1 = 0
+            if (!isN(dia)) dia = 0
+            if (!isN(rot)) rot = 0
             if (!isN(len)) len = 1
 
-
-            x = clamp1(x) * width
-            y = (1 - clamp1(y)) * height
-            r2 = clamp1(r2) * Math.min(width, height) / 2
-            r1 = (1 - clamp1(r1)) * r2
+            x *= width
+            y = (1 - y) * height
 
             const
               isArc = len < 1,
-              t1 = Math.PI * 2 * (a1 + .75),
-              t2 = Math.PI * 2 * (a1 + len + .75),
+              r2 = dia * Math.min(width, height) / 2,
+              r1 = (1 - size) * r2,
+              t1 = Math.PI * 2 * (rot + .75),
+              t2 = Math.PI * 2 * (rot + len + .75),
               tt = (t1 + t2) / 2
 
             if (isArc) {
