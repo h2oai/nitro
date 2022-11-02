@@ -331,18 +331,6 @@ const
     }
     return newStroke(d)
   },
-  makeGaugeX = (ds: F[], w: F, h: F) => {
-    let [a, b, s] = ds
-    if (!isN(a)) a = 0
-    if (!isN(b)) b = 0
-    if (!isN(s)) s = 1
-    const p = newStroke([
-      'M', a * w, h / 2,
-      'H', b * w,
-    ])
-    p.setAttribute('stroke-width', String(h * s))
-    return p
-  },
   makeGaugeFill = (ds: F[], w: F, h: F) => {
     return newFill([
       'M', 0, 0,
@@ -352,14 +340,24 @@ const
       'Z'
     ])
   },
-  makeGaugeY = (ds: F[], w: F, h: F) => {
-    let [a, b, s] = ds
-    if (!isN(a)) a = 0
-    if (!isN(b)) b = 0
+  makeGaugeX = (ds: F[], w: F, h: F) => {
+    let [len, s] = ds
+    if (!isN(len)) len = 0
     if (!isN(s)) s = 1
     const p = newStroke([
-      'M', w / 2, (1 - a) * h,
-      'V', (1 - b) * h,
+      'M', 0, h / 2,
+      'h', len * w,
+    ])
+    p.setAttribute('stroke-width', String(h * s))
+    return p
+  },
+  makeGaugeY = (ds: F[], w: F, h: F) => {
+    let [len, s] = ds
+    if (!isN(len)) len = 0
+    if (!isN(s)) s = 1
+    const p = newStroke([
+      'M', w / 2, h,
+      'v', -len * h
     ])
     p.setAttribute('stroke-width', String(w * s))
     return p

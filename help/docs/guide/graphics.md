@@ -337,16 +337,15 @@ view(
 
 Set `mode='g gauge-x'` to draw a horizontal gauge.
 
-Set `data=` to normalized `[start, end, size]` values.
-`size` defines the thickness of the bar relative to the rail, and defaults to 1 (bar is as thick as the rail).
+Set `data=` to normalized `[length, width]` values.
+`width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
 
 
 ```py
 style = 'w-48 h-4 fill-indigo-100 stroke-indigo-700'
 view(
-    box(mode='g gauge-x', style=style, data=[0, 0.35]),
-    box(mode='g gauge-x', style=style, data=[0.35, 1]),
-    box(mode='g gauge-x', style=style, data=[0, 0.35, 0.5]),  # thinner bar
+    box(mode='g gauge-x', style=style, data=[0.75]),
+    box(mode='g gauge-x', style=style, data=[0.75, 0.5]),  # thinner bar
 )
 ```
 
@@ -358,16 +357,15 @@ view(
 
 Set `mode='g gauge-y'` to draw a vertical gauge.
 
-Set `data=` to normalized `[start, end, size]` values.
-`size` defines the thickness of the bar relative to the rail, and defaults to 1 (bar is as thick as the rail).
+Set `data=` to normalized `[length, width]` values.
+`width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
 
 
 ```py
 style = 'w-4 h-48 fill-indigo-100 stroke-indigo-700'
 view(row(
-    box(mode='g gauge-y', style=style, data=[0, 0.35]),
-    box(mode='g gauge-y', style=style, data=[0.35, 1]),
-    box(mode='g gauge-y', style=style, data=[0, 0.35, 0.5]),  # thinner bar
+    box(mode='g gauge-y', style=style, data=[0.75]),
+    box(mode='g gauge-y', style=style, data=[0.75, 0.5]),  # thinner bar
 ))
 ```
 
@@ -385,7 +383,7 @@ Set `data=` to normalized `[length, width, track-length, track-width, rotation]`
 
 `inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
 
-`size` defines the size of the bar relative to the rail, and defaults to 1.
+`size` defines the size of the bar relative to the track, and defaults to 1.
 
 
 ```py
@@ -433,7 +431,7 @@ Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius, 
 
 `inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
 
-`size` defines the size of the bar relative to the rail, and defaults to 1.
+`size` defines the size of the bar relative to the track, and defaults to 1.
 
 
 ```py
@@ -809,11 +807,11 @@ Overlay multiple gauges to create a stacked bar.
 bar = box(mode='g gauge-x') / 'absolute inset-0 fill-none'
 view(
     box(
-        bar(data=[0, 0.1]) / 'stroke-red-400',
-        bar(data=[0.1, 0.3]) / 'stroke-orange-400',
-        bar(data=[0.3, 0.7]) / 'stroke-amber-400',
-        bar(data=[0.7, 0.8]) / 'stroke-lime-400',
-        bar(data=[0.8, 1.0]) / 'stroke-green-400',
+        bar(data=[1.0]) / 'stroke-green-400',
+        bar(data=[0.8]) / 'stroke-lime-400',
+        bar(data=[0.7]) / 'stroke-amber-400',
+        bar(data=[0.3]) / 'stroke-orange-400',
+        bar(data=[0.1]) / 'stroke-red-400',
     ) / 'relative w-48 h-4',
 )
 ```
@@ -832,10 +830,10 @@ layer = box() / 'absolute inset-0 fill-none'
 bar = layer(mode='g gauge-x')
 view(
     box(
-        bar(data=[0, 0.6]) / 'stroke-slate-400',  # band
-        bar(data=[0.6, 0.8]) / 'stroke-slate-300',  # band
-        bar(data=[0.8, 1]) / 'stroke-slate-200',  # band
-        bar(data=[0, 0.7, 0.25]) / 'stroke-slate-900',  # measure
+        bar(data=[1]) / 'stroke-slate-200',  # band
+        bar(data=[0.8]) / 'stroke-slate-300',  # band
+        bar(data=[0.6]) / 'stroke-slate-400',  # band
+        bar(data=[0.7, 0.25]) / 'stroke-slate-900',  # measure
         layer(mode='g guide-x', data=[0.9]) / 'stroke-red-800',  # comparative measure
     ) / 'relative w-48 h-6',
 )
