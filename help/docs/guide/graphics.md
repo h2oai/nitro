@@ -841,3 +841,29 @@ view(
 
 
 ![Screenshot](assets/screenshots/graphics_bullet_graph.png)
+
+
+## Network graph
+
+Overlay point and link graphics to create a network graph (node-link diagram).
+
+
+```py
+n = 100
+nodes = [(random.uniform(.05, .95), random.uniform(.05, .95)) for _ in range(n)]
+edges = []
+for x1, y1 in nodes:
+    for x2, y2 in random.choices(nodes, k=random.randint(1, 4)):
+        edges.append((x1, y1, x2, y2))
+
+layer = box() / 'absolute inset-0'
+view(
+    box(
+        layer(mode='g-link-x', data=edges) / 'stroke-indigo-300 fill-none',
+        layer(mode='g-point', data=nodes) / 'stroke-indigo-700 fill-none',
+    ) / 'relative w-64 h-64',
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_network_graph.png)

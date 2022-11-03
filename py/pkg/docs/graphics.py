@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import random
 
 from h2o_nitro import View, box, row, col, option, lorem
 
@@ -692,4 +693,23 @@ def graphics_bullet_graph(view: View):  # height 3
             bar(data=[0.7, 0.25]) / 'stroke-slate-900',  # measure
             layer(mode='g guide-x', data=[0.9]) / 'stroke-red-800',  # comparative measure
         ) / 'relative w-48 h-6',
+    )
+
+
+# ## Network graph
+# Overlay point and link graphics to create a network graph (node-link diagram).
+def graphics_network_graph(view: View):  # height 4
+    n = 100
+    nodes = [(random.uniform(.05, .95), random.uniform(.05, .95)) for _ in range(n)]
+    edges = []
+    for x1, y1 in nodes:
+        for x2, y2 in random.choices(nodes, k=random.randint(1, 4)):
+            edges.append((x1, y1, x2, y2))
+
+    layer = box() / 'absolute inset-0'
+    view(
+        box(
+            layer(mode='g-link-x', data=edges) / 'stroke-indigo-300 fill-none',
+            layer(mode='g-point', data=nodes) / 'stroke-indigo-700 fill-none',
+        ) / 'relative w-64 h-64',
     )

@@ -33,6 +33,7 @@
 import json
 import os
 import datetime
+import random
 from pathlib import Path
 from h2o_nitro import View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \
     __version__ as version

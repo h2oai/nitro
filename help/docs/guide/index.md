@@ -477,6 +477,7 @@ Draw visualizations, microcharts, sparklines, and other data graphics.
 - [Win Loss](graphics.md#win-loss)
 - [Stacked bar](graphics.md#stacked-bar)
 - [Bullet graph](graphics.md#bullet-graph)
+- [Network graph](graphics.md#network-graph)
 
 ## Format
 
