@@ -17,4 +17,6 @@ from .core import View, AsyncView, Box, Option, Theme, box, option, header, row,
 
 from .fake import lorem
 
+import h2o_nitro.graphics
+
 from .version import __version__

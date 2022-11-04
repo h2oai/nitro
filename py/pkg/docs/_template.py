@@ -35,9 +35,9 @@ import os
 import datetime
 import random
 from pathlib import Path
+import h2o_nitro
 from h2o_nitro import View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \
     __version__ as version
-import h2o_nitro.fake as fake
 from h2o_nitro_web import web_directory
 import simple_websocket
 from flask import Flask, request, send_from_directory

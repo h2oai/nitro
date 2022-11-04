@@ -454,6 +454,7 @@ and it's unsure how long it will take to complete.
 
 Draw visualizations, microcharts, sparklines, and other data graphics.
 
+- [Introduction](graphics.md#introduction)
 - [Line Y](graphics.md#line-y)
 - [Curve Y](graphics.md#curve-y)
 - [Step Y](graphics.md#step-y)

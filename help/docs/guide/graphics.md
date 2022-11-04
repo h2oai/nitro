@@ -5,6 +5,96 @@ template: overrides/main.html
 
 Draw visualizations, microcharts, sparklines, and other data graphics.
 
+## Introduction
+
+Nitro includes graphics primitives that can be composited together to create custom visualizations and charts
+that aesthetically match the surrounding page layout.
+
+Graphics in Nitro are responsive, which means they resize automatically when the page size changes. Unlike SVG
+graphics, which resize physically, Nitro's graphics resize semantically (or logically). For example, if the points
+in a scatterplot are 10px wide in a visualization, they'll continue to be 10px wide when resized, so that the
+points do not appear distorted or skewed at different sizes.
+
+The graphical elements are styled using `style=`, similar to how you would style everything else in Nitro.
+
+Graphical primitives include lines, bars, points, guides, labels, and so on. Each of these are covered in detail
+in the following sections. Each primitive uses normalized
+
+To stack graphics, use the `relative` style on the parent box, and `absolute inset-0` on each child box.
+This makes the boxes render on top of each other instead of one below the other.
+
+Here's a rather complicated example that creates a custom time series chart from primitives. This example is just for
+demonstrating how compositing works.
+Most of the time, the graphics you create in Nitro would be much simpler than this.
+
+
+```py
+# Some pretty random data:
+n = 100
+data1 = h2o_nitro.graphics.random_walk(n)
+data2 = h2o_nitro.graphics.random_walk(n)
+# Select a few random points to highlight:
+highlighted = [random.randint(0, n - 1) for _ in range(4)]
+guides = [i / (n - 1) for i in highlighted]
+points1 = [(i / (n - 1), data1[i]) for i in highlighted]
+points2 = [(i / (n - 1), data2[i]) for i in highlighted]
+
+# Compose graphics:
+layer = box() / 'absolute inset-0'
+view(
+    row(
+        # Y-axis:
+        box(
+            mode='g-label',
+            data=[
+                # All labels are right-justified
+                [1, 0 / 4, '0', 1, 0],  # first label, align top
+                [1, 1 / 4, '100', 1],
+                [1, 2 / 4, '200', 1],
+                [1, 3 / 4, '300', 1],
+                [1, 4 / 4, '400', 1, 1],  # last label, align bottom
+            ],
+        ) / 'w-8 h-48 text-xs text-slate-500',
+        col(
+            box(
+                # Month shading:
+                layer(mode='g-rect', data=[
+                    [1 / 10, .5, 1 / 5, 1],
+                    [5 / 10, .5, 1 / 5, 1],
+                    [9 / 10, .5, 1 / 5, 1],
+                ]) / 'fill-slate-100 stroke-none',
+                # X-guides
+                layer(mode='g guide-x', data=guides) / 'stroke-slate-300 fill-none',
+                # Y-guides
+                layer(mode='g guide-y', data=[.25, .5, .75]) / 'stroke-slate-300 fill-none',
+                # Time-series
+                layer(mode='g line-y', data=data1) / 'stroke-blue-600 fill-none',
+                layer(mode='g line-y', data=data2) / 'stroke-red-600 fill-none',
+                # Highlighted points:
+                layer(mode='g-point', data=points1) / 'stroke-blue-600 fill-none',
+                layer(mode='g-point', data=points2) / 'stroke-red-600 fill-none',
+            ) / 'relative w-full h-48',
+            # X-axis:
+            box(
+                mode='g-label',
+                data=[
+                    [0 / 5, .5, 'Jul', 0],  # first label, left-justify
+                    [1 / 5, .5, 'Aug'],
+                    [2 / 5, .5, 'Sep'],
+                    [3 / 5, .5, 'Oct'],
+                    [4 / 5, .5, 'Nov'],
+                    [5 / 5, .5, 'Dec', 1],  # last label, right-justify
+                ],
+            ) / 'w-full h-8 text-xs text-slate-500',
+        ) / 'w-full',
+    ),
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_intro.png)
+
+
 ## Line Y
 
 Set `mode='g line-y'` to draw line and area charts.
@@ -509,7 +599,7 @@ view(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_annotation.png)
+![Screenshot](assets/screenshots/graphics_label.png)
 
 
 ## Point

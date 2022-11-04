@@ -35,33 +35,3 @@ def sentences(k=1):
 
 def words(k=3):
     return ' '.join(random.sample(_long_lorems, k)).title()
-
-
-def _walk(min=0.0, max=100.0, variation: Optional[float] = None, start: Optional[float] = None):
-    if variation is None:
-        variation = (max - min) / 10.0
-    if start is None:
-        start = random.uniform(min, max)
-    x = start
-    while True:
-        x += (random.random() - 0.5) * variation
-        if not min <= x <= max:
-            x = random.uniform(min, max)
-        yield x
-
-
-def numbers(k: Union[int, list], min=0.0, max=100.0, variation: Optional[float] = None, start: Optional[float] = None):
-    w = _walk(min, max, variation, start)
-    if isinstance(k, list):
-        return [(k[i], next(w)) for i in range(len(k))]
-    return [next(w) for _ in range(k)]
-
-
-def hours(k: int, ago: int):
-    x = datetime.datetime.utcnow() - datetime.timedelta(hours=ago)
-    return [(x + datetime.timedelta(hours=i)).isoformat() + 'Z' for i in range(k)]
-
-
-def days(k: int, ago: int):
-    x = datetime.datetime.utcnow() - datetime.timedelta(days=ago)
-    return [(x + datetime.timedelta(days=i)).isoformat() + 'Z' for i in range(k)]
