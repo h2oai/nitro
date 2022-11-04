@@ -139,7 +139,6 @@ export const boxTypes = {
   error: { input: false, labeled: false },
   file: { input: true, labeled: false },
   group: { input: false, labeled: false },
-  g: { input: false, labeled: false },
   info: { input: false, labeled: false },
   md: { input: false, labeled: false }, // not an input unless it contains hyperlinks
   menu: { input: true, labeled: true },
@@ -164,6 +163,29 @@ export const boxTypes = {
   warning: { input: false, labeled: false },
   web: { input: false, labeled: false },
   week: { input: true, labeled: false },
+  // Graphics ("g") modes:
+  'g-label': { input: false, labeled: false },
+  'g-point': { input: false, labeled: false },
+  'g-rect': { input: false, labeled: false },
+  'g-arc': { input: false, labeled: false },
+  'g-polygon': { input: false, labeled: false },
+  'g-polyline': { input: false, labeled: false },
+  'g-link-x': { input: false, labeled: false },
+  'g-link-y': { input: false, labeled: false },
+  'g-spline-x': { input: false, labeled: false },
+  'g-spline-y': { input: false, labeled: false },
+  'g-gauge-c': { input: false, labeled: false },
+  'g-gauge-sc': { input: false, labeled: false },
+  'g-guide-x': { input: false, labeled: false },
+  'g-gauge-x': { input: false, labeled: false },
+  'g-line-y': { input: false, labeled: false },
+  'g-curve-y': { input: false, labeled: false },
+  'g-step-y': { input: false, labeled: false },
+  'g-bar-y': { input: false, labeled: false },
+  'g-stroke-y': { input: false, labeled: false },
+  'g-tick-y': { input: false, labeled: false },
+  'g-guide-y': { input: false, labeled: false },
+  'g-gauge-y': { input: false, labeled: false },
 }
 
 export type BoxMode = keyof typeof boxTypes
@@ -178,11 +200,6 @@ export type BoxModifier = 'live'
   | 'vertical'
   | 'top' | 'middle' | 'bottom' | 'left' | 'center' | 'right'
   | 'open' | 'closed'
-  // Graphics ("g") modes:
-  | 'g-label' | 'g-point' | 'g-rect' | 'g-arc' | 'g-polygon' | 'g-polyline' | 'g-link-x' | 'g-link-y' | 'g-spline-x' | 'g-spline-y'
-  | 'gauge-c' | 'gauge-sc'
-  | 'guide-x' | 'gauge-x'
-  | 'line-y' | 'curve-y' | 'step-y' | 'bar-y' | 'stroke-y' | 'tick-y' | 'guide-y' | 'gauge-y'
 
 export type BoxT = BoxMode | BoxModifier
 

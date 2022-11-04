@@ -23,10 +23,11 @@ type Pairs = Pair[]
 
 const
   lerp = (f: F, a: F, b: F) => a * (1.0 - f) + (b * f),
-  clamp1 = (f: any) => isN(f) ? f < 0 ? 0 : f > 1 ? 1 : f : 0,
-  clamp1s = (fs: any[]) => fs.map(clamp1),
   isPair = (x: any) => Array.isArray(x) && x.length === 2,
   arePairs = (xs: any[]): xs is Pairs => xs.every(isPair),
+  clamp1 = (f: any) => isN(f) ? f < 0 ? 0 : f > 1 ? 1 : f : 0,
+  clamp1s = (fs: any[]) => fs.map(clamp1),
+  clampPairs = (fs: Pairs) => fs.map(clamp1s) as Pairs,
   newEl = (t: S) => document.createElementNS('http://www.w3.org/2000/svg', t),
   newPath = (d: PathD) => {
     const p = newEl('path')
@@ -470,13 +471,15 @@ export const GraphicLabel = ({ context, box }: BoxProps) => {
           style={{ left, top }}
         >
           <div>{text}</div>
-        </div>)
+        </div>
+      )
     }
+    return <></>
   })
   return <div className={css('relative', style)}>{labels}</div>
 }
 
-export const Graphic2 = ({ box }: BoxProps) => {
+export const Graphic = ({ box }: BoxProps) => {
   const
     { modes, style, data } = box,
     ref = useRef<HTMLDivElement>(null)
@@ -667,6 +670,77 @@ export const Graphic2 = ({ box }: BoxProps) => {
           }
         }
         svg.appendChild(newPath(path))
+      } else if (modes.has('g-line-y')) {
+        if (arePairs(data)) {
+          const d = clampPairs(data)
+          svg.appendChild(makeLineYFilli(d, width, height))
+          svg.appendChild(makeLineYi(d, width, height))
+        } else {
+          const d = clamp1s(data)
+          svg.appendChild(makeLineYFill(d, width, height))
+          svg.appendChild(makeLineY(d, width, height))
+        }
+      } else if (modes.has('g-curve-y')) {
+        if (arePairs(data)) {
+          const d = clampPairs(data)
+          const
+            ps0 = makeCurveYPoints(d.map((x: Pair) => x[0]).slice(0).reverse(), width, height, true),
+            ps1 = makeCurveYPoints(d.map((x: Pair) => x[1]), width, height, false)
+          svg.appendChild(makeCurveYFilli(ps0, ps1))
+          svg.appendChild(makeCurveYi(ps0, ps1))
+        } else {
+          const ps = makeCurveYPoints(clamp1s(data), width, height, false)
+          svg.appendChild(makeCurveYFill(ps, width, height))
+          svg.appendChild(makeCurveY(ps))
+        }
+      } else if (modes.has('g-step-y')) {
+        if (arePairs(data)) {
+          const d = clampPairs(data)
+          svg.appendChild(makeStepYFilli(d, width, height))
+          svg.appendChild(makeStepYi(d, width, height))
+        } else {
+          const d = clamp1s(data)
+          svg.appendChild(makeStepYFill(d, width, height))
+          svg.appendChild(makeStepY(d, width, height))
+        }
+      } else if (modes.has('g-bar-y')) {
+        if (arePairs(data)) {
+          svg.appendChild(makeBarYi(clampPairs(data), width, height))
+        } else {
+          svg.appendChild(makeBarY(clamp1s(data), width, height))
+        }
+      } else if (modes.has('g-stroke-y')) {
+        if (arePairs(data)) {
+          svg.appendChild(makeStrokeYi(clampPairs(data), width, height))
+        } else {
+          svg.appendChild(makeStrokeY(clamp1s(data), width, height))
+        }
+      } else if (modes.has('g-tick-y')) {
+        if (arePairs(data)) {
+          svg.appendChild(makeTickYi(clampPairs(data), width, height))
+        } else {
+          svg.appendChild(makeTickY(clamp1s(data), width, height))
+        }
+      } else if (modes.has('g-guide-x')) {
+        svg.appendChild(makeGuideX(clamp1s(data), width, height))
+      } else if (modes.has('g-guide-y')) {
+        svg.appendChild(makeGuideY(clamp1s(data), width, height))
+      } else if (modes.has('g-gauge-x')) {
+        const d = clamp1s(data)
+        svg.appendChild(makeGaugeFill(d, width, height))
+        svg.appendChild(makeGaugeX(d, width, height))
+      } else if (modes.has('g-gauge-y')) {
+        const d = clamp1s(data)
+        svg.appendChild(makeGaugeFill(d, width, height))
+        svg.appendChild(makeGaugeY(d, width, height))
+      } else if (modes.has('g-gauge-c')) {
+        const d = clamp1s(data)
+        svg.appendChild(makeGaugeCFill(d, width, height))
+        svg.appendChild(makeGaugeC(d, width, height))
+      } else if (modes.has('g-gauge-sc')) {
+        const d = clamp1s(data)
+        svg.appendChild(makeGaugeSCFill(d, width, height))
+        svg.appendChild(makeGaugeSC(d, width, height))
       } else if (modes.has('g-rect')) {
         for (const d of data) {
           if (Array.isArray(d)) {
@@ -820,100 +894,6 @@ export const Graphic2 = ({ box }: BoxProps) => {
               ]))
             }
           }
-        }
-      }
-
-      while (div.firstChild) div.removeChild(div.firstChild)
-      div.appendChild(svg)
-    }
-  })
-  return <div ref={ref} className={css(style)} />
-}
-
-export const Graphic = ({ context, box }: BoxProps) => {
-  const
-    { modes, style, data: rawData } = box,
-    ref = useRef<HTMLDivElement>(null),
-    unclamped: any = rawData || [],
-    paired = arePairs(unclamped),
-    data: any = paired ? unclamped.map(clamp1s) : clamp1s(unclamped)
-
-  useEffect(() => {
-    const div = ref.current
-    if (div) {
-      const
-        rect = div.getBoundingClientRect(),
-        w = Math.round(rect.width),
-        h = Math.round(rect.height),
-        svg = newEl('svg')
-
-      svg.setAttribute('viewBox', `0 0 ${w} ${h}`)
-      svg.setAttribute('width', `${w}`)
-      svg.setAttribute('height', `${h}`)
-
-      if (data.length) {
-        if (modes.has('line-y')) {
-          if (paired) {
-            svg.appendChild(makeLineYFilli(data, w, h))
-            svg.appendChild(makeLineYi(data, w, h))
-          } else {
-            svg.appendChild(makeLineYFill(data, w, h))
-            svg.appendChild(makeLineY(data, w, h))
-          }
-        } else if (modes.has('curve-y')) {
-          if (paired) {
-            const
-              ps0 = makeCurveYPoints(data.map((x: Pair) => x[0]).slice(0).reverse(), w, h, true),
-              ps1 = makeCurveYPoints(data.map((x: Pair) => x[1]), w, h, false)
-            svg.appendChild(makeCurveYFilli(ps0, ps1))
-            svg.appendChild(makeCurveYi(ps0, ps1))
-          } else {
-            const ps = makeCurveYPoints(data, w, h, false)
-            svg.appendChild(makeCurveYFill(ps, w, h))
-            svg.appendChild(makeCurveY(ps))
-          }
-        } else if (modes.has('step-y')) {
-          if (paired) {
-            svg.appendChild(makeStepYFilli(data, w, h))
-            svg.appendChild(makeStepYi(data, w, h))
-          } else {
-            svg.appendChild(makeStepYFill(data, w, h))
-            svg.appendChild(makeStepY(data, w, h))
-          }
-        } else if (modes.has('bar-y')) {
-          if (paired) {
-            svg.appendChild(makeBarYi(data, w, h))
-          } else {
-            svg.appendChild(makeBarY(data, w, h))
-          }
-        } else if (modes.has('stroke-y')) {
-          if (paired) {
-            svg.appendChild(makeStrokeYi(data, w, h))
-          } else {
-            svg.appendChild(makeStrokeY(data, w, h))
-          }
-        } else if (modes.has('tick-y')) {
-          if (paired) {
-            svg.appendChild(makeTickYi(data, w, h))
-          } else {
-            svg.appendChild(makeTickY(data, w, h))
-          }
-        } else if (modes.has('guide-x')) {
-          svg.appendChild(makeGuideX(data, w, h))
-        } else if (modes.has('guide-y')) {
-          svg.appendChild(makeGuideY(data, w, h))
-        } else if (modes.has('gauge-x')) {
-          svg.appendChild(makeGaugeFill(data, w, h))
-          svg.appendChild(makeGaugeX(data, w, h))
-        } else if (modes.has('gauge-y')) {
-          svg.appendChild(makeGaugeFill(data, w, h))
-          svg.appendChild(makeGaugeY(data, w, h))
-        } else if (modes.has('gauge-c')) {
-          svg.appendChild(makeGaugeCFill(data, w, h))
-          svg.appendChild(makeGaugeC(data, w, h))
-        } else if (modes.has('gauge-sc')) {
-          svg.appendChild(makeGaugeSCFill(data, w, h))
-          svg.appendChild(makeGaugeSC(data, w, h))
         }
       }
 
