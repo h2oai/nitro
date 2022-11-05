@@ -54,7 +54,7 @@ view(
                 [1, 3 / 4, '300', 1],
                 [1, 4 / 4, '400', 1, 1],  # last label, align bottom
             ],
-        ) / 'w-8 h-48 text-xs text-slate-500',
+        ) / 'w-8 h-48 text-xs text-slate-300',
         col(
             box(
                 # Month shading:
@@ -62,17 +62,17 @@ view(
                     [1 / 10, .5, 1 / 5, 1],
                     [5 / 10, .5, 1 / 5, 1],
                     [9 / 10, .5, 1 / 5, 1],
-                ]) / 'fill-slate-100 stroke-none',
+                ]) / 'fill-slate-700 stroke-none',
                 # X-guides
-                layer(mode='g-guide-x', data=guides) / 'stroke-slate-300 fill-none',
+                layer(mode='g-guide-x', data=guides) / 'stroke-rose-500 fill-none',
                 # Y-guides
-                layer(mode='g-guide-y', data=[.25, .5, .75]) / 'stroke-slate-300 fill-none',
+                layer(mode='g-guide-y', data=[.25, .5, .75]) / 'stroke-slate-600 fill-none',
                 # Time-series
-                layer(mode='g-line-y', data=data1) / 'stroke-blue-600 fill-none',
-                layer(mode='g-line-y', data=data2) / 'stroke-red-600 fill-none',
+                layer(mode='g-line-y', data=data1) / 'stroke-yellow-400 fill-none',
+                layer(mode='g-line-y', data=data2) / 'stroke-emerald-400 fill-none',
                 # Highlighted points:
-                layer(mode='g-point', data=points1) / 'stroke-blue-600 fill-none',
-                layer(mode='g-point', data=points2) / 'stroke-red-600 fill-none',
+                layer(mode='g-point', data=points1) / 'stroke-yellow-400 fill-none',
+                layer(mode='g-point', data=points2) / 'stroke-emerald-400 fill-none',
             ) / 'relative w-full h-48',
             # X-axis:
             box(
@@ -85,9 +85,9 @@ view(
                     [4 / 5, .5, 'Nov'],
                     [5 / 5, .5, 'Dec', 1],  # last label, right-justify
                 ],
-            ) / 'w-full h-8 text-xs text-slate-500',
+            ) / 'w-full h-8 text-xs text-slate-300',
         ) / 'w-full',
-    ),
+    ) / 'bg-slate-800 p-4',
 )
 ```
 
