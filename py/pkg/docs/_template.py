@@ -34,6 +34,7 @@ import json
 import os
 import datetime
 import random
+import math
 from pathlib import Path
 import h2o_nitro
 from h2o_nitro import View, box, option, header, row, col, ContextSwitchError, lorem, Theme, \

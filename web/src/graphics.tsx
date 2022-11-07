@@ -45,6 +45,14 @@ const
     p.setAttribute('fill', 'none')
     return p
   },
+  makeLineX = (xs: F[], w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / (n - 1),
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', lerp(xs[i], 0, w), dy * i)
+    return newStroke(d)
+  },
   makeLineY = (ys: F[], w: F, h: F) => {
     const
       n = ys.length,
@@ -52,6 +60,68 @@ const
       d: Array<S | F> = []
     for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i], h, 0))
     return newStroke(d)
+  },
+  makeAreaX = (xs: F[], w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / (n - 1),
+      d: Array<S | F> = []
+    d.push('M', 0, 0)
+    for (let i = 0; i < n; i++) d.push('L', lerp(xs[i], 0, w), dy * i)
+    d.push('L', 0, h)
+    d.push('Z')
+    return newFill(d)
+  },
+  makeAreaY = (ys: F[], w: F, h: F) => {
+    const
+      n = ys.length,
+      dx = w / (n - 1),
+      d: Array<S | F> = []
+    d.push('M', 0, h)
+    for (let i = 0; i < n; i++) d.push('L', dx * i, lerp(ys[i], h, 0))
+    d.push('L', w, h)
+    d.push('Z')
+    return newFill(d)
+  },
+  makeLineXi = (xs: Pairs, w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / (n - 1),
+      d: Array<S | F> = []
+    for (const j of [0, 1]) {
+      for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', lerp(xs[i][j], 0, w), dy * i)
+    }
+    return newStroke(d)
+  },
+  makeLineYi = (ys: Pairs, w: F, h: F) => {
+    const
+      n = ys.length,
+      dx = w / (n - 1),
+      d: Array<S | F> = []
+    for (const j of [0, 1]) {
+      for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][j], h, 0))
+    }
+    return newStroke(d)
+  },
+  makeAreaXi = (xs: Pairs, w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / (n - 1),
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', lerp(xs[i][0], 0, w), dy * i)
+    for (let i = n - 1; i >= 0; i--) d.push('L', lerp(xs[i][1], 0, w), dy * i)
+    d.push('Z')
+    return newFill(d)
+  },
+  makeAreaYi = (ys: Pairs, w: F, h: F) => {
+    const
+      n = ys.length,
+      dx = w / (n - 1),
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][0], h, 0))
+    for (let i = n - 1; i >= 0; i--) d.push('L', dx * i, lerp(ys[i][1], h, 0))
+    d.push('Z')
+    return newFill(d)
   },
   joinCurveX = (ps: Pair[]) => {
     const d: F[][] = []
@@ -77,38 +147,6 @@ const
       d[i] = [rev ? w - dx * i : dx * i, lerp(ys[i], h, 0)]
     }
     return joinCurveX(d)
-  },
-  makeLineYFill = (ys: F[], w: F, h: F) => {
-    const
-      n = ys.length,
-      dx = w / (n - 1),
-      d: Array<S | F> = []
-    d.push('M', 0, h)
-    for (let i = 0; i < n; i++) d.push('L', dx * i, lerp(ys[i], h, 0))
-    d.push('L', w, h)
-    d.push('Z')
-    return newFill(d)
-  },
-  makeLineYi = (ys: Pairs, w: F, h: F) => {
-    const
-      n = ys.length,
-      dx = w / (n - 1),
-      d: Array<S | F> = []
-    for (const j of [0, 1]) {
-      for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][j], h, 0))
-    }
-
-    return newStroke(d)
-  },
-  makeLineYFilli = (ys: Pairs, w: F, h: F) => {
-    const
-      n = ys.length,
-      dx = w / (n - 1),
-      d: Array<S | F> = []
-    for (let i = 0; i < n; i++) d.push(i ? 'L' : 'M', dx * i, lerp(ys[i][0], h, 0))
-    for (let i = n - 1; i >= 0; i--) d.push('L', dx * i, lerp(ys[i][1], h, 0))
-    d.push('Z')
-    return newFill(d)
   },
   drawCurveY = (ps: F[][], d: Array<S | F>) => {
     for (let i = 0; i < ps.length; i++) {
@@ -670,14 +708,24 @@ export const Graphic = ({ box }: BoxProps) => {
           }
         }
         svg.appendChild(newPath(path))
+      } else if (modes.has('g-line-x')) {
+        if (arePairs(data)) {
+          const d = clampPairs(data)
+          svg.appendChild(makeAreaXi(d, width, height))
+          svg.appendChild(makeLineXi(d, width, height))
+        } else {
+          const d = clamp1s(data)
+          svg.appendChild(makeAreaX(d, width, height))
+          svg.appendChild(makeLineX(d, width, height))
+        }
       } else if (modes.has('g-line-y')) {
         if (arePairs(data)) {
           const d = clampPairs(data)
-          svg.appendChild(makeLineYFilli(d, width, height))
+          svg.appendChild(makeAreaYi(d, width, height))
           svg.appendChild(makeLineYi(d, width, height))
         } else {
           const d = clamp1s(data)
-          svg.appendChild(makeLineYFill(d, width, height))
+          svg.appendChild(makeAreaY(d, width, height))
           svg.appendChild(makeLineY(d, width, height))
         }
       } else if (modes.has('g-curve-y')) {

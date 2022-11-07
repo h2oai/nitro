@@ -95,65 +95,62 @@ view(
 ![Screenshot](assets/screenshots/graphics_intro.png)
 
 
-## Line Y
+## Line
 
-Set `mode='g-line-y'` to draw line and area charts.
+Set `mode='g-line-x'` or `mode='g-line-y'` to draw line and area charts.
 
-For a single curve, set `data=` to a sequence of normalized y-coordinates.
+For a single line, set `data=` to a sequence of normalized values.
 
-For dual curves, set `data=` to a sequence of normalized `[low, high]` y-coordinates.
+For intervals (dual lines), set `data=` to a sequence of normalized `[low, high]` values.
 
 
 ```py
+data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
+intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
+             (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
+
 view(row(
     # Single curve:
     col(
         # Stroke and fill:
-        box(
-            mode='g-line-y',
-            style='w-48 h-8 fill-indigo-100 stroke-indigo-700',
-            data=[0.5, 0.65, 0.5, 0.4, 0.95, 0.05, 0.5, 0.5, 0.6, 0.5, 0.5] * 6,
-        ),
+        box(mode='g-line-y', style='w-32 h-8 fill-indigo-100 stroke-indigo-700', data=data),
         # Stroke only:
-        box(
-            mode='g-line-y',
-            style='w-48 h-8 fill-none stroke-indigo-700',
-            data=[0.5, 0.65, 0.5, 0.4, 0.95, 0.05, 0.5, 0.5, 0.6, 0.5, 0.5] * 6,
-        ),
+        box(mode='g-line-y', style='w-32 h-8 fill-none stroke-indigo-700', data=data),
         # Fill only:
-        box(
-            mode='g-line-y',
-            style='w-48 h-8 fill-indigo-700 stroke-none',
-            data=[0.5, 0.65, 0.5, 0.4, 0.95, 0.05, 0.5, 0.5, 0.6, 0.5, 0.5] * 6,
-        ),
+        box(mode='g-line-y', style='w-32 h-8 fill-indigo-700 stroke-none', data=data),
     ),
     # Dual curve:
     col(
         # Stroke and fill:
-        box(
-            mode='g-line-y',
-            style='w-48 h-8 fill-indigo-100 stroke-indigo-700',
-            data=[[0.5, 0.8], [0.2, 0.6], [0.3, 0.9], [0.6, 0.7]] * 6,
-        ),
-
+        box(mode='g-line-y', style='w-32 h-8 fill-indigo-100 stroke-indigo-700', data=intervals),
         # Stroke only:
-        box(
-            mode='g-line-y',
-            style='w-48 h-8 fill-none stroke-indigo-700',
-            data=[[0.5, 0.8], [0.2, 0.6], [0.3, 0.9], [0.6, 0.7]] * 6,
-        ),
+        box(mode='g-line-y', style='w-32 h-8 fill-none stroke-indigo-700', data=intervals),
         # Fill only:
-        box(
-            mode='g-line-y',
-            style='w-48 h-8 fill-indigo-700 stroke-none',
-            data=[[0.5, 0.8], [0.2, 0.6], [0.3, 0.9], [0.6, 0.7]] * 6,
-        ),
+        box(mode='g-line-y', style='w-32 h-8 fill-indigo-700 stroke-none', data=intervals),
+    ),
+    # Single curve:
+    row(
+        # Stroke and fill:
+        box(mode='g-line-x', style='w-8 h-32 fill-indigo-100 stroke-indigo-700', data=data),
+        # Stroke only:
+        box(mode='g-line-x', style='w-8 h-32 fill-none stroke-indigo-700', data=data),
+        # Fill only:
+        box(mode='g-line-x', style='w-8 h-32 fill-indigo-700 stroke-none', data=data),
+    ),
+    # Dual curve:
+    row(
+        # Stroke and fill:
+        box(mode='g-line-x', style='w-8 h-32 fill-indigo-100 stroke-indigo-700', data=intervals),
+        # Stroke only:
+        box(mode='g-line-x', style='w-8 h-32 fill-none stroke-indigo-700', data=intervals),
+        # Fill only:
+        box(mode='g-line-x', style='w-8 h-32 fill-indigo-700 stroke-none', data=intervals),
     ),
 ))
 ```
 
 
-![Screenshot](assets/screenshots/graphics_line_y.png)
+![Screenshot](assets/screenshots/graphics_line_xy.png)
 
 
 ## Curve Y

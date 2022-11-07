@@ -178,6 +178,7 @@ export const boxTypes = {
   'g-gauge-sc': { input: false, labeled: false },
   'g-guide-x': { input: false, labeled: false },
   'g-gauge-x': { input: false, labeled: false },
+  'g-line-x': { input: false, labeled: false },
   'g-line-y': { input: false, labeled: false },
   'g-curve-y': { input: false, labeled: false },
   'g-step-y': { input: false, labeled: false },
