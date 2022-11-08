@@ -372,7 +372,7 @@ view(
     box(
         mode='g-guide-x',
         style='w-48 h-8 stroke-indigo-700',
-        data=[0, 0.2, 0.4, 0.6, 0.8, 0.85, 0.9, 0.95, 0.975, 1],
+        data=[0, .2, .4, .6, .8, .85, .9, .95, .975, 1],
     ),
 )
 ```
@@ -393,7 +393,7 @@ view(
     box(
         mode='g-guide-y',
         style='w-8 h-48 stroke-indigo-700',
-        data=[0, 0.2, 0.4, 0.6, 0.8, 0.85, 0.9, 0.95, 0.975, 1],
+        data=[0, .2, .4, .6, .8, .85, .9, .95, .975, 1],
     ),
 )
 ```
@@ -413,8 +413,8 @@ Set `data=` to normalized `[length, width]` values.
 ```py
 style = 'w-48 h-4 fill-indigo-100 stroke-indigo-700'
 view(
-    box(mode='g-gauge-x', style=style, data=[0.75]),
-    box(mode='g-gauge-x', style=style, data=[0.75, 0.5]),  # thinner bar
+    box(mode='g-gauge-x', style=style, data=[.75]),
+    box(mode='g-gauge-x', style=style, data=[.75, .5]),  # thinner bar
 )
 ```
 
@@ -433,8 +433,8 @@ Set `data=` to normalized `[length, width]` values.
 ```py
 style = 'w-4 h-48 fill-indigo-100 stroke-indigo-700'
 view(row(
-    box(mode='g-gauge-y', style=style, data=[0.75]),
-    box(mode='g-gauge-y', style=style, data=[0.75, 0.5]),  # thinner bar
+    box(mode='g-gauge-y', style=style, data=[.75]),
+    box(mode='g-gauge-y', style=style, data=[.75, .5]),  # thinner bar
 ))
 ```
 
@@ -459,30 +459,30 @@ Set `data=` to normalized `[length, width, track-length, track-width, rotation]`
 style = 'w-24 h-24 fill-indigo-100 stroke-indigo-700'
 view(
     row(
-        box(mode='g-gauge-c', style=style, data=[0, 0.35]),
-        box(mode='g-gauge-c', style=style, data=[0, 0.35, 0.5, 1]),
-        box(mode='g-gauge-c', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
-        box(mode='g-gauge-c', style=style, data=[0, 0.35, 0.5, 1, 0.5]),  # thinner bar
-        box(mode='g-gauge-c', style=style, data=[0, 0.35, 0.5, 0.75]),
-        box(mode='g-gauge-c', style=style, data=[0.25, 0.75, 0.5, 1]),
+        box(mode='g-gauge-c', style=style, data=[0, .35]),
+        box(mode='g-gauge-c', style=style, data=[0, .35, .5, 1]),
+        box(mode='g-gauge-c', style=style, data=[0, .35, .5]),  # end-radius defaults to 1.
+        box(mode='g-gauge-c', style=style, data=[0, .35, .5, 1, .5]),  # thinner bar
+        box(mode='g-gauge-c', style=style, data=[0, .35, .5, .75]),
+        box(mode='g-gauge-c', style=style, data=[.25, .75, .5, 1]),
     ),
     row(
         # With label:
         box(
-            box(mode='g-gauge-c', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-c', data=[0, .35, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
             box('35%') / 'text-sm font-bold',
         ) / 'relative flex w-24 h-24 justify-center items-center',
         # Stacked:
         box(
-            box(mode='g-gauge-c', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box(mode='g-gauge-c', data=[0.35, 0.65, 0.5]) / 'absolute inset-0 fill-none stroke-red-500',
-            box(mode='g-gauge-c', data=[0.65, 0.8, 0.5]) / 'absolute inset-0 fill-none stroke-red-300',
+            box(mode='g-gauge-c', data=[0, .35, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-c', data=[.35, .65, .5]) / 'absolute inset-0 fill-none stroke-red-500',
+            box(mode='g-gauge-c', data=[.65, .8, .5]) / 'absolute inset-0 fill-none stroke-red-300',
         ) / 'relative w-24 h-24',
         # Concentric:
         box(
-            box(mode='g-gauge-c', data=[0, 0.35, 0.8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box(mode='g-gauge-c', data=[0, 0.65, 0.5, 0.7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
-            box(mode='g-gauge-c', data=[0, 0.85, 0.2, 0.4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
+            box(mode='g-gauge-c', data=[0, .35, .8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-c', data=[0, .65, .5, .7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
+            box(mode='g-gauge-c', data=[0, .85, .2, .4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
         ) / 'relative w-24 h-24',
     )
 )
@@ -507,30 +507,30 @@ Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius, 
 style = 'w-24 h-12 fill-indigo-100 stroke-indigo-700'
 view(
     row(
-        box(mode='g-gauge-sc', style=style, data=[0, 0.35]),
-        box(mode='g-gauge-sc', style=style, data=[0, 0.35, 0.5, 1]),
-        box(mode='g-gauge-sc', style=style, data=[0, 0.35, 0.5]),  # end-radius defaults to 1.
-        box(mode='g-gauge-sc', style=style, data=[0, 0.35, 0.5, 1, 0.5]),  # thinner bar
-        box(mode='g-gauge-sc', style=style, data=[0, 0.35, 0.5, 0.75]),
-        box(mode='g-gauge-sc', style=style, data=[0.25, 0.75, 0.5, 1]),
+        box(mode='g-gauge-sc', style=style, data=[0, .35]),
+        box(mode='g-gauge-sc', style=style, data=[0, .35, .5, 1]),
+        box(mode='g-gauge-sc', style=style, data=[0, .35, .5]),  # end-radius defaults to 1.
+        box(mode='g-gauge-sc', style=style, data=[0, .35, .5, 1, .5]),  # thinner bar
+        box(mode='g-gauge-sc', style=style, data=[0, .35, .5, .75]),
+        box(mode='g-gauge-sc', style=style, data=[.25, .75, .5, 1]),
     ),
     row(
         # With label:
         box(
-            box(mode='g-gauge-sc', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-sc', data=[0, .35, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
             box('35%') / 'text-xs font-medium',
         ) / 'relative flex w-24 h-12 justify-center items-end',
         # Stacked:
         box(
-            box(mode='g-gauge-sc', data=[0, 0.35, 0.5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box(mode='g-gauge-sc', data=[0.35, 0.65, 0.5]) / 'absolute inset-0 fill-none stroke-red-500',
-            box(mode='g-gauge-sc', data=[0.65, 0.8, 0.5]) / 'absolute inset-0 fill-none stroke-red-300',
+            box(mode='g-gauge-sc', data=[0, .35, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-sc', data=[.35, .65, .5]) / 'absolute inset-0 fill-none stroke-red-500',
+            box(mode='g-gauge-sc', data=[.65, .8, .5]) / 'absolute inset-0 fill-none stroke-red-300',
         ) / 'relative w-24 h-12',
         # Concentric:
         box(
-            box(mode='g-gauge-sc', data=[0, 0.35, 0.8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box(mode='g-gauge-sc', data=[0, 0.65, 0.5, 0.7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
-            box(mode='g-gauge-sc', data=[0, 0.85, 0.2, 0.4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
+            box(mode='g-gauge-sc', data=[0, .35, .8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-sc', data=[0, .65, .5, .7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
+            box(mode='g-gauge-sc', data=[0, .85, .2, .4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
         ) / 'relative w-24 h-12',
     ),
 )
@@ -555,11 +555,11 @@ view(
         mode='g-label',
         style='w-48 h-8 text-xs bg-slate-100',
         data=[
-            [0, 0.5, '0', 0],  # first label, left-justify
-            [0.25, 0.5, '100'],
-            [0.5, 0.5, '200'],
-            [0.75, 0.5, '300'],
-            [1, 0.5, '400', 1],  # last label, right-justify
+            [0, .5, '0', 0],  # first label, left-justify
+            [.25, .5, '100'],
+            [.5, .5, '200'],
+            [.75, .5, '300'],
+            [1, .5, '400', 1],  # last label, right-justify
         ],
     ),
     box(
@@ -568,9 +568,9 @@ view(
         data=[
             # All labels are right-justified
             [1, 0, '0', 1, 0],  # first label, align top
-            [1, 0.25, '100', 1],
-            [1, 0.5, '200', 1],
-            [1, 0.75, '300', 1],
+            [1, .25, '100', 1],
+            [1, .5, '200', 1],
+            [1, .75, '300', 1],
             [1, 1, '400', 1, 1],  # last label, align bottom
         ],
     ),
@@ -636,9 +636,9 @@ view(
         mode='g-rect',
         style='w-32 h-16 fill-indigo-100 stroke-indigo-700',
         data=[
-            [0.25, 0.5, 0.2, 0.9],
-            [0.5, 0.5, 0.2, 0.5],
-            [0.75, 0.5, 0.2, 0.9, 10],
+            [.25, .5, .2, .9],
+            [.5, .5, .2, .5],
+            [.75, .5, .2, .9, 10],
         ],
     ),
 )
@@ -661,19 +661,19 @@ view(row(
         mode='g-arc',
         style='w-32 h-32 fill-indigo-100 stroke-indigo-700',
         data=[
-            [0.05, 0.5, 0.1],
-            [0.25, 0.5, 0.3],
-            [0.7, 0.5, 0.6, 1, 0.5],  # donut
+            [.05, .5, .1],
+            [.25, .5, .3],
+            [.7, .5, .6, 1, .5],  # donut
         ],
     ),
     box(
         mode='g-arc',
         style='w-32 h-32 fill-indigo-100 stroke-indigo-700',
         data=[
-            [1 / 8, 0.5, 1 / 5, 1 / 2, 1, 3 / 4],
-            [3 / 8, 0.5, 1 / 3, 3 / 4, .5, 0],
-            [5 / 8, 0.5, 1 / 5, 4 / 12, 1, 1 / 12],
-            [7 / 8, 0.5, 1 / 5, 3 / 4, .75, 1 / 12],
+            [1 / 8, .5, 1 / 5, 1 / 2, 1, 3 / 4],
+            [3 / 8, .5, 1 / 3, 3 / 4, .5, 0],
+            [5 / 8, .5, 1 / 5, 4 / 12, 1, 1 / 12],
+            [7 / 8, .5, 1 / 5, 3 / 4, .75, 1 / 12],
         ],
     ),
 ))
@@ -695,18 +695,18 @@ view(
         style='w-32 h-8 fill-none stroke-indigo-700',
         data=[
             [
-                0.1, 0.1, 0.1, 0.9,
-                0.2, 0.1, 0.2, 0.9,
-                0.3, 0.1, 0.3, 0.9,
-                0.4, 0.1, 0.4, 0.9,
-                0.5, 0.1, 0.5, 0.9,
+                .1, .1, .1, .9,
+                .2, .1, .2, .9,
+                .3, .1, .3, .9,
+                .4, .1, .4, .9,
+                .5, .1, .5, .9,
             ],
             [
-                0.6, 0.1, 0.9, 0.1,
-                0.6, 0.3, 0.9, 0.3,
-                0.6, 0.5, 0.9, 0.5,
-                0.6, 0.7, 0.9, 0.7,
-                0.6, 0.9, 0.9, 0.9,
+                .6, .1, .9, .1,
+                .6, .3, .9, .3,
+                .6, .5, .9, .5,
+                .6, .7, .9, .7,
+                .6, .9, .9, .9,
             ],
         ],
     ),
@@ -729,18 +729,18 @@ view(
         style='w-32 h-8 fill-indigo-100 stroke-indigo-700',
         data=[
             [
-                0.1, 0.05, 0.1, 0.9,
-                0.2, 0.1, 0.2, 0.9,
-                0.3, 0.1, 0.3, 0.9,
-                0.4, 0.1, 0.4, 0.9,
-                0.5, 0.05
+                .1, .05, .1, .9,
+                .2, .1, .2, .9,
+                .3, .1, .3, .9,
+                .4, .1, .4, .9,
+                .5, .05
             ],
             [
-                0.55, 0.1, 0.9, 0.1,
-                0.6, 0.3, 0.9, 0.3,
-                0.6, 0.5, 0.9, 0.5,
-                0.6, 0.7, 0.9, 0.7,
-                0.55, 0.9
+                .55, .1, .9, .1,
+                .6, .3, .9, .3,
+                .6, .5, .9, .5,
+                .6, .7, .9, .7,
+                .55, .9
             ],
         ],
     ),
@@ -771,27 +771,27 @@ view(
             mode='g-link-x',
             style='h-32 w-32 fill-none stroke-indigo-700',
             data=[
-                [0.1, 0.75, 0.9, 0.95],
-                [0.1, 0.5, 0.9, 0.5],
-                [0.1, 0.25, 0.9, 0.05],
+                [.1, .75, .9, .95],
+                [.1, .5, .9, .5],
+                [.1, .25, .9, .05],
             ],
         ),
         box(
             mode='g-link-x',
             style='h-32 w-32 fill-indigo-700 stroke-none',
             data=[
-                [0.1, 0.75, 0.9, 0.75, 0.05],  # add thickness
-                [0.1, 0.5, 0.9, 0.5, 0.1],  # more thickness
-                [0.1, 0.25, 0.9, 0.25, 0.25],  # even more thickness
+                [.1, .75, .9, .75, .05],  # add thickness
+                [.1, .5, .9, .5, .1],  # more thickness
+                [.1, .25, .9, .25, .25],  # even more thickness
             ],
         ),
         box(
             mode='g-link-x',
             style='h-32 w-32 fill-indigo-700 stroke-none',
             data=[
-                [0.1, 0.75, 0.9, 0.75, 0.1, 0.2],  # start thin, end thick
-                [0.1, 0.5, 0.9, 0.5, 0.2, 0.1],  # start thick, end thin
-                [0.1, 0.25, 0.9, 0.25, 0.1, 0.1],  # uniform thickness
+                [.1, .75, .9, .75, .1, .2],  # start thin, end thick
+                [.1, .5, .9, .5, .2, .1],  # start thick, end thin
+                [.1, .25, .9, .25, .1, .1],  # uniform thickness
             ],
         ),
     ),
@@ -800,27 +800,27 @@ view(
             mode='g-link-y',
             style='h-32 w-32 fill-none stroke-indigo-700',
             data=[
-                [0.75, 0.1, 0.95, 0.9],
-                [0.5, 0.1, 0.5, 0.9],
-                [0.25, 0.1, 0.05, 0.9],
+                [.75, .1, .95, .9],
+                [.5, .1, .5, .9],
+                [.25, .1, .05, .9],
             ],
         ),
         box(
             mode='g-link-y',
             style='h-32 w-32 fill-indigo-700 stroke-none',
             data=[
-                [0.75, 0.1, 0.75, 0.9, 0.05],  # add thickness
-                [0.5, 0.1, 0.5, 0.9, 0.1],  # more thickness
-                [0.25, 0.1, 0.25, 0.9, 0.25],  # even more thickness
+                [.75, .1, .75, .9, .05],  # add thickness
+                [.5, .1, .5, .9, .1],  # more thickness
+                [.25, .1, .25, .9, .25],  # even more thickness
             ],
         ),
         box(
             mode='g-link-y',
             style='h-32 w-32 fill-indigo-700 stroke-none',
             data=[
-                [0.75, 0.1, 0.75, 0.9, 0.1, 0.2],  # start thin, end thick
-                [0.5, 0.1, 0.5, 0.9, 0.2, 0.1],  # start thick, end thin
-                [0.25, 0.1, 0.25, 0.9, 0.1, 0.1],  # uniform thickness
+                [.75, .1, .75, .9, .1, .2],  # start thin, end thick
+                [.5, .1, .5, .9, .2, .1],  # start thick, end thin
+                [.25, .1, .25, .9, .1, .1],  # uniform thickness
             ],
         ),
     ),
@@ -850,18 +850,18 @@ view(
             mode='g-spline-x',
             style='h-32 w-32 fill-none stroke-indigo-700',
             data=[
-                [0.1, 0.75, 0.9, 0.95],
-                [0.1, 0.5, 0.9, 0.5],
-                [0.1, 0.25, 0.9, 0.05],
+                [.1, .75, .9, .95],
+                [.1, .5, .9, .5],
+                [.1, .25, .9, .05],
             ],
         ),
         box(
             mode='g-spline-x',
             style='h-32 w-32 fill-indigo-700 stroke-none',
             data=[
-                [0.1, 0.75, 0.9, 0.95, 0.05],  # add thickness
-                [0.1, 0.65, 0.9, 0.65, 0.1],  # more thickness
-                [0.1, 0.45, 0.9, 0.25, 0.25],  # even more thickness
+                [.1, .75, .9, .95, .05],  # add thickness
+                [.1, .65, .9, .65, .1],  # more thickness
+                [.1, .45, .9, .25, .25],  # even more thickness
             ],
         ),
         box(
@@ -879,18 +879,18 @@ view(
             mode='g-spline-y',
             style='h-32 w-32 fill-none stroke-indigo-700',
             data=[
-                [0.75, 0.1, 0.95, 0.9],
-                [0.5, 0.1, 0.5, 0.9],
-                [0.25, 0.1, 0.05, 0.9],
+                [.75, .1, .95, .9],
+                [.5, .1, .5, .9],
+                [.25, .1, .05, .9],
             ],
         ),
         box(
             mode='g-spline-y',
             style='h-32 w-32 fill-indigo-700 stroke-none',
             data=[
-                [0.75, 0.1, 0.95, 0.9, 0.05],  # add thickness
-                [0.65, 0.1, 0.65, 0.9, 0.1],  # more thickness
-                [0.45, 0.1, 0.25, 0.9, 0.25],  # even more thickness
+                [.75, .1, .95, .9, .05],  # add thickness
+                [.65, .1, .65, .9, .1],  # more thickness
+                [.45, .1, .25, .9, .25],  # even more thickness
             ],
         ),
         box(
@@ -940,10 +940,10 @@ bar = box(mode='g-gauge-x') / 'absolute inset-0 fill-none'
 view(
     box(
         bar(data=[1.0]) / 'stroke-green-400',
-        bar(data=[0.8]) / 'stroke-lime-400',
-        bar(data=[0.7]) / 'stroke-amber-400',
-        bar(data=[0.3]) / 'stroke-orange-400',
-        bar(data=[0.1]) / 'stroke-red-400',
+        bar(data=[.8]) / 'stroke-lime-400',
+        bar(data=[.7]) / 'stroke-amber-400',
+        bar(data=[.3]) / 'stroke-orange-400',
+        bar(data=[.1]) / 'stroke-red-400',
     ) / 'relative w-48 h-4',
 )
 ```
@@ -963,10 +963,10 @@ bar = layer(mode='g-gauge-x')
 view(
     box(
         bar(data=[1]) / 'stroke-slate-200',  # band
-        bar(data=[0.8]) / 'stroke-slate-300',  # band
-        bar(data=[0.6]) / 'stroke-slate-400',  # band
-        bar(data=[0.7, 0.25]) / 'stroke-slate-900',  # measure
-        layer(mode='g-guide-x', data=[0.9]) / 'stroke-red-800',  # comparative measure
+        bar(data=[.8]) / 'stroke-slate-300',  # band
+        bar(data=[.6]) / 'stroke-slate-400',  # band
+        bar(data=[.7, .25]) / 'stroke-slate-900',  # measure
+        layer(mode='g-guide-x', data=[.9]) / 'stroke-red-800',  # comparative measure
     ) / 'relative w-48 h-6',
 )
 ```
