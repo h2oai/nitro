@@ -130,6 +130,21 @@ const
       if (i) {
         const [x0, y0] = ps[i - 1]
         // B-spline, with control points 1/3 away from nodes.
+        const dy = (y - y0) / 3
+        d.push([x0, y0 + dy, x, y - dy, x, y])
+      } else {
+        d.push([0, 0, 0, 0, x, y])
+      }
+    }
+    return d
+  },
+  joinCurveY = (ps: Pair[]) => {
+    const d: F[][] = []
+    for (let i = 0; i < ps.length; i++) {
+      const [x, y] = ps[i]
+      if (i) {
+        const [x0, y0] = ps[i - 1]
+        // B-spline, with control points 1/3 away from nodes.
         const dx = (x - x0) / 3
         d.push([x0 + dx, y0, x - dx, y, x, y])
       } else {
@@ -138,7 +153,17 @@ const
     }
     return d
   },
-  makeCurveYPoints = (ys: F[], w: F, h: F, rev: B) => {
+  makeCurveX = (xs: F[], w: F, h: F, rev: B) => {
+    const
+      n = xs.length,
+      dy = h / (n - 1),
+      d = new Array<Pair>(n)
+    for (let i = 0; i < n; i++) {
+      d[i] = [lerp(xs[i], 0, w), rev ? h - dy * i : dy * i]
+    }
+    return joinCurveX(d)
+  },
+  makeCurveY = (ys: F[], w: F, h: F, rev: B) => {
     const
       n = ys.length,
       dx = w / (n - 1),
@@ -146,9 +171,9 @@ const
     for (let i = 0; i < n; i++) {
       d[i] = [rev ? w - dx * i : dx * i, lerp(ys[i], h, 0)]
     }
-    return joinCurveX(d)
+    return joinCurveY(d)
   },
-  drawCurveY = (ps: F[][], d: Array<S | F>) => {
+  drawCurve = (ps: F[][], d: Array<S | F>) => {
     for (let i = 0; i < ps.length; i++) {
       const p = ps[i]
       if (i) {
@@ -158,12 +183,12 @@ const
       }
     }
   },
-  makeCurveY = (ps: F[][]) => {
+  makeCurve = (ps: F[][]) => {
     const d: Array<S | F> = []
-    drawCurveY(ps, d)
+    drawCurve(ps, d)
     return newStroke(d)
   },
-  makeCurveYFill = (ps: F[][], w: F, h: F) => {
+  makeCurveArea = (ps: F[][], w: F, h: F) => {
     const d: Array<S | F> = []
     d.push('M', 0, h)
     for (let i = 0; i < ps.length; i++) {
@@ -178,13 +203,13 @@ const
     d.push('Z')
     return newFill(d)
   },
-  makeCurveYi = (ps0: F[][], ps1: F[][]) => {
+  makeCurvei = (ps0: F[][], ps1: F[][]) => {
     const d: Array<S | F> = []
-    drawCurveY(ps0, d)
-    drawCurveY(ps1, d)
+    drawCurve(ps0, d)
+    drawCurve(ps1, d)
     return newStroke(d)
   },
-  makeCurveYFilli = (ps0: F[][], ps1: F[][]) => {
+  makeCurveAreai = (ps0: F[][], ps1: F[][]) => {
     const d: Array<S | F> = []
     for (let i = 0; i < ps1.length; i++) {
       const p = ps1[i]
@@ -873,18 +898,31 @@ export const Graphic = ({ box }: BoxProps) => {
           svg.appendChild(makeAreaY(d, width, height))
           svg.appendChild(makeLineY(d, width, height))
         }
+      } else if (modes.has('g-curve-x')) {
+        if (arePairs(data)) {
+          const d = clampPairs(data)
+          const
+            ps0 = makeCurveX(d.map((x: Pair) => x[0]).slice(0).reverse(), width, height, true),
+            ps1 = makeCurveX(d.map((x: Pair) => x[1]), width, height, false)
+          svg.appendChild(makeCurveAreai(ps0, ps1))
+          svg.appendChild(makeCurvei(ps0, ps1))
+        } else {
+          const ps = makeCurveX(clamp1s(data), width, height, false)
+          svg.appendChild(makeCurveArea(ps, width, height))
+          svg.appendChild(makeCurve(ps))
+        }
       } else if (modes.has('g-curve-y')) {
         if (arePairs(data)) {
           const d = clampPairs(data)
           const
-            ps0 = makeCurveYPoints(d.map((x: Pair) => x[0]).slice(0).reverse(), width, height, true),
-            ps1 = makeCurveYPoints(d.map((x: Pair) => x[1]), width, height, false)
-          svg.appendChild(makeCurveYFilli(ps0, ps1))
-          svg.appendChild(makeCurveYi(ps0, ps1))
+            ps0 = makeCurveY(d.map((x: Pair) => x[0]).slice(0).reverse(), width, height, true),
+            ps1 = makeCurveY(d.map((x: Pair) => x[1]), width, height, false)
+          svg.appendChild(makeCurveAreai(ps0, ps1))
+          svg.appendChild(makeCurvei(ps0, ps1))
         } else {
-          const ps = makeCurveYPoints(clamp1s(data), width, height, false)
-          svg.appendChild(makeCurveYFill(ps, width, height))
-          svg.appendChild(makeCurveY(ps))
+          const ps = makeCurveY(clamp1s(data), width, height, false)
+          svg.appendChild(makeCurveArea(ps, width, height))
+          svg.appendChild(makeCurve(ps))
         }
       } else if (modes.has('g-step-x')) {
         if (arePairs(data)) {

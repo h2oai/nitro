@@ -166,24 +166,43 @@ For intervals (dual curves), set `data=` to a sequence of normalized `[low, high
 data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
 intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
              (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
+
 view(row(
     # Single curve:
     col(
         # Stroke and fill:
-        box(mode='g-curve-y', style='w-48 h-8 fill-indigo-100 stroke-indigo-700', data=data),
+        box(mode='g-curve-y', style='w-32 h-8 fill-indigo-100 stroke-indigo-700', data=data),
         # Stroke only:
-        box(mode='g-curve-y', style='w-48 h-8 fill-none stroke-indigo-700', data=data),
+        box(mode='g-curve-y', style='w-32 h-8 fill-none stroke-indigo-700', data=data),
         # Fill only:
-        box(mode='g-curve-y', style='w-48 h-8 fill-indigo-700 stroke-none', data=data),
+        box(mode='g-curve-y', style='w-32 h-8 fill-indigo-700 stroke-none', data=data),
     ),
     # Dual curve:
     col(
         # Stroke and fill:
-        box(mode='g-curve-y', style='w-48 h-8 fill-indigo-100 stroke-indigo-700', data=intervals),
+        box(mode='g-curve-y', style='w-32 h-8 fill-indigo-100 stroke-indigo-700', data=intervals),
         # Stroke only:
-        box(mode='g-curve-y', style='w-48 h-8 fill-none stroke-indigo-700', data=intervals),
+        box(mode='g-curve-y', style='w-32 h-8 fill-none stroke-indigo-700', data=intervals),
         # Fill only:
-        box(mode='g-curve-y', style='w-48 h-8 fill-indigo-700 stroke-none', data=intervals),
+        box(mode='g-curve-y', style='w-32 h-8 fill-indigo-700 stroke-none', data=intervals),
+    ),
+    # Single curve:
+    row(
+        # Stroke and fill:
+        box(mode='g-curve-x', style='w-8 h-32 fill-indigo-100 stroke-indigo-700', data=data),
+        # Stroke only:
+        box(mode='g-curve-x', style='w-8 h-32 fill-none stroke-indigo-700', data=data),
+        # Fill only:
+        box(mode='g-curve-x', style='w-8 h-32 fill-indigo-700 stroke-none', data=data),
+    ),
+    # Dual curve:
+    row(
+        # Stroke and fill:
+        box(mode='g-curve-x', style='w-8 h-32 fill-indigo-100 stroke-indigo-700', data=intervals),
+        # Stroke only:
+        box(mode='g-curve-x', style='w-8 h-32 fill-none stroke-indigo-700', data=intervals),
+        # Fill only:
+        box(mode='g-curve-x', style='w-8 h-32 fill-indigo-700 stroke-none', data=intervals),
     ),
 ))
 ```
