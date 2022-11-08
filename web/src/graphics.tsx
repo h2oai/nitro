@@ -431,6 +431,21 @@ const
     }
     return newStroke(d)
   },
+  makeTickX = (xs: F[], w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / n,
+      d: Array<S | F> = []
+    let y = 0
+    for (const x of xs) {
+      d.push(
+        'M', lerp(x, 0, w), y,
+        'v', dy
+      )
+      y += dy
+    }
+    return newStroke(d)
+  },
   makeTickY = (ys: F[], w: F, h: F) => {
     const
       n = ys.length,
@@ -443,6 +458,23 @@ const
         'h', dx
       )
       x += dx
+    }
+    return newStroke(d)
+  },
+  makeTickXi = (xs: Pairs, w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / n,
+      d: Array<S | F> = []
+    let y = 0
+    for (const x of xs) {
+      d.push(
+        'M', lerp(x[0], 0, w), y,
+        'v', dy,
+        'M', lerp(x[1], 0, w), y,
+        'v', dy
+      )
+      y += dy
     }
     return newStroke(d)
   },
@@ -897,6 +929,12 @@ export const Graphic = ({ box }: BoxProps) => {
           svg.appendChild(makeStrokeYi(clampPairs(data), width, height))
         } else {
           svg.appendChild(makeStrokeY(clamp1s(data), width, height))
+        }
+      } else if (modes.has('g-tick-x')) {
+        if (arePairs(data)) {
+          svg.appendChild(makeTickXi(clampPairs(data), width, height))
+        } else {
+          svg.appendChild(makeTickX(clamp1s(data), width, height))
         }
       } else if (modes.has('g-tick-y')) {
         if (arePairs(data)) {

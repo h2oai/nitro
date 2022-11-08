@@ -298,33 +298,34 @@ def graphics_stroke_xy(view: View):  # height 3
     ))
 
 
-# ## Tick Y
-# Set `mode='g-tick-y'` to draw a sequence of horizontal ticks.
+# ## Tick
+# Set `mode='g-tick-x'` or `mode='g-tick-y'` to draw a sequence of ticks.
 #
-# For simple ticks, set `data=` to a sequence of normalized y-coordinates.
+# For simple ticks, set `data=` to a sequence of normalized values.
 #
-# For interval-valued ticks, set `data=` to a sequence of normalized `[low, high]` y-coordinates.
-def graphics_tick_y(view: View):  # height 3
-    view(
-        # Ticks:
-        box(
-            mode='g-tick-y',
-            style='w-48 h-8 stroke-indigo-700',
-            data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 3,
+# For interval-valued ticks, set `data=` to a sequence of normalized `[low, high]` values.
+def graphics_tick_xy(view: View):  # height 3
+    data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
+    intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
+                 (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
+    view(row(
+        col(
+            # Strokes:
+            box(mode='g-tick-y', style='w-32 h-8 stroke-indigo-700', data=data),
+            # Thicker strokes:
+            box(mode='g-tick-y', style='w-32 h-8 stroke-indigo-700 stroke-4', data=data),
+            # Interval-valued:
+            box(mode='g-tick-y', style='w-32 h-8 stroke-indigo-700', data=intervals),
         ),
-        # Thicker ticks:
-        box(
-            mode='g-tick-y',
-            style='w-48 h-8 stroke-indigo-700 stroke-2',
-            data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 3,
-        ),
-        # Interval-valued
-        box(
-            mode='g-tick-y',
-            style='w-48 h-8 stroke-indigo-700',
-            data=[[0.1, 0.9], [0.2, 0.8], [0.3, 0.7], [0.4, 0.6]] * 6,
-        ),
-    )
+        row(
+            # Strokes:
+            box(mode='g-tick-x', style='w-8 h-32 stroke-indigo-700', data=data),
+            # Thicker strokes:
+            box(mode='g-tick-x', style='w-8 h-32 stroke-indigo-700 stroke-4', data=data),
+            # Interval-valued:
+            box(mode='g-tick-x', style='w-8 h-32 stroke-indigo-700', data=intervals),
+        )
+    ))
 
 
 # ## Guide X
