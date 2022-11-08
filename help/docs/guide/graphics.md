@@ -959,15 +959,29 @@ Overlay multiple gauge and guide graphics to create a bullet graph.
 
 ```py
 layer = box() / 'absolute inset-0 fill-none'
-bar = layer(mode='g-gauge-x')
+gauge = layer(mode='g-gauge-x')
 view(
-    box(
-        bar(data=[1]) / 'stroke-slate-200',  # band
-        bar(data=[.8]) / 'stroke-slate-300',  # band
-        bar(data=[.6]) / 'stroke-slate-400',  # band
-        bar(data=[.7, .25]) / 'stroke-slate-900',  # measure
-        layer(mode='g-guide-x', data=[.9]) / 'stroke-red-800',  # comparative measure
-    ) / 'relative w-48 h-6',
+    row(
+        box(
+            box('Revenue') / 'font-medium text-sm',
+            box('U.S. $(1,000s)') / 'text-xs'
+        ) / 'text-right',
+        box(
+            box(
+                gauge(data=[1]) / 'stroke-slate-200',  # band
+                gauge(data=[.8]) / 'stroke-slate-300',  # band
+                gauge(data=[.6]) / 'stroke-slate-400',  # band
+                gauge(data=[.7, .25]) / 'stroke-slate-900',  # measure
+                layer(mode='g-guide-x', data=[.9]) / 'stroke-red-800',  # reference
+            ) / 'relative w-48 h-6',
+            box(
+                mode='g-guide-x', data=[i / 6 for i in range(0, 7)]
+            ) / 'w-48 h-1 stroke-slate-800',
+            box(
+                mode='g-label', data=[(i / 6, 0, str(i * 50)) for i in range(0, 7)]
+            ) / 'w-48 h-2 text-xs',
+        ) / 'flex flex-col'
+    )
 )
 ```
 
