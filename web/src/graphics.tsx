@@ -205,6 +205,22 @@ const
     d.push('Z')
     return newFill(d)
   },
+  makeStepX = (xs: F[], w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / n,
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) {
+      const x = lerp(xs[i], 0, w)
+      if (i) {
+        d.push('H', x)
+      } else {
+        d.push('M', x, 0)
+      }
+      d.push('v', dy)
+    }
+    return newStroke(d)
+  },
   makeStepY = (ys: F[], w: F, h: F) => {
     const
       n = ys.length,
@@ -221,7 +237,21 @@ const
     }
     return newStroke(d)
   },
-  makeStepYFill = (ys: F[], w: F, h: F) => {
+  makeStepAreaX = (xs: F[], w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / n,
+      d: Array<S | F> = []
+    d.push('M', 0, 0)
+    for (let i = 0; i < n; i++) {
+      d.push('H', lerp(xs[i], 0, w))
+      d.push('v', dy)
+    }
+    d.push('L', 0, h)
+    d.push('Z')
+    return newFill(d)
+  },
+  makeStepAreaY = (ys: F[], w: F, h: F) => {
     const
       n = ys.length,
       dx = w / n,
@@ -231,9 +261,27 @@ const
       d.push('V', lerp(ys[i], h, 0))
       d.push('h', dx)
     }
-    d.push('V', w, h)
+    d.push('L', w, h)
     d.push('Z')
     return newFill(d)
+  },
+  makeStepXi = (xs: Pairs, w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / n,
+      d: Array<S | F> = []
+    for (const j of [0, 1]) {
+      for (let i = 0; i < n; i++) {
+        const x = lerp(xs[i][j], 0, w)
+        if (i) {
+          d.push('H', x)
+        } else {
+          d.push('M', x, 0)
+        }
+        d.push('v', dy)
+      }
+    }
+    return newStroke(d)
   },
   makeStepYi = (ys: Pairs, w: F, h: F) => {
     const
@@ -253,7 +301,34 @@ const
     }
     return newStroke(d)
   },
-  makeStepYFilli = (ys: Pairs, w: F, h: F) => {
+  makeStepAreaXi = (xs: Pairs, w: F, h: F) => {
+    const
+      n = xs.length,
+      dy = h / n,
+      d: Array<S | F> = []
+    for (let i = 0; i < n; i++) {
+      if (i) {
+        d.push(
+          'H', lerp(xs[i][0], 0, w),
+          'v', dy
+        )
+      } else {
+        d.push(
+          'M', lerp(xs[i][0], 0, w), 0,
+          'v', dy
+        )
+      }
+    }
+    for (let i = n - 1; i >= 0; i--) {
+      d.push(
+        'H', lerp(xs[i][1], 0, w),
+        'v', -dy
+      )
+    }
+    d.push('Z')
+    return newFill(d)
+  },
+  makeStepAreaYi = (ys: Pairs, w: F, h: F) => {
     const
       n = ys.length,
       dx = w / n,
@@ -741,14 +816,24 @@ export const Graphic = ({ box }: BoxProps) => {
           svg.appendChild(makeCurveYFill(ps, width, height))
           svg.appendChild(makeCurveY(ps))
         }
+      } else if (modes.has('g-step-x')) {
+        if (arePairs(data)) {
+          const d = clampPairs(data)
+          svg.appendChild(makeStepAreaXi(d, width, height))
+          svg.appendChild(makeStepXi(d, width, height))
+        } else {
+          const d = clamp1s(data)
+          svg.appendChild(makeStepAreaX(d, width, height))
+          svg.appendChild(makeStepX(d, width, height))
+        }
       } else if (modes.has('g-step-y')) {
         if (arePairs(data)) {
           const d = clampPairs(data)
-          svg.appendChild(makeStepYFilli(d, width, height))
+          svg.appendChild(makeStepAreaYi(d, width, height))
           svg.appendChild(makeStepYi(d, width, height))
         } else {
           const d = clamp1s(data)
-          svg.appendChild(makeStepYFill(d, width, height))
+          svg.appendChild(makeStepAreaY(d, width, height))
           svg.appendChild(makeStepY(d, width, height))
         }
       } else if (modes.has('g-bar-y')) {

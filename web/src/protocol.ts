@@ -181,6 +181,7 @@ export const boxTypes = {
   'g-line-x': { input: false, labeled: false },
   'g-line-y': { input: false, labeled: false },
   'g-curve-y': { input: false, labeled: false },
+  'g-step-x': { input: false, labeled: false },
   'g-step-y': { input: false, labeled: false },
   'g-bar-y': { input: false, labeled: false },
   'g-stroke-y': { input: false, labeled: false },
