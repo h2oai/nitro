@@ -886,6 +886,12 @@ export const Graphic = ({ box }: BoxProps) => {
         } else {
           svg.appendChild(makeBarY(clamp1s(data), width, height))
         }
+      } else if (modes.has('g-stroke-x')) {
+        if (arePairs(data)) {
+          svg.appendChild(makeStrokeXi(clampPairs(data), width, height))
+        } else {
+          svg.appendChild(makeStrokeX(clamp1s(data), width, height))
+        }
       } else if (modes.has('g-stroke-y')) {
         if (arePairs(data)) {
           svg.appendChild(makeStrokeYi(clampPairs(data), width, height))
