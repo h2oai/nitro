@@ -751,9 +751,10 @@ view(
 ![Screenshot](assets/screenshots/graphics_polygon.png)
 
 
-## Link X
+## Link
 
-Set `mode='g-link-x'` to draw connecting lines between pairs of points.
+Set `mode='g-link-x'` or `mode='g-link-y'` to draw connecting lines between pairs of points.
+Use `g-link-x` mode to make horizontal connections, and `g-link-y` to make vertical connections.
 
 Set `data=` to a sequence of normalized `[x1, y1, x2, y2, t1, t2]` values, where:
 
@@ -764,39 +765,70 @@ Set `data=` to a sequence of normalized `[x1, y1, x2, y2, t1, t2]` values, where
 
 
 ```py
-view(row(
-    box(
-        mode='g-link-x',
-        style='h-32 w-32 fill-none stroke-indigo-700',
-        data=[
-            [0.1, 0.75, 0.9, 0.95],
-            [0.1, 0.5, 0.9, 0.5],
-            [0.1, 0.25, 0.9, 0.05],
-        ],
+view(
+    row(
+        box(
+            mode='g-link-x',
+            style='h-32 w-32 fill-none stroke-indigo-700',
+            data=[
+                [0.1, 0.75, 0.9, 0.95],
+                [0.1, 0.5, 0.9, 0.5],
+                [0.1, 0.25, 0.9, 0.05],
+            ],
+        ),
+        box(
+            mode='g-link-x',
+            style='h-32 w-32 fill-indigo-700 stroke-none',
+            data=[
+                [0.1, 0.75, 0.9, 0.75, 0.05],  # add thickness
+                [0.1, 0.5, 0.9, 0.5, 0.1],  # more thickness
+                [0.1, 0.25, 0.9, 0.25, 0.25],  # even more thickness
+            ],
+        ),
+        box(
+            mode='g-link-x',
+            style='h-32 w-32 fill-indigo-700 stroke-none',
+            data=[
+                [0.1, 0.75, 0.9, 0.75, 0.1, 0.2],  # start thin, end thick
+                [0.1, 0.5, 0.9, 0.5, 0.2, 0.1],  # start thick, end thin
+                [0.1, 0.25, 0.9, 0.25, 0.1, 0.1],  # uniform thickness
+            ],
+        ),
     ),
-    box(
-        mode='g-link-x',
-        style='h-32 w-32 fill-indigo-700 stroke-none',
-        data=[
-            [0.1, 0.75, 0.9, 0.75, 0.05],  # add thickness
-            [0.1, 0.5, 0.9, 0.5, 0.1],  # more thickness
-            [0.1, 0.25, 0.9, 0.25, 0.25],  # even more thickness
-        ],
+    row(
+        box(
+            mode='g-link-y',
+            style='h-32 w-32 fill-none stroke-indigo-700',
+            data=[
+                [0.75, 0.1, 0.95, 0.9],
+                [0.5, 0.1, 0.5, 0.9],
+                [0.25, 0.1, 0.05, 0.9],
+            ],
+        ),
+        box(
+            mode='g-link-y',
+            style='h-32 w-32 fill-indigo-700 stroke-none',
+            data=[
+                [0.75, 0.1, 0.75, 0.9, 0.05],  # add thickness
+                [0.5, 0.1, 0.5, 0.9, 0.1],  # more thickness
+                [0.25, 0.1, 0.25, 0.9, 0.25],  # even more thickness
+            ],
+        ),
+        box(
+            mode='g-link-y',
+            style='h-32 w-32 fill-indigo-700 stroke-none',
+            data=[
+                [0.75, 0.1, 0.75, 0.9, 0.1, 0.2],  # start thin, end thick
+                [0.5, 0.1, 0.5, 0.9, 0.2, 0.1],  # start thick, end thin
+                [0.25, 0.1, 0.25, 0.9, 0.1, 0.1],  # uniform thickness
+            ],
+        ),
     ),
-    box(
-        mode='g-link-x',
-        style='h-32 w-32 fill-indigo-700 stroke-none',
-        data=[
-            [0.1, 0.75, 0.9, 0.75, 0.1, 0.2],  # start thin, end thick
-            [0.1, 0.5, 0.9, 0.5, 0.2, 0.1],  # start thick, end thin
-            [0.1, 0.25, 0.9, 0.25, 0.1, 0.1],  # uniform thickness
-        ],
-    ),
-))
+)
 ```
 
 
-![Screenshot](assets/screenshots/graphics_link_x.png)
+![Screenshot](assets/screenshots/graphics_link_xy.png)
 
 
 ## Spline X

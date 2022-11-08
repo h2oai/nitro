@@ -1088,6 +1088,28 @@ export const Graphic = ({ box }: BoxProps) => {
             }
           }
         }
+      } else if (modes.has('g-link-y')) {
+        for (const d of data) {
+          if (Array.isArray(d)) {
+            let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
+            x1 *= width
+            y1 = (1 - y1) * height
+            x2 *= width
+            y2 = (1 - y2) * height
+            if (isN(t1)) {
+              if (!isN(t2)) t2 = t1
+              t1 *= width / 2
+              t2 *= width / 2
+              const el = newEl('polygon')
+              el.setAttribute('points', `${x1 - t1},${y1} ${x2 - t2},${y2} ${x2 + t2},${y2} ${x1 + t2},${y1}`)
+              svg.appendChild(el)
+            } else {
+              const el = newEl('polyline')
+              el.setAttribute('points', `${x1},${y1} ${x2},${y2}`)
+              svg.appendChild(el)
+            }
+          }
+        }
       } else if (modes.has('g-spline-x')) {
         for (const d of data) {
           if (Array.isArray(d)) {

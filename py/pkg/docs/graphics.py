@@ -635,8 +635,9 @@ def graphics_polygon(view: View):  # height 3
     )
 
 
-# ## Link X
-# Set `mode='g-link-x'` to draw connecting lines between pairs of points.
+# ## Link
+# Set `mode='g-link-x'` or `mode='g-link-y'` to draw connecting lines between pairs of points.
+# Use `g-link-x` mode to make horizontal connections, and `g-link-y` to make vertical connections.
 #
 # Set `data=` to a sequence of normalized `[x1, y1, x2, y2, t1, t2]` values, where:
 #
@@ -644,36 +645,67 @@ def graphics_polygon(view: View):  # height 3
 # - `(x2, y2)` is the end point.
 # - `t1` (optional) is the start thickness. If omitted, the stroke thickness can be controlled using `style=`.
 # - `t2` (optional) is the end thickness. Defaults to `t1` if omitted.
-def graphics_link_x(view: View):  # height 3
-    view(row(
-        box(
-            mode='g-link-x',
-            style='h-32 w-32 fill-none stroke-indigo-700',
-            data=[
-                [0.1, 0.75, 0.9, 0.95],
-                [0.1, 0.5, 0.9, 0.5],
-                [0.1, 0.25, 0.9, 0.05],
-            ],
+def graphics_link_xy(view: View):  # height 4
+    view(
+        row(
+            box(
+                mode='g-link-x',
+                style='h-32 w-32 fill-none stroke-indigo-700',
+                data=[
+                    [0.1, 0.75, 0.9, 0.95],
+                    [0.1, 0.5, 0.9, 0.5],
+                    [0.1, 0.25, 0.9, 0.05],
+                ],
+            ),
+            box(
+                mode='g-link-x',
+                style='h-32 w-32 fill-indigo-700 stroke-none',
+                data=[
+                    [0.1, 0.75, 0.9, 0.75, 0.05],  # add thickness
+                    [0.1, 0.5, 0.9, 0.5, 0.1],  # more thickness
+                    [0.1, 0.25, 0.9, 0.25, 0.25],  # even more thickness
+                ],
+            ),
+            box(
+                mode='g-link-x',
+                style='h-32 w-32 fill-indigo-700 stroke-none',
+                data=[
+                    [0.1, 0.75, 0.9, 0.75, 0.1, 0.2],  # start thin, end thick
+                    [0.1, 0.5, 0.9, 0.5, 0.2, 0.1],  # start thick, end thin
+                    [0.1, 0.25, 0.9, 0.25, 0.1, 0.1],  # uniform thickness
+                ],
+            ),
         ),
-        box(
-            mode='g-link-x',
-            style='h-32 w-32 fill-indigo-700 stroke-none',
-            data=[
-                [0.1, 0.75, 0.9, 0.75, 0.05],  # add thickness
-                [0.1, 0.5, 0.9, 0.5, 0.1],  # more thickness
-                [0.1, 0.25, 0.9, 0.25, 0.25],  # even more thickness
-            ],
+        row(
+            box(
+                mode='g-link-y',
+                style='h-32 w-32 fill-none stroke-indigo-700',
+                data=[
+                    [0.75, 0.1, 0.95, 0.9],
+                    [0.5, 0.1, 0.5, 0.9],
+                    [0.25, 0.1, 0.05, 0.9],
+                ],
+            ),
+            box(
+                mode='g-link-y',
+                style='h-32 w-32 fill-indigo-700 stroke-none',
+                data=[
+                    [0.75, 0.1, 0.75, 0.9, 0.05],  # add thickness
+                    [0.5, 0.1, 0.5, 0.9, 0.1],  # more thickness
+                    [0.25, 0.1, 0.25, 0.9, 0.25],  # even more thickness
+                ],
+            ),
+            box(
+                mode='g-link-y',
+                style='h-32 w-32 fill-indigo-700 stroke-none',
+                data=[
+                    [0.75, 0.1, 0.75, 0.9, 0.1, 0.2],  # start thin, end thick
+                    [0.5, 0.1, 0.5, 0.9, 0.2, 0.1],  # start thick, end thin
+                    [0.25, 0.1, 0.25, 0.9, 0.1, 0.1],  # uniform thickness
+                ],
+            ),
         ),
-        box(
-            mode='g-link-x',
-            style='h-32 w-32 fill-indigo-700 stroke-none',
-            data=[
-                [0.1, 0.75, 0.9, 0.75, 0.1, 0.2],  # start thin, end thick
-                [0.1, 0.5, 0.9, 0.5, 0.2, 0.1],  # start thick, end thin
-                [0.1, 0.25, 0.9, 0.25, 0.1, 0.1],  # uniform thickness
-            ],
-        ),
-    ))
+    )
 
 
 # ## Spline X

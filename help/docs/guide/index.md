@@ -473,7 +473,7 @@ Draw visualizations, microcharts, sparklines, and other data graphics.
 - [Arc](graphics.md#arc)
 - [Polyline](graphics.md#polyline)
 - [Polygon](graphics.md#polygon)
-- [Link X](graphics.md#link-x)
+- [Link](graphics.md#link)
 - [Spline X](graphics.md#spline-x)
 - [Win Loss](graphics.md#win-loss)
 - [Stacked bar](graphics.md#stacked-bar)
