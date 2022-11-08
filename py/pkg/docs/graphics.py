@@ -708,8 +708,8 @@ def graphics_link_xy(view: View):  # height 4
     )
 
 
-# ## Spline X
-# Set `mode='g-spline-x'` to draw connecting splines (curves) between pairs of points.
+# ## Spline
+# Set `mode='g-spline-x'` `mode='g-spline-y'` to draw connecting splines (bezier curves) between pairs of points.
 #
 # Set `data=` to a sequence of normalized `[x1, y1, x2, y2, t1, t2]` values, where:
 #
@@ -717,36 +717,67 @@ def graphics_link_xy(view: View):  # height 4
 # - `(x2, y2)` is the end point.
 # - `t1` (optional) is the start thickness. If omitted, the stroke thickness can be controlled using `style=`.
 # - `t2` (optional) is the end thickness. Defaults to `t1` if omitted.
-def graphics_spline_x(view: View):  # height 3
-    view(row(
-        box(
-            mode='g-spline-x',
-            style='h-32 w-32 fill-none stroke-indigo-700',
-            data=[
-                [0.1, 0.75, 0.9, 0.95],
-                [0.1, 0.5, 0.9, 0.5],
-                [0.1, 0.25, 0.9, 0.05],
-            ],
+def graphics_spline_xy(view: View):  # height 4
+    view(
+        row(
+            box(
+                mode='g-spline-x',
+                style='h-32 w-32 fill-none stroke-indigo-700',
+                data=[
+                    [0.1, 0.75, 0.9, 0.95],
+                    [0.1, 0.5, 0.9, 0.5],
+                    [0.1, 0.25, 0.9, 0.05],
+                ],
+            ),
+            box(
+                mode='g-spline-x',
+                style='h-32 w-32 fill-indigo-700 stroke-none',
+                data=[
+                    [0.1, 0.75, 0.9, 0.95, 0.05],  # add thickness
+                    [0.1, 0.65, 0.9, 0.65, 0.1],  # more thickness
+                    [0.1, 0.45, 0.9, 0.25, 0.25],  # even more thickness
+                ],
+            ),
+            box(
+                mode='g-spline-x',
+                style='h-32 w-32 fill-indigo-700 stroke-none',
+                data=[
+                    [.1, .75, .9, .65, .05, .25],  # variable thickness
+                    [.1, .65, .9, .45, .1, .1],  # uniform thickness
+                    [.1, .45, .9, .35, .25, .05],  # variable thickness
+                ],
+            ),
         ),
-        box(
-            mode='g-spline-x',
-            style='h-32 w-32 fill-indigo-700 stroke-none',
-            data=[
-                [0.1, 0.75, 0.9, 0.75, 0.05],  # add thickness
-                [0.1, 0.5, 0.9, 0.5, 0.1],  # more thickness
-                [0.1, 0.25, 0.9, 0.25, 0.25],  # even more thickness
-            ],
-        ),
-        box(
-            mode='g-spline-x',
-            style='h-32 w-32 fill-indigo-700 stroke-none',
-            data=[
-                [0.1, 0.8, 0.9, 0.65, 0.2, 0.3],  # variable thickness
-                [0.1, 0.5, 0.9, 0.3, 0.2, 0.3],  # variable thickness
-                [0.1, 0.25, 0.9, 0.05, 0.1, 0.1],  # uniform thickness
-            ],
-        ),
-    ))
+        row(
+            box(
+                mode='g-spline-y',
+                style='h-32 w-32 fill-none stroke-indigo-700',
+                data=[
+                    [0.75, 0.1, 0.95, 0.9],
+                    [0.5, 0.1, 0.5, 0.9],
+                    [0.25, 0.1, 0.05, 0.9],
+                ],
+            ),
+            box(
+                mode='g-spline-y',
+                style='h-32 w-32 fill-indigo-700 stroke-none',
+                data=[
+                    [0.75, 0.1, 0.95, 0.9, 0.05],  # add thickness
+                    [0.65, 0.1, 0.65, 0.9, 0.1],  # more thickness
+                    [0.45, 0.1, 0.25, 0.9, 0.25],  # even more thickness
+                ],
+            ),
+            box(
+                mode='g-spline-y',
+                style='h-32 w-32 fill-indigo-700 stroke-none',
+                data=[
+                    [.75, .1, .65, .9, .05, .25],  # variable thickness
+                    [.65, .1, .45, .9, .1, .1],  # uniform thickness
+                    [.45, .1, .35, .9, .25, .05],  # variable thickness
+                ],
+            ),
+        )
+    )
 
 
 # ## Win Loss

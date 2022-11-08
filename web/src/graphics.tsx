@@ -1138,6 +1138,34 @@ export const Graphic = ({ box }: BoxProps) => {
             }
           }
         }
+      } else if (modes.has('g-spline-y')) {
+        for (const d of data) {
+          if (Array.isArray(d)) {
+            let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
+            x1 *= width
+            y1 = (1 - y1) * height
+            x2 *= width
+            y2 = (1 - y2) * height
+            const ym = (y1 + y2) / 2
+            if (isN(t1)) {
+              if (!isN(t2)) t2 = t1
+              t1 *= width / 2
+              t2 *= width / 2
+              svg.appendChild(newPath([
+                'M', x1 - t1, y1,
+                'C', x1 - t1, ym, x2 - t2, ym, x2 - t2, y2,
+                'h', t2 * 2,
+                'C', x2 + t2, ym, x1 + t1, ym, x1 + t1, y1,
+                'Z'
+              ]))
+            } else {
+              svg.appendChild(newStroke([
+                'M', x1, y1,
+                'C', x1, ym, x2, ym, x2, y2,
+              ]))
+            }
+          }
+        }
       }
 
       while (div.firstChild) div.removeChild(div.firstChild)
