@@ -150,7 +150,7 @@ view(row(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_line_xy.png)
+![Screenshot](assets/screenshots/graphics_line.png)
 
 
 ## Curve
@@ -189,7 +189,7 @@ view(row(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_curve_xy.png)
+![Screenshot](assets/screenshots/graphics_curve.png)
 
 
 ## Step
@@ -248,7 +248,7 @@ view(row(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_step_xy.png)
+![Screenshot](assets/screenshots/graphics_step.png)
 
 
 ## Bar
@@ -281,7 +281,7 @@ view(row(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_bar_xy.png)
+![Screenshot](assets/screenshots/graphics_bar.png)
 
 
 ## Stroke
@@ -320,7 +320,7 @@ view(row(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_stroke_xy.png)
+![Screenshot](assets/screenshots/graphics_stroke.png)
 
 
 ## Tick
@@ -357,89 +357,72 @@ view(row(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_tick_xy.png)
+![Screenshot](assets/screenshots/graphics_tick.png)
 
 
-## Guide X
+## Guide
 
-Set `mode='g-guide-x'` to draw a sequence of x-axis guide lines.
+Set `mode='g-guide-x'` or `mode='g-guide-y'` to draw a sequence of guide lines.
 
-Set `data=` to a sequence of normalized x-coordinates.
+Set `data=` to a sequence of normalized x- or y- coordinates.
 
 
 ```py
-view(
+view(row(
     box(
         mode='g-guide-x',
         style='w-48 h-8 stroke-indigo-700',
         data=[0, .2, .4, .6, .8, .85, .9, .95, .975, 1],
     ),
-)
-```
-
-
-![Screenshot](assets/screenshots/graphics_guide_x.png)
-
-
-## Guide Y
-
-Set `mode='g-guide-y'` to draw a sequence of y-axis guide lines.
-
-Set `data=` to a sequence of normalized y-coordinates.
-
-
-```py
-view(
     box(
         mode='g-guide-y',
         style='w-8 h-48 stroke-indigo-700',
         data=[0, .2, .4, .6, .8, .85, .9, .95, .975, 1],
     ),
-)
-```
-
-
-![Screenshot](assets/screenshots/graphics_guide_y.png)
-
-
-## Gauge X
-
-Set `mode='g-gauge-x'` to draw a horizontal gauge.
-
-Set `data=` to normalized `[length, width]` values.
-`width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
-
-
-```py
-style = 'w-48 h-4 fill-indigo-100 stroke-indigo-700'
-view(
-    box(mode='g-gauge-x', style=style, data=[.75]),
-    box(mode='g-gauge-x', style=style, data=[.75, .5]),  # thinner bar
-)
-```
-
-
-![Screenshot](assets/screenshots/graphics_gauge_x.png)
-
-
-## Gauge Y
-
-Set `mode='g-gauge-y'` to draw a vertical gauge.
-
-Set `data=` to normalized `[length, width]` values.
-`width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
-
-
-```py
-style = 'w-4 h-48 fill-indigo-100 stroke-indigo-700'
-view(row(
-    box(mode='g-gauge-y', style=style, data=[.75]),
-    box(mode='g-gauge-y', style=style, data=[.75, .5]),  # thinner bar
 ))
 ```
 
 
-![Screenshot](assets/screenshots/graphics_gauge_y.png)
+![Screenshot](assets/screenshots/graphics_guide.png)
+
+
+## Gauge
+
+Set `mode='g-gauge-x'` or `mode='g-gauge-y'` to draw a gauge.
+
+Set `data=` to normalized `[length, width]` values.
+`width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
+
+
+```py
+view(row(
+    col(
+        box(
+            mode='g-gauge-x',
+            style='w-48 h-4 fill-indigo-100 stroke-indigo-700',
+            data=[.75],
+        ),
+        box(
+            mode='g-gauge-x',
+            style='w-48 h-4 fill-indigo-100 stroke-indigo-700',
+            data=[.75, .5],
+        ),  # thinner bar
+    ),
+    box(
+        mode='g-gauge-y',
+        style='w-4 h-48 fill-indigo-100 stroke-indigo-700',
+        data=[.75],
+    ),
+    box(
+        mode='g-gauge-y',
+        style='w-4 h-48 fill-indigo-100 stroke-indigo-700',
+        data=[.75, .5],
+    ),  # thinner bar
+))
+```
+
+
+![Screenshot](assets/screenshots/graphics_gauge.png)
 
 
 ## Circular Gauge
@@ -828,7 +811,7 @@ view(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_link_xy.png)
+![Screenshot](assets/screenshots/graphics_link.png)
 
 
 ## Spline
@@ -907,7 +890,7 @@ view(
 ```
 
 
-![Screenshot](assets/screenshots/graphics_spline_xy.png)
+![Screenshot](assets/screenshots/graphics_spline.png)
 
 
 ## Win Loss

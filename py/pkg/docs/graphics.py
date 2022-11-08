@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import random
-import math
 
 from h2o_nitro import View, box, row, col, option, lorem
 import h2o_nitro.graphics
@@ -111,7 +110,7 @@ def graphics_intro(view: View):  # height 4
 # For a single line, set `data=` to a sequence of normalized values.
 #
 # For intervals (dual lines), set `data=` to a sequence of normalized `[low, high]` values.
-def graphics_line_xy(view: View):  # height 3
+def graphics_line(view: View):  # height 3
     data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
     intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
                  (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
@@ -162,7 +161,7 @@ def graphics_line_xy(view: View):  # height 3
 # For a single curve, set `data=` to a sequence of normalized values.
 #
 # For intervals (dual curves), set `data=` to a sequence of normalized `[low, high]` values.
-def graphics_curve_xy(view: View):  # height 3
+def graphics_curve(view: View):  # height 3
     data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
     intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
                  (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
@@ -196,7 +195,7 @@ def graphics_curve_xy(view: View):  # height 3
 # For a single curve, set `data=` to a sequence of normalized values.
 #
 # For intervals (dual curves), set `data=` to a sequence of normalized `[low, high]` values.
-def graphics_step_xy(view: View):  # height 3
+def graphics_step(view: View):  # height 3
     data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
     intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
                  (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
@@ -246,7 +245,7 @@ def graphics_step_xy(view: View):  # height 3
 # For simple bars, set `data=` to a sequence of normalized values.
 #
 # For interval-valued bars, set `data=` to a sequence of normalized `[low, high]` values.
-def graphics_bar_xy(view: View):  # height 3
+def graphics_bar(view: View):  # height 3
     data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
     intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
                  (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
@@ -274,7 +273,7 @@ def graphics_bar_xy(view: View):  # height 3
 # For simple strokes, set `data=` to a sequence of normalized values.
 #
 # For interval-valued strokes, set `data=` to a sequence of normalized `[low, high]` values.
-def graphics_stroke_xy(view: View):  # height 3
+def graphics_stroke(view: View):  # height 3
     data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72] * 2
     intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
                  (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)] * 2
@@ -304,7 +303,7 @@ def graphics_stroke_xy(view: View):  # height 3
 # For simple ticks, set `data=` to a sequence of normalized values.
 #
 # For interval-valued ticks, set `data=` to a sequence of normalized `[low, high]` values.
-def graphics_tick_xy(view: View):  # height 3
+def graphics_tick(view: View):  # height 3
     data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
     intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
                  (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
@@ -328,57 +327,54 @@ def graphics_tick_xy(view: View):  # height 3
     ))
 
 
-# ## Guide X
-# Set `mode='g-guide-x'` to draw a sequence of x-axis guide lines.
+# ## Guide
+# Set `mode='g-guide-x'` or `mode='g-guide-y'` to draw a sequence of guide lines.
 #
-# Set `data=` to a sequence of normalized x-coordinates.
-def graphics_guide_x(view: View):  # height 3
-    view(
+# Set `data=` to a sequence of normalized x- or y- coordinates.
+def graphics_guide(view: View):  # height 3
+    view(row(
         box(
             mode='g-guide-x',
             style='w-48 h-8 stroke-indigo-700',
             data=[0, .2, .4, .6, .8, .85, .9, .95, .975, 1],
         ),
-    )
-
-
-# ## Guide Y
-# Set `mode='g-guide-y'` to draw a sequence of y-axis guide lines.
-#
-# Set `data=` to a sequence of normalized y-coordinates.
-def graphics_guide_y(view: View):  # height 3
-    view(
         box(
             mode='g-guide-y',
             style='w-8 h-48 stroke-indigo-700',
             data=[0, .2, .4, .6, .8, .85, .9, .95, .975, 1],
         ),
-    )
+    ))
 
 
-# ## Gauge X
-# Set `mode='g-gauge-x'` to draw a horizontal gauge.
+# ## Gauge
+# Set `mode='g-gauge-x'` or `mode='g-gauge-y'` to draw a gauge.
 #
 # Set `data=` to normalized `[length, width]` values.
 # `width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
-def graphics_gauge_x(view: View):  # height 3
-    style = 'w-48 h-4 fill-indigo-100 stroke-indigo-700'
-    view(
-        box(mode='g-gauge-x', style=style, data=[.75]),
-        box(mode='g-gauge-x', style=style, data=[.75, .5]),  # thinner bar
-    )
-
-
-# ## Gauge Y
-# Set `mode='g-gauge-y'` to draw a vertical gauge.
-#
-# Set `data=` to normalized `[length, width]` values.
-# `width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
-def graphics_gauge_y(view: View):  # height 3
-    style = 'w-4 h-48 fill-indigo-100 stroke-indigo-700'
+def graphics_gauge(view: View):  # height 3
     view(row(
-        box(mode='g-gauge-y', style=style, data=[.75]),
-        box(mode='g-gauge-y', style=style, data=[.75, .5]),  # thinner bar
+        col(
+            box(
+                mode='g-gauge-x',
+                style='w-48 h-4 fill-indigo-100 stroke-indigo-700',
+                data=[.75],
+            ),
+            box(
+                mode='g-gauge-x',
+                style='w-48 h-4 fill-indigo-100 stroke-indigo-700',
+                data=[.75, .5],
+            ),  # thinner bar
+        ),
+        box(
+            mode='g-gauge-y',
+            style='w-4 h-48 fill-indigo-100 stroke-indigo-700',
+            data=[.75],
+        ),
+        box(
+            mode='g-gauge-y',
+            style='w-4 h-48 fill-indigo-100 stroke-indigo-700',
+            data=[.75, .5],
+        ),  # thinner bar
     ))
 
 
@@ -645,7 +641,7 @@ def graphics_polygon(view: View):  # height 3
 # - `(x2, y2)` is the end point.
 # - `t1` (optional) is the start thickness. If omitted, the stroke thickness can be controlled using `style=`.
 # - `t2` (optional) is the end thickness. Defaults to `t1` if omitted.
-def graphics_link_xy(view: View):  # height 4
+def graphics_link(view: View):  # height 4
     view(
         row(
             box(
@@ -717,7 +713,7 @@ def graphics_link_xy(view: View):  # height 4
 # - `(x2, y2)` is the end point.
 # - `t1` (optional) is the start thickness. If omitted, the stroke thickness can be controlled using `style=`.
 # - `t2` (optional) is the end thickness. Defaults to `t1` if omitted.
-def graphics_spline_xy(view: View):  # height 4
+def graphics_spline(view: View):  # height 4
     view(
         row(
             box(
