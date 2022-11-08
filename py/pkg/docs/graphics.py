@@ -240,27 +240,30 @@ def graphics_step_xy(view: View):  # height 3
     ))
 
 
-# ## Bar Y
-# Set `mode='g-bar-y'` to draw bar/column charts.
+# ## Bar
+# Set `mode='g-bar-x'` or `mode='g-bar-y'` to draw bar/column charts.
 #
-# For simple bars, set `data=` to a sequence of normalized y-coordinates.
+# For simple bars, set `data=` to a sequence of normalized values.
 #
-# For interval-valued bars, set `data=` to a sequence of normalized `[low, high]` y-coordinates.
-def graphics_bar_y(view: View):  # height 3
-    view(
-        # "Column chart":
-        box(
-            mode='g-bar-y',
-            style='w-48 h-8 stroke-indigo-700',
-            data=[0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5] * 3,
+# For interval-valued bars, set `data=` to a sequence of normalized `[low, high]` values.
+def graphics_bar_xy(view: View):  # height 3
+    data = [.05, .24, .53, .61, .28, .45, .56, .68, .95, .72]
+    intervals = [(.62, .9), (.57, 1), (.28, .66), (.34, .77), (.25, .48),
+                 (0, .39), (.14, .65), (.18, .79), (.40, .78), (.61, 1)]
+    view(row(
+        col(
+            # "Column chart":
+            box(mode='g-bar-y', style='w-32 h-16 stroke-indigo-700', data=data),
+            # Interval-valued:
+            box(mode='g-bar-y', style='w-32 h-16 stroke-indigo-700', data=intervals),
         ),
-        # Interval-valued:
-        box(
-            mode='g-bar-y',
-            style='w-48 h-8 stroke-indigo-700',
-            data=[[0.1, 0.9], [0.2, 0.8], [0.3, 0.7], [0.4, 0.6]] * 6,
-        ),
-    )
+        row(
+            # "Bar chart":
+            box(mode='g-bar-x', style='w-16 h-32 stroke-indigo-700', data=data),
+            # Interval-valued:
+            box(mode='g-bar-x', style='w-16 h-32 stroke-indigo-700', data=intervals),
+        )
+    ))
 
 
 # ## Stroke Y

@@ -458,7 +458,7 @@ Draw visualizations, microcharts, sparklines, and other data graphics.
 - [Line](graphics.md#line)
 - [Curve](graphics.md#curve)
 - [Step](graphics.md#step)
-- [Bar Y](graphics.md#bar-y)
+- [Bar](graphics.md#bar)
 - [Stroke Y](graphics.md#stroke-y)
 - [Tick Y](graphics.md#tick-y)
 - [Guide X](graphics.md#guide-x)

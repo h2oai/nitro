@@ -355,15 +355,39 @@ const
     d.push('Z')
     return newFill(d)
   },
+  makeBarX = (xs: F[], w: F, h: F) => {
+    const p = makeStrokeX(xs, w, h)
+    p.setAttribute('stroke-width', String(h / xs.length - 1)) // 1px gap
+    return p
+  },
   makeBarY = (ys: F[], w: F, h: F) => {
     const p = makeStrokeY(ys, w, h)
     p.setAttribute('stroke-width', String(w / ys.length - 1)) // 1px gap
+    return p
+  },
+  makeBarXi = (xs: Pairs, w: F, h: F) => {
+    const p = makeStrokeXi(xs, w, h)
+    p.setAttribute('stroke-width', String(h / xs.length - 1)) // 1px gap
     return p
   },
   makeBarYi = (ys: Pairs, w: F, h: F) => {
     const p = makeStrokeYi(ys, w, h)
     p.setAttribute('stroke-width', String(w / ys.length - 1)) // 1px gap
     return p
+  },
+  makeStrokeX = (xs: F[], w: F, h: F) => {
+    const
+      d: Array<S | F> = [],
+      dy = h / xs.length
+    let y = dy / 2
+    for (const x of xs) {
+      d.push(
+        'M', 0, y,
+        'H', lerp(x, 0, w)
+      )
+      y += dy
+    }
+    return newStroke(d)
   },
   makeStrokeY = (ys: F[], w: F, h: F) => {
     const
@@ -376,6 +400,20 @@ const
         'V', lerp(y, h, 0)
       )
       x += dx
+    }
+    return newStroke(d)
+  },
+  makeStrokeXi = (xs: Pairs, w: F, h: F) => {
+    const
+      d: Array<S | F> = [],
+      dy = h / xs.length
+    let y = dy / 2
+    for (const x of xs) {
+      d.push(
+        'M', lerp(x[0], 0, w), y,
+        'H', lerp(x[1], 0, w)
+      )
+      y += dy
     }
     return newStroke(d)
   },
@@ -835,6 +873,12 @@ export const Graphic = ({ box }: BoxProps) => {
           const d = clamp1s(data)
           svg.appendChild(makeStepAreaY(d, width, height))
           svg.appendChild(makeStepY(d, width, height))
+        }
+      } else if (modes.has('g-bar-x')) {
+        if (arePairs(data)) {
+          svg.appendChild(makeBarXi(clampPairs(data), width, height))
+        } else {
+          svg.appendChild(makeBarX(clamp1s(data), width, height))
         }
       } else if (modes.has('g-bar-y')) {
         if (arePairs(data)) {
