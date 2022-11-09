@@ -323,35 +323,21 @@ const
   makeStepXi = (xs: Pairs, w: F, h: F) => {
     const
       n = xs.length,
-      dy = h / n,
+      dy = h / (n - 1),
+      dy2 = dy / 2,
       d: Array<S | F> = []
     for (const j of [0, 1]) {
       for (let i = 0; i < n; i++) {
         const x = lerp(xs[i][j], 0, w)
         if (i) {
-          d.push('H', x)
+          d.push(
+            'v', dy2,
+            'H', x,
+            'v', dy2,
+          )
         } else {
           d.push('M', x, 0)
         }
-        d.push('v', dy)
-      }
-    }
-    return newStroke(d)
-  },
-  makeStepYi = (ys: Pairs, w: F, h: F) => {
-    const
-      n = ys.length,
-      dx = w / n,
-      d: Array<S | F> = []
-    for (const j of [0, 1]) {
-      for (let i = 0; i < n; i++) {
-        const y = lerp(ys[i][j], h, 0)
-        if (i) {
-          d.push('V', y)
-        } else {
-          d.push('M', 0, y)
-        }
-        d.push('h', dx)
       }
     }
     return newStroke(d)
@@ -359,53 +345,89 @@ const
   makeStepAreaXi = (xs: Pairs, w: F, h: F) => {
     const
       n = xs.length,
-      dy = h / n,
+      dy = h / (n - 1),
+      dy2 = dy / 2,
       d: Array<S | F> = []
     for (let i = 0; i < n; i++) {
+      const x = lerp(xs[i][0], 0, w)
       if (i) {
         d.push(
-          'H', lerp(xs[i][0], 0, w),
-          'v', dy
+          'v', dy2,
+          'H', x,
+          'v', dy2,
         )
       } else {
-        d.push(
-          'M', lerp(xs[i][0], 0, w), 0,
-          'v', dy
-        )
+        d.push('M', x, 0)
       }
     }
-    for (let i = n - 1; i >= 0; i--) {
-      d.push(
-        'H', lerp(xs[i][1], 0, w),
-        'v', -dy
-      )
+    const nn = n - 1
+    for (let i = nn; i >= 0; i--) {
+      const x = lerp(xs[i][1], 0, w)
+      if (i === nn) {
+        d.push('H', x)
+      } else {
+        d.push(
+          'v', -dy2,
+          'H', x,
+          'v', -dy2
+        )
+      }
     }
     d.push('Z')
     return newFill(d)
   },
+  makeStepYi = (ys: Pairs, w: F, h: F) => {
+    const
+      n = ys.length,
+      dx = w / (n - 1),
+      dx2 = dx / 2,
+      d: Array<S | F> = []
+    for (const j of [0, 1]) {
+      for (let i = 0; i < n; i++) {
+        const y = lerp(ys[i][j], h, 0)
+        if (i) {
+          d.push(
+            'h', dx2,
+            'V', y,
+            'h', dx2,
+          )
+        } else {
+          d.push('M', 0, y)
+        }
+      }
+    }
+    return newStroke(d)
+  },
   makeStepAreaYi = (ys: Pairs, w: F, h: F) => {
     const
       n = ys.length,
-      dx = w / n,
+      dx = w / (n - 1),
+      dx2 = dx / 2,
       d: Array<S | F> = []
     for (let i = 0; i < n; i++) {
+      const y = lerp(ys[i][0], h, 0)
       if (i) {
         d.push(
-          'V', lerp(ys[i][0], h, 0),
-          'h', dx
+          'h', dx2,
+          'V', y,
+          'h', dx2,
         )
       } else {
-        d.push(
-          'M', 0, lerp(ys[i][0], h, 0),
-          'h', dx
-        )
+        d.push('M', 0, y)
       }
     }
-    for (let i = n - 1; i >= 0; i--) {
-      d.push(
-        'V', lerp(ys[i][1], h, 0),
-        'h', -dx
-      )
+    const nn = n - 1
+    for (let i = nn; i >= 0; i--) {
+      const y = lerp(ys[i][1], h, 0)
+      if (i === nn) {
+        d.push('V', y)
+      } else {
+        d.push(
+          'h', -dx2,
+          'V', y,
+          'h', -dx2
+        )
+      }
     }
     d.push('Z')
     return newFill(d)
