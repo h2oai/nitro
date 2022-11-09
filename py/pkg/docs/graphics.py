@@ -287,7 +287,7 @@ def graphics_bar(view: View):  # height 3
 
 
 # ## Stroke
-# Set `mode='g-stroke-x'` or `mode='g-stroke-y'` to draw a sequence of vertical strokes.
+# Set `mode='g-stroke-x'` or `mode='g-stroke-y'` to draw a sequence of strokes.
 # The `stroke-` mode is similar to the `bar-` mode, except that you can control the thickness of the strokes (bars)
 # when using the `stroke-` mode.
 #
@@ -320,6 +320,7 @@ def graphics_stroke(view: View):  # height 3
 
 # ## Tick
 # Set `mode='g-tick-x'` or `mode='g-tick-y'` to draw a sequence of ticks.
+# The `tick-` mode is similar to the `bar-` mode, except that only the tip of the bar is drawn.
 #
 # For simple ticks, set `data=` to a sequence of normalized values.
 #
@@ -370,8 +371,10 @@ def graphics_guide(view: View):  # height 3
 # ## Gauge
 # Set `mode='g-gauge-x'` or `mode='g-gauge-y'` to draw a gauge.
 #
-# Set `data=` to normalized `[length, width]` values.
-# `width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
+# Set `data=` to normalized `[length, width]` values:
+#
+# - `length` defines the length of the bar.
+# - `width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
 def graphics_gauge(view: View):  # height 3
     view(row(
         col(
@@ -473,10 +476,13 @@ def graphics_gauge_c(view: View):  # height 6
 # ## Label
 # Set `mode='g-label'` to draw a sequence of labels.
 #
-# - Set `data=` to a sequence of normalized `[x, y, text, justify, align]` values.
-# - Set `justify` to `0` (left), `1` (right), or omit to center (default).
-# - Set `align` to `0` (top), `1` (bottom), or omit to center (default).
-def graphics_label(view: View):  # height 3
+# Set `data=` to a sequence of normalized `[x, y, text, justify, align]` values.
+#
+# `justify` and `align` define the anchor point of the label:
+#
+# - Set `justify` to `0` (left), `1` (right), or `.5` to center horizontally (default).
+# - Set `align` to `0` (top), `1` (bottom), or `.5` to center vertically (default).
+def graphics_label(view: View):  # height 4
     view(
         box(
             mode='g-label',
@@ -515,7 +521,7 @@ def graphics_label(view: View):  # height 3
 #   `tu` (triangle-up), `tr` (triangle-right), `td` (triangle-down), `tl` (triangle-left),
 #   `h` (horizontal bar), `v` (vertical bar), `p` (plus),`x` (cross),
 #   `au` (arrow-up), `ar` (arrow-right), `al` (arrow-left), `ad` (arrow-down).
-def graphics_point(view: View):  # height 3
+def graphics_point(view: View):  # height 2
     view(
         box(
             mode='g-point',
@@ -543,6 +549,12 @@ def graphics_point(view: View):  # height 3
 
 # ## Rectangle
 # Set `mode='g-rect'` to draw multiple rectangles.
+#
+# Set `data=` to a sequence of normalized `[x, y, width, height, corner-radius]` values, where:
+#
+# - `(x, y)` defines the center of the rectangle.
+# - `width` and `height` define the size of the rectangle.
+# - `corner-radius` (optional) is the corner radius in pixels (not normalized).
 def graphics_rect(view: View):  # height 3
     view(
         box(
@@ -560,7 +572,13 @@ def graphics_rect(view: View):  # height 3
 # ## Arc
 # Set `mode='g-arc'` to draw multiple arcs or circles.
 #
-# Set `data=` to a sequence of normalized `[x, y, diameter, length, width, rotation]` values.
+# Set `data=` to a sequence of normalized `[x, y, diameter, length, width, rotation]` values, where:
+#
+# - `(x, y)` defines the center of the arc.
+# - `diameter` defines the diameter of the arc.
+# - `length` defines the length of the arc (`1` for circles, fractions for arcs).
+# - `width` defines the thickness of the arc (`1` for discs, fractions for donuts).
+# - `rotation` defines the rotation angle of the arc (`.25` for 90 degrees, `.5` for 180 degrees, and so on).
 def graphics_arc(view: View):  # height 3
     view(row(
         box(
@@ -587,6 +605,8 @@ def graphics_arc(view: View):  # height 3
 
 # ## Polyline
 # Set `mode='g-polyline'` to draw multiple polylines.
+#
+# Set `data=` to a sequence of normalized `[x1, y1, x2, y2, x3, y3, ...]` values where xi, yi represent vertices.
 def graphics_polyline(view: View):  # height 3
     view(
         box(
@@ -613,7 +633,9 @@ def graphics_polyline(view: View):  # height 3
 
 
 # ## Polygon
-# Set `mode='g-polygon'` to draw multiple polygon.
+# Set `mode='g-polygon'` to draw multiple polygons.
+#
+# Set `data=` to a sequence of normalized `[x1, y1, x2, y2, x3, y3, ...]` values where xi, yi represent vertices.
 def graphics_polygon(view: View):  # height 3
     view(
         box(
@@ -786,7 +808,7 @@ def graphics_spline(view: View):  # height 4
 
 # ## Win Loss
 # Stack two bar graphics vertically to create a win-loss graphic.
-def graphics_win_loss(view: View):  # height 3
+def graphics_win_loss(view: View):  # height 2
     wins = [1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1] * 2
     losses = [(x + 1) % 2 for x in wins]  # invert wins
     view(
@@ -799,7 +821,7 @@ def graphics_win_loss(view: View):  # height 3
 
 # ## Stacked bar
 # Overlay multiple gauges to create a stacked bar.
-def graphics_stacked_bar(view: View):  # height 3
+def graphics_stacked_bar(view: View):  # height 2
     bar = box(mode='g-gauge-x') / 'absolute inset-0 fill-none'
     view(
         box(
@@ -849,7 +871,7 @@ def graphics_network_graph(view: View):  # height 4
     nodes = [(random.uniform(.05, .95), random.uniform(.05, .95)) for _ in range(n)]
     edges = []
     for x1, y1 in nodes:
-        for x2, y2 in random.choices(nodes, k=random.randint(1, 4)):
+        for x2, y2 in random.choices(nodes, k=random.randint(1, 2)):
             edges.append((x1, y1, x2, y2))
 
     layer = box() / 'absolute inset-0'
@@ -857,5 +879,5 @@ def graphics_network_graph(view: View):  # height 4
         box(
             layer(mode='g-link-x', data=edges) / 'stroke-indigo-300 fill-none',
             layer(mode='g-point', data=nodes) / 'stroke-indigo-700 fill-none',
-        ) / 'relative w-64 h-64',
+        ) / 'relative h-64',
     )

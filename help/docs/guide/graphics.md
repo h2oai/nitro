@@ -307,7 +307,7 @@ view(row(
 
 ## Stroke
 
-Set `mode='g-stroke-x'` or `mode='g-stroke-y'` to draw a sequence of vertical strokes.
+Set `mode='g-stroke-x'` or `mode='g-stroke-y'` to draw a sequence of strokes.
 The `stroke-` mode is similar to the `bar-` mode, except that you can control the thickness of the strokes (bars)
 when using the `stroke-` mode.
 
@@ -347,6 +347,7 @@ view(row(
 ## Tick
 
 Set `mode='g-tick-x'` or `mode='g-tick-y'` to draw a sequence of ticks.
+The `tick-` mode is similar to the `bar-` mode, except that only the tip of the bar is drawn.
 
 For simple ticks, set `data=` to a sequence of normalized values.
 
@@ -411,8 +412,10 @@ view(row(
 
 Set `mode='g-gauge-x'` or `mode='g-gauge-y'` to draw a gauge.
 
-Set `data=` to normalized `[length, width]` values.
-`width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
+Set `data=` to normalized `[length, width]` values:
+
+- `length` defines the length of the bar.
+- `width` defines the thickness of the bar relative to the track, and defaults to 1 (bar is as thick as the track).
 
 
 ```py
@@ -528,9 +531,12 @@ view(
 
 Set `mode='g-label'` to draw a sequence of labels.
 
-- Set `data=` to a sequence of normalized `[x, y, text, justify, align]` values.
-- Set `justify` to `0` (left), `1` (right), or omit to center (default).
-- Set `align` to `0` (top), `1` (bottom), or omit to center (default).
+Set `data=` to a sequence of normalized `[x, y, text, justify, align]` values.
+
+`justify` and `align` define the anchor point of the label:
+
+- Set `justify` to `0` (left), `1` (right), or `.5` to center horizontally (default).
+- Set `align` to `0` (top), `1` (bottom), or `.5` to center vertically (default).
 
 
 ```py
@@ -613,6 +619,12 @@ view(
 
 Set `mode='g-rect'` to draw multiple rectangles.
 
+Set `data=` to a sequence of normalized `[x, y, width, height, corner-radius]` values, where:
+
+- `(x, y)` defines the center of the rectangle.
+- `width` and `height` define the size of the rectangle.
+- `corner-radius` (optional) is the corner radius in pixels (not normalized).
+
 
 ```py
 view(
@@ -636,7 +648,13 @@ view(
 
 Set `mode='g-arc'` to draw multiple arcs or circles.
 
-Set `data=` to a sequence of normalized `[x, y, diameter, length, width, rotation]` values.
+Set `data=` to a sequence of normalized `[x, y, diameter, length, width, rotation]` values, where:
+
+- `(x, y)` defines the center of the arc.
+- `diameter` defines the diameter of the arc.
+- `length` defines the length of the arc (`1` for circles, fractions for arcs).
+- `width` defines the thickness of the arc (`1` for discs, fractions for donuts).
+- `rotation` defines the rotation angle of the arc (`.25` for 90 degrees, `.5` for 180 degrees, and so on).
 
 
 ```py
@@ -671,6 +689,8 @@ view(row(
 
 Set `mode='g-polyline'` to draw multiple polylines.
 
+Set `data=` to a sequence of normalized `[x1, y1, x2, y2, x3, y3, ...]` values where xi, yi represent vertices.
+
 
 ```py
 view(
@@ -703,7 +723,9 @@ view(
 
 ## Polygon
 
-Set `mode='g-polygon'` to draw multiple polygon.
+Set `mode='g-polygon'` to draw multiple polygons.
+
+Set `data=` to a sequence of normalized `[x1, y1, x2, y2, x3, y3, ...]` values where xi, yi represent vertices.
 
 
 ```py
@@ -983,7 +1005,7 @@ n = 100
 nodes = [(random.uniform(.05, .95), random.uniform(.05, .95)) for _ in range(n)]
 edges = []
 for x1, y1 in nodes:
-    for x2, y2 in random.choices(nodes, k=random.randint(1, 4)):
+    for x2, y2 in random.choices(nodes, k=random.randint(1, 2)):
         edges.append((x1, y1, x2, y2))
 
 layer = box() / 'absolute inset-0'
@@ -991,7 +1013,7 @@ view(
     box(
         layer(mode='g-link-x', data=edges) / 'stroke-indigo-300 fill-none',
         layer(mode='g-point', data=nodes) / 'stroke-indigo-700 fill-none',
-    ) / 'relative w-64 h-64',
+    ) / 'relative h-64',
 )
 ```
 
