@@ -30,17 +30,19 @@ import h2o_nitro.graphics
 # in a scatterplot are 10px wide in a visualization, they'll continue to be 10px wide when resized, so that the
 # points do not appear distorted or skewed at different sizes.
 #
-# The graphical elements are styled using `style=`, similar to how you would style everything else in Nitro.
+# Graphics are styled using `style=`, similar to how everything else is styled in Nitro.
 #
-# Graphical primitives include lines, bars, points, guides, labels, and so on. Each of these are covered in detail
-# in the following sections. Each primitive uses normalized
+# Graphics primitives include lines, bars, points, guides, labels, and so on, covered in detail
+# in the following sections. Each primitive is rendered using normalized coordinates (floats between 0 and 1), supplied
+# with `data=`. X-values are mapped from left (0) to right (1). Y-values are mapped from bottom (0) to top (1).
 #
-# To stack graphics, use the `relative` style on the parent box, and `absolute inset-0` on each child box.
+# Graphics primitives can be stacked to form sophisticated visualizations.
+# To stack graphics, use the `relative` style on the parent box, with `absolute inset-0` on each child box.
 # This makes the boxes render on top of each other instead of one below the other.
 #
-# Here's a rather complicated example that creates a custom time series chart from primitives. This example is just for
-# demonstrating how compositing works.
-# Most of the time, the graphics you create in Nitro would be much simpler than this.
+# Here's a rather complicated example that creates a custom time series chart from primitives. Note that this example
+# is just for demonstrating how compositing works, and most of the time, the graphics you create in Nitro would be
+# significantly simpler.
 def graphics_intro(view: View):  # height 4
     # Some pretty random data:
     n = 100
@@ -407,8 +409,7 @@ def graphics_gauge(view: View):  # height 3
 # - `track-length` is the length of the track (optional, default `1`).
 # - `track-width` is the thickness of the track (optional, default `1`).
 # - `rotation` is the angle of rotation (optional, default `0`).
-# - `diameter` is the diameter of the gauge (optional, default `0`).
-# `size` defines the size of the bar relative to the track, and defaults to 1.
+# - `diameter` is the diameter of the gauge (optional, default `1`).
 def graphics_gauge_c(view: View):  # height 6
     style = 'w-24 h-24 fill-indigo-100 stroke-indigo-700'
     view(
