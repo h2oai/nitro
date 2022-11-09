@@ -1020,7 +1020,7 @@ export const Graphic = ({ box }: BoxProps) => {
           x = width / 2,
           y = height / 2,
           track = makeArcFill(x, y, trackLen, trackSize, dia, rot, width, height),
-          bar = makeArc(x, y, len, trackSize, size, dia, rot, width, height)
+          bar = makeArc(x, y, len * trackLen, trackSize, size, dia, rot, width, height)
 
         track.setAttribute('stroke', 'none')
         bar.setAttribute('fill', 'none')

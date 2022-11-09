@@ -440,32 +440,32 @@ def graphics_gauge_c(view: View):  # height 6
             ) / 'relative w-24 h-24',
         ),
         row(
-            box(mode='g-gauge-c', style=style, data=[.35, 1, .5]),
-            box(mode='g-gauge-c', style=style, data=[.35, .5, .5]),  # thinner bar
-            box(mode='g-gauge-c', style=style, data=[.35, 1, .5, .5]),  # thinner track
-            box(mode='g-gauge-c', style=style, data=[.35, .5, .5, .5]),  # thinner track and bar
-            box(mode='g-gauge-c', style=style, data=[.35, 1, .5, .5, .75]),  # rotate 270 degrees
+            box(mode='g-gauge-c', style=style, data=[.35, 1, .5, .5, .75]),
+            box(mode='g-gauge-c', style=style, data=[.35, .5, .5, .5, .75]),
+            box(mode='g-gauge-c', style=style, data=[.35, 1, 10 / 12, .5, 7 / 12]),
+            box(mode='g-gauge-c', style=style, data=[.35, .5, 10 / 12, .5, 7 / 12]),
+            box(mode='g-gauge-c', style=style, data=[.35, 1, 4 / 12, .5, 10 / 12]),
         ),
         row(
             # With label:
             box(
-                box(mode='g-gauge-c', data=[.35, 1, .5, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+                box(mode='g-gauge-c', data=[.35, 1, .5, .5, .75]) / 'absolute inset-0 fill-red-100 stroke-red-700',
                 box('35%') / 'text-sm font-bold',
-                ) / 'relative flex w-24 h-24 justify-center items-center',
+            ) / 'relative flex w-24 h-24 justify-center items-center',
             # Stacked:
             box(
-                box(mode='g-gauge-c', data=[.8, 1, .5, .5]) / 'absolute inset-0 fill-red-100 stroke-red-300',
-                box(mode='g-gauge-c', data=[.65, 1, .5, .5]) / 'absolute inset-0 fill-none stroke-red-500',
-                box(mode='g-gauge-c', data=[.4, 1, .5, .5]) / 'absolute inset-0 fill-none stroke-red-700',
-                box(mode='g-gauge-c', data=[.9, .2, .5, .5]) / 'absolute inset-0 fill-none stroke-red-900',
-                ) / 'relative w-24 h-24',
+                box(mode='g-gauge-c', data=[.8, 1, .5, .5, .75]) / 'absolute inset-0 fill-red-100 stroke-red-300',
+                box(mode='g-gauge-c', data=[.65, 1, .5, .5, .75]) / 'absolute inset-0 fill-none stroke-red-500',
+                box(mode='g-gauge-c', data=[.4, 1, .5, .5, .75]) / 'absolute inset-0 fill-none stroke-red-700',
+                box(mode='g-gauge-c', data=[.9, .2, .5, .5, .75]) / 'absolute inset-0 fill-none stroke-red-900',
+            ) / 'relative w-24 h-24',
             # Concentric:
             box(
                 box(mode='g-gauge-c', data=[.5, 1, .5, .2, 0]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-                box(mode='g-gauge-c', data=[.65, 1, .5, .25, 0, .75]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
+                box(mode='g-gauge-c', data=[.6, 1, .5, .25, 0, .75]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
                 box(mode='g-gauge-c', data=[.8, 1, .5, .3, 0, .5]) / 'absolute inset-0 fill-green-100 stroke-green-700',
-                ) / 'relative w-24 h-24',
-            ),
+            ) / 'relative w-24 h-24',
+        ),
     )
 
 
