@@ -571,83 +571,6 @@ const
     p.setAttribute('stroke-width', String(w * s))
     return p
   },
-  makeGaugeC = (xs: F[], w: F, h: F) => {
-    let [a1, a2, r1, r2, s] = xs
-    if (!isN(a1)) a1 = 0
-    if (!isN(a2)) a2 = 0
-    if (!isN(r1)) r1 = 0
-    if (!isN(r2)) r2 = 1
-    if (!isN(s)) s = 1
-    const
-      rmax = Math.min(w, h) / 2,
-      t1 = Math.PI * (2 * Math.min(a1, a2) + 0.5),
-      t2 = Math.PI * (2 * Math.max(a1, a2) + 0.5),
-      tt = (t1 + t2) / 2
-    r1 *= rmax
-    r2 *= rmax
-    const r = (r1 + r2) / 2
-    const path = newStroke([
-      'M', w / 2 - r * Math.cos(t1), h / 2 - r * Math.sin(t1),
-      'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(tt), h / 2 - r * Math.sin(tt),
-      'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(t2), h / 2 - r * Math.sin(t2)
-    ])
-    path.setAttribute('stroke-width', String((r2 - r1) * s))
-    return path
-  },
-  makeGaugeCFill = (xs: F[], w: F, h: F) => {
-    let [a1, a2, r1, r2] = xs
-    if (!isN(r1)) r1 = 0
-    if (!isN(r2)) r2 = 1
-    const rmax = Math.min(w, h) / 2
-    r1 *= rmax
-    r2 *= rmax
-    const d1 = r1 * 2, d2 = r2 * 2
-    return newFill([
-      'M', w / 2, h / 2 - r2,
-      'a', r2, r2, 0, 0, 1, 0, d2, // outer arc  1
-      'a', r2, r2, 0, 0, 1, 0, -d2, // outer arc 2
-      'v', r2 - r1, // slit
-      'a', r1, r1, 0, 0, 0, 0, d1, // inner arc 1
-      'a', r1, r1, 0, 0, 0, 0, -d1, // inner arc 2
-      'Z'
-    ])
-  },
-  makeGaugeSC = (xs: F[], w: F, h: F) => {
-    let [a1, a2, r1, r2, s] = xs
-    if (!isN(a1)) a1 = 0
-    if (!isN(a2)) a2 = 0
-    if (!isN(r1)) r1 = 0
-    if (!isN(r2)) r2 = 1
-    if (!isN(s)) s = 1
-    const
-      rmax = Math.min(w / 2, h),
-      t1 = Math.PI * Math.min(a1, a2),
-      t2 = Math.PI * Math.max(a1, a2)
-    r1 *= rmax
-    r2 *= rmax
-    const r = (r1 + r2) / 2
-    const path = newStroke([
-      'M', w / 2 - r * Math.cos(t1), h - r * Math.sin(t1),
-      'A', r, r, 0, 0, 1, w / 2 - r * Math.cos(t2), h - r * Math.sin(t2)
-    ])
-    path.setAttribute('stroke-width', String((r2 - r1) * s))
-    return path
-  },
-  makeGaugeSCFill = (xs: F[], w: F, h: F) => {
-    const rmax = Math.min(w / 2, h)
-    let [a1, a2, r1, r2] = xs
-    if (!isN(r1)) r1 = 0
-    if (!isN(r2)) r2 = 1
-    r1 *= rmax
-    r2 *= rmax
-    return newFill([
-      'M', w / 2 - r2, h,
-      'a', r2, r2, 0, 0, 1, r2 * 2, 0, // outer arc
-      'h', r1 - r2, // slit
-      'a', r1, r1, 0, 0, 0, -r1 * 2, 0, // inner arc
-      'Z'
-    ])
-  },
   makePolyline = (d: any, width: F, height: F) => {
     const points: S[] = []
     for (let i = 0; i < d.length; i += 2) {
@@ -657,6 +580,75 @@ const
       points.push(`${x},${y}`)
     }
     return points.join(' ')
+  },
+  makeArcFill = (x: F, y: F, len: F, size: F, dia: F, rot: F, width: F, height: F) => {
+    const
+      r2 = dia * Math.min(width, height) / 2,
+      r1 = (1 - size) * r2,
+      t1 = Math.PI * 2 * (rot + .75),
+      t2 = Math.PI * 2 * (rot + len + .75),
+      tt = (t1 + t2) / 2
+
+    if (len < 1) { // arc
+      const path: PathD = []
+      path.push(
+        'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
+        'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
+        'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
+      )
+      if (r1 < r2) {
+        // reverse arc
+        path.push(
+          'L', x + r1 * Math.cos(t2), y + r1 * Math.sin(t2),
+          'A', r1, r1, 0, 0, 0, x + r1 * Math.cos(tt), y + r1 * Math.sin(tt),
+          'A', r1, r1, 0, 0, 0, x + r1 * Math.cos(t1), y + r1 * Math.sin(t1),
+          'Z'
+        )
+      } else {
+        // connect to center
+        path.push(
+          'L', x, y,
+          'Z'
+        )
+      }
+      return newPath(path)
+    }
+
+    if (r1 < r2) { // donut
+      return newPath([
+        'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
+        'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
+        'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
+        'Z',
+        'M', x + r1 * Math.cos(t1), y + r1 * Math.sin(t1),
+        'A', r1, r1, 0, 1, 0, x + r1 * Math.cos(tt), y + r1 * Math.sin(tt),
+        'A', r1, r1, 0, 1, 0, x + r1 * Math.cos(t2), y + r1 * Math.sin(t2),
+        'Z'
+      ])
+    }
+
+    const circle = newEl('circle')
+    circle.setAttribute('cx', String(x))
+    circle.setAttribute('cy', String(y))
+    circle.setAttribute('r', String(r2))
+    return circle
+  },
+  makeArc = (x: F, y: F, len: F, trackSize: F, size: F, dia: F, rot: F, width: F, height: F) => {
+    const
+      r2 = dia * Math.min(width, height) / 2,
+      r1 = (1 - trackSize) * r2,
+      r = (r1 + r2) / 2,
+      t1 = Math.PI * 2 * (rot + .75),
+      t2 = Math.PI * 2 * (rot + len + .75),
+      tt = (t1 + t2) / 2
+
+    const arc = newStroke([
+      'M', x + r * Math.cos(t1), y + r * Math.sin(t1),
+      'A', r, r, 0, 0, 1, x + r * Math.cos(tt), y + r * Math.sin(tt),
+      'A', r, r, 0, 0, 1, x + r * Math.cos(t2), y + r * Math.sin(t2),
+    ])
+    arc.setAttribute('stroke-width', String((r2 - r1) * size))
+    return arc
   }
 
 export const GraphicLabel = ({ context, box }: BoxProps) => {
@@ -992,14 +984,6 @@ export const Graphic = ({ box }: BoxProps) => {
         const d = clamp1s(data)
         svg.appendChild(makeGaugeFill(d, width, height))
         svg.appendChild(makeGaugeY(d, width, height))
-      } else if (modes.has('g-gauge-c')) {
-        const d = clamp1s(data)
-        svg.appendChild(makeGaugeCFill(d, width, height))
-        svg.appendChild(makeGaugeC(d, width, height))
-      } else if (modes.has('g-gauge-sc')) {
-        const d = clamp1s(data)
-        svg.appendChild(makeGaugeSCFill(d, width, height))
-        svg.appendChild(makeGaugeSC(d, width, height))
       } else if (modes.has('g-rect')) {
         for (const d of data) {
           if (Array.isArray(d)) {
@@ -1022,70 +1006,40 @@ export const Graphic = ({ box }: BoxProps) => {
             svg.appendChild(el)
           }
         }
+      } else if (modes.has('g-gauge-c')) {
+        let [len, size, trackLen, trackSize, rot, dia] = clamp1s(data)
+
+        if (!isN(len)) len = 1
+        if (!isN(size)) size = 1
+        if (!isN(trackLen)) trackLen = 1
+        if (!isN(trackSize)) trackSize = 1
+        if (!isN(rot)) rot = 0
+        if (!isN(dia)) dia = 1
+
+        const
+          x = width / 2,
+          y = height / 2,
+          track = makeArcFill(x, y, trackLen, trackSize, dia, rot, width, height),
+          bar = makeArc(x, y, len, trackSize, size, dia, rot, width, height)
+
+        track.setAttribute('stroke', 'none')
+        bar.setAttribute('fill', 'none')
+
+        svg.appendChild(track)
+        svg.appendChild(bar)
       } else if (modes.has('g-arc')) {
         for (const d of data) {
           if (Array.isArray(d)) {
             let [x, y, dia, len, size, rot] = clamp1s(d)
 
-            if (!isN(dia)) dia = 0
+            if (!isN(dia)) dia = 1
             if (!isN(rot)) rot = 0
             if (!isN(len)) len = 1
 
             x *= width
             y = (1 - y) * height
 
-            const
-              isArc = len < 1,
-              r2 = dia * Math.min(width, height) / 2,
-              r1 = (1 - size) * r2,
-              t1 = Math.PI * 2 * (rot + .75),
-              t2 = Math.PI * 2 * (rot + len + .75),
-              tt = (t1 + t2) / 2
-
-            if (isArc) {
-              const path: PathD = []
-              path.push(
-                'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
-                'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
-                'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
-              )
-              if (r1 < r2) {
-                // reverse arc
-                path.push(
-                  'L', x + r1 * Math.cos(t2), y + r1 * Math.sin(t2),
-                  'A', r1, r1, 0, 0, 0, x + r1 * Math.cos(tt), y + r1 * Math.sin(tt),
-                  'A', r1, r1, 0, 0, 0, x + r1 * Math.cos(t1), y + r1 * Math.sin(t1),
-                  'Z'
-                )
-              } else {
-                // connect to center
-                path.push(
-                  'L', x, y,
-                  'Z'
-                )
-              }
-              svg.appendChild(newPath(path))
-            } else {
-              if (r1 < r2) {
-                // donut
-                svg.appendChild(newPath([
-                  'M', x + r2 * Math.cos(t1), y + r2 * Math.sin(t1),
-                  'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(tt), y + r2 * Math.sin(tt),
-                  'A', r2, r2, 0, 0, 1, x + r2 * Math.cos(t2), y + r2 * Math.sin(t2),
-                  'Z',
-                  'M', x + r1 * Math.cos(t1), y + r1 * Math.sin(t1),
-                  'A', r1, r1, 0, 1, 0, x + r1 * Math.cos(tt), y + r1 * Math.sin(tt),
-                  'A', r1, r1, 0, 1, 0, x + r1 * Math.cos(t2), y + r1 * Math.sin(t2),
-                  'Z'
-                ]))
-              } else {
-                const circle = newEl('circle')
-                circle.setAttribute('cx', String(x))
-                circle.setAttribute('cy', String(y))
-                circle.setAttribute('r', String(r2))
-                svg.appendChild(circle)
-              }
-            }
+            svg.appendChild(makeArcFill(x, y, len, size, dia, rot, width, height))
           }
         }
       } else if (modes.has('g-polyline')) {

@@ -448,12 +448,14 @@ view(row(
 
 Set `mode='g-gauge-c'` to draw a circular gauge.
 
-Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius, size]` values.
+Set `data=` to normalized `[length, width, track-length, track-width, rotation, diameter]` values:
 
-Set `data=` to normalized `[length, width, track-length, track-width, rotation]` values.
-
-`inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
-
+- `length` is the length of the gauge bar.
+- `width` is the thickness of the gauge bar (optional, default `1`).
+- `track-length` is the length of the track (optional, default `1`).
+- `track-width` is the thickness of the track (optional, default `1`).
+- `rotation` is the angle of rotation (optional, default `0`).
+- `diameter` is the diameter of the gauge (optional, default `0`).
 `size` defines the size of the bar relative to the track, and defaults to 1.
 
 
@@ -461,85 +463,64 @@ Set `data=` to normalized `[length, width, track-length, track-width, rotation]`
 style = 'w-24 h-24 fill-indigo-100 stroke-indigo-700'
 view(
     row(
-        box(mode='g-gauge-c', style=style, data=[0, .35]),
-        box(mode='g-gauge-c', style=style, data=[0, .35, .5, 1]),
-        box(mode='g-gauge-c', style=style, data=[0, .35, .5]),  # end-radius defaults to 1.
-        box(mode='g-gauge-c', style=style, data=[0, .35, .5, 1, .5]),  # thinner bar
-        box(mode='g-gauge-c', style=style, data=[0, .35, .5, .75]),
-        box(mode='g-gauge-c', style=style, data=[.25, .75, .5, 1]),
+        box(mode='g-gauge-c', style=style, data=[.35]),
+        box(mode='g-gauge-c', style=style, data=[.35, .5]),  # thinner bar
+        box(mode='g-gauge-c', style=style, data=[.35, 1, 1, .5]),  # thinner track
+        box(mode='g-gauge-c', style=style, data=[.35, .5, 1, .5]),  # thinner track and bar
+        box(mode='g-gauge-c', style=style, data=[.35, 1, 1, .5, .75]),  # rotate 270 degrees
     ),
     row(
         # With label:
         box(
-            box(mode='g-gauge-c', data=[0, .35, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-c', data=[.35, 1, 1, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
             box('35%') / 'text-sm font-bold',
         ) / 'relative flex w-24 h-24 justify-center items-center',
         # Stacked:
         box(
-            box(mode='g-gauge-c', data=[0, .35, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box(mode='g-gauge-c', data=[.35, .65, .5]) / 'absolute inset-0 fill-none stroke-red-500',
-            box(mode='g-gauge-c', data=[.65, .8, .5]) / 'absolute inset-0 fill-none stroke-red-300',
+            box(mode='g-gauge-c', data=[.8, 1, 1, .5]) / 'absolute inset-0 fill-red-100 stroke-red-300',
+            box(mode='g-gauge-c', data=[.65, 1, 1, .5]) / 'absolute inset-0 fill-none stroke-red-500',
+            box(mode='g-gauge-c', data=[.4, 1, 1, .5]) / 'absolute inset-0 fill-none stroke-red-700',
+            box(mode='g-gauge-c', data=[.9, .2, 1, .5]) / 'absolute inset-0 fill-none stroke-red-900',
         ) / 'relative w-24 h-24',
         # Concentric:
         box(
-            box(mode='g-gauge-c', data=[0, .35, .8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box(mode='g-gauge-c', data=[0, .65, .5, .7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
-            box(mode='g-gauge-c', data=[0, .85, .2, .4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
+            box(mode='g-gauge-c', data=[.5, 1, 1, .2, 0]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-c', data=[.65, 1, 1, .25, 0, .75]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
+            box(mode='g-gauge-c', data=[.8, 1, 1, .3, 0, .5]) / 'absolute inset-0 fill-green-100 stroke-green-700',
         ) / 'relative w-24 h-24',
-    )
+    ),
+    row(
+        box(mode='g-gauge-c', style=style, data=[.35, 1, .5]),
+        box(mode='g-gauge-c', style=style, data=[.35, .5, .5]),  # thinner bar
+        box(mode='g-gauge-c', style=style, data=[.35, 1, .5, .5]),  # thinner track
+        box(mode='g-gauge-c', style=style, data=[.35, .5, .5, .5]),  # thinner track and bar
+        box(mode='g-gauge-c', style=style, data=[.35, 1, .5, .5, .75]),  # rotate 270 degrees
+    ),
+    row(
+        # With label:
+        box(
+            box(mode='g-gauge-c', data=[.35, 1, .5, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box('35%') / 'text-sm font-bold',
+            ) / 'relative flex w-24 h-24 justify-center items-center',
+        # Stacked:
+        box(
+            box(mode='g-gauge-c', data=[.8, 1, .5, .5]) / 'absolute inset-0 fill-red-100 stroke-red-300',
+            box(mode='g-gauge-c', data=[.65, 1, .5, .5]) / 'absolute inset-0 fill-none stroke-red-500',
+            box(mode='g-gauge-c', data=[.4, 1, .5, .5]) / 'absolute inset-0 fill-none stroke-red-700',
+            box(mode='g-gauge-c', data=[.9, .2, .5, .5]) / 'absolute inset-0 fill-none stroke-red-900',
+            ) / 'relative w-24 h-24',
+        # Concentric:
+        box(
+            box(mode='g-gauge-c', data=[.5, 1, .5, .2, 0]) / 'absolute inset-0 fill-red-100 stroke-red-700',
+            box(mode='g-gauge-c', data=[.65, 1, .5, .25, 0, .75]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
+            box(mode='g-gauge-c', data=[.8, 1, .5, .3, 0, .5]) / 'absolute inset-0 fill-green-100 stroke-green-700',
+            ) / 'relative w-24 h-24',
+        ),
 )
 ```
 
 
 ![Screenshot](assets/screenshots/graphics_gauge_c.png)
-
-
-## Semicircular Gauge
-
-Set `mode='g-gauge-sc'` to draw a semicircular gauge.
-
-Set `data=` to normalized `[start-angle, end-angle, inner-radius, outer-radius, size]` values.
-
-`inner-radius` and `outer-radius` are optional, and default to `0` and `1` respectively.
-
-`size` defines the size of the bar relative to the track, and defaults to 1.
-
-
-```py
-style = 'w-24 h-12 fill-indigo-100 stroke-indigo-700'
-view(
-    row(
-        box(mode='g-gauge-sc', style=style, data=[0, .35]),
-        box(mode='g-gauge-sc', style=style, data=[0, .35, .5, 1]),
-        box(mode='g-gauge-sc', style=style, data=[0, .35, .5]),  # end-radius defaults to 1.
-        box(mode='g-gauge-sc', style=style, data=[0, .35, .5, 1, .5]),  # thinner bar
-        box(mode='g-gauge-sc', style=style, data=[0, .35, .5, .75]),
-        box(mode='g-gauge-sc', style=style, data=[.25, .75, .5, 1]),
-    ),
-    row(
-        # With label:
-        box(
-            box(mode='g-gauge-sc', data=[0, .35, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box('35%') / 'text-xs font-medium',
-        ) / 'relative flex w-24 h-12 justify-center items-end',
-        # Stacked:
-        box(
-            box(mode='g-gauge-sc', data=[0, .35, .5]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box(mode='g-gauge-sc', data=[.35, .65, .5]) / 'absolute inset-0 fill-none stroke-red-500',
-            box(mode='g-gauge-sc', data=[.65, .8, .5]) / 'absolute inset-0 fill-none stroke-red-300',
-        ) / 'relative w-24 h-12',
-        # Concentric:
-        box(
-            box(mode='g-gauge-sc', data=[0, .35, .8, 1]) / 'absolute inset-0 fill-red-100 stroke-red-700',
-            box(mode='g-gauge-sc', data=[0, .65, .5, .7]) / 'absolute inset-0 fill-blue-100 stroke-blue-700',
-            box(mode='g-gauge-sc', data=[0, .85, .2, .4]) / 'absolute inset-0 fill-green-100 stroke-green-700',
-        ) / 'relative w-24 h-12',
-    ),
-)
-```
-
-
-![Screenshot](assets/screenshots/graphics_gauge_sc.png)
 
 
 ## Label
