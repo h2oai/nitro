@@ -455,6 +455,7 @@ and it's unsure how long it will take to complete.
 Draw visualizations, microcharts, sparklines, and other data graphics.
 
 - [Introduction](graphics.md#introduction)
+- [Point](graphics.md#point)
 - [Line](graphics.md#line)
 - [Curve](graphics.md#curve)
 - [Step](graphics.md#step)
@@ -465,7 +466,6 @@ Draw visualizations, microcharts, sparklines, and other data graphics.
 - [Gauge](graphics.md#gauge)
 - [Circular Gauge](graphics.md#circular-gauge)
 - [Label](graphics.md#label)
-- [Point](graphics.md#point)
 - [Rectangle](graphics.md#rectangle)
 - [Arc](graphics.md#arc)
 - [Polyline](graphics.md#polyline)

@@ -97,6 +97,50 @@ view(
 ![Screenshot](assets/screenshots/graphics_intro.png)
 
 
+## Point
+
+Set `mode='g-point'` to draw shapes at multiple points.
+
+Set `data=` to a sequence of normalized `[x, y, size, shape]` values, where:
+
+- `(x, y)` is the anchor point of the shape.
+- `size` determines the size of the shape, in pixels (note that this is a fixed size, not normalized).
+- `shape` is one of `c` (circle, default), `s` (square), `d` (diamond),
+`tu` (triangle-up), `tr` (triangle-right), `td` (triangle-down), `tl` (triangle-left),
+`h` (horizontal bar), `v` (vertical bar), `p` (plus),`x` (cross),
+`au` (arrow-up), `ar` (arrow-right), `al` (arrow-left), `ad` (arrow-down).
+
+
+```py
+view(
+    box(
+        mode='g-point',
+        style='w-64 h-8 fill-none stroke-indigo-700',
+        data=[
+            [1 / 16, .5, 10, 'c'],  # circle
+            [2 / 16, .5, 10, 's'],  # square
+            [3 / 16, .5, 10, 'd'],  # diamond
+            [4 / 16, .5, 10, 'tu'],  # triangle-up
+            [5 / 16, .5, 10, 'tr'],  # triangle-right
+            [6 / 16, .5, 10, 'td'],  # triangle-down
+            [7 / 16, .5, 10, 'tl'],  # triangle-left
+            [8 / 16, .5, 10, 'h'],  # horizontal bar
+            [9 / 16, .5, 10, 'v'],  # vertical bar
+            [10 / 16, .5, 10, 'p'],  # plus
+            [11 / 16, .5, 10, 'x'],  # cross
+            [12 / 16, .5, 10, 'au'],  # arrow-up
+            [13 / 16, .5, 10, 'ar'],  # arrow-right
+            [14 / 16, .5, 10, 'ad'],  # arrow-down
+            [15 / 16, .5, 10, 'al'],  # arrow-left
+        ],
+    )
+)
+```
+
+
+![Screenshot](assets/screenshots/graphics_point.png)
+
+
 ## Line
 
 Set `mode='g-line-x'` or `mode='g-line-y'` to draw line and area charts.
@@ -569,50 +613,6 @@ view(
 
 
 ![Screenshot](assets/screenshots/graphics_label.png)
-
-
-## Point
-
-Set `mode='g-point'` to draw shapes at multiple points.
-
-Set `data=` to a sequence of normalized `[x, y, size, shape]` values, where:
-
-- `(x, y)` is the anchor point of the shape.
-- `size` determines the size of the shape, in pixels (note that this is a fixed size, not normalized).
-- `shape` is one of `c` (circle, default), `s` (square), `d` (diamond),
-`tu` (triangle-up), `tr` (triangle-right), `td` (triangle-down), `tl` (triangle-left),
-`h` (horizontal bar), `v` (vertical bar), `p` (plus),`x` (cross),
-`au` (arrow-up), `ar` (arrow-right), `al` (arrow-left), `ad` (arrow-down).
-
-
-```py
-view(
-    box(
-        mode='g-point',
-        style='w-64 h-8 fill-none stroke-indigo-700',
-        data=[
-            [1 / 16, .5, 10, 'c'],  # circle
-            [2 / 16, .5, 10, 's'],  # square
-            [3 / 16, .5, 10, 'd'],  # diamond
-            [4 / 16, .5, 10, 'tu'],  # triangle-up
-            [5 / 16, .5, 10, 'tr'],  # triangle-right
-            [6 / 16, .5, 10, 'td'],  # triangle-down
-            [7 / 16, .5, 10, 'tl'],  # triangle-left
-            [8 / 16, .5, 10, 'h'],  # horizontal bar
-            [9 / 16, .5, 10, 'v'],  # vertical bar
-            [10 / 16, .5, 10, 'p'],  # plus
-            [11 / 16, .5, 10, 'x'],  # cross
-            [12 / 16, .5, 10, 'au'],  # arrow-up
-            [13 / 16, .5, 10, 'ar'],  # arrow-right
-            [14 / 16, .5, 10, 'ad'],  # arrow-down
-            [15 / 16, .5, 10, 'al'],  # arrow-left
-        ],
-    )
-)
-```
-
-
-![Screenshot](assets/screenshots/graphics_point.png)
 
 
 ## Rectangle

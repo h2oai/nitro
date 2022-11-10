@@ -1208,7 +1208,6 @@ const redraw = (box: Box, div: HTMLDivElement | null) => {
       }
     }
   }
-  console.log('render')
   while (div.firstChild) div.removeChild(div.firstChild)
   div.appendChild(svg)
 }
