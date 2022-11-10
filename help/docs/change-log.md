@@ -21,6 +21,13 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.18.0
+
+Nov 10, 2022
+
+- Added
+    - Data graphics primitives (point, line, curve, bar, rect, polygon, etc.)
+
 ## v0.17.0
 
 Oct 18, 2022
