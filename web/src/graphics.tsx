@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { useEffect, useRef } from 'react';
-import { B, F, isN, S } from './core';
+import { useLayoutEffect, useRef } from 'react';
+import { B, debounce, F, isN, S } from './core';
 import { css } from './css';
+import { Box } from './protocol';
 import { BoxProps } from './ui';
 
 type PathD = Array<S | F>
@@ -731,490 +732,500 @@ export const GraphicLabel = ({ context, box }: BoxProps) => {
   return <div className={css('relative', style)}>{labels}</div>
 }
 
-export const Graphic = ({ box }: BoxProps) => {
+const redraw = (box: Box, div: HTMLDivElement | null) => {
+  const { modes, data } = box
+
+  if (!(div && Array.isArray(data) && data.length)) return
   const
-    { modes, style, data } = box,
-    ref = useRef<HTMLDivElement>(null)
+    bounds = div.getBoundingClientRect(),
+    width = Math.round(bounds.width),
+    height = Math.round(bounds.height),
+    svg = newEl('svg')
 
-  useEffect(() => {
-    const div = ref.current
-    if (div && Array.isArray(data) && data.length) {
-      const
-        bounds = div.getBoundingClientRect(),
-        width = Math.round(bounds.width),
-        height = Math.round(bounds.height),
-        svg = newEl('svg')
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
+  svg.setAttribute('width', `${width}`)
+  svg.setAttribute('height', `${height}`)
 
-      svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
-      svg.setAttribute('width', `${width}`)
-      svg.setAttribute('height', `${height}`)
+  if (modes.has('g-point')) {
+    const path: PathD = []
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        let [x, y, w, shape, rot] = d
+        x = clamp1(x) * width
+        y = (1 - clamp1(y)) * height
+        if (!isN(w)) w = 10
+        rot = clamp1(rot)
 
-      if (modes.has('g-point')) {
-        const path: PathD = []
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            let [x, y, w, shape, rot] = d
-            x = clamp1(x) * width
-            y = (1 - clamp1(y)) * height
-            if (!isN(w)) w = 10
-            rot = clamp1(rot)
-
-            switch (shape) {
-              case 's':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x - r, y - r,
-                    'h', w,
-                    'v', w,
-                    'h', -w,
-                    'Z'
-                  )
-                }
-                break
-              case 'd':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x, y - r,
-                    'l', r, r,
-                    'l', -r, r,
-                    'l', -r, -r,
-                    'Z'
-                  )
-                }
-                break
-              case 'tu':
-                {
-                  const s = w * 2 / Math.sqrt(3)
-                  path.push(
-                    'M', x, y - w * 2 / 3,
-                    'l', s / 2, w,
-                    'h', -s,
-                    'Z'
-                  )
-                }
-                break
-              case 'tr':
-                {
-                  const s = w * 2 / Math.sqrt(3)
-                  path.push(
-                    'M', x + w * 2 / 3, y,
-                    'l', -w, s / 2,
-                    'v', -s,
-                    'Z'
-                  )
-                }
-                break
-              case 'td':
-                {
-                  const s = w * 2 / Math.sqrt(3)
-                  path.push(
-                    'M', x, y + w * 2 / 3,
-                    'l', s / 2, -w,
-                    'h', -s,
-                    'Z'
-                  )
-                }
-                break
-              case 'tl':
-                {
-                  const s = w * 2 / Math.sqrt(3)
-                  path.push(
-                    'M', x - w * 2 / 3, y,
-                    'l', w, s / 2,
-                    'v', -s,
-                    'Z'
-                  )
-                }
-                break
-              case 'h':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x - r, y,
-                    'h', w,
-                  )
-                }
-                break
-              case 'v':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x, y - r,
-                    'v', w,
-                  )
-                }
-                break
-              case 'p':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x, y - r,
-                    'v', w,
-                    'M', x - r, y,
-                    'h', w,
-                  )
-                }
-                break
-              case 'x':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x - r, y - r,
-                    'l', w, w,
-                    'M', x - r, y + r,
-                    'l', w, -w,
-                  )
-                }
-                break
-              case 'au':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x - r, y + r,
-                    'l', r, -r,
-                    'l', r, r,
-                  )
-                }
-                break
-              case 'ar':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x - r, y - r,
-                    'l', r, r,
-                    'l', -r, r,
-                  )
-                }
-                break
-              case 'ad':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x + r, y - r,
-                    'l', -r, r,
-                    'l', -r, -r,
-                  )
-                }
-                break
-              case 'al':
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x + r, y - r,
-                    'l', -r, r,
-                    'l', r, r,
-                  )
-                }
-                break
-              default:
-                {
-                  const r = w / 2
-                  path.push(
-                    'M', x - r, y,
-                    'a', r, r, 0, 0, 1, w, 0,
-                    'a', r, r, 0, 0, 1, -w, 0,
-                    'Z'
-                  )
-                }
-            }
-          }
-        }
-        svg.appendChild(newPath(path))
-      } else if (modes.has('g-line-x')) {
-        if (arePairs(data)) {
-          const d = clampPairs(data)
-          svg.appendChild(makeAreaXi(d, width, height))
-          svg.appendChild(makeLineXi(d, width, height))
-        } else {
-          const d = clamp1s(data)
-          svg.appendChild(makeAreaX(d, width, height))
-          svg.appendChild(makeLineX(d, width, height))
-        }
-      } else if (modes.has('g-line-y')) {
-        if (arePairs(data)) {
-          const d = clampPairs(data)
-          svg.appendChild(makeAreaYi(d, width, height))
-          svg.appendChild(makeLineYi(d, width, height))
-        } else {
-          const d = clamp1s(data)
-          svg.appendChild(makeAreaY(d, width, height))
-          svg.appendChild(makeLineY(d, width, height))
-        }
-      } else if (modes.has('g-curve-x')) {
-        if (arePairs(data)) {
-          const d = clampPairs(data)
-          const
-            ps0 = makeCurveX(d.map((x: Pair) => x[0]).slice(0).reverse(), width, height, true),
-            ps1 = makeCurveX(d.map((x: Pair) => x[1]), width, height, false)
-          svg.appendChild(makeCurveAreai(ps0, ps1))
-          svg.appendChild(makeCurvei(ps0, ps1))
-        } else {
-          const ps = makeCurveX(clamp1s(data), width, height, false)
-          svg.appendChild(makeCurveArea(ps, width, height))
-          svg.appendChild(makeCurve(ps))
-        }
-      } else if (modes.has('g-curve-y')) {
-        if (arePairs(data)) {
-          const d = clampPairs(data)
-          const
-            ps0 = makeCurveY(d.map((x: Pair) => x[0]).slice(0).reverse(), width, height, true),
-            ps1 = makeCurveY(d.map((x: Pair) => x[1]), width, height, false)
-          svg.appendChild(makeCurveAreai(ps0, ps1))
-          svg.appendChild(makeCurvei(ps0, ps1))
-        } else {
-          const ps = makeCurveY(clamp1s(data), width, height, false)
-          svg.appendChild(makeCurveArea(ps, width, height))
-          svg.appendChild(makeCurve(ps))
-        }
-      } else if (modes.has('g-step-x')) {
-        if (arePairs(data)) {
-          const d = clampPairs(data)
-          svg.appendChild(makeStepAreaXi(d, width, height))
-          svg.appendChild(makeStepXi(d, width, height))
-        } else {
-          const d = clamp1s(data)
-          svg.appendChild(makeStepAreaX(d, width, height))
-          svg.appendChild(makeStepX(d, width, height))
-        }
-      } else if (modes.has('g-step-y')) {
-        if (arePairs(data)) {
-          const d = clampPairs(data)
-          svg.appendChild(makeStepAreaYi(d, width, height))
-          svg.appendChild(makeStepYi(d, width, height))
-        } else {
-          const d = clamp1s(data)
-          svg.appendChild(makeStepAreaY(d, width, height))
-          svg.appendChild(makeStepY(d, width, height))
-        }
-      } else if (modes.has('g-bar-x')) {
-        if (arePairs(data)) {
-          svg.appendChild(makeBarXi(clampPairs(data), width, height))
-        } else {
-          svg.appendChild(makeBarX(clamp1s(data), width, height))
-        }
-      } else if (modes.has('g-bar-y')) {
-        if (arePairs(data)) {
-          svg.appendChild(makeBarYi(clampPairs(data), width, height))
-        } else {
-          svg.appendChild(makeBarY(clamp1s(data), width, height))
-        }
-      } else if (modes.has('g-stroke-x')) {
-        if (arePairs(data)) {
-          svg.appendChild(makeStrokeXi(clampPairs(data), width, height))
-        } else {
-          svg.appendChild(makeStrokeX(clamp1s(data), width, height))
-        }
-      } else if (modes.has('g-stroke-y')) {
-        if (arePairs(data)) {
-          svg.appendChild(makeStrokeYi(clampPairs(data), width, height))
-        } else {
-          svg.appendChild(makeStrokeY(clamp1s(data), width, height))
-        }
-      } else if (modes.has('g-tick-x')) {
-        if (arePairs(data)) {
-          svg.appendChild(makeTickXi(clampPairs(data), width, height))
-        } else {
-          svg.appendChild(makeTickX(clamp1s(data), width, height))
-        }
-      } else if (modes.has('g-tick-y')) {
-        if (arePairs(data)) {
-          svg.appendChild(makeTickYi(clampPairs(data), width, height))
-        } else {
-          svg.appendChild(makeTickY(clamp1s(data), width, height))
-        }
-      } else if (modes.has('g-guide-x')) {
-        svg.appendChild(makeGuideX(clamp1s(data), width, height))
-      } else if (modes.has('g-guide-y')) {
-        svg.appendChild(makeGuideY(clamp1s(data), width, height))
-      } else if (modes.has('g-gauge-x')) {
-        const d = clamp1s(data)
-        svg.appendChild(makeGaugeFill(d, width, height))
-        svg.appendChild(makeGaugeX(d, width, height))
-      } else if (modes.has('g-gauge-y')) {
-        const d = clamp1s(data)
-        svg.appendChild(makeGaugeFill(d, width, height))
-        svg.appendChild(makeGaugeY(d, width, height))
-      } else if (modes.has('g-rect')) {
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            let [x, y, w, h, r] = d
-            x = clamp1(x) * width
-            y = (1 - clamp1(y)) * height
-            w = clamp1(w) * width
-            h = clamp1(h) * height
-
-            const el = newEl('rect')
-            el.setAttribute('x', String(x - w / 2))
-            el.setAttribute('y', String(y - h / 2))
-            el.setAttribute('width', String(w))
-            el.setAttribute('height', String(h))
-            if (isN(r)) {
-              el.setAttribute('rx', String(r))
-              el.setAttribute('ry', String(r))
-            }
-
-            svg.appendChild(el)
-          }
-        }
-      } else if (modes.has('g-gauge-c')) {
-        let [len, size, trackLen, trackSize, rot, dia] = clamp1s(data)
-
-        if (!isN(len)) len = 1
-        if (!isN(size)) size = 1
-        if (!isN(trackLen)) trackLen = 1
-        if (!isN(trackSize)) trackSize = 1
-        if (!isN(rot)) rot = 0
-        if (!isN(dia)) dia = 1
-
-        const
-          x = width / 2,
-          y = height / 2,
-          track = makeArcFill(x, y, trackLen, trackSize, dia, rot, width, height),
-          bar = makeArc(x, y, len * trackLen, trackSize, size, dia, rot, width, height)
-
-        track.setAttribute('stroke', 'none')
-        bar.setAttribute('fill', 'none')
-
-        svg.appendChild(track)
-        svg.appendChild(bar)
-      } else if (modes.has('g-arc')) {
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            let [x, y, dia, len, size, rot] = clamp1s(d)
-
-            if (!isN(dia)) dia = 1
-            if (!isN(rot)) rot = 0
-            if (!isN(len)) len = 1
-
-            x *= width
-            y = (1 - y) * height
-
-            svg.appendChild(makeArcFill(x, y, len, size, dia, rot, width, height))
-          }
-        }
-      } else if (modes.has('g-polyline')) {
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            const el = newEl('polyline')
-            el.setAttribute('points', makePolyline(d, width, height))
-            svg.appendChild(el)
-          }
-        }
-      } else if (modes.has('g-polygon')) {
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            const el = newEl('polygon')
-            el.setAttribute('points', makePolyline(d, width, height))
-            svg.appendChild(el)
-          }
-        }
-      } else if (modes.has('g-link-x')) {
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
-            x1 *= width
-            y1 = (1 - y1) * height
-            x2 *= width
-            y2 = (1 - y2) * height
-            if (isN(t1)) {
-              if (!isN(t2)) t2 = t1
-              t1 *= height / 2
-              t2 *= height / 2
-              const el = newEl('polygon')
-              el.setAttribute('points', `${x1},${y1 - t1} ${x2},${y2 - t2} ${x2},${y2 + t2} ${x1},${y1 + t1}`)
-              svg.appendChild(el)
-            } else {
-              const el = newEl('polyline')
-              el.setAttribute('points', `${x1},${y1} ${x2},${y2}`)
-              svg.appendChild(el)
-            }
-          }
-        }
-      } else if (modes.has('g-link-y')) {
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
-            x1 *= width
-            y1 = (1 - y1) * height
-            x2 *= width
-            y2 = (1 - y2) * height
-            if (isN(t1)) {
-              if (!isN(t2)) t2 = t1
-              t1 *= width / 2
-              t2 *= width / 2
-              const el = newEl('polygon')
-              el.setAttribute('points', `${x1 - t1},${y1} ${x2 - t2},${y2} ${x2 + t2},${y2} ${x1 + t2},${y1}`)
-              svg.appendChild(el)
-            } else {
-              const el = newEl('polyline')
-              el.setAttribute('points', `${x1},${y1} ${x2},${y2}`)
-              svg.appendChild(el)
-            }
-          }
-        }
-      } else if (modes.has('g-spline-x')) {
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
-            x1 *= width
-            y1 = (1 - y1) * height
-            x2 *= width
-            y2 = (1 - y2) * height
-            const xm = (x1 + x2) / 2
-            if (isN(t1)) {
-              if (!isN(t2)) t2 = t1
-              t1 *= height / 2
-              t2 *= height / 2
-              svg.appendChild(newPath([
-                'M', x1, y1 - t1,
-                'C', xm, y1 - t1, xm, y2 - t2, x2, y2 - t2,
-                'v', t2 * 2,
-                'C', xm, y2 + t2, xm, y1 + t1, x1, y1 + t1,
+        switch (shape) {
+          case 's':
+            {
+              const r = w / 2
+              path.push(
+                'M', x - r, y - r,
+                'h', w,
+                'v', w,
+                'h', -w,
                 'Z'
-              ]))
-            } else {
-              svg.appendChild(newStroke([
-                'M', x1, y1,
-                'C', xm, y1, xm, y2, x2, y2,
-              ]))
+              )
             }
-          }
-        }
-      } else if (modes.has('g-spline-y')) {
-        for (const d of data) {
-          if (Array.isArray(d)) {
-            let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
-            x1 *= width
-            y1 = (1 - y1) * height
-            x2 *= width
-            y2 = (1 - y2) * height
-            const ym = (y1 + y2) / 2
-            if (isN(t1)) {
-              if (!isN(t2)) t2 = t1
-              t1 *= width / 2
-              t2 *= width / 2
-              svg.appendChild(newPath([
-                'M', x1 - t1, y1,
-                'C', x1 - t1, ym, x2 - t2, ym, x2 - t2, y2,
-                'h', t2 * 2,
-                'C', x2 + t2, ym, x1 + t1, ym, x1 + t1, y1,
+            break
+          case 'd':
+            {
+              const r = w / 2
+              path.push(
+                'M', x, y - r,
+                'l', r, r,
+                'l', -r, r,
+                'l', -r, -r,
                 'Z'
-              ]))
-            } else {
-              svg.appendChild(newStroke([
-                'M', x1, y1,
-                'C', x1, ym, x2, ym, x2, y2,
-              ]))
+              )
             }
-          }
+            break
+          case 'tu':
+            {
+              const s = w * 2 / Math.sqrt(3)
+              path.push(
+                'M', x, y - w * 2 / 3,
+                'l', s / 2, w,
+                'h', -s,
+                'Z'
+              )
+            }
+            break
+          case 'tr':
+            {
+              const s = w * 2 / Math.sqrt(3)
+              path.push(
+                'M', x + w * 2 / 3, y,
+                'l', -w, s / 2,
+                'v', -s,
+                'Z'
+              )
+            }
+            break
+          case 'td':
+            {
+              const s = w * 2 / Math.sqrt(3)
+              path.push(
+                'M', x, y + w * 2 / 3,
+                'l', s / 2, -w,
+                'h', -s,
+                'Z'
+              )
+            }
+            break
+          case 'tl':
+            {
+              const s = w * 2 / Math.sqrt(3)
+              path.push(
+                'M', x - w * 2 / 3, y,
+                'l', w, s / 2,
+                'v', -s,
+                'Z'
+              )
+            }
+            break
+          case 'h':
+            {
+              const r = w / 2
+              path.push(
+                'M', x - r, y,
+                'h', w,
+              )
+            }
+            break
+          case 'v':
+            {
+              const r = w / 2
+              path.push(
+                'M', x, y - r,
+                'v', w,
+              )
+            }
+            break
+          case 'p':
+            {
+              const r = w / 2
+              path.push(
+                'M', x, y - r,
+                'v', w,
+                'M', x - r, y,
+                'h', w,
+              )
+            }
+            break
+          case 'x':
+            {
+              const r = w / 2
+              path.push(
+                'M', x - r, y - r,
+                'l', w, w,
+                'M', x - r, y + r,
+                'l', w, -w,
+              )
+            }
+            break
+          case 'au':
+            {
+              const r = w / 2
+              path.push(
+                'M', x - r, y + r,
+                'l', r, -r,
+                'l', r, r,
+              )
+            }
+            break
+          case 'ar':
+            {
+              const r = w / 2
+              path.push(
+                'M', x - r, y - r,
+                'l', r, r,
+                'l', -r, r,
+              )
+            }
+            break
+          case 'ad':
+            {
+              const r = w / 2
+              path.push(
+                'M', x + r, y - r,
+                'l', -r, r,
+                'l', -r, -r,
+              )
+            }
+            break
+          case 'al':
+            {
+              const r = w / 2
+              path.push(
+                'M', x + r, y - r,
+                'l', -r, r,
+                'l', r, r,
+              )
+            }
+            break
+          default:
+            {
+              const r = w / 2
+              path.push(
+                'M', x - r, y,
+                'a', r, r, 0, 0, 1, w, 0,
+                'a', r, r, 0, 0, 1, -w, 0,
+                'Z'
+              )
+            }
         }
       }
-
-      while (div.firstChild) div.removeChild(div.firstChild)
-      div.appendChild(svg)
     }
-  })
-  return <div ref={ref} className={css(style)} />
+    svg.appendChild(newPath(path))
+  } else if (modes.has('g-line-x')) {
+    if (arePairs(data)) {
+      const d = clampPairs(data)
+      svg.appendChild(makeAreaXi(d, width, height))
+      svg.appendChild(makeLineXi(d, width, height))
+    } else {
+      const d = clamp1s(data)
+      svg.appendChild(makeAreaX(d, width, height))
+      svg.appendChild(makeLineX(d, width, height))
+    }
+  } else if (modes.has('g-line-y')) {
+    if (arePairs(data)) {
+      const d = clampPairs(data)
+      svg.appendChild(makeAreaYi(d, width, height))
+      svg.appendChild(makeLineYi(d, width, height))
+    } else {
+      const d = clamp1s(data)
+      svg.appendChild(makeAreaY(d, width, height))
+      svg.appendChild(makeLineY(d, width, height))
+    }
+  } else if (modes.has('g-curve-x')) {
+    if (arePairs(data)) {
+      const d = clampPairs(data)
+      const
+        ps0 = makeCurveX(d.map((x: Pair) => x[0]).slice(0).reverse(), width, height, true),
+        ps1 = makeCurveX(d.map((x: Pair) => x[1]), width, height, false)
+      svg.appendChild(makeCurveAreai(ps0, ps1))
+      svg.appendChild(makeCurvei(ps0, ps1))
+    } else {
+      const ps = makeCurveX(clamp1s(data), width, height, false)
+      svg.appendChild(makeCurveArea(ps, width, height))
+      svg.appendChild(makeCurve(ps))
+    }
+  } else if (modes.has('g-curve-y')) {
+    if (arePairs(data)) {
+      const d = clampPairs(data)
+      const
+        ps0 = makeCurveY(d.map((x: Pair) => x[0]).slice(0).reverse(), width, height, true),
+        ps1 = makeCurveY(d.map((x: Pair) => x[1]), width, height, false)
+      svg.appendChild(makeCurveAreai(ps0, ps1))
+      svg.appendChild(makeCurvei(ps0, ps1))
+    } else {
+      const ps = makeCurveY(clamp1s(data), width, height, false)
+      svg.appendChild(makeCurveArea(ps, width, height))
+      svg.appendChild(makeCurve(ps))
+    }
+  } else if (modes.has('g-step-x')) {
+    if (arePairs(data)) {
+      const d = clampPairs(data)
+      svg.appendChild(makeStepAreaXi(d, width, height))
+      svg.appendChild(makeStepXi(d, width, height))
+    } else {
+      const d = clamp1s(data)
+      svg.appendChild(makeStepAreaX(d, width, height))
+      svg.appendChild(makeStepX(d, width, height))
+    }
+  } else if (modes.has('g-step-y')) {
+    if (arePairs(data)) {
+      const d = clampPairs(data)
+      svg.appendChild(makeStepAreaYi(d, width, height))
+      svg.appendChild(makeStepYi(d, width, height))
+    } else {
+      const d = clamp1s(data)
+      svg.appendChild(makeStepAreaY(d, width, height))
+      svg.appendChild(makeStepY(d, width, height))
+    }
+  } else if (modes.has('g-bar-x')) {
+    if (arePairs(data)) {
+      svg.appendChild(makeBarXi(clampPairs(data), width, height))
+    } else {
+      svg.appendChild(makeBarX(clamp1s(data), width, height))
+    }
+  } else if (modes.has('g-bar-y')) {
+    if (arePairs(data)) {
+      svg.appendChild(makeBarYi(clampPairs(data), width, height))
+    } else {
+      svg.appendChild(makeBarY(clamp1s(data), width, height))
+    }
+  } else if (modes.has('g-stroke-x')) {
+    if (arePairs(data)) {
+      svg.appendChild(makeStrokeXi(clampPairs(data), width, height))
+    } else {
+      svg.appendChild(makeStrokeX(clamp1s(data), width, height))
+    }
+  } else if (modes.has('g-stroke-y')) {
+    if (arePairs(data)) {
+      svg.appendChild(makeStrokeYi(clampPairs(data), width, height))
+    } else {
+      svg.appendChild(makeStrokeY(clamp1s(data), width, height))
+    }
+  } else if (modes.has('g-tick-x')) {
+    if (arePairs(data)) {
+      svg.appendChild(makeTickXi(clampPairs(data), width, height))
+    } else {
+      svg.appendChild(makeTickX(clamp1s(data), width, height))
+    }
+  } else if (modes.has('g-tick-y')) {
+    if (arePairs(data)) {
+      svg.appendChild(makeTickYi(clampPairs(data), width, height))
+    } else {
+      svg.appendChild(makeTickY(clamp1s(data), width, height))
+    }
+  } else if (modes.has('g-guide-x')) {
+    svg.appendChild(makeGuideX(clamp1s(data), width, height))
+  } else if (modes.has('g-guide-y')) {
+    svg.appendChild(makeGuideY(clamp1s(data), width, height))
+  } else if (modes.has('g-gauge-x')) {
+    const d = clamp1s(data)
+    svg.appendChild(makeGaugeFill(d, width, height))
+    svg.appendChild(makeGaugeX(d, width, height))
+  } else if (modes.has('g-gauge-y')) {
+    const d = clamp1s(data)
+    svg.appendChild(makeGaugeFill(d, width, height))
+    svg.appendChild(makeGaugeY(d, width, height))
+  } else if (modes.has('g-rect')) {
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        let [x, y, w, h, r] = d
+        x = clamp1(x) * width
+        y = (1 - clamp1(y)) * height
+        w = clamp1(w) * width
+        h = clamp1(h) * height
+
+        const el = newEl('rect')
+        el.setAttribute('x', String(x - w / 2))
+        el.setAttribute('y', String(y - h / 2))
+        el.setAttribute('width', String(w))
+        el.setAttribute('height', String(h))
+        if (isN(r)) {
+          el.setAttribute('rx', String(r))
+          el.setAttribute('ry', String(r))
+        }
+
+        svg.appendChild(el)
+      }
+    }
+  } else if (modes.has('g-gauge-c')) {
+    let [len, size, trackLen, trackSize, rot, dia] = clamp1s(data)
+
+    if (!isN(len)) len = 1
+    if (!isN(size)) size = 1
+    if (!isN(trackLen)) trackLen = 1
+    if (!isN(trackSize)) trackSize = 1
+    if (!isN(rot)) rot = 0
+    if (!isN(dia)) dia = 1
+
+    const
+      x = width / 2,
+      y = height / 2,
+      track = makeArcFill(x, y, trackLen, trackSize, dia, rot, width, height),
+      bar = makeArc(x, y, len * trackLen, trackSize, size, dia, rot, width, height)
+
+    track.setAttribute('stroke', 'none')
+    bar.setAttribute('fill', 'none')
+
+    svg.appendChild(track)
+    svg.appendChild(bar)
+  } else if (modes.has('g-arc')) {
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        let [x, y, dia, len, size, rot] = clamp1s(d)
+
+        if (!isN(dia)) dia = 1
+        if (!isN(rot)) rot = 0
+        if (!isN(len)) len = 1
+
+        x *= width
+        y = (1 - y) * height
+
+        svg.appendChild(makeArcFill(x, y, len, size, dia, rot, width, height))
+      }
+    }
+  } else if (modes.has('g-polyline')) {
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        const el = newEl('polyline')
+        el.setAttribute('points', makePolyline(d, width, height))
+        svg.appendChild(el)
+      }
+    }
+  } else if (modes.has('g-polygon')) {
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        const el = newEl('polygon')
+        el.setAttribute('points', makePolyline(d, width, height))
+        svg.appendChild(el)
+      }
+    }
+  } else if (modes.has('g-link-x')) {
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
+        x1 *= width
+        y1 = (1 - y1) * height
+        x2 *= width
+        y2 = (1 - y2) * height
+        if (isN(t1)) {
+          if (!isN(t2)) t2 = t1
+          t1 *= height / 2
+          t2 *= height / 2
+          const el = newEl('polygon')
+          el.setAttribute('points', `${x1},${y1 - t1} ${x2},${y2 - t2} ${x2},${y2 + t2} ${x1},${y1 + t1}`)
+          svg.appendChild(el)
+        } else {
+          const el = newEl('polyline')
+          el.setAttribute('points', `${x1},${y1} ${x2},${y2}`)
+          svg.appendChild(el)
+        }
+      }
+    }
+  } else if (modes.has('g-link-y')) {
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
+        x1 *= width
+        y1 = (1 - y1) * height
+        x2 *= width
+        y2 = (1 - y2) * height
+        if (isN(t1)) {
+          if (!isN(t2)) t2 = t1
+          t1 *= width / 2
+          t2 *= width / 2
+          const el = newEl('polygon')
+          el.setAttribute('points', `${x1 - t1},${y1} ${x2 - t2},${y2} ${x2 + t2},${y2} ${x1 + t2},${y1}`)
+          svg.appendChild(el)
+        } else {
+          const el = newEl('polyline')
+          el.setAttribute('points', `${x1},${y1} ${x2},${y2}`)
+          svg.appendChild(el)
+        }
+      }
+    }
+  } else if (modes.has('g-spline-x')) {
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
+        x1 *= width
+        y1 = (1 - y1) * height
+        x2 *= width
+        y2 = (1 - y2) * height
+        const xm = (x1 + x2) / 2
+        if (isN(t1)) {
+          if (!isN(t2)) t2 = t1
+          t1 *= height / 2
+          t2 *= height / 2
+          svg.appendChild(newPath([
+            'M', x1, y1 - t1,
+            'C', xm, y1 - t1, xm, y2 - t2, x2, y2 - t2,
+            'v', t2 * 2,
+            'C', xm, y2 + t2, xm, y1 + t1, x1, y1 + t1,
+            'Z'
+          ]))
+        } else {
+          svg.appendChild(newStroke([
+            'M', x1, y1,
+            'C', xm, y1, xm, y2, x2, y2,
+          ]))
+        }
+      }
+    }
+  } else if (modes.has('g-spline-y')) {
+    for (const d of data) {
+      if (Array.isArray(d)) {
+        let [x1, y1, x2, y2, t1, t2] = clamp1s(d)
+        x1 *= width
+        y1 = (1 - y1) * height
+        x2 *= width
+        y2 = (1 - y2) * height
+        const ym = (y1 + y2) / 2
+        if (isN(t1)) {
+          if (!isN(t2)) t2 = t1
+          t1 *= width / 2
+          t2 *= width / 2
+          svg.appendChild(newPath([
+            'M', x1 - t1, y1,
+            'C', x1 - t1, ym, x2 - t2, ym, x2 - t2, y2,
+            'h', t2 * 2,
+            'C', x2 + t2, ym, x1 + t1, ym, x1 + t1, y1,
+            'Z'
+          ]))
+        } else {
+          svg.appendChild(newStroke([
+            'M', x1, y1,
+            'C', x1, ym, x2, ym, x2, y2,
+          ]))
+        }
+      }
+    }
+  }
+  console.log('render')
+  while (div.firstChild) div.removeChild(div.firstChild)
+  div.appendChild(svg)
+}
+
+export const Graphic = ({ box }: BoxProps) => {
+  const ref = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    // Schedule redraws 1 second after the window has stopped resizing:
+    const invalidate = debounce(1000, () => redraw(box, ref.current))
+    window.addEventListener('resize', invalidate)
+
+    // Draw immediately once:
+    redraw(box, ref.current)
+
+    // Dispose
+    return () => window.removeEventListener('resize', invalidate)
+  }, [box]);
+
+  return <div ref={ref} className={css(box.style)} />
 }

@@ -194,6 +194,15 @@ export const anyN = (...xs: any[]) => xs.some(isN)
 export const anyS = (...xs: any[]) => xs.some(isS)
 export const anyD = (...xs: any[]) => xs.some(x => x !== undefined)
 export const defer = (seconds: U, f: TimerHandler) => window.setTimeout(f, seconds * 1000)
+export const throttle = (ms: U, f: () => void) => {
+  let wait = false
+  return () => {
+    if (wait) return
+    f()
+    wait = true
+    setTimeout(() => { wait = false }, ms)
+  }
+}
 export const debounce = (ms: U, f: () => void) => {
   let t: U
   return () => {
