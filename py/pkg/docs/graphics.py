@@ -864,6 +864,51 @@ def graphics_bullet_graph(view: View):  # height 2
     )
 
 
+# ## Sankey diagram
+# Overlay splines to create a sankey diagram.
+def graphics_sankey(view: View):  # height 5
+    n_src, n_dst = 3, 9  # number of sources and destinations
+    whitespace = .5
+    domain = [[random.random() for _ in range(n_dst)] for _ in range(n_src)]  # fake data
+
+    # Normalize domain, minus whitespace:
+    dsum = sum([sum(ds) for ds in domain])  # sum
+    range_ = [[d * whitespace / dsum for d in ds] for ds in domain]
+
+    # Compute spacing between bunches
+    dy1, dy2 = (1 - whitespace) / n_src, (1 - whitespace) / n_dst
+    x1, y1, x2, y2 = 0, dy1 / 2, 1, dy2 / 2
+
+    bunches = []
+    # Pass 1: Compute start positions
+    for rs in range_:
+        bunch = []
+        for r in rs:
+            edge = [x1, y1 + r / 2, x2, y2, r]
+            bunch.append(edge)
+            y1 += r
+        y1 += dy1  # spacing
+        bunches.append(bunch)
+
+    # Pass 2: Compute end positions
+    for j in range(n_dst):
+        for i in range(n_src):
+            edge = bunches[i][j]  # (x1, y1, x2, y2, r)
+            r = edge[4]
+            edge[3] = y2 + r / 2
+            y2 += r
+        y2 += dy2  # spacing
+
+    # Now the simple part: render splines
+    splines = box(mode='g-spline-x') / 'absolute inset-0 stroke-none'
+    colors = [f'fill-{color}-300' for color in ['amber', 'rose', 'sky']]
+    view(
+        box(
+            *[(splines(data=bunch) / colors[i]) for i, bunch in enumerate(bunches)]
+        ) / 'relative w-full h-96'
+    )
+
+
 # ## Network graph
 # Overlay point and link graphics to create a network graph (node-link diagram).
 def graphics_network_graph(view: View):  # height 4
