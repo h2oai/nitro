@@ -379,7 +379,7 @@ export const newClient = (server: Server) => {
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)
                   if (help) helpB(sanitizeHelp(formatterB(), help))
-                  if (resources) formatterB(formatter(toTranslationLookup(resources.translations), resources.locale))
+                  if (resources) formatterB(formatter(toTranslationLookup(resources.translations || []), resources.locale))
                   const state = stateB()
                   if (state.t === ClientStateT.Connected) busyB(false)
                 }
