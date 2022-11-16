@@ -15,9 +15,9 @@
 import hotkeys from "hotkeys-js";
 import { B, Dict, isS, on, S, Signal, signal, U, V } from './core';
 import { formatter } from "./format";
-import { freeze, sanitizeBox, sanitizeHelp, sanitizeOptions } from './heuristics';
+import { freeze, mergeBoxes, sanitizeBox, sanitizeHelp, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
-import { Box, Translation, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme } from './protocol';
+import { Box, BoxT, DisplayMode, Edit, EditType, Input, InputValue, Message, MessageType, Option, Server, ServerEvent, ServerEventT, Theme, Translation } from './protocol';
 import { applyTheme } from './theme';
 import { Context } from "./ui";
 
@@ -199,6 +199,7 @@ const toTranslationLookup = (bs: Translation[]) => {
   return d
 }
 
+export const defaultLayout: Box = { xid: '', index: 0, modes: new Set<BoxT>([]) }
 
 export const newClient = (server: Server) => {
   const
@@ -209,6 +210,7 @@ export const newClient = (server: Server) => {
     menuB = signal<Option[]>([]),
     navB = signal<Option[]>([]),
     themeB = signal<Theme>({}),
+    layoutB = signal<Box>(defaultLayout),
     modeB = signal<DisplayMode>('normal'),
     formatterB = signal(formatter(toTranslationLookup([emptyTranslation]), emptyTranslation.locale)),
     busyB = signal<B>(true, () => false),
@@ -265,7 +267,9 @@ export const newClient = (server: Server) => {
               case MessageType.Output:
                 {
                   const
-                    { box: rawBox, edit: rawEdit } = msg,
+                    { box: rawBody, edit: rawEdit } = msg,
+                    layout = layoutB(),
+                    rawBox = layout === defaultLayout ? rawBody : mergeBoxes(layout, rawBody),
                     box = sanitizeBox(formatterB(), rawBox),
                     boxes = box.items ?? [],
                     root = body[0]?.items ?? []
@@ -369,13 +373,14 @@ export const newClient = (server: Server) => {
                 {
                   const
                     { settings } = msg,
-                    { title, caption, menu, nav, theme, plugins, help, mode, resources } = settings
+                    { title, caption, menu, nav, theme, layout, plugins, help, mode, resources } = settings
 
                   if (title) titleB(title)
                   if (caption) captionB(caption)
                   if (menu) menuB(sanitizeOptions(menu))
                   if (nav) navB(sanitizeOptions(nav))
                   if (theme) themeB(theme)
+                  if (layout) layoutB(layout)
                   if (mode) modeB(mode)
                   if (plugins) installPlugins(plugins)
                   if (help) helpB(sanitizeHelp(formatterB(), help))
@@ -419,6 +424,7 @@ export const newClient = (server: Server) => {
     menuB,
     navB,
     themeB,
+    layoutB,
     modeB,
     helpB,
     helpE,

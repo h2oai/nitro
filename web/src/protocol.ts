@@ -119,6 +119,7 @@ export type Settings = {
   menu?: Option[]
   nav?: Option[]
   theme?: Theme
+  layout?: Box
   plugins?: Plugin[]
   help?: Dict<S>
   resources?: Resources

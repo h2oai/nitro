@@ -15,7 +15,7 @@
 import { FontIcon } from '@fluentui/react';
 import { ReactNode, useEffect, useState } from 'react';
 import { Body, Popup } from './body';
-import { Client, ClientStateT } from './client';
+import { Client, ClientStateT, defaultLayout } from './client';
 import { on, S, U } from './core';
 import { css } from './css';
 import { Header } from './header';
@@ -82,20 +82,27 @@ export const App = ({ client }: { client: Client }) => {
       }
     case ClientStateT.Connected:
       const
-        { popup, busyB, modeB } = client,
-        isChromeless = modeB() === 'chromeless'
+        { popup, busyB, modeB, layoutB } = client,
+        isChromeless = modeB() === 'chromeless',
+        layout = layoutB(),
+        content = (layout === defaultLayout)
+          ? (
+            <div className='view'>
+              {!isChromeless && <div className='stripe' />}
+              <div className={css('max-w-3xl mx-auto')}>
+                {!isChromeless && <Header client={client} />}
+                <Body client={client} />
+              </div>
+            </div>
+          ) : (
+            <Body client={client} />
+          )
       return (
         <>
           {busyB() && <Busy timeout={500} />}
           <HelpPanel helpE={client.helpE} helpB={client.helpB} />
-          <div className='view'>
-            {!isChromeless && <div className='stripe' />}
-            <div className={css('max-w-3xl mx-auto')}>
-              {!isChromeless && <Header client={client} />}
-              <Body client={client} />
-              {popup.length ? <Popup client={client} /> : <></>}
-            </div>
-          </div>
+          {content}
+          {popup.length ? <Popup client={client} /> : <></>}
         </>
       )
   }

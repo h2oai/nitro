@@ -202,6 +202,32 @@ export const sanitizeHelp = (formatter: Formatter, help: Dict<S>): Dict<S> => {
   return help
 }
 
+const mergeBoxes_ = (layout: Box, body: Box) => {
+  const { items } = layout
+  if (Array.isArray(items)) {
+    for (let i = 0, n = items.length; i < n; i++) {
+      const item = items[i]
+      if (item && !isS(item) && !Array.isArray(item)) {
+        const b = item as any
+        if (b.mode === 'body') {
+          items[i] = body
+          return true
+        }
+      } else {
+        if (mergeBoxes_(item, body)) return true
+      }
+    }
+  }
+  return false
+}
+
+export const mergeBoxes = (layout: Box, body: Box) => {
+  // This function is called pre-santization.
+  // Find and replace the first occurance of a 'body' box with the actual body.
+  mergeBoxes_(layout, body)
+  return layout
+}
+
 export const sanitizeBox = (formatter: Formatter, box: Box): Box => {
   if (isN(box)) box = String(box) as any // number -> string, if a number was passed in
 

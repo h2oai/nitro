@@ -524,7 +524,7 @@ class Box:
             hotkey=self.hotkey,
             popup=self.popup,
             style=self.style,
-            disabled= self.disabled,
+            disabled=self.disabled,
             image=self.image,
             icon=self.icon,
             min=self.min,
@@ -637,6 +637,7 @@ def _marshal_set(
         menu: Optional[Sequence[Option]] = None,
         nav: Optional[Sequence[Option]] = None,
         theme: Optional[Theme] = None,
+        layout: Optional[Box] = None,
         plugins: Optional[Iterable[Plugin]] = None,
         help: Optional[Dict[str, str]] = None,
         resources: Optional[Resources] = None,
@@ -650,6 +651,7 @@ def _marshal_set(
             menu=_dump(menu),
             nav=_dump(nav),
             theme=_dump(theme),
+            layout=_dump(layout),
             plugins=_dump(plugins),
             help=_dump(help),
             resources=_dump(resources),
@@ -740,6 +742,7 @@ class _View:
             nav: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
+            layout: Optional[Box] = None,
             plugins: Optional[Iterable[Plugin]] = None,
             help: Optional[Dict[str, str]] = None,
             resources: Optional[Dict[str, Dict[str, str]]] = None,
@@ -756,6 +759,7 @@ class _View:
         self._nav = nav
         self._routes = routes
         self._theme = theme
+        self._layout = layout
         self._plugins = plugins
         self._help = help
         self._resources = resources
@@ -774,6 +778,7 @@ class _View:
             menu=self._menu,
             nav=self._nav,
             theme=self._theme,
+            layout=self._layout,
             plugins=self._plugins,
             help=self._help,
             resources=resources,
@@ -816,13 +821,14 @@ class View(_View):
             nav: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
+            layout: Optional[Box] = None,
             plugins: Optional[Iterable[Plugin]] = None,
             help: Optional[Dict[str, str]] = None,
             resources: Optional[Dict[str, Dict[str, str]]] = None,
             locale: Optional[LocaleOrTranslate] = None,
             delegator: Optional[Delegator] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins,
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, layout, plugins,
                          help, resources, locale, delegator)
 
     def serve(self, send: Callable, recv: Callable, context: any = None):
@@ -837,6 +843,7 @@ class View(_View):
             nav=self._nav,
             routes=self._routes,
             theme=self._theme,
+            layout=self._layout,
             plugins=self._plugins,
             help=self._help,
             resources=self._resources,
@@ -956,13 +963,14 @@ class AsyncView(_View):
             nav: Optional[Sequence[Option]] = None,
             routes: Optional[Sequence[Option]] = None,
             theme: Optional[Theme] = None,
+            layout: Optional[Box] = None,
             plugins: Optional[Iterable[Plugin]] = None,
             help: Optional[Dict[str, str]] = None,
             resources: Optional[Dict[str, Dict[str, str]]] = None,
             locale: Optional[LocaleOrTranslate] = None,
             delegator: Optional[Delegator] = None,
     ):
-        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, plugins,
+        super().__init__(delegate, context, send, recv, title, caption, menu, nav, routes, theme, layout, plugins,
                          help, resources, locale, delegator)
 
     async def serve(self, send: Callable, recv: Callable, context: any = None):
@@ -977,6 +985,7 @@ class AsyncView(_View):
             nav=self._nav,
             routes=self._routes,
             theme=self._theme,
+            layout=self._layout,
             plugins=self._plugins,
             help=self._help,
             resources=self._resources,
