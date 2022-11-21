@@ -112,6 +112,7 @@ const ratioSubset = map({
 
 const replacements = new Map<S, S>()
 const evaluations = new Map<S, Rule[]>()
+const defined = '!' // sentinel for styles already included in styles.css
 const repl = (find: S, replace: S) => replacements.set(find, replace)
 const rule = (find: S, ...rule: Rule[]) => {
   let rules = evaluations.get(find)
@@ -120,6 +121,9 @@ const rule = (find: S, ...rule: Rule[]) => {
 }
 
 // --- begin rules ---
+
+repl('sr-only', defined)
+repl('not-sr-only', defined)
 
 rule('pointer-events', [any('none', 'auto'), v => `pointer-events:${v}`])
 repl('visible', 'visibility:visible')
@@ -1219,6 +1223,10 @@ const newCSSCache = (ss: CSSStyleSheet): PredefineCSS => {
         }
       }
       const style = stylize(base)
+      if (style === defined) { // valid style name that's already included in styles.css
+        classNames.push(name)
+        continue
+      }
       if (style) {
         // hover:only:px-3.5 -> hover\:only-child\:px-3\.5
         let ruleName = escape(name)
