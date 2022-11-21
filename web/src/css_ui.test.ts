@@ -11,6 +11,7 @@ it('should translate color opacity', () => {
   expect(c('bg-indigo-500/75')).toEqual('--tw-bg-opacity:0.75;background-color:rgb(99 102 241 / var(--tw-bg-opacity))')
   expect(c('bg-black/75')).toEqual('--tw-bg-opacity:0.75;background-color:rgb(0 0 0 / var(--tw-bg-opacity))')
   expect(c('bg-white/75')).toEqual('--tw-bg-opacity:0.75;background-color:rgb(255 255 255 / var(--tw-bg-opacity))')
+  expect(c('bg-accent-300/75')).toEqual('--tw-bg-opacity:0.75;background-color:rgb(var(--ui-accent-300) / var(--tw-bg-opacity))')
   // TODO
   // expect(c('grid-cols-[1fr_500px_2fr]')).toEqual('grid-template-columns:1fr 500px 2fr')
   // expect(c("bg-[#bada55]")).toEqual('--tw-bg-opacity:1;background-color:rgb(186 218 85 / var(--tw-bg-opacity)')
