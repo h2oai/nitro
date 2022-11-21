@@ -1,13 +1,17 @@
 import { fromSpectrum, shades, spectrum, spectrumHues } from "./color"
-import { Dict, mapd, S, U } from "./core"
+import { Dict, S, U } from "./core"
 
 type Style = S | undefined
-type Match = (s: S) => Style
-type Apply = (s: S) => Style
+type Match = (s: S) => S | S[] | undefined
+type Apply = (...s: S[]) => Style
 type Rule = [Match, Apply]
 
 const createPalette = () => {
-  const palette: Dict<S> = {}
+  const palette: Dict<S> = {
+    black: '0 0 0',
+    white: '255 255 255'
+  }
+
   for (const name in spectrum) {
     const colors = spectrum[name]
     for (let i = 0; i < shades.length; i++) {
@@ -15,6 +19,11 @@ const createPalette = () => {
       palette[`${name}-${shades[i]}`] = `${r} ${g} ${b}`
     }
   }
+
+  for (const shade of shades) {
+    palette[`accent-${shade}`] = `var(--ui-accent-${shade})`
+  }
+
   return palette
 }
 
@@ -556,8 +565,20 @@ const namedColor = map({
   current: 'currentColor',
   transparent: 'transparent',
 })
-const accentColor = map(mapd(shades, s => [`accent-${s}`, `var(--ui-accent-${s})`]))
-const color = either(map(palette), map({ white: '255 255 255', black: '0 0 0' }), accentColor)
+const opacity = numF([0, 5, 10, 20, 25, 30, 40, 50, 60, 70, 75, 80, 90, 95, 100], n => n / 100)
+const color = (s: S) => {
+  const i = s.indexOf('/')
+  if (i < 0) {
+    const c = palette[s]
+    if (c) return [c, 1]
+  } else {
+    const c = palette[s.substring(0, i)]
+    if (c) {
+      const o = opacity(s.substring(i + 1))
+      if (o !== undefined) return [c, o]
+    }
+  }
+}
 
 rule('divide-x',
   [borderWidth, v => `--tw-divide-x-reverse:0;border-right-width:calc(${v} * var(--tw-divide-x-reverse));border-left-width:calc(${v} * calc(1 - var(--tw-divide-x-reverse)))`],
@@ -570,7 +591,7 @@ rule('divide-y',
 rule('divide',
   [borderStyle, v => `border-style:${v}`],
   [namedColor, v => `border-color:${v}`],
-  [color, v => `--tw-divide-opacity:1;border-color:rgb(${v} / var(--tw-divide-opacity))`],
+  [color, (v, o) => `--tw-divide-opacity:${o};border-color:rgb(${v} / var(--tw-divide-opacity))`],
 )
 
 rule('place-self', [either(auto, flexJustify), v => `place-self:${v}`])
@@ -634,18 +655,18 @@ rule('border', [borderStyle, v => `border-style:${v}`])
 const borderRule = (n: S, t: S) =>
   rule(`border${n}`,
     [namedColor, v => `border${t}-color:${v}`],
-    [color, v => `--tw-border-opacity:1;border${t}-color:rgb(${v} / var(--tw-border-opacity))`],
+    [color, (v, o) => `--tw-border-opacity:${o};border${t}-color:rgb(${v} / var(--tw-border-opacity))`],
   )
 
 borderRule('', '')
 
 rule('border-x',
   [namedColor, v => `border-left-color:${v};border-right-color:${v}`],
-  [color, v => `--tw-border-opacity:1;border-left-color:rgb(${v} / var(--tw-border-opacity));border-right-color:rgb(${v} / var(--tw-border-opacity))`],
+  [color, (v, o) => `--tw-border-opacity:${o};border-left-color:rgb(${v} / var(--tw-border-opacity));border-right-color:rgb(${v} / var(--tw-border-opacity))`],
 )
 rule('border-y',
   [namedColor, v => `border-top-color:${v};border-bottom-color:${v}`],
-  [color, v => `--tw-border-opacity:1;border-top-color:rgb(${v} / var(--tw-border-opacity));border-bottom-color:rgb(${v} / var(--tw-border-opacity))`],
+  [color, (v, o) => `--tw-border-opacity:${o};border-top-color:rgb(${v} / var(--tw-border-opacity));border-bottom-color:rgb(${v} / var(--tw-border-opacity))`],
 )
 
 borderRule('-t', '-top')
@@ -655,7 +676,7 @@ borderRule('-l', '-left')
 
 rule('bg',
   [namedColor, v => `background-color:${v}`],
-  [color, v => `--tw-bg-opacity:1;background-color:rgb(${v} / var(--tw-bg-opacity))`],
+  [color, (v, o) => `--tw-bg-opacity:${o};background-color:rgb(${v} / var(--tw-bg-opacity))`],
   [none, () => 'background-image:none'],
 )
 
@@ -774,7 +795,7 @@ rule('text', [map({
   '7xl': ['4.5rem', '1'],
   '8xl': ['6rem', '1'],
   '9xl': ['8rem', '1'],
-}), ([f, l]) => `font-size:${f};line-height:${l}`])
+}), (f, l) => `font-size:${f};line-height:${l}`])
 
 rule('font', [map({
   'thin': 100,
@@ -834,7 +855,7 @@ rule('tracking', [map({
 
 rule('text',
   [namedColor, v => `color:${v}`],
-  [color, v => `--tw-text-opacity:1;color:rgb(${v} / var(--tw-text-opacity))`],
+  [color, (v, o) => `--tw-text-opacity:${o};color:rgb(${v} / var(--tw-text-opacity))`],
 )
 repl('underline', '-webkit-text-decoration-line:underline;text-decoration-line:underline')
 repl('overline', '-webkit-text-decoration-line:overline;text-decoration-line:overline')
@@ -880,7 +901,6 @@ rule('accent',
   [color, v => `accent-color:rgb(${v})`],
 )
 
-const opacity = numF([0, 5, 10, 20, 25, 30, 40, 50, 60, 70, 75, 80, 90, 95, 100], n => n / 100)
 rule('opacity', [opacity, v => `opacity:${v}`])
 
 const blendMode = any(
@@ -944,7 +964,7 @@ rule('ring', [map({
 repl('ring-inset', '--tw-ring-inset:inset')
 rule('ring',
   [namedColor, v => `--tw-ring-color:${v}`],
-  [color, v => `--tw-ring-opacity:1;--tw-ring-color:rgb(${v} / var(--tw-ring-opacity))`],
+  [color, (v, o) => `--tw-ring-opacity:${o};--tw-ring-color:rgb(${v} / var(--tw-ring-opacity))`],
 )
 rule('ring-offset',
   [eq01248, v => `--tw-ring-offset-width:${v}px`],
@@ -1149,7 +1169,7 @@ const mediaQueries: Dict<S> = {
 const tryExpand = (rules: Rule[], suffix: S): S | undefined => {
   for (const [match, apply] of rules) {
     const s = match(suffix)
-    if (s !== undefined) return apply(s)
+    if (s !== undefined) return Array.isArray(s) ? apply(...s) : apply(s)
   }
 }
 
