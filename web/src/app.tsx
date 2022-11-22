@@ -30,7 +30,7 @@ const Busy = ({ timeout }: { timeout: U }) => {
   })
   return (
     <div
-      className={css('absolute inset-0 flex flex-col justify-center items-center bg-black opacity-0 transition-opacity')}
+      className={css('absolute inset-0 flex p-8 flex-col justify-center items-center bg-black opacity-0 transition-opacity')}
       style={{ zIndex: 1000, opacity: visible ? 0.5 : 0 }}
     >
       <img alt='Busy' src={loadingAnimation} />
@@ -39,7 +39,7 @@ const Busy = ({ timeout }: { timeout: U }) => {
 }
 
 const Signage = ({ title, icon, children }: { title: S, icon: S, children: ReactNode }) => (
-  <div className={css('absolute inset-0 flex justify-center items-center')}>
+  <div className={css('flex p-8 justify-center items-center')}>
     <div className={css('flex gap-4')}>
       <FontIcon className={css('text-5xl text-red-500 animate-pulse')} iconName={icon} />
       <div className={css('')}>
