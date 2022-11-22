@@ -123,10 +123,17 @@ const replacements = new Map<S, S>()
 const evaluations = new Map<S, Rule[]>()
 const defined = '!' // sentinel for styles already included in styles.css
 const repl = (find: S, replace: S) => replacements.set(find, replace)
-const rule = (find: S, ...rule: Rule[]) => {
-  let rules = evaluations.get(find)
-  if (!rules) evaluations.set(find, (rules = []))
-  rules.push(...rule)
+const rule = (find: S, ...rules: Rule[]) => {
+  let ruleset = evaluations.get(find)
+  if (!ruleset) evaluations.set(find, (ruleset = []))
+  ruleset.push(...rules)
+}
+const negrule = (find: S, ...rules: Rule[]) => {
+  rule(find, ...rules)
+  const negrules = rules.map(([match, apply]): Rule => {
+    return [match, (v: S) => apply('-' + v)]
+  })
+  rule('-' + find, ...negrules)
 }
 
 // --- begin rules ---
@@ -180,13 +187,13 @@ rule('float', [any('right', 'left', 'none'), v => `float:${v}`])
 rule('clear', [any('left', 'right', 'both', 'none'), v => `clear:${v}`])
 
 const margin = either(size, auto)
-rule('m', [margin, v => `margin:${v}`])
-rule('mx', [margin, v => `margin-left:${v};margin-right:${v}`])
-rule('my', [margin, v => `margin-top:${v};margin-bottom:${v}`])
-rule('mt', [margin, v => `margin-top:${v}`])
-rule('mr', [margin, v => `margin-right:${v}`])
-rule('mb', [margin, v => `margin-bottom:${v}`])
-rule('ml', [margin, v => `margin-left:${v}`])
+negrule('m', [margin, v => `margin:${v}`])
+negrule('mx', [margin, v => `margin-left:${v};margin-right:${v}`])
+negrule('my', [margin, v => `margin-top:${v};margin-bottom:${v}`])
+negrule('mt', [margin, v => `margin-top:${v}`])
+negrule('mr', [margin, v => `margin-right:${v}`])
+negrule('mb', [margin, v => `margin-bottom:${v}`])
+negrule('ml', [margin, v => `margin-left:${v}`])
 
 rule('box', [any('border', 'content'), v => `box-sizing:${v}-box`])
 
