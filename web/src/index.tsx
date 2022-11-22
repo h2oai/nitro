@@ -30,6 +30,10 @@ const
   server = endpoint ? newSocketServer(endpoint) : newLocalServer(),
   client = newClient(server)
 
+// The absolute-positioned busy overlay is nested directly inside this element, 
+// so ensure that the busy overlay can block the entire root element, not just the load-time body area.
+if (root) root.style.position = 'relative'
+
 applyTheme(client.themeB())
 ReactDOM.render(<App client={client} />, root);
 client.connect()
