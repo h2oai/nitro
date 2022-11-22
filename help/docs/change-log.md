@@ -21,6 +21,14 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.18.1
+
+Nov 22, 2022
+
+- Fixed
+    - Busy overlay does not block entire interactive area.
+    - Exception when translations are missing in active resource pack.
+
 ## v0.18.0
 
 Nov 10, 2022
