@@ -151,17 +151,17 @@ repl('relative', 'position:relative')
 repl('sticky', 'position:-webkit-sticky;position:sticky')
 
 const inset = either(size, auto, ratioSubset)
-rule('inset', [inset, v => `top:${v};right:${v};bottom:${v};left:${v}`])
-rule('inset-x', [inset, v => `left:${v};right:${v}`])
-rule('inset-y', [inset, v => `top:${v};bottom:${v}`])
-rule('top', [inset, v => `top:${v}`])
-rule('right', [inset, v => `right:${v}`])
-rule('bottom', [inset, v => `bottom:${v}`])
-rule('left', [inset, v => `left:${v}`])
+negrule('inset', [inset, v => `top:${v};right:${v};bottom:${v};left:${v}`])
+negrule('inset-x', [inset, v => `left:${v};right:${v}`])
+negrule('inset-y', [inset, v => `top:${v};bottom:${v}`])
+negrule('top', [inset, v => `top:${v}`])
+negrule('right', [inset, v => `right:${v}`])
+negrule('bottom', [inset, v => `bottom:${v}`])
+negrule('left', [inset, v => `left:${v}`])
 repl('isolate', 'isolation:isolate')
 repl('isolation-auto', 'isolation:auto')
-rule('z', [either(num(0, 10, 20, 30, 40, 50), auto), v => `z-index:${v}`])
-rule('order', [either(range(1, 12), map({ 'first': '-9999', 'last': '9999', 'none': '0' })), v => `order:${v}`])
+negrule('z', [either(num(0, 10, 20, 30, 40, 50), auto), v => `z-index:${v}`])
+negrule('order', [either(range(1, 12), map({ 'first': '-9999', 'last': '9999', 'none': '0' })), v => `order:${v}`])
 
 repl('col-auto', 'grid-column:auto')
 rule('col-span',
@@ -299,14 +299,14 @@ rule('origin', [map({
 
 const translate = either(size, ratioSubset)
 
-rule('translate-x', [translate, v => `--tw-translate-x:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
-rule('translate-y', [translate, v => `--tw-translate-y:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
+negrule('translate-x', [translate, v => `--tw-translate-x:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
+negrule('translate-y', [translate, v => `--tw-translate-y:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
 
-rule('rotate', [num(0, 1, 2, 3, 6, 12, 45, 90, 180), v => `--tw-rotate:${v}deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
+negrule('rotate', [num(0, 1, 2, 3, 6, 12, 45, 90, 180), v => `--tw-rotate:${v}deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
 
 const skew = num(0, 1, 2, 3, 6, 12, 45, 90, 180)
-rule('skew-x', [skew, v => `--tw-skew-x:${v}deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
-rule('skew-y', [skew, v => `--tw-skew-y:${v}deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
+negrule('skew-x', [skew, v => `--tw-skew-x:${v}deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
+negrule('skew-y', [skew, v => `--tw-skew-y:${v}deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
 
 const scale = map({
   '0': '0',
@@ -320,9 +320,9 @@ const scale = map({
   '125': '1.25',
   '150': '1.5',
 })
-rule('scale', [scale, v => `--tw-scale-x:${v};--tw-scale-y:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
-rule('scale-x', [scale, v => `--tw-scale-x:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
-rule('scale-y', [scale, v => `--tw-scale-y:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
+negrule('scale', [scale, v => `--tw-scale-x:${v};--tw-scale-y:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
+negrule('scale-x', [scale, v => `--tw-scale-x:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
+negrule('scale-y', [scale, v => `--tw-scale-y:${v};transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))`])
 
 rule('animate', [map({
   none: 'none',
@@ -414,13 +414,13 @@ rule('snap',
   [any('normal', 'always'), v => `scroll-snap-stop:${v}`],
 )
 
-rule('scroll-m', [size, v => `scroll-margin:${v}`])
-rule('scroll-mx', [size, v => `scroll-margin-left:${v};scroll-margin-right:${v}`])
-rule('scroll-my', [size, v => `scroll-margin-top:${v};scroll-margin-bottom:${v}`])
-rule('scroll-mt', [size, v => `scroll-margin-top:${v}`])
-rule('scroll-mr', [size, v => `scroll-margin-right:${v}`])
-rule('scroll-mb', [size, v => `scroll-margin-bottom:${v}`])
-rule('scroll-ml', [size, v => `scroll-margin-left:${v}`])
+negrule('scroll-m', [size, v => `scroll-margin:${v}`])
+negrule('scroll-mx', [size, v => `scroll-margin-left:${v};scroll-margin-right:${v}`])
+negrule('scroll-my', [size, v => `scroll-margin-top:${v};scroll-margin-bottom:${v}`])
+negrule('scroll-mt', [size, v => `scroll-margin-top:${v}`])
+negrule('scroll-mr', [size, v => `scroll-margin-right:${v}`])
+negrule('scroll-mb', [size, v => `scroll-margin-bottom:${v}`])
+negrule('scroll-ml', [size, v => `scroll-margin-left:${v}`])
 rule('scroll-p', [size, v => `scroll-padding:${v}`])
 rule('scroll-px', [size, v => `scroll-padding-left:${v};scroll-padding-right:${v}`])
 rule('scroll-py', [size, v => `scroll-padding-top:${v};scroll-padding-bottom:${v}`])
@@ -550,11 +550,11 @@ rule('gap', [size, v => `gap:${v}`])
 rule('gap-x', [size, v => `-moz-column-gap:${v};column-gap:${v}`])
 rule('gap-y', [size, v => `row-gap:${v}`])
 const reverse = eq('reverse')
-rule('space-x',
+negrule('space-x',
   [size, v => `--tw-space-x-reverse:0;margin-right:calc(${v} * var(--tw-space-x-reverse));margin-left:calc(${v} * calc(1 - var(--tw-space-x-reverse)))`],
   [reverse, () => `--tw-space-x-reverse:1`],
 )
-rule('space-y',
+negrule('space-y',
   [size, v => `--tw-space-y-reverse:0;margin-top:calc(${v} * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(${v} * var(--tw-space-y-reverse))`],
   [reverse, () => `--tw-space-y-reverse:1`],
 )
@@ -776,7 +776,7 @@ rule('pl', [size, v => `padding-left:${v}`])
 
 rule('text', [any('left', 'center', 'right', 'justify', 'start', 'end'), v => `text-align:${v}`])
 
-rule('indent', [size, v => `text-indent:${v}`])
+negrule('indent', [size, v => `text-indent:${v}`])
 
 rule('align', [any(
   'baseline', 'top', 'middle', 'bottom', 'text-top', 'text-bottom', 'sub', 'super',
@@ -1039,7 +1039,7 @@ rule('brightness', [brightness, filter('brightness')])
 rule('contrast', [contrast, filter('contrast')])
 rule('drop-shadow', [dropShadow, rawFilter('drop-shadow')])
 rule('grayscale', [grayscale, filter('grayscale')])
-rule('hue-rotate', [hueRotate, filter('hue-rotate')])
+negrule('hue-rotate', [hueRotate, filter('hue-rotate')])
 rule('invert', [grayscale, filter('invert')])
 rule('saturate', [saturate, filter('saturate')])
 rule('sepia', [grayscale, filter('sepia')])
@@ -1050,7 +1050,7 @@ rule('backdrop-blur', [blur, backdrop('blur')])
 rule('backdrop-brightness', [brightness, backdrop('brightness')])
 rule('backdrop-contrast', [contrast, backdrop('contrast')])
 rule('backdrop-grayscale', [grayscale, backdrop('grayscale')])
-rule('backdrop-hue-rotate', [hueRotate, backdrop('hue-rotate')])
+negrule('backdrop-hue-rotate', [hueRotate, backdrop('hue-rotate')])
 rule('backdrop-invert', [grayscale, backdrop('invert')])
 rule('backdrop-opacity', [opacity, backdrop('opacity')])
 rule('backdrop-saturate', [saturate, backdrop('saturate')])
