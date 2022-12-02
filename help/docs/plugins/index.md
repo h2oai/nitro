@@ -12,6 +12,18 @@ Plugins add new capabilities to Nitro. See [writing plugins](writing.md) to lear
 
 ## Data Visualization
 
+### Plotly
+
+Renders [Plotly](https://plotly.com/python/) visualizations.
+
+!!!example "Install"
+    ```sh
+    pip install h2o-nitro-plotly
+    ```
+
+[:material-github: Github](https://github.com/h2oai/nitro-plotly)
+
+
 ### Bokeh
 
 Renders [Bokeh](https://docs.bokeh.org/en/latest/) visualizations.
