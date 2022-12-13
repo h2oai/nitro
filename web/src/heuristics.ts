@@ -213,7 +213,6 @@ const mergeBoxes_ = (layout: Box, body: Box) => {
           items[i] = body
           return true
         }
-      } else {
         if (mergeBoxes_(item, body)) return true
       }
     }
