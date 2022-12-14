@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { ContextualMenu, Dialog, DialogType, IModalProps } from '@fluentui/react';
-import { Client } from './client';
+import { Client, defaultLayout } from './client';
 import { signal, xid } from './core';
 import { hasActions } from './heuristics';
 import { Box } from './protocol';
@@ -30,7 +30,7 @@ const
   makeContinuable = (boxes: Box[]): Box[] => hasActions(boxes) ? boxes : [...boxes, continueButton]
 
 export const Body = ({ client }: { client: Client }) => {
-  const boxes: Box[] = makeContinuable(client.body)
+  const boxes: Box[] = client.layoutB() === defaultLayout ? makeContinuable(client.body) : client.body
   return (
     <div className='main'>
       <XBox context={client.context} box={{ xid: 'main', index: -1, modes: new Set(['col']), items: boxes, options: [] }} />
