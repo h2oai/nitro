@@ -166,23 +166,76 @@ const NonTerminal = ({ context, box, children }: BoxProps & { children: React.Re
 }
 
 const Terminal = ({ context, box }: BoxProps) => {
-  const
-    { name, hotkey } = box,
-    onClick = createOnClick(context, box),
-    unbind = hotkey && onClick ? context.hotkey(hotkey, onClick) : undefined,
-    dispose = () => {
-      if (unbind) unbind()
-    }
+  if (box.link) return <LinkedTerminal context={context} box={box} />
+  if (box.modes.has('tap')) return <TapInput context={context} box={box} />
+  return (
+    <div
+      className={css(box.style)}
+      data-name={box.name}
+    >{box.text ?? ''}</div>
+  )
+}
 
-  useEffect(() => dispose)
+const LinkedTerminal = ({ context, box }: BoxProps) => {
+  const
+    { name, hotkey, link } = box,
+    onClick = (e?: React.MouseEvent<HTMLDivElement>) => {
+      jump(link ?? '')
+      if (e) e.preventDefault()
+    },
+    unbind = context.hotkey(hotkey ?? '', onClick)
+
+  useEffect(() => unbind)
 
   return (
     <div
-      className={css(onClick ? 'cursor-pointer' : undefined, box.style)}
+      className={css('cursor-pointer', box.style)}
       onClick={onClick}
       data-name={name}
     >{box.text ?? ''}</div>
   )
+}
+
+const TapInput = ({ context, box }: BoxProps) => {
+  const
+    { name, hotkey } = box,
+    onClick = () => {
+      const v = box.value ?? box.name ?? box.text
+      if (v) {
+        context.record(v as any)
+        context.commit()
+      }
+    },
+    unbind = context.hotkey(hotkey ?? '', onClick)
+
+  useEffect(() => unbind)
+
+  return (
+    <div
+      className={css('cursor-pointer', box.style)}
+      onClick={onClick}
+      data-name={name}
+    >{box.text ?? ''}</div>
+  )
+}
+
+const createOnClick = (context: Context, box: Box) => {
+  const { modes, link } = box
+  if (modes.has('tap')) {
+    return () => {
+      const v = box.value ?? box.name ?? box.text
+      if (v) {
+        context.record(v as any)
+        context.commit()
+      }
+    }
+  }
+  if (link) {
+    return (e?: React.MouseEvent<HTMLDivElement>) => {
+      jump(link ?? '')
+      if (e) e.preventDefault()
+    }
+  }
 }
 
 const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children: React.ReactNode }) => {
@@ -254,22 +307,4 @@ const TabSet = ({ context, box }: BoxProps) => {
       <Pivot defaultSelectedKey={selectedKey}>{tabs}</Pivot>
     </div>
   )
-}
-
-const createOnClick = (context: Context, box: Box) => {
-  const { modes, link } = box
-  return modes.has('tap')
-    ? () => {
-      const v = box.value ?? box.name ?? box.text
-      if (v) {
-        context.record(v as any)
-        context.commit()
-      }
-    }
-    : link
-      ? (e?: React.MouseEvent<HTMLDivElement>) => {
-        jump(link ?? '')
-        if (e) e.preventDefault()
-      }
-      : undefined
 }

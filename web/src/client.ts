@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import hotkeys from "hotkeys-js";
-import { B, Dict, isS, on, S, Signal, signal, U, V } from './core';
+import { B, Dict, isS, noop, on, S, Signal, signal, U, V } from './core';
 import { formatter } from "./format";
 import { freeze, mergeBoxes, sanitizeBox, sanitizeHelp, sanitizeOptions } from './heuristics';
 import { installPlugins } from './plugin';
@@ -220,6 +220,8 @@ export const newClient = (server: Server) => {
     helpB = signal<Dict<S>>({}),
     helpE = signal<S>(),
     hotkey = (chord: S, handle: () => void) => {
+      if (!chord) return noop
+
       hotkeys.unbind(chord)
       hotkeys(chord, e => {
         e.preventDefault()
