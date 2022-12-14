@@ -208,9 +208,8 @@ const mergeBoxes_ = (layout: Box, body: Box) => {
     for (let i = 0, n = items.length; i < n; i++) {
       const item = items[i]
       if (item && !isS(item) && !Array.isArray(item)) {
-        const b = item as any
-        if (b.mode === 'body') {
-          items[i] = body
+        if ((item as any).mode === 'body') {
+          item.items = [body]
           return true
         }
         if (mergeBoxes_(item, body)) return true
