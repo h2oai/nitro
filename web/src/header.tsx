@@ -21,6 +21,7 @@ import { toContextualMenuItem } from './options';
 import { Option } from './protocol';
 
 const manageHotkeys = (client: Client, options: Option[]) => {
+  // BUG: doesn't handle submenu hotkeys
   const dispose: Array<() => void> = []
   options.forEach(o => {
     if (o.hotkey) dispose.push(client.hotkey(o.hotkey, () => client.jump(o.value)))

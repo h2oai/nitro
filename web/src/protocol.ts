@@ -140,7 +140,7 @@ export const boxTypes = {
   check: unlabeledInput,
   col: unlabeledOutput,
   color: unlabeledInput,
-  input: unlabeledInput,
+  input: unlabeledInput, // parent
   critical: unlabeledOutput,
   date: labeledInput,
   day: unlabeledInput,
@@ -151,6 +151,7 @@ export const boxTypes = {
   md: unlabeledOutput, // not an input unless it contains hyperlinks
   menu: labeledInput,
   month: unlabeledInput,
+  more: unlabeledOutput, // input child
   number: labeledInput,
   password: unlabeledInput,
   progress: unlabeledOutput,

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { INavLink, INavLinkGroup, Nav, Pivot, PivotItem } from '@fluentui/react';
-import React, { useEffect } from 'react';
+import { ContextualMenu, INavLink, INavLinkGroup, Nav, Pivot, PivotItem } from '@fluentui/react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Banner } from './banner';
 import { Buttons } from './buttons';
 import { Calendar } from './calendar';
@@ -33,6 +33,7 @@ import { Expander } from './expander';
 import { FileUpload } from './file_upload';
 import { Graphic, GraphicLabel } from './graphics';
 import { Help } from './help';
+import { toContextualMenuItem } from './options';
 import { PluginBox } from './plugin';
 import { ProgressBar } from './progress';
 import { Box } from './protocol';
@@ -57,9 +58,10 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
     context = box.index >= 0 ? root.scoped(box.index, box.pid ?? box.xid) : root
 
   if (items) {
-    if (options?.length) return modes.has('col')
-      ? <NavSet context={context} box={box} />
-      : <TabSet context={context} box={box} />
+    if (options?.length) {
+      if (modes.has('col')) return <NavSet context={context} box={box} />
+      if (modes.has('row')) return <TabSet context={context} box={box} />
+    }
 
     const children = items.map(box => (
       <Help key={box.xid} context={context} box={box}>
@@ -165,9 +167,29 @@ const NonTerminal = ({ context, box, children }: BoxProps & { children: React.Re
   )
 }
 
+const createOnClick = (context: Context, box: Box) => {
+  const { modes, link } = box
+  if (modes.has('tap')) {
+    return () => {
+      const v = box.value ?? box.name ?? box.text
+      if (v) {
+        context.record(v as any)
+        context.commit()
+      }
+    }
+  }
+  if (link) {
+    return (e?: React.MouseEvent<HTMLDivElement>) => {
+      jump(link ?? '')
+      if (e) e.preventDefault()
+    }
+  }
+}
+
 const Terminal = ({ context, box }: BoxProps) => {
   if (box.link) return <LinkedTerminal context={context} box={box} />
   if (box.modes.has('tap')) return <TapInput context={context} box={box} />
+  if (box.modes.has('more')) return <MoreInput context={context} box={box} />
   return (
     <div
       className={css(box.style)}
@@ -219,23 +241,38 @@ const TapInput = ({ context, box }: BoxProps) => {
   )
 }
 
-const createOnClick = (context: Context, box: Box) => {
-  const { modes, link } = box
-  if (modes.has('tap')) {
-    return () => {
-      const v = box.value ?? box.name ?? box.text
+const MoreInput = ({ context, box }: BoxProps) => {
+  const
+    { name, text, options } = box,
+    onItemClick = (v: any) => {
       if (v) {
-        context.record(v as any)
+        context.record(v)
         context.commit()
       }
-    }
-  }
-  if (link) {
-    return (e?: React.MouseEvent<HTMLDivElement>) => {
-      jump(link ?? '')
-      if (e) e.preventDefault()
-    }
-  }
+    },
+    items = (options ?? []).map(o => toContextualMenuItem(o, onItemClick)),
+    ref = useRef(null),
+    [visible, setVisible] = useState(false),
+    showMenu = () => setVisible(true),
+    hideMenu = () => setVisible(false)
+
+  return (
+    <div
+      ref={ref}
+      className={css('cursor-pointer', box.style)}
+      onClick={showMenu}
+      data-name={name}
+    >
+      {text ?? ''}
+      <ContextualMenu
+        items={items}
+        hidden={!visible}
+        target={ref}
+        onItemClick={hideMenu}
+        onDismiss={hideMenu}
+      />
+    </div>
+  )
 }
 
 const NavSetItem = make(({ visibleB, children }: { visibleB: Signal<B>, children: React.ReactNode }) => {

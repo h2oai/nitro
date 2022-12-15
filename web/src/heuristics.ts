@@ -337,7 +337,7 @@ const assignParents = (boxes: Box[]) => {
 
 const assignParent = (index: U, pid: S, boxes: Box[]) => {
   for (const box of boxes) {
-    if (box.modes.has('tap')) {
+    if (box.modes.has('tap') || box.modes.has('more')) {
       box.index = index
       box.pid = pid
       // Don't recurse: ignore nested interactive areas.
