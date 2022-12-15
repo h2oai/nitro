@@ -426,6 +426,7 @@ Use a file upload component to get one or more files from the user.
 Create custom input components that respond to gestures.
 
 - [Tap](inputs.md#tap)
+- [More](inputs.md#more)
 
 ## Banner
 
