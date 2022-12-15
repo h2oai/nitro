@@ -50,7 +50,7 @@ choice = view(
                 option('profile', 'My Profile'),
                 option('security', 'Security'),
                 option('notifications', 'Notifications'),
-                option('settings', 'settings'),
+                option('settings', 'Settings'),
                 option('theme', 'Theme'),
                 option('support', 'Support', options=[
                     # Nested sub-menu

@@ -53,7 +53,7 @@ def input_more(view: View):  # height 4
                     option('profile', 'My Profile'),
                     option('security', 'Security'),
                     option('notifications', 'Notifications'),
-                    option('settings', 'settings'),
+                    option('settings', 'Settings'),
                     option('theme', 'Theme'),
                     option('support', 'Support', options=[
                         # Nested sub-menu

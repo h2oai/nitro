@@ -49,7 +49,7 @@ import { Textbox } from './textbox';
 import { TextBlock } from './text_block';
 import { TimePicker } from './time_picker';
 import { Toggle } from './toggle';
-import { BoxProps, Context, make } from './ui';
+import { BoxProps, make } from './ui';
 import { WebView } from './webview';
 
 export const XBox = ({ context: root, box }: BoxProps) => { // recursive
@@ -71,7 +71,7 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
 
     return modes.has('group')
       ? <Expander box={box}>{children}</Expander>
-      : <NonTerminal context={context} box={box}>{children}</NonTerminal>
+      : <Plain context={context} box={box}>{children}</Plain>
 
   } // !items
 
@@ -141,64 +141,33 @@ export const XBox = ({ context: root, box }: BoxProps) => { // recursive
     }
   }
 
-  return <Terminal context={context} box={box} />
+  return <Plain context={context} box={box} />
 }
 
-const NonTerminal = ({ context, box, children }: BoxProps & { children: React.ReactNode }) => {
-  const
-    { name, modes, hotkey } = box,
-    background = box.image ? { backgroundImage: `url(${box.image})` } : undefined,
-    flex = modes.has('col') ? 'flex flex-col gap-2' : modes.has('row') ? 'flex gap-2' : undefined,
-    onClick = createOnClick(context, box),
-    unbind = hotkey && onClick ? context.hotkey(hotkey, onClick) : undefined,
-    dispose = () => {
-      if (unbind) unbind()
-    }
+type ParentBox = BoxProps & { children?: React.ReactNode }
 
-  useEffect(() => dispose)
+const toStyle = (box: Box): React.CSSProperties | undefined => box.image ? { backgroundImage: `url(${box.image})` } : undefined
 
+const toClassname = (box: Box, click: any, children: any) => css(
+  children ? box.modes.has('col') ? 'flex flex-col gap-2' : box.modes.has('row') ? 'flex gap-2' : undefined : undefined,
+  click ? 'cursor-pointer' : undefined,
+  box.style
+)
+
+const Plain = ({ context, box, children }: ParentBox) => {
+  if (box.link) return <Hyperlink context={context} box={box} >{children}</Hyperlink>
+  if (box.modes.has('tap')) return <TapInput context={context} box={box}>{children}</TapInput>
+  if (box.modes.has('more')) return <MoreInput context={context} box={box}>{children}</MoreInput>
   return (
     <div
-      className={css(flex, onClick ? 'cursor-pointer' : undefined, box.style)}
-      onClick={onClick}
-      style={background}
-      data-name={name}
-    >{children}</div>
-  )
-}
-
-const createOnClick = (context: Context, box: Box) => {
-  const { modes, link } = box
-  if (modes.has('tap')) {
-    return () => {
-      const v = box.value ?? box.name ?? box.text
-      if (v) {
-        context.record(v as any)
-        context.commit()
-      }
-    }
-  }
-  if (link) {
-    return (e?: React.MouseEvent<HTMLDivElement>) => {
-      jump(link ?? '')
-      if (e) e.preventDefault()
-    }
-  }
-}
-
-const Terminal = ({ context, box }: BoxProps) => {
-  if (box.link) return <LinkedTerminal context={context} box={box} />
-  if (box.modes.has('tap')) return <TapInput context={context} box={box} />
-  if (box.modes.has('more')) return <MoreInput context={context} box={box} />
-  return (
-    <div
-      className={css(box.style)}
+      className={toClassname(box, null, children)}
       data-name={box.name}
-    >{box.text ?? ''}</div>
+      style={children ? toStyle(box) : undefined}
+    >{children ?? box.text ?? ''}</div>
   )
 }
 
-const LinkedTerminal = ({ context, box }: BoxProps) => {
+const Hyperlink = ({ context, box, children }: ParentBox) => {
   const
     { name, hotkey, link } = box,
     onClick = (e?: React.MouseEvent<HTMLDivElement>) => {
@@ -211,14 +180,15 @@ const LinkedTerminal = ({ context, box }: BoxProps) => {
 
   return (
     <div
-      className={css('cursor-pointer', box.style)}
+      className={toClassname(box, onClick, children)}
       onClick={onClick}
       data-name={name}
-    >{box.text ?? ''}</div>
+      style={children ? toStyle(box) : undefined}
+    >{children ?? box.text ?? ''}</div>
   )
 }
 
-const TapInput = ({ context, box }: BoxProps) => {
+const TapInput = ({ context, box, children }: ParentBox) => {
   const
     { name, hotkey } = box,
     onClick = () => {
@@ -234,14 +204,15 @@ const TapInput = ({ context, box }: BoxProps) => {
 
   return (
     <div
-      className={css('cursor-pointer', box.style)}
+      className={toClassname(box, onClick, children)}
       onClick={onClick}
       data-name={name}
-    >{box.text ?? ''}</div>
+      style={children ? toStyle(box) : undefined}
+    >{children ?? box.text ?? ''}</div>
   )
 }
 
-const MoreInput = ({ context, box }: BoxProps) => {
+const MoreInput = ({ context, box, children }: ParentBox) => {
   const
     { name, text, options } = box,
     onItemClick = (v: any) => {
@@ -259,11 +230,12 @@ const MoreInput = ({ context, box }: BoxProps) => {
   return (
     <div
       ref={ref}
-      className={css('cursor-pointer', box.style)}
+      className={toClassname(box, showMenu, children)}
       onClick={showMenu}
       data-name={name}
+      style={children ? toStyle(box) : undefined}
     >
-      {text ?? ''}
+      {children ?? text ?? ''}
       <ContextualMenu
         items={items}
         hidden={!visible}
