@@ -270,12 +270,11 @@ export const sanitizeBox = (formatter: Formatter, box: Box): Box => {
   const fmt = box.locale ? formatter.load(box.locale) : formatter
 
   let mdHasLinks = false
+  if (box.options) box.options = sanitizeOptions(box.options)
   if (box.items) {
     box.items = box.items.map(b => sanitizeBox(fmt, b))
   } else {
-    const { value, options } = box
-
-    if (options) box.options = sanitizeOptions(options)
+    const { value } = box
 
     sanitizeRange(box)
 

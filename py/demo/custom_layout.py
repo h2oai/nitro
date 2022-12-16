@@ -20,8 +20,8 @@ from h2o_nitro import View, box, option
 
 
 def main(view: View):
-    name = view(box('What is your name?', value='Boaty McBoatface'), ['Continue'])
-    feel = view(box(f'How do you feel today, {name}?', value='intrigued'), ['Continue'])
+    name, _ = view(box('What is your name?', value='Boaty McBoatface'), ['Continue'])
+    feel, _ = view(box(f'How do you feel today, {name}?', value='intrigued'), ['Continue'])
     view(f'What a coincidence, {name}, I feel {feel}, too!')
 
 
@@ -78,15 +78,12 @@ layout = box(
                                             box('Open user menu') / 'sr-only',
                                             box(
                                                 box('B') / 'text-white text-lg font-light',
+                                                mode='more',
+                                                options=['Profile', 'Settings', 'Sign Out'],
                                             ) / 'flex items-center justify-center h-8 w-8 rounded-full bg-pink-500',
+                                            mode='input',
                                         ) / 'flex rounded-full bg-indigo-600 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600',
                                     ),
-                                    # Profile menu
-                                    box(
-                                        box('Profile') / 'block py-2 px-4 text-sm text-gray-700',
-                                        box('Settings') / 'block py-2 px-4 text-sm text-gray-700',
-                                        box('Sign out') / 'block py-2 px-4 text-sm text-gray-700',
-                                    ) / 'absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black focus:outline-none',
                                 ) / 'relative ml-3 shrink-0',
                             ) / 'flex items-center',
                         ) / 'hidden lg:ml-4 lg:block',
