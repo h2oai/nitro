@@ -21,6 +21,13 @@ For LTS releases, bug fixes are provided for 2 years and security fixes are prov
 the longest window of support and maintenance. For general releases, bug fixes are provided for 6 months and security
 fixes are provided for 1 year.
 
+## v0.19.0
+
+Dec 15, 2022
+
+- Added
+    - Custom layouts: change the default template used by all app screens.
+
 ## v0.18.1
 
 Nov 22, 2022
