@@ -3,6 +3,7 @@ VERSION:=$(shell cat VERSION)
 
 all: build
 
+.PHONY: version
 version:
 	echo "__version__ = \"${VERSION}\"" > py/pkg/h2o_nitro/version.py
 	echo "__version__ = \"${VERSION}\"" > py/web/h2o_nitro_web/version.py
