@@ -3,13 +3,13 @@ VERSION:=$(shell cat VERSION)
 
 all: build
 
-version:
+set-version:
 	echo "__version__ = \"${VERSION}\"" > py/pkg/h2o_nitro/version.py
 	echo "__version__ = \"${VERSION}\"" > py/web/h2o_nitro_web/version.py
 
-setup: clean version setup-web setup-py setup-screenshots setup-docs setup-cli ## Install dependencies
+setup: clean set-version setup-web setup-py setup-screenshots setup-docs setup-cli ## Install dependencies
 
-build: version web py docs ## Build everything
+build: set-version web py docs ## Build everything
 
 clean: clean-docs clean-screenshots clean-py clean-web ## Clean everything
 	rm -f py/pkg/h2o_nitro/version.py
