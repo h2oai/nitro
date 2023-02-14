@@ -24,7 +24,7 @@ jobs:
       - name: Snyk scan for Node dependencies
         continue-on-error: true
         run: |
-          find /path/to/directory -type f -regex "package(-lock)?\.json" -exec sh -c 'snyk test --file="$0" -d fail-on=all' {} \;
+          find . -type f -regex "package(-lock)?\.json" -exec sh -c 'snyk test --file="$0" -d fail-on=all' {} \;
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   # snyk_scan_monitor:
