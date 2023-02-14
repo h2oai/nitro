@@ -24,7 +24,7 @@ jobs:
       - name: Snyk scan for Node dependencies
         continue-on-error: true
         run: |
-          find . -name 'package.json' | xargs -I {} sh -c 'cd "$(dirname "{}")" && npm install && snyk test --file="{}" -d --fail-on=all'
+          find . -name 'package.json' | xargs -I {} sh -c 'cd "$(dirname "{}")" && npm install && snyk monitor --file="$(basename "{}")"'
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   # snyk_scan_monitor:
