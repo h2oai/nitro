@@ -54,13 +54,13 @@ jobs:
       - name: Snyk scan for Node dependencies - 'package.json' files
         continue-on-error: true
         run: |
-          find . -name 'package.json' | xargs -I {} sh -c 'cd "$(dirname "{}")" && npm install && snyk monitor --file="$(basename "{}")" -d  --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/"$(basename "{}")"'
+          find . -name 'package.json' | xargs -I {} sh -c 'cd "$(dirname "{}")" && npm install && snyk monitor --file="$(basename "{}")" -d  --org=NITRO-CF8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/"$(basename "{}")"'
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       
       - name: Snyk scan for Node dependencies - 'package-lock.json' files
         continue-on-error: true
         run: |
-          find . -name 'package-lock.json' | xargs -I {} sh -c 'cd "$(dirname "{}")" && npm install && snyk monitor --file="$(basename "{}")" -d  --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/"$(basename "{}")"'
+          find . -name 'package-lock.json' | xargs -I {} sh -c 'cd "$(dirname "{}")" && npm install && snyk monitor --file="$(basename "{}")" -d  --org=NITRO-CF8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/"$(basename "{}")"'
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
