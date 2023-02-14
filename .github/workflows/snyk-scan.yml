@@ -1,0 +1,42 @@
+name: Snyk Security Vulnerability Scan
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+  push:
+    tags:
+      - 'v.[0-9].[0-100]+.[0-100]+'
+    branches:
+      - main
+      - devops/snyk-integration
+
+jobs:
+  snyk_scan_test:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: snyk/actions/setup@master
+
+      - name: Find all package.json and package-lock.json files
+        uses: jeertmans/filesfinder@v0.3.5
+        id: package-files
+        with:
+          args: -r "package(-lock)?\.json"
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: Snyk scan for Node dependencies
+        continue-on-error: true
+        run: |
+          for dep-file in ${{ steps.package-files.outputs.files }}
+          do
+            snyk test --file=dep-file -d --fail-on=all
+          done
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  # snyk_scan_monitor:
+  #   if: ${{ github.event_name == 'push' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
