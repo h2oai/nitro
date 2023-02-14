@@ -21,24 +21,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      
-      - name: Install Node dependencies
-        run: |
-          find . -name 'package.json' | while read file; do
-            dir=$(dirname "$file")
-            (cd "$dir" && npm install)
-          done
-          find . -name 'package-lock.json' | while read file; do
-            dir=$(dirname "$file")
-            (cd "$dir" && npm install)
-          done
 
       - name: Snyk scan for Node dependencies - 'package.json' files
         continue-on-error: true
         run: |
           find . -name 'package.json' | while read file; do
             dir=$(dirname "$file")
-            (cd "$dir" && snyk test --file=package.json -d --fail-on=all)
+            (cd "$dir" && npm install && snyk test --file=package.json -d --fail-on=all)
           done
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -48,7 +37,7 @@ jobs:
         run: |
           find . -name 'package-lock.json' | while read file; do
             dir=$(dirname "$file")
-            (cd "$dir" && snyk test --file=package-lock.json -d --fail-on=all)
+            (cd "$dir" && npm install && snyk test --file=package-lock.json -d --fail-on=all)
           done
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -69,24 +58,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      
-      - name: Install Node dependencies
-        run: |
-          find . -name 'package.json' | while read file; do
-            dir=$(dirname "$file")
-            (cd "$dir" && npm install)
-          done
-          find . -name 'package-lock.json' | while read file; do
-            dir=$(dirname "$file")
-            (cd "$dir" && npm install)
-          done
 
       - name: Snyk scan for Node dependencies - 'package.json' files
         continue-on-error: true
         run: |
           find . -name 'package.json' | while read file; do
             dir=$(dirname "$file")
-            (cd "$dir" && snyk monitor --file=package.json -d --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$(dirname "$file") )
+            (cd "$dir" && npm install && snyk monitor --file=package.json -d --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$(dirname "$file") )
           done
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -96,7 +74,7 @@ jobs:
         run: |
           find . -name 'package-lock.json' | while read file; do
             dir=$(dirname "$file")
-            (cd "$dir" && snyk monitor --file=package-lock.json -d --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$(dirname "$file") )
+            (cd "$dir" && npm install && snyk monitor --file=package-lock.json -d --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$(dirname "$file") )
           done
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
