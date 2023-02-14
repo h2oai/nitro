@@ -64,7 +64,7 @@ jobs:
         run: |
           find . -name 'package.json' | while read file; do
             dir=$(dirname "$file")
-            (cd "$dir" && npm install && snyk monitor --file=package.json -d --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$(dirname "$file") )
+            (cd "$dir" && npm install && snyk monitor --file=package.json -d --org=nitro-cf8 --remote-repo-url=nitro/${{ env.GITHUB_REF }} --project-name="NITRO/nitro/${{ env.GITHUB_REF }}/$(basename "$dir")")
           done
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -74,7 +74,7 @@ jobs:
         run: |
           find . -name 'package-lock.json' | while read file; do
             dir=$(dirname "$file")
-            (cd "$dir" && npm install && snyk monitor --file=package-lock.json -d --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$(dirname "$file") )
+            (cd "$dir" && npm install && snyk monitor --file=package.json -d --org=nitro-cf8 --remote-repo-url=nitro/${{ env.GITHUB_REF }} --project-name="NITRO/nitro/${{ env.GITHUB_REF }}/$(basename "$dir")")
           done
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
