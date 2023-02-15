@@ -65,7 +65,7 @@ jobs:
       - name: Extract github branch/tag name
         shell: bash
         run: echo "ref=$(echo ${GITHUB_REF##*/})" >> $GITHUB_OUTPUT
-        id: extract_re
+        id: extract_ref
 
       - uses: snyk/actions/setup@master
       
@@ -79,15 +79,10 @@ jobs:
 
       - name: Snyk scan for Python dependencies - 'requirements.txt' files
         run: |
-          export BRANCH_TAG_NAME=${{ steps.extract_ref.outputs.ref }}
           for file in $(find . -name "requirements.txt"); do
             file=${file:2}
-            echo ""
-            echo "##### SCAN $file START #####"
-            echo ""
             pip install -r $file
-            snyk monitor --package-manager=pip --org=nitro-cf8 --remote-repo-url=nitro-cf8/$BRANCH_TAG_NAME --file=$file --project-name=NITRO/nitro/$BRANCH_TAG_NAME/$file -d --skip-unresolved 
-            echo "##### SCAN $file END #####"
+            snyk monitor --command=python3 --package-manager=pip --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --file=$file --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$file -d --skip-unresolved 
           done
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
