@@ -72,7 +72,7 @@ jobs:
           do
             if [[ "$file" == *"requirements.txt" ]]; then
               python3 -m pip install -r $file
-              snyk test command=python3 --package-manager=pip --file=$file --skip-unresolved -d --fail-on=all
+              snyk test --command=python3 --package-manager=pip --file=$file --skip-unresolved -d --fail-on=all
             fi
           done 
         env:
