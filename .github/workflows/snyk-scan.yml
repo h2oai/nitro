@@ -1,11 +1,17 @@
 name: Snyk Security Vulnerability Scan
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [opened, edited, synchronize]
+  create:
+    tags:
+      - 'v.[0-9]+.[0-9]+.[0-9]+'
+      - 'v.[0-9]+.[0-9]+.[0-9]+.[0-9]+'
   push:
     tags:
-      - 'v.[0-9].[0-100]+.[0-100]+'
+      - 'v.[0-9]+.[0-9]+.[0-9]+'
+      - 'v.[0-9]+.[0-9]+.[0-9]+.[0-9]+'
     branches:
       - main
       - devops/snyk-integration
@@ -18,42 +24,100 @@ jobs:
       - uses: actions/checkout@master
       - uses: snyk/actions/setup@master
       
+      - name: Check changed Deps files
+        uses: tj-actions/changed-files@v35
+        id: changed-files
+        with:
+          files: | # This will match all the files with below patterns
+            **/package.json
+            **/package-lock.json
+            **/requirements.txt
+            **/go.mod
+
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
 
-      - name: Snyk scan for Node dependencies - 'package.json' files
+      - name: Snyk scan for Node dependencies - package.json files
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'package.json')
+        id: scan1
         continue-on-error: true
         run: |
-          find . -name 'package.json' | while read file; do
-            dir=$(dirname "$file")
-            (cd "$dir" && npm install && snyk test --file=package.json -d --fail-on=all)
-          done
+          for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
+          do
+            if [[ "$file" == *"package.json" ]]; then
+              snyk test --file=$file -d --fail-on=all
+            fi
+          done 
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       
-      - name: Snyk scan for Node dependencies - 'package-lock.json' files
+      - name: Snyk scan for Node dependencies - package.json files
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'package-lock.json')
+        id: scan2
         continue-on-error: true
         run: |
-          find . -name 'package-lock.json' | while read file; do
-            dir=$(dirname "$file")
-            (cd "$dir" && npm install && snyk test --file=package-lock.json -d --fail-on=all)
-          done
+          for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
+          do
+            if [[ "$file" == *"package-lock.json" ]]; then
+              snyk test --file=$file -d --fail-on=all
+            fi
+          done 
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
+      
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.7'
-
-      - name: Snyk scan for Python dependencies - 'requirements.txt' files
+          node-version: '3.8'
+      
+      - name: Snyk scan for Python dependencies - requirements.txt files
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'requirements.txt')
+        id: scan3
+        continue-on-error: true
         run: |
-          find . -name 'requirements.txt' | while read file; do
-            dir=$(dirname "$file")
-            (cd "$dir" && pip install -r requirements.txt && snyk test command=python3 --package-manager=pip --file=requirements.txt --skip-unresolved -d --fail-on=all)
-          done
+          for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
+          do
+            if [[ "$file" == *"requirements.txt" ]]; then
+              python3 -m pip install $file
+              snyk test command=python3 --package-manager=pip --file=$file --skip-unresolved -d --fail-on=all
+            fi
+          done 
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      
+      - uses: actions/setup-go@v3
+        with:
+          node-version: '1.18'
+      
+      - name: Snyk scan for Go dependencies - go.mod files
+        if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'go.mod')
+        id: scan4
+        continue-on-error: true
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
+          do
+            if [[ "$file" == *"go.mod" ]]; then
+              GOFLAGS="-e" snyk test --file=$file -p -d --skip-unresolved --fail-on=all
+            fi
+          done 
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        
+
+      
+      - name: Check Snyk scan results
+        if: steps.scan1.outcome == 'failure' || steps.scan2.outcome == 'failure' || steps.scan3.outcome == 'failure' || steps.scan4.outcome == 'failure'
+        shell: bash
+        run: |
+          echo "[warning] Please solve the fixable security vulnerabilities found in failed steps!
+                Snyk scan for Java dependencies - ${{ steps.scan1.outcome }}
+                Snyk scan for Python dependencies - ${{ steps.scan2.outcome }}
+                Snyk scan for Node dependencies - ${{ steps.scan3.outcome }}
+                Snyk scan for Go dependencies - ${{ steps.scan4.outcome }}
+                "
+          exit 1
+      
+
       
 
   snyk_scan_monitor:
