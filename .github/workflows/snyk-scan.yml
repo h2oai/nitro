@@ -71,7 +71,7 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
           do
             if [[ "$file" == *"requirements.txt" ]]; then
-              python3 -m pip install $file
+              python3 -m pip install -r $file
               snyk test command=python3 --package-manager=pip --file=$file --skip-unresolved -d --fail-on=all
             fi
           done 
