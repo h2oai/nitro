@@ -36,10 +36,10 @@ jobs:
         
       - name: List all changed files
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}; do
             file=${file:2}
             echo "$file was changed"
-          don
+          done
 
       - uses: actions/setup-node@v3
         with:
@@ -112,7 +112,7 @@ jobs:
           do
             if [[ "$file" == *"go.mod" ]]; then
               file=${file:2}
-              GOFLAGS="-e" snyk test --file=$file -p -d --skip-unresolved --fail-on=all
+              GOFLAGS="-e" snyk test --all-projects --file=$file -p -d --skip-unresolved --fail-on=all
             fi
           done 
         env:
@@ -153,6 +153,8 @@ jobs:
         continue-on-error: true
         run: |
           for file in $(find . -name "package.json" -o -name "package-lock.json"); do
+            directory=$(dirname "$file")
+            cd directory && npm install
             file=${file:2}
             snyk monitor --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --file=$file --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$file -d 
           done
@@ -183,6 +185,6 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          GOFLAGS="-e" snyk monitor --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --file=cli/go.mod --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/cli/go.mod -p -d --skip-unresolved
+          GOFLAGS="-e" snyk monitor --all-projects --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --file=cli/go.mod --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/cli/go.mod -p -d --skip-unresolved
 
       
