@@ -29,7 +29,6 @@ jobs:
         id: changed-files
         with:
           files: | # This will match all the files with below patterns
-            **/package.json
             **/package-lock.json
             **/requirements.txt
             **/go.mod
@@ -46,7 +45,7 @@ jobs:
       
       - name: Snyk scan for Node dependencies - package-lock.json files
         if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'package-lock.json')
-        id: scan2
+        id: scan1
         continue-on-error: true
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
@@ -66,7 +65,7 @@ jobs:
       
       - name: Snyk scan for Python dependencies - requirements.txt files
         if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'requirements.txt')
-        id: scan3
+        id: scan2
         continue-on-error: true
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
@@ -85,7 +84,7 @@ jobs:
       
       - name: Snyk scan for Go dependencies - go.mod file
         if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'go.mod')
-        id: scan4
+        id: scan3
         continue-on-error: true
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
@@ -104,9 +103,8 @@ jobs:
         run: |
           echo "[warning] Please solve the fixable security vulnerabilities found in failed steps!
                 Snyk scan for Node dependencies [package.json] - ${{ steps.scan1.outcome }}
-                Snyk scan for Node dependencies [package-lock.json] - ${{ steps.scan2.outcome }}
-                Snyk scan for Python dependencies - ${{ steps.scan3.outcome }}
-                Snyk scan for Go dependencies - ${{ steps.scan4.outcome }}
+                Snyk scan for Python dependencies - ${{ steps.scan2.outcome }}
+                Snyk scan for Go dependencies - ${{ steps.scan3.outcome }}
                 "
           exit 1
       
