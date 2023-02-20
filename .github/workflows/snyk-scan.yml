@@ -36,7 +36,7 @@ jobs:
         
       - name: List all changed files
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}; do
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             file=${file:2}
             echo "$file was changed"
           don
@@ -53,6 +53,8 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
           do
             if [[ "$file" == *"package.json" ]]; then
+              directory=$(dirname "$file")
+              cd directory && npm install
               file=${file:2}
               snyk test --file=$file -d --fail-on=all
             fi
@@ -68,6 +70,8 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_and_modified_files }}:
           do
             if [[ "$file" == *"package-lock.json" ]]; then
+              directory=$(dirname "$file")
+              cd directory && npm install
               file=${file:2}
               snyk test --file=$file -d --fail-on=all
             fi
@@ -97,7 +101,7 @@ jobs:
       
       - uses: actions/setup-go@v3
         with:
-          node-version: '1.18'
+          go-version: '1.18'
       
       - name: Snyk scan for Go dependencies - go.mod file
         if: contains(steps.changed-files.outputs.all_changed_and_modified_files, 'go.mod')
@@ -172,7 +176,7 @@ jobs:
       
       - uses: actions/setup-go@v3
         with:
-          node-version: '1.18'
+          go-version: '1.18'
       
       - name: Snyk scan for Go dependencies - go.mod
         continue-on-error: true
