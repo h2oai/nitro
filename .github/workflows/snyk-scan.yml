@@ -6,19 +6,16 @@ on:
     types: [opened, edited, synchronize]
   create:
     tags:
-      - 'v.[0-9]+.[0-9]+.[0-9]+'
-      - 'v.[0-9]+.[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
   push:
     tags:
-      - 'v.[0-9]+.[0-9]+.[0-9]+'
-      - 'v.[0-9]+.[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
     branches:
       - main
-      - devops/snyk-integration
 
 jobs:
   snyk_scan_test:
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -102,7 +99,7 @@ jobs:
         shell: bash
         run: |
           echo "[warning] Please solve the fixable security vulnerabilities found in failed steps!
-                Snyk scan for Node dependencies [package.json] - ${{ steps.scan1.outcome }}
+                Snyk scan for Node dependencies [package-lock.json] - ${{ steps.scan1.outcome }}
                 Snyk scan for Python dependencies - ${{ steps.scan2.outcome }}
                 Snyk scan for Go dependencies - ${{ steps.scan3.outcome }}
                 "
