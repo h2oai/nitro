@@ -129,6 +129,7 @@ jobs:
           for file in $(find . -name "package-lock.json"); do
             directory=$(dirname "$file")
             cd directory && npm install
+            file=${file:2}
             snyk monitor --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --file=$file --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$file -d 
           done
         env:
@@ -143,6 +144,7 @@ jobs:
         run: |
           for file in $(find . -name "requirements.txt"); do
             python3 -m pip install -r $file
+            file=${file:2}
             snyk monitor --command=python3 --package-manager=pip --org=nitro-cf8 --remote-repo-url=nitro/${{ steps.extract_ref.outputs.ref }} --file=$file --project-name=NITRO/nitro/${{ steps.extract_ref.outputs.ref }}/$file -d --skip-unresolved 
           done
         env:
