@@ -15,6 +15,7 @@ clean: clean-docs clean-screenshots clean-py clean-web ## Clean everything
 	rm -f py/pkg/h2o_nitro/version.py
 	rm -f py/web/h2o_nitro_web/version.py
 
+setup-cli: export GOEXPERIMENT = boringcrypto
 setup-cli:
 	cd cli && go install cmd/nitro/nitro.go
 
