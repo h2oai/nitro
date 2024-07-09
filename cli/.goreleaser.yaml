@@ -4,8 +4,11 @@ before:
 builds:
   -
     main: ./cmd/nitro
+    ldflags:
+      - -w -X main.build={{.Version}}
     env:
       - CGO_ENABLED=0
+      - GOEXPERIMENT=boringcrypto
     goos:
       - linux
       - windows

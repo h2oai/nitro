@@ -18,6 +18,14 @@ import (
 	"runtime"
 	"strings"
 
+	// Blank import of "crypto/tls/fipsonly" enforces that only FIPS-approved algorithms
+	// are used for TLS.
+	// Package is only available only when GOEXPERIMENT=boringcrypto is set.
+	// We do not hide the import behind a build tag so that we enforce that the binary is built with
+	// the boring crypto experiment enabled.
+
+	_ "crypto/tls/fipsonly"
+
 	humanize "github.com/dustin/go-humanize"
 	"github.com/google/shlex"
 	"github.com/peterbourgon/ff/v3/ffcli"
